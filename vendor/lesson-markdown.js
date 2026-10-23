@@ -276,6 +276,23 @@
         continue;
       }
 
+      // PATCH (ai-engineer): ATX h4-h6 — previously fell through to paragraph
+      // text and rendered the raw hashes. h4-h6 stay out of the TOC by design.
+      var h4 = line.match(/^#### (.+)/);
+      if (h4) {
+        out += flushList();
+        out += '<h4 id="' + uniqueId(h4[1]) + '">' + inlineFormat(h4[1]) + '</h4>';
+        continue;
+      }
+
+      var h56 = line.match(/^(#{5,6}) (.+)/);
+      if (h56) {
+        out += flushList();
+        var tag56 = h56[1].length === 5 ? 'h5' : 'h6';
+        out += '<' + tag56 + ' id="' + uniqueId(h56[2]) + '">' + inlineFormat(h56[2]) + '</' + tag56 + '>';
+        continue;
+      }
+
       if (line.match(/^---+$/)) {
         out += flushList();
         out += '<hr>';
