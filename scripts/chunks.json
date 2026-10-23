@@ -1,0 +1,1447 @@
+[
+ {
+  "id": "c001",
+  "phase": "00-setup-and-tooling",
+  "lessons": [
+   "01-dev-environment",
+   "02-git-and-collaboration",
+   "03-gpu-setup-and-cloud",
+   "04-apis-and-keys",
+   "05-jupyter-notebooks",
+   "06-python-environments"
+  ],
+  "bytes": 42189
+ },
+ {
+  "id": "c002",
+  "phase": "00-setup-and-tooling",
+  "lessons": [
+   "07-docker-for-ai",
+   "08-editor-setup",
+   "09-data-management",
+   "10-terminal-and-shell",
+   "11-linux-for-ai",
+   "12-debugging-and-profiling"
+  ],
+  "bytes": 71463
+ },
+ {
+  "id": "c003",
+  "phase": "00-setup-and-tooling",
+  "lessons": [
+   "13-python-for-ai-engineering"
+  ],
+  "bytes": 45404
+ },
+ {
+  "id": "c004",
+  "phase": "01-math-foundations",
+  "lessons": [
+   "01-linear-algebra-intuition",
+   "02-vectors-matrices-operations",
+   "03-matrix-transformations",
+   "04-calculus-for-ml"
+  ],
+  "bytes": 75812
+ },
+ {
+  "id": "c005",
+  "phase": "01-math-foundations",
+  "lessons": [
+   "05-chain-rule-and-autodiff",
+   "06-probability-and-distributions",
+   "07-bayes-theorem",
+   "08-optimization"
+  ],
+  "bytes": 78769
+ },
+ {
+  "id": "c006",
+  "phase": "01-math-foundations",
+  "lessons": [
+   "09-information-theory",
+   "10-dimensionality-reduction",
+   "11-singular-value-decomposition",
+   "12-tensor-operations"
+  ],
+  "bytes": 81443
+ },
+ {
+  "id": "c007",
+  "phase": "01-math-foundations",
+  "lessons": [
+   "13-numerical-stability",
+   "14-norms-and-distances",
+   "15-statistics-for-ml"
+  ],
+  "bytes": 76017
+ },
+ {
+  "id": "c008",
+  "phase": "01-math-foundations",
+  "lessons": [
+   "16-sampling-methods",
+   "17-linear-systems"
+  ],
+  "bytes": 59202
+ },
+ {
+  "id": "c009",
+  "phase": "01-math-foundations",
+  "lessons": [
+   "18-convex-optimization",
+   "19-complex-numbers",
+   "20-fourier-transform"
+  ],
+  "bytes": 73841
+ },
+ {
+  "id": "c010",
+  "phase": "01-math-foundations",
+  "lessons": [
+   "21-graph-theory",
+   "22-stochastic-processes"
+  ],
+  "bytes": 47366
+ },
+ {
+  "id": "c011",
+  "phase": "02-ml-fundamentals",
+  "lessons": [
+   "01-what-is-machine-learning",
+   "02-linear-regression",
+   "03-logistic-regression"
+  ],
+  "bytes": 65581
+ },
+ {
+  "id": "c012",
+  "phase": "02-ml-fundamentals",
+  "lessons": [
+   "04-decision-trees",
+   "05-support-vector-machines",
+   "06-knn-and-distances",
+   "07-unsupervised-learning"
+  ],
+  "bytes": 76782
+ },
+ {
+  "id": "c013",
+  "phase": "02-ml-fundamentals",
+  "lessons": [
+   "08-feature-engineering",
+   "09-model-evaluation",
+   "10-bias-variance"
+  ],
+  "bytes": 74450
+ },
+ {
+  "id": "c014",
+  "phase": "02-ml-fundamentals",
+  "lessons": [
+   "11-ensemble-methods",
+   "12-hyperparameter-tuning",
+   "13-ml-pipelines"
+  ],
+  "bytes": 57419
+ },
+ {
+  "id": "c015",
+  "phase": "02-ml-fundamentals",
+  "lessons": [
+   "14-naive-bayes",
+   "15-time-series",
+   "16-anomaly-detection"
+  ],
+  "bytes": 76014
+ },
+ {
+  "id": "c016",
+  "phase": "02-ml-fundamentals",
+  "lessons": [
+   "17-imbalanced-data",
+   "18-feature-selection",
+   "19-ml-system-design"
+  ],
+  "bytes": 71599
+ },
+ {
+  "id": "c017",
+  "phase": "02-ml-fundamentals",
+  "lessons": [
+   "20-model-monitoring-and-drift",
+   "21-feature-stores-and-training-serving-skew"
+  ],
+  "bytes": 44790
+ },
+ {
+  "id": "c018",
+  "phase": "03-deep-learning-core",
+  "lessons": [
+   "01-the-perceptron",
+   "02-multi-layer-networks",
+   "03-backpropagation",
+   "04-activation-functions"
+  ],
+  "bytes": 73992
+ },
+ {
+  "id": "c019",
+  "phase": "03-deep-learning-core",
+  "lessons": [
+   "05-loss-functions",
+   "06-optimizers",
+   "07-regularization"
+  ],
+  "bytes": 69585
+ },
+ {
+  "id": "c020",
+  "phase": "03-deep-learning-core",
+  "lessons": [
+   "08-weight-initialization",
+   "09-learning-rate-schedules",
+   "10-mini-framework"
+  ],
+  "bytes": 59849
+ },
+ {
+  "id": "c021",
+  "phase": "03-deep-learning-core",
+  "lessons": [
+   "11-intro-to-pytorch",
+   "12-intro-to-jax",
+   "13-debugging-neural-networks"
+  ],
+  "bytes": 76455
+ },
+ {
+  "id": "c022",
+  "phase": "04-computer-vision",
+  "lessons": [
+   "01-image-fundamentals",
+   "02-convolutions-from-scratch",
+   "03-cnns-lenet-to-resnet",
+   "04-image-classification"
+  ],
+  "bytes": 78001
+ },
+ {
+  "id": "c023",
+  "phase": "04-computer-vision",
+  "lessons": [
+   "05-transfer-learning",
+   "06-object-detection-yolo",
+   "07-semantic-segmentation-unet",
+   "08-instance-segmentation-mask-rcnn"
+  ],
+  "bytes": 71402
+ },
+ {
+  "id": "c024",
+  "phase": "04-computer-vision",
+  "lessons": [
+   "09-image-generation-gans",
+   "10-image-generation-diffusion",
+   "11-stable-diffusion",
+   "12-video-understanding",
+   "13-3d-vision-nerf"
+  ],
+  "bytes": 72188
+ },
+ {
+  "id": "c025",
+  "phase": "04-computer-vision",
+  "lessons": [
+   "14-vision-transformers",
+   "15-real-time-edge",
+   "16-vision-pipeline-capstone",
+   "17-self-supervised-vision",
+   "18-open-vocab-clip",
+   "19-ocr-document-understanding"
+  ],
+  "bytes": 77684
+ },
+ {
+  "id": "c026",
+  "phase": "04-computer-vision",
+  "lessons": [
+   "20-image-retrieval-metric",
+   "21-keypoint-pose",
+   "22-3d-gaussian-splatting",
+   "23-diffusion-transformers-rectified-flow",
+   "24-sam3-open-vocab-segmentation"
+  ],
+  "bytes": 72726
+ },
+ {
+  "id": "c027",
+  "phase": "04-computer-vision",
+  "lessons": [
+   "25-vision-language-models",
+   "26-monocular-depth",
+   "27-multi-object-tracking",
+   "28-world-models-video-diffusion"
+  ],
+  "bytes": 60660
+ },
+ {
+  "id": "c028",
+  "phase": "05-nlp-foundations-to-advanced",
+  "lessons": [
+   "01-text-processing",
+   "02-bag-of-words-tfidf",
+   "03-word-embeddings-word2vec",
+   "04-glove-fasttext-subword",
+   "05-sentiment-analysis",
+   "06-named-entity-recognition"
+  ],
+  "bytes": 75705
+ },
+ {
+  "id": "c029",
+  "phase": "05-nlp-foundations-to-advanced",
+  "lessons": [
+   "07-pos-tagging-parsing",
+   "08-cnns-rnns-for-text",
+   "09-sequence-to-sequence",
+   "10-attention-mechanism",
+   "11-machine-translation",
+   "12-text-summarization"
+  ],
+  "bytes": 70455
+ },
+ {
+  "id": "c030",
+  "phase": "05-nlp-foundations-to-advanced",
+  "lessons": [
+   "13-question-answering",
+   "14-information-retrieval-search",
+   "15-topic-modeling",
+   "16-text-generation-pre-transformer",
+   "17-chatbots-rule-to-neural",
+   "18-multilingual-nlp"
+  ],
+  "bytes": 81003
+ },
+ {
+  "id": "c031",
+  "phase": "05-nlp-foundations-to-advanced",
+  "lessons": [
+   "19-subword-tokenization",
+   "20-structured-outputs-constrained-decoding",
+   "21-nli-textual-entailment",
+   "22-embedding-models-deep-dive",
+   "23-chunking-strategies-rag",
+   "24-coreference-resolution"
+  ],
+  "bytes": 62060
+ },
+ {
+  "id": "c032",
+  "phase": "05-nlp-foundations-to-advanced",
+  "lessons": [
+   "25-entity-linking",
+   "26-relation-extraction-kg",
+   "27-llm-evaluation-frameworks",
+   "28-long-context-evaluation",
+   "29-dialogue-state-tracking"
+  ],
+  "bytes": 53412
+ },
+ {
+  "id": "c033",
+  "phase": "06-speech-and-audio",
+  "lessons": [
+   "01-audio-fundamentals",
+   "02-spectrograms-mel-features",
+   "03-audio-classification",
+   "04-speech-recognition-asr",
+   "05-whisper-architecture-finetuning",
+   "06-speaker-recognition-verification"
+  ],
+  "bytes": 55083
+ },
+ {
+  "id": "c034",
+  "phase": "06-speech-and-audio",
+  "lessons": [
+   "07-text-to-speech",
+   "08-voice-cloning-conversion",
+   "09-music-generation",
+   "10-audio-language-models",
+   "11-real-time-audio-processing",
+   "12-voice-assistant-pipeline"
+  ],
+  "bytes": 52702
+ },
+ {
+  "id": "c035",
+  "phase": "06-speech-and-audio",
+  "lessons": [
+   "13-neural-audio-codecs",
+   "14-voice-activity-detection-turn-taking",
+   "15-streaming-speech-to-speech-moshi-hibiki",
+   "16-anti-spoofing-audio-watermarking",
+   "17-audio-evaluation-metrics"
+  ],
+  "bytes": 48214
+ },
+ {
+  "id": "c036",
+  "phase": "07-transformers-deep-dive",
+  "lessons": [
+   "01-why-transformers",
+   "02-self-attention-from-scratch",
+   "03-multi-head-attention",
+   "04-positional-encoding",
+   "05-full-transformer",
+   "06-bert-masked-language-modeling"
+  ],
+  "bytes": 58947
+ },
+ {
+  "id": "c037",
+  "phase": "07-transformers-deep-dive",
+  "lessons": [
+   "07-gpt-causal-language-modeling",
+   "08-t5-bart-encoder-decoder",
+   "09-vision-transformers",
+   "10-audio-transformers-whisper",
+   "11-mixture-of-experts",
+   "12-kv-cache-flash-attention"
+  ],
+  "bytes": 62096
+ },
+ {
+  "id": "c038",
+  "phase": "07-transformers-deep-dive",
+  "lessons": [
+   "13-scaling-laws",
+   "14-build-a-transformer-capstone",
+   "15-attention-variants",
+   "16-speculative-decoding"
+  ],
+  "bytes": 43330
+ },
+ {
+  "id": "c039",
+  "phase": "08-generative-ai",
+  "lessons": [
+   "01-generative-models-taxonomy-history",
+   "02-autoencoders-vae",
+   "03-gans-generator-discriminator",
+   "04-conditional-gans-pix2pix",
+   "05-stylegan",
+   "06-diffusion-ddpm-from-scratch"
+  ],
+  "bytes": 63105
+ },
+ {
+  "id": "c040",
+  "phase": "08-generative-ai",
+  "lessons": [
+   "07-latent-diffusion-stable-diffusion",
+   "08-controlnet-lora-conditioning",
+   "09-inpainting-outpainting-editing",
+   "10-video-generation",
+   "11-audio-generation",
+   "12-3d-generation"
+  ],
+  "bytes": 62805
+ },
+ {
+  "id": "c041",
+  "phase": "08-generative-ai",
+  "lessons": [
+   "13-flow-matching-rectified-flows",
+   "14-evaluation-fid-clip-score",
+   "19-visual-autoregressive-var"
+  ],
+  "bytes": 31531
+ },
+ {
+  "id": "c042",
+  "phase": "09-reinforcement-learning",
+  "lessons": [
+   "01-mdps-states-actions-rewards",
+   "02-dynamic-programming",
+   "03-monte-carlo-methods",
+   "04-q-learning-sarsa",
+   "05-dqn",
+   "06-policy-gradients-reinforce"
+  ],
+  "bytes": 71426
+ },
+ {
+  "id": "c043",
+  "phase": "09-reinforcement-learning",
+  "lessons": [
+   "07-actor-critic-a2c-a3c",
+   "08-ppo",
+   "09-reward-modeling-rlhf",
+   "10-multi-agent-rl",
+   "11-sim-to-real-transfer",
+   "12-rl-for-games"
+  ],
+  "bytes": 80536
+ },
+ {
+  "id": "c044",
+  "phase": "10-llms-from-scratch",
+  "lessons": [
+   "01-tokenizers",
+   "02-building-a-tokenizer",
+   "03-data-pipelines"
+  ],
+  "bytes": 65153
+ },
+ {
+  "id": "c045",
+  "phase": "10-llms-from-scratch",
+  "lessons": [
+   "04-pre-training-mini-gpt",
+   "05-scaling-distributed"
+  ],
+  "bytes": 60243
+ },
+ {
+  "id": "c046",
+  "phase": "10-llms-from-scratch",
+  "lessons": [
+   "06-instruction-tuning-sft",
+   "07-rlhf"
+  ],
+  "bytes": 61413
+ },
+ {
+  "id": "c047",
+  "phase": "10-llms-from-scratch",
+  "lessons": [
+   "08-dpo",
+   "09-constitutional-ai-self-improvement",
+   "10-evaluation"
+  ],
+  "bytes": 81753
+ },
+ {
+  "id": "c048",
+  "phase": "10-llms-from-scratch",
+  "lessons": [
+   "11-quantization"
+  ],
+  "bytes": 47693
+ },
+ {
+  "id": "c049",
+  "phase": "10-llms-from-scratch",
+  "lessons": [
+   "12-inference-optimization",
+   "13-building-complete-llm-pipeline",
+   "14-open-models-architecture-walkthroughs"
+  ],
+  "bytes": 76611
+ },
+ {
+  "id": "c050",
+  "phase": "10-llms-from-scratch",
+  "lessons": [
+   "15-speculative-decoding-eagle3",
+   "16-differential-attention-v2",
+   "17-native-sparse-attention",
+   "18-multi-token-prediction",
+   "19-dualpipe-parallelism"
+  ],
+  "bytes": 72509
+ },
+ {
+  "id": "c051",
+  "phase": "10-llms-from-scratch",
+  "lessons": [
+   "20-deepseek-v3-walkthrough",
+   "21-jamba-hybrid-ssm-transformer",
+   "22-async-hogwild-inference",
+   "25-speculative-decoding",
+   "34-gradient-checkpointing"
+  ],
+  "bytes": 71620
+ },
+ {
+  "id": "c052",
+  "phase": "11-llm-engineering",
+  "lessons": [
+   "01-prompt-engineering",
+   "02-few-shot-cot"
+  ],
+  "bytes": 76349
+ },
+ {
+  "id": "c053",
+  "phase": "11-llm-engineering",
+  "lessons": [
+   "03-structured-outputs",
+   "04-embeddings"
+  ],
+  "bytes": 53293
+ },
+ {
+  "id": "c054",
+  "phase": "11-llm-engineering",
+  "lessons": [
+   "05-context-engineering",
+   "06-rag",
+   "07-advanced-rag"
+  ],
+  "bytes": 80122
+ },
+ {
+  "id": "c055",
+  "phase": "11-llm-engineering",
+  "lessons": [
+   "08-fine-tuning-lora",
+   "09-function-calling"
+  ],
+  "bytes": 65035
+ },
+ {
+  "id": "c056",
+  "phase": "11-llm-engineering",
+  "lessons": [
+   "10-evaluation"
+  ],
+  "bytes": 41815
+ },
+ {
+  "id": "c057",
+  "phase": "11-llm-engineering",
+  "lessons": [
+   "11-caching-cost"
+  ],
+  "bytes": 42650
+ },
+ {
+  "id": "c058",
+  "phase": "11-llm-engineering",
+  "lessons": [
+   "12-guardrails"
+  ],
+  "bytes": 46987
+ },
+ {
+  "id": "c059",
+  "phase": "11-llm-engineering",
+  "lessons": [
+   "13-production-app",
+   "14-model-context-protocol",
+   "15-prompt-caching"
+  ],
+  "bytes": 80712
+ },
+ {
+  "id": "c060",
+  "phase": "11-llm-engineering",
+  "lessons": [
+   "16-langgraph-state-machines",
+   "17-agent-framework-tradeoffs"
+  ],
+  "bytes": 27209
+ },
+ {
+  "id": "c061",
+  "phase": "12-multimodal-ai",
+  "lessons": [
+   "01-vision-transformer-patch-tokens",
+   "02-clip-contrastive-pretraining",
+   "03-blip2-qformer-bridge",
+   "04-flamingo-gated-cross-attention",
+   "05-llava-visual-instruction-tuning",
+   "06-any-resolution-patch-n-pack"
+  ],
+  "bytes": 68764
+ },
+ {
+  "id": "c062",
+  "phase": "12-multimodal-ai",
+  "lessons": [
+   "07-open-weight-vlm-recipes",
+   "08-llava-onevision-single-multi-video",
+   "09-qwen-vl-family-dynamic-fps",
+   "10-internvl3-native-multimodal",
+   "11-chameleon-early-fusion-tokens",
+   "12-emu3-next-token-for-generation"
+  ],
+  "bytes": 61640
+ },
+ {
+  "id": "c063",
+  "phase": "12-multimodal-ai",
+  "lessons": [
+   "13-transfusion-autoregressive-diffusion",
+   "14-show-o-discrete-diffusion-unified",
+   "15-janus-pro-decoupled-encoders",
+   "16-mio-any-to-any-streaming",
+   "17-video-language-temporal-grounding",
+   "18-long-video-million-token"
+  ],
+  "bytes": 53043
+ },
+ {
+  "id": "c064",
+  "phase": "12-multimodal-ai",
+  "lessons": [
+   "19-audio-language-whisper-to-af3",
+   "20-omni-models-thinker-talker",
+   "21-embodied-vlas-openvla-pi0-groot",
+   "22-document-diagram-understanding",
+   "23-colpali-vision-native-rag",
+   "24-multimodal-rag-cross-modal"
+  ],
+  "bytes": 52874
+ },
+ {
+  "id": "c065",
+  "phase": "12-multimodal-ai",
+  "lessons": [
+   "25-multimodal-agents-computer-use"
+  ],
+  "bytes": 8591
+ },
+ {
+  "id": "c066",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "01-the-tool-interface",
+   "02-function-calling-deep-dive",
+   "03-parallel-and-streaming-tool-calls",
+   "04-structured-output",
+   "05-tool-schema-design",
+   "06-mcp-fundamentals"
+  ],
+  "bytes": 68193
+ },
+ {
+  "id": "c067",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "07-building-an-mcp-server",
+   "08-building-an-mcp-client",
+   "09-mcp-transports",
+   "10-mcp-resources-and-prompts",
+   "11-mcp-sampling",
+   "12-mcp-roots-and-elicitation"
+  ],
+  "bytes": 79463
+ },
+ {
+  "id": "c068",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "13-mcp-async-tasks",
+   "14-mcp-apps",
+   "15-mcp-security-tool-poisoning",
+   "16-mcp-security-oauth-2-1"
+  ],
+  "bytes": 71734
+ },
+ {
+  "id": "c069",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "17-mcp-gateways-and-registries",
+   "18-mcp-auth-production",
+   "19-a2a-protocol",
+   "20-opentelemetry-genai"
+  ],
+  "bytes": 77375
+ },
+ {
+  "id": "c070",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "21-llm-routing-layer",
+   "22-skills-and-agent-sdks",
+   "23-capstone-tool-ecosystem",
+   "24-skill-discovery-and-progressive-disclosure",
+   "25-skill-invocation-and-routing"
+  ],
+  "bytes": 79249
+ },
+ {
+  "id": "c071",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "26-skill-permissions-sandboxes-and-trust",
+   "27-skill-evals-packaging-and-portability",
+   "28-mcp-tool-contracts-and-content"
+  ],
+  "bytes": 75136
+ },
+ {
+  "id": "c072",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "29-mcp-reliability-cancellation-and-flow-control",
+   "30-mcp-registry-supply-chain-and-drift",
+   "31-mcp-conformance-versioning-and-operations"
+  ],
+  "bytes": 65022
+ },
+ {
+  "id": "c073",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "32-program-anatomy-elf-from-scratch"
+  ],
+  "bytes": 40933
+ },
+ {
+  "id": "c074",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "33-disassembly-and-control-flow"
+  ],
+  "bytes": 42075
+ },
+ {
+  "id": "c075",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "34-lifting-to-pseudocode"
+  ],
+  "bytes": 48527
+ },
+ {
+  "id": "c076",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "35-evidence-confidence-and-unknowns",
+   "36-rebuild-and-prove-equal"
+  ],
+  "bytes": 74307
+ },
+ {
+  "id": "c077",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "37-the-reverse-engineering-landscape"
+  ],
+  "bytes": 49113
+ },
+ {
+  "id": "c078",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "38-calling-conventions-and-stack-frames"
+  ],
+  "bytes": 49104
+ },
+ {
+  "id": "c079",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "39-compiler-idioms-and-optimization"
+  ],
+  "bytes": 48293
+ },
+ {
+  "id": "c080",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "40-linking-loading-and-stripped-binaries"
+  ],
+  "bytes": 58466
+ },
+ {
+  "id": "c081",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "41-recovering-data-and-types"
+  ],
+  "bytes": 52334
+ },
+ {
+  "id": "c082",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "42-dynamic-analysis-of-your-own-program"
+  ],
+  "bytes": 55917
+ },
+ {
+  "id": "c083",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "43-bytecode-and-managed-formats"
+  ],
+  "bytes": 45914
+ },
+ {
+  "id": "c084",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "44-binary-diffing-and-symbolic-execution"
+  ],
+  "bytes": 44781
+ },
+ {
+  "id": "c085",
+  "phase": "13-tools-and-protocols",
+  "lessons": [
+   "45-ai-assisted-reverse-engineering"
+  ],
+  "bytes": 48499
+ },
+ {
+  "id": "c086",
+  "phase": "14-agent-engineering",
+  "lessons": [
+   "01-the-agent-loop",
+   "02-rewoo-plan-and-execute",
+   "03-reflexion-verbal-rl",
+   "04-tree-of-thoughts-lats",
+   "05-self-refine-and-critic",
+   "06-tool-use-and-function-calling"
+  ],
+  "bytes": 50761
+ },
+ {
+  "id": "c087",
+  "phase": "14-agent-engineering",
+  "lessons": [
+   "07-memory-virtual-context-memgpt",
+   "08-memory-blocks-sleep-time-compute",
+   "09-hybrid-memory-mem0",
+   "10-skill-libraries-voyager",
+   "11-planning-htn-and-evolutionary",
+   "12-anthropic-workflow-patterns"
+  ],
+  "bytes": 49524
+ },
+ {
+  "id": "c088",
+  "phase": "14-agent-engineering",
+  "lessons": [
+   "13-langgraph-stateful-graphs",
+   "14-autogen-actor-model",
+   "15-crewai-role-based-crews",
+   "16-openai-agents-sdk",
+   "17-claude-agent-sdk",
+   "18-agno-and-mastra-runtimes"
+  ],
+  "bytes": 49854
+ },
+ {
+  "id": "c089",
+  "phase": "14-agent-engineering",
+  "lessons": [
+   "19-benchmarks-swebench-gaia",
+   "20-benchmarks-webarena-osworld",
+   "21-computer-use-agents",
+   "22-voice-agents-pipecat-livekit",
+   "23-otel-genai-conventions",
+   "24-agent-observability-platforms"
+  ],
+  "bytes": 38163
+ },
+ {
+  "id": "c090",
+  "phase": "14-agent-engineering",
+  "lessons": [
+   "25-multi-agent-debate",
+   "26-failure-modes-agentic",
+   "27-prompt-injection-defense",
+   "28-orchestration-patterns",
+   "29-production-runtimes",
+   "30-eval-driven-agent-development"
+  ],
+  "bytes": 40250
+ },
+ {
+  "id": "c091",
+  "phase": "14-agent-engineering",
+  "lessons": [
+   "31-agent-workbench-why-models-fail",
+   "32-minimal-agent-workbench",
+   "33-instructions-as-executable-constraints",
+   "34-repo-memory-and-state",
+   "35-initialization-scripts",
+   "36-scope-contracts"
+  ],
+  "bytes": 67797
+ },
+ {
+  "id": "c092",
+  "phase": "14-agent-engineering",
+  "lessons": [
+   "37-runtime-feedback-loops",
+   "38-verification-gates",
+   "39-reviewer-agent",
+   "40-multi-session-handoff",
+   "41-workbench-for-real-repos",
+   "42-agent-workbench-capstone"
+  ],
+  "bytes": 61604
+ },
+ {
+  "id": "c093",
+  "phase": "14-agent-engineering",
+  "lessons": [
+   "43-frame-the-task-before-code",
+   "44-plan-from-evidence",
+   "45-delegate-with-isolation",
+   "46-turn-feedback-into-system",
+   "47-outcomes-before-output",
+   "48-discover-the-real-workflow"
+  ],
+  "bytes": 28276
+ },
+ {
+  "id": "c094",
+  "phase": "14-agent-engineering",
+  "lessons": [
+   "49-map-assumptions-and-risk",
+   "50-choose-the-smallest-testable-slice",
+   "51-write-specifications-that-preserve-judgment",
+   "52-design-success-metrics",
+   "53-prototype-pilot-or-production",
+   "54-build-the-feedback-ratchet"
+  ],
+  "bytes": 32671
+ },
+ {
+  "id": "c095",
+  "phase": "15-autonomous-systems",
+  "lessons": [
+   "01-long-horizon-agents",
+   "02-star-family-reasoning",
+   "03-alphaevolve-evolutionary-coding",
+   "04-darwin-godel-machine",
+   "05-ai-scientist-v2",
+   "06-automated-alignment-research"
+  ],
+  "bytes": 53731
+ },
+ {
+  "id": "c096",
+  "phase": "15-autonomous-systems",
+  "lessons": [
+   "07-recursive-self-improvement",
+   "08-bounded-self-improvement",
+   "09-coding-agent-landscape",
+   "10-claude-code-permission-modes",
+   "11-browser-agents",
+   "12-durable-execution"
+  ],
+  "bytes": 54404
+ },
+ {
+  "id": "c097",
+  "phase": "15-autonomous-systems",
+  "lessons": [
+   "13-cost-governors",
+   "14-kill-switches-canaries",
+   "15-propose-then-commit",
+   "16-checkpoints-rollback",
+   "17-constitutional-ai",
+   "18-llama-guard"
+  ],
+  "bytes": 55265
+ },
+ {
+  "id": "c098",
+  "phase": "15-autonomous-systems",
+  "lessons": [
+   "19-anthropic-rsp",
+   "20-openai-preparedness-deepmind-fsf",
+   "21-metr-external-evaluation",
+   "22-cais-caisi-societal-risk"
+  ],
+  "bytes": 37683
+ },
+ {
+  "id": "c099",
+  "phase": "16-multi-agent-and-swarms",
+  "lessons": [
+   "01-why-multi-agent",
+   "02-fipa-acl-heritage"
+  ],
+  "bytes": 34539
+ },
+ {
+  "id": "c100",
+  "phase": "16-multi-agent-and-swarms",
+  "lessons": [
+   "03-communication-protocols",
+   "04-primitive-model",
+   "05-supervisor-orchestrator-pattern"
+  ],
+  "bytes": 74022
+ },
+ {
+  "id": "c101",
+  "phase": "16-multi-agent-and-swarms",
+  "lessons": [
+   "06-hierarchical-architecture",
+   "07-society-of-mind-debate",
+   "08-role-specialization",
+   "09-parallel-swarm-networks",
+   "10-group-chat-speaker-selection",
+   "11-handoffs-and-routines"
+  ],
+  "bytes": 49446
+ },
+ {
+  "id": "c102",
+  "phase": "16-multi-agent-and-swarms",
+  "lessons": [
+   "12-a2a-protocol",
+   "13-shared-memory-blackboard",
+   "14-consensus-and-bft",
+   "15-voting-debate-topology",
+   "16-negotiation-bargaining",
+   "17-generative-agents-simulation"
+  ],
+  "bytes": 70175
+ },
+ {
+  "id": "c103",
+  "phase": "16-multi-agent-and-swarms",
+  "lessons": [
+   "18-theory-of-mind-coordination",
+   "19-swarm-optimization-pso-aco",
+   "20-marl-maddpg-qmix-mappo",
+   "21-agent-economies",
+   "22-production-scaling-queues-checkpoints",
+   "23-failure-modes-mast-groupthink"
+  ],
+  "bytes": 69478
+ },
+ {
+  "id": "c104",
+  "phase": "16-multi-agent-and-swarms",
+  "lessons": [
+   "24-evaluation-coordination-benchmarks",
+   "25-case-studies-2026-sota"
+  ],
+  "bytes": 25216
+ },
+ {
+  "id": "c105",
+  "phase": "17-infrastructure-and-production",
+  "lessons": [
+   "01-managed-llm-platforms",
+   "02-inference-platform-economics",
+   "03-gpu-autoscaling-kubernetes",
+   "04-vllm-serving-internals",
+   "05-eagle3-speculative-decoding",
+   "06-sglang-radixattention"
+  ],
+  "bytes": 62554
+ },
+ {
+  "id": "c106",
+  "phase": "17-infrastructure-and-production",
+  "lessons": [
+   "07-tensorrt-llm-blackwell",
+   "08-inference-metrics-goodput",
+   "09-production-quantization",
+   "10-cold-start-mitigation",
+   "11-multi-region-kv-locality",
+   "12-edge-inference"
+  ],
+  "bytes": 54535
+ },
+ {
+  "id": "c107",
+  "phase": "17-infrastructure-and-production",
+  "lessons": [
+   "13-llm-observability",
+   "14-prompt-semantic-caching",
+   "15-batch-apis",
+   "16-model-routing",
+   "17-disaggregated-prefill-decode",
+   "18-vllm-production-stack-lmcache"
+  ],
+  "bytes": 52917
+ },
+ {
+  "id": "c108",
+  "phase": "17-infrastructure-and-production",
+  "lessons": [
+   "19-ai-gateways",
+   "20-shadow-canary-progressive",
+   "21-ab-testing-llm-features",
+   "22-load-testing-llm-apis",
+   "23-sre-for-ai",
+   "24-chaos-engineering-llm"
+  ],
+  "bytes": 47851
+ },
+ {
+  "id": "c109",
+  "phase": "17-infrastructure-and-production",
+  "lessons": [
+   "25-security-secrets-audit",
+   "26-compliance-frameworks",
+   "27-finops-llms",
+   "28-self-hosted-serving-selection",
+   "29-model-demo-interfaces"
+  ],
+  "bytes": 70704
+ },
+ {
+  "id": "c110",
+  "phase": "18-ethics-safety-alignment",
+  "lessons": [
+   "01-instruction-following-alignment-signal",
+   "02-reward-hacking-goodhart",
+   "03-direct-preference-optimization-family",
+   "04-sycophancy-rlhf-amplification",
+   "05-constitutional-ai-rlaif",
+   "06-mesa-optimization-deceptive-alignment"
+  ],
+  "bytes": 59422
+ },
+ {
+  "id": "c111",
+  "phase": "18-ethics-safety-alignment",
+  "lessons": [
+   "07-sleeper-agents-persistent-deception",
+   "08-in-context-scheming-frontier-models",
+   "09-alignment-faking",
+   "10-ai-control-subversion",
+   "11-scalable-oversight-weak-to-strong",
+   "12-red-teaming-pair-automated-attacks"
+  ],
+  "bytes": 53768
+ },
+ {
+  "id": "c112",
+  "phase": "18-ethics-safety-alignment",
+  "lessons": [
+   "13-many-shot-jailbreaking",
+   "14-ascii-art-visual-jailbreaks",
+   "15-indirect-prompt-injection",
+   "16-red-team-tooling-garak-llamaguard-pyrit",
+   "17-wmdp-dual-use-evaluation",
+   "18-frontier-safety-frameworks-rsp-pf-fsf"
+  ],
+  "bytes": 47314
+ },
+ {
+  "id": "c113",
+  "phase": "18-ethics-safety-alignment",
+  "lessons": [
+   "19-model-welfare-research",
+   "20-bias-representational-harm",
+   "21-fairness-criteria-group-individual-counterfactual",
+   "22-differential-privacy-for-llms",
+   "23-watermarking-synthid-stable-signature-c2pa",
+   "24-regulatory-frameworks-eu-us-uk-korea"
+  ],
+  "bytes": 49948
+ },
+ {
+  "id": "c114",
+  "phase": "18-ethics-safety-alignment",
+  "lessons": [
+   "25-echoleak-cves-for-ai",
+   "26-model-system-dataset-cards",
+   "27-data-provenance-training-governance",
+   "28-alignment-research-ecosystem",
+   "29-moderation-systems-openai-perspective-llamaguard",
+   "30-dual-use-risk-cyber-bio-chem-nuclear"
+  ],
+  "bytes": 51267
+ },
+ {
+  "id": "c115",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "01-terminal-native-coding-agent",
+   "02-rag-over-codebase",
+   "03-realtime-voice-assistant",
+   "04-multimodal-document-qa",
+   "05-autonomous-research-agent",
+   "06-devops-troubleshooting-agent"
+  ],
+  "bytes": 62589
+ },
+ {
+  "id": "c116",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "07-end-to-end-fine-tuning-pipeline",
+   "08-production-rag-chatbot",
+   "09-code-migration-agent",
+   "10-multi-agent-software-team",
+   "11-llm-observability-dashboard",
+   "12-video-understanding-pipeline"
+  ],
+  "bytes": 56705
+ },
+ {
+  "id": "c117",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "13-mcp-server-with-registry",
+   "14-speculative-decoding-server",
+   "15-constitutional-safety-harness",
+   "16-github-issue-to-pr-agent",
+   "17-personal-ai-tutor",
+   "20-agent-harness-loop-contract"
+  ],
+  "bytes": 67257
+ },
+ {
+  "id": "c118",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "21-tool-registry-schema-validation",
+   "22-jsonrpc-stdio-transport",
+   "23-function-call-dispatcher",
+   "24-plan-execute-control-flow",
+   "25-verification-gates-observation-budget",
+   "26-sandbox-runner-denylist"
+  ],
+  "bytes": 41879
+ },
+ {
+  "id": "c119",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "27-eval-harness-fixture-tasks",
+   "28-observability-otel-traces",
+   "29-end-to-end-coding-task-demo",
+   "30-bpe-tokenizer-from-scratch",
+   "31-tokenized-dataset-sliding-window",
+   "32-token-positional-embeddings"
+  ],
+  "bytes": 45012
+ },
+ {
+  "id": "c120",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "33-multihead-self-attention",
+   "34-transformer-block",
+   "35-gpt-model-assembly",
+   "36-training-loop-eval",
+   "37-loading-pretrained-weights",
+   "38-classifier-finetuning"
+  ],
+  "bytes": 56521
+ },
+ {
+  "id": "c121",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "39-instruction-tuning-sft",
+   "40-dpo-from-scratch",
+   "41-eval-pipeline",
+   "42-large-corpus-downloader",
+   "43-hdf5-tokenized-corpus",
+   "44-cosine-lr-warmup"
+  ],
+  "bytes": 60194
+ },
+ {
+  "id": "c122",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "45-gradient-clipping-amp",
+   "46-gradient-accumulation",
+   "47-checkpoint-save-resume",
+   "48-distributed-fsdp-ddp",
+   "49-lm-eval-harness",
+   "50-hypothesis-generator"
+  ],
+  "bytes": 58433
+ },
+ {
+  "id": "c123",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "51-literature-retrieval",
+   "52-experiment-runner",
+   "53-result-evaluator",
+   "54-paper-writer",
+   "55-critic-loop",
+   "56-iteration-scheduler"
+  ],
+  "bytes": 44217
+ },
+ {
+  "id": "c124",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "57-end-to-end-research-demo",
+   "58-vision-encoder-patches",
+   "59-vit-transformer",
+   "60-projection-layer-modality-align",
+   "61-cross-attention-fusion",
+   "62-vision-language-pretraining"
+  ],
+  "bytes": 47908
+ },
+ {
+  "id": "c125",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "63-multimodal-eval",
+   "64-chunking-strategies-advanced",
+   "65-hybrid-retrieval-bm25-dense",
+   "66-reranker-cross-encoder",
+   "67-query-rewriting-hyde",
+   "68-rag-eval-precision-recall"
+  ],
+  "bytes": 62864
+ },
+ {
+  "id": "c126",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "69-end-to-end-rag-system",
+   "70-task-spec-format",
+   "71-classical-metrics",
+   "72-code-exec-metric",
+   "73-perplexity-calibration",
+   "74-leaderboard-aggregation"
+  ],
+  "bytes": 46982
+ },
+ {
+  "id": "c127",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "75-end-to-end-eval-runner",
+   "76-collective-ops-from-scratch",
+   "77-data-parallel-ddp",
+   "78-zero-parameter-sharding",
+   "79-pipeline-parallel",
+   "80-checkpoint-sharded-resume"
+  ],
+  "bytes": 49337
+ },
+ {
+  "id": "c128",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "81-end-to-end-distributed-train",
+   "82-jailbreak-taxonomy",
+   "83-prompt-injection-detector",
+   "84-refusal-evaluation",
+   "85-content-classifier-integration",
+   "86-constitutional-rules-engine"
+  ],
+  "bytes": 40802
+ },
+ {
+  "id": "c129",
+  "phase": "19-capstone-projects",
+  "lessons": [
+   "87-end-to-end-safety-gate"
+  ],
+  "bytes": 6427
+ }
+]

@@ -1,0 +1,11 @@
+{
+  "id": "using-coding-agents",
+  "title": "智能体辅助工程",
+  "summary": "在真实代码仓库中框定任务、规划、执行、委派、验证、评审并持续改进编码智能体的工作。",
+  "decisionPrompt": null,
+  "prerequisites": [],
+  "responsibilities": null,
+  "goodFitIf": null,
+  "portfolio": null,
+  "stages": []
+}

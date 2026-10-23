@@ -1,0 +1,11 @@
+{
+  "id": "shaping-the-build",
+  "title": "产品判断与交付",
+  "summary": "把证据转化为成果、假设、可测试切片、可执行规范、度量计划以及有主的反馈闭环。",
+  "decisionPrompt": null,
+  "prerequisites": [],
+  "responsibilities": null,
+  "goodFitIf": null,
+  "portfolio": null,
+  "stages": []
+}

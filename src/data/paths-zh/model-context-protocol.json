@@ -1,0 +1,26 @@
+{
+  "id": "model-context-protocol",
+  "title": "Model Context Protocol (MCP)",
+  "summary": "从 JSON-RPC 信封到一致性发布门禁，构建、保护、验证和运维无状态的 MCP 系统。",
+  "decisionPrompt": null,
+  "prerequisites": [
+    {
+      "title": "Python 与命令行基础",
+      "description": "能查看 JSON、编辑文件并运行 Python 命令。不需要 MCP 或智能体框架经验。"
+    },
+    {
+      "title": "可执行网络证据所需 Python 3",
+      "description": "确定性实现和测试使用 Python 3。第 07 课的第二个实现可选 TypeScript 运行器。"
+    },
+    {
+      "title": "工具接口",
+      "description": "如果你不熟悉带类型的工具调用和副作用边界，先快速浏览这节课。"
+    },
+    {
+      "title": "工具 Schema 设计",
+      "description": "如果你还没设计或验证过 JSON Schema 工具输入，先快速浏览这节课。"
+    }
+  ],
+  "portfolio": null,
+  "stages": []
+}

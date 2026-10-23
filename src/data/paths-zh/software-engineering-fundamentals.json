@@ -1,0 +1,11 @@
+{
+  "id": "software-engineering-fundamentals",
+  "title": "软件工程基础",
+  "summary": "打好 AI 系统依赖的代码仓库、调试、测试、接口、安全、发布与运维基础。",
+  "decisionPrompt": null,
+  "prerequisites": [],
+  "responsibilities": null,
+  "goodFitIf": null,
+  "portfolio": null,
+  "stages": []
+}

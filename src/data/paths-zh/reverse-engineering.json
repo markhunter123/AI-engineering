@@ -1,0 +1,28 @@
+{
+  "id": "reverse-engineering",
+  "title": "逆向工程",
+  "summary": "阅读你自己编译的程序：解析文件、解码指令、提升到伪代码、记录证据、证明重编译等价；再用这套流程认识整个领域及其主要工具。",
+  "decisionPrompt": null,
+  "prerequisites": [
+    {
+      "title": "Python、十六进制与命令行",
+      "description": "能阅读 Python、执行命令、在十六进制与十进制之间转换。不需要有汇编或二进制分析经验。"
+    },
+    {
+      "title": "Python 3.10 或更高版本",
+      "description": "路径中的 reader、decoder、lifter 和 ledger 都只使用 Python 标准库。编译后的 fixture 已包含在仓库中。"
+    },
+    {
+      "title": "用于重编译 fixture 和第 36 课的 clang",
+      "description": "clang 用于从源码重编译 fixture 并编译第 36 课的差分驱动。没有它时，第 36 课会读取已提交的 object，并将行为断言标记为未知。"
+    },
+    {
+      "title": "只分析你自己编写或获得授权分析的程序",
+      "description": "在第 32 课实验前，确认每个目标都是你编写并编译的程序，或持有书面授权的程序。第 32 课开头会讲法律和授权规则。"
+    }
+  ],
+  "responsibilities": null,
+  "goodFitIf": null,
+  "portfolio": null,
+  "stages": []
+}

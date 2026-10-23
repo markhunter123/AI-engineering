@@ -1,0 +1,44 @@
+{
+  "id": "ai-data-engineer",
+  "title": "AI 数据系统",
+  "summary": "为 AI 系统构建可靠的数据、特征、embedding、检索、评估和可观测性 pipeline。",
+  "decisionPrompt": "你是否希望让训练、检索、评估和生产行为背后的数据值得信赖？",
+  "prerequisites": null,
+  "responsibilities": [
+    "设计可复现的摄取、转换和特征 pipeline。",
+    "构建具备显式质量指标的 embedding 和检索路径。",
+    "检测泄漏、漂移、缺失数据和检索回退。",
+    "从源头到生产环境，对数据依赖行为进行埋点。"
+  ],
+  "goodFitIf": [
+    "相比演示，你更在意血缘、可重复性和数据质量。",
+    "你喜欢把模型行为追溯到数据和检索决策。",
+    "你希望把数据系统与可衡量的 AI 结果关联起来。"
+  ],
+  "portfolio": {
+    "title": "可溯源的 AI 数据 Pipeline",
+    "description": "构建一条可复现的数据与检索路径，使其输入、转换、质量检查和下游影响都可被检查。"
+  },
+  "stages": [
+    {
+      "id": "common-core",
+      "outcome": "构建可复现的数据、特征和语言模型准备 pipeline。",
+      "artifact": "一个带版本控制、确定性转换、切分检查和可复现运行记录的 pipeline。"
+    },
+    {
+      "id": "role-practice",
+      "outcome": "构建可独立测量质量的上下文和检索路径。",
+      "artifact": "一个具备文档化语料、索引配置和检索指标的系统。"
+    },
+    {
+      "id": "proof-project",
+      "outcome": "把数据路径连接到经过评估的准生产应用。",
+      "artifact": "一条具备端到端质量检查和应用级评估的可溯源 AI 数据 pipeline。"
+    },
+    {
+      "id": "interview-readiness-evidence",
+      "outcome": "展示 telemetry 如何区分数据、检索和生成故障。",
+      "artifact": "一份将生产症状关联到责任数据或检索阶段的故障分析。"
+    }
+  ]
+}

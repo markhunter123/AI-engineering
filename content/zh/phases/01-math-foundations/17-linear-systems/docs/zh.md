@@ -1,0 +1,600 @@
+# 线性系统
+
+> 求解 $Ax = b$ 是数学中最古老的问题之一，而你的神经网络至今仍在运行它。
+
+**Type:** Build
+**Language:** Python
+**Prerequisites:** Phase 1, Lessons 01 (Linear Algebra Intuition), 02 (Vectors & Matrices), 03 (Matrix Transformations)
+**Time:** ~120 minutes
+
+## 学习目标
+
+- 使用带部分选主元的高斯消元法和回代求解 $Ax = b$
+- 用 LU、QR 和 Cholesky 分解对矩阵进行因式分解，并解释各自适用场景
+- 推导最小二乘的正规方程，并将其与线性回归和岭回归联系起来
+- 使用条件数诊断病态系统，并通过正则化使其稳定
+
+## 问题
+
+每次训练线性回归，你都在求解一个线性系统。每次计算最小二乘拟合，你都在求解一个线性系统。每次神经网络层计算 `y = Wx + b`，它都在求值线性系统的一侧。加入正则化时，你修改了这个系统。使用高斯过程时，你对矩阵进行因式分解。为马氏距离求协方差矩阵的逆时，你也在求解一个线性系统。
+
+方程 $Ax = b$ 无处不在。$A$ 是已知系数的矩阵。$b$ 是已知输出的向量。$x$ 是你想求的未知向量。在线性回归中，$A$ 是数据矩阵，$b$ 是目标向量，$x$ 是权重向量。整个模型可以归结为：找到 $x$，使得 $Ax$ 尽可能接近 $b$。
+
+本节课从头构建求解该方程的每一种主要方法。你会理解为什么有些方法快、有些方法稳定，为什么有些只适用于方阵系统而有些能处理超定系统，以及为什么矩阵的条件数决定了你的答案是否有意义。
+
+## 概念
+
+### Ax = b 的几何含义
+
+线性方程组有直观的几何解释。每个方程定义一个超平面。解就是所有超平面相交的点（或点集）。
+
+```
+2x + y = 5          Two lines in 2D.
+x - y  = 1          They intersect at x=2, y=1.
+```
+
+```mermaid
+graph LR
+    A["2x + y = 5"] --- S["Solution: (2, 1)"]
+    B["x - y = 1"] --- S
+```
+
+三种情况可能发生：
+
+```mermaid
+graph TD
+    subgraph "One Solution"
+        A1["Lines intersect at a single point"]
+    end
+    subgraph "No Solution"
+        A2["Lines are parallel — no intersection"]
+    end
+    subgraph "Infinite Solutions"
+        A3["Lines are identical — every point is a solution"]
+    end
+```
+
+在矩阵形式中，「唯一解」意味着 $A$ 可逆；「无解」意味着系统不相容；「无穷多解」意味着 $A$ 有零空间。大多数机器学习问题属于「没有精确解」这一类，因为你的方程（数据点）比未知量（参数）多。这就是最小二乘的用武之地。
+
+### 列视角与行视角
+
+读 $Ax = b$ 有两种方式。
+
+**行视角。** $A$ 的每一行定义一个方程。每个方程是一个超平面。解是它们共同相交的位置。
+
+**列视角。** $A$ 的每一列是一个向量。问题变成：$A$ 的列的什么线性组合能产生 $b$？
+
+```
+A = | 2  1 |    b = | 5 |
+    | 1 -1 |        | 1 |
+
+Row picture: solve 2x + y = 5 and x - y = 1 simultaneously.
+
+Column picture: find x1, x2 such that:
+  x1 * [2, 1] + x2 * [1, -1] = [5, 1]
+  2 * [2, 1] + 1 * [1, -1] = [4+1, 2-1] = [5, 1]   check.
+```
+
+列视角更为根本。如果 $b$ 位于 $A$ 的列空间中，系统有解。如果不在，你就找列空间中最近的点。这个最近点就是最小二乘解。
+
+### 高斯消元
+
+高斯消元将 $Ax = b$ 转化为上三角系统 $Ux = c$，然后通过回代求解。这是最直接的解法。
+
+算法：
+
+```
+1. For each column k (the pivot column):
+   a. Find the largest entry in column k at or below row k (partial pivoting).
+   b. Swap that row with row k.
+   c. For each row i below k:
+      - Compute multiplier m = A[i][k] / A[k][k]
+      - Subtract m times row k from row i.
+2. Back substitute: solve from the last equation upward.
+```
+
+示例：
+
+```
+Original:
+| 2  1  1 | 8 |       R2 = R2 - (2)R1     | 2  1   1 |  8 |
+| 4  3  3 |20 |  -->  R3 = R3 - (1)R1 --> | 0  1   1 |  4 |
+| 2  3  1 |12 |                            | 0  2   0 |  4 |
+
+                       R3 = R3 - (2)R2     | 2  1   1 |  8 |
+                                       --> | 0  1   1 |  4 |
+                                           | 0  0  -2 | -4 |
+
+Back substitute:
+  -2 * x3 = -4    -->  x3 = 2
+  x2 + 2  = 4     -->  x2 = 2
+  2*x1 + 2 + 2 = 8 --> x1 = 2
+```
+
+高斯消元的代价是 $O(n^3)$。对于 $1000 \times 1000$ 的系统，大约是十亿次浮点运算。很快，但如果你需要用同一个 $A$ 求解多个系统，还可以更快。
+
+### 部分选主元：为何重要
+
+没有选主元，高斯消元可能失败或产生垃圾结果。如果主元为零，就会除以零；如果主元很小，就会放大舍入误差。
+
+```
+Bad pivot:                       With partial pivoting:
+| 0.001  1 | 1.001 |            Swap rows first:
+| 1      1 | 2     |            | 1      1 | 2     |
+                                 | 0.001  1 | 1.001 |
+m = 1/0.001 = 1000              m = 0.001/1 = 0.001
+R2 = R2 - 1000*R1               R2 = R2 - 0.001*R1
+| 0.001  1     | 1.001   |      | 1      1     | 2     |
+| 0     -999   | -999.0  |      | 0      0.999 | 0.999 |
+
+x2 = 1.000 (correct)            x2 = 1.000 (correct)
+x1 = (1.001 - 1)/0.001          x1 = (2 - 1)/1 = 1.000 (correct)
+   = 0.001/0.001 = 1.000        Stable because the multiplier is small.
+```
+
+在精度有限的浮点算术中，未选主元版本可能丢失有效数字。部分选主元总是选择可用的最大主元，以最小化误差放大。
+
+### LU 分解
+
+LU 分解将 $A$ 分解为一个下三角矩阵 $L$ 和一个上三角矩阵 $U$：$A = LU$。$L$ 矩阵存储高斯消元中的乘子，$U$ 矩阵是消元的结果。
+
+```
+A = L @ U
+
+| 2  1  1 |   | 1  0  0 |   | 2  1   1 |
+| 4  3  3 | = | 2  1  0 | @ | 0  1   1 |
+| 2  3  1 |   | 1  2  1 |   | 0  0  -2 |
+```
+
+为什么要因式分解而不直接消元？因为一旦得到 $L$ 和 $U$，对任意新的 $b$ 求解 $Ax = b$ 只需 $O(n^2)$：
+
+```math
+\begin{aligned}
+Ax &= b \\
+LUx &= b \\
+&\text{Let } y = Ux\text{:} \\
+Ly &= b \quad \text{(forward substitution, } O(n^2)\text{)} \\
+Ux &= y \quad \text{(back substitution, } O(n^2)\text{)}
+\end{aligned}
+```
+
+$O(n^3)$ 的代价只在因式分解时支付一次，之后每次求解都是 $O(n^2)$。如果你需要用同一个 $A$ 但不同的 $b$ 求解 1000 个系统，LU 可将总工作量节省约 1000/3 倍。
+
+采用部分选主元时，得到 $PA = LU$，其中 $P$ 是记录行交换的置换矩阵。
+
+### QR 分解
+
+QR 分解将 $A$ 分解为正交矩阵 $Q$ 和上三角矩阵 $R$：$A = QR$。
+
+正交矩阵满足 $Q^T Q = I$。它的列是标准正交向量。乘以 $Q$ 保持长度和角度不变。
+
+```
+A = Q @ R
+
+Q has orthonormal columns: Q^T Q = I
+R is upper triangular
+
+To solve Ax = b:
+  QRx = b
+  Rx = Q^T b    (just multiply by Q^T, no inversion needed)
+  Back substitute to get x.
+```
+
+对于求解最小二乘问题，QR 比 LU 数值更稳定。Gram-Schmidt 过程逐列构建 $Q$：
+
+```
+Given columns a1, a2, ... of A:
+
+q1 = a1 / ||a1||
+
+q2 = a2 - (a2 . q1) * q1        (subtract projection onto q1)
+q2 = q2 / ||q2||                (normalize)
+
+q3 = a3 - (a3 . q1) * q1 - (a3 . q2) * q2
+q3 = q3 / ||q3||
+
+R[i][j] = qi . aj    for i <= j
+```
+
+每一步都去除沿前面所有 $q$ 向量方向的分量，只保留新的正交方向。
+
+### Cholesky 分解
+
+当 $A$ 对称（$A = A^T$）且正定（所有特征值为正）时，可以将其分解为 $A = L L^T$，其中 $L$ 是下三角矩阵。这就是 Cholesky 分解。
+
+```
+A = L @ L^T
+
+| 4  2 |   | 2  0 |   | 2  1 |
+| 2  5 | = | 1  2 | @ | 0  2 |
+
+L[i][i] = sqrt(A[i][i] - sum(L[i][k]^2 for k < i))
+L[i][j] = (A[i][j] - sum(L[i][k]*L[j][k] for k < j)) / L[j][j]    for i > j
+```
+
+Cholesky 的速度约为 LU 的两倍，存储量只需一半。它只适用于对称正定矩阵，但这类矩阵随处可见：
+
+- 协方差矩阵对称正半定（加正则化后正定）。
+- 高斯过程中的核矩阵对称正定。
+- 凸函数在极小值处的 Hessian 对称正定。
+- $A^T A$ 总是对称正半定。
+
+在高斯过程中，你用 Cholesky 对核矩阵 $K$ 进行因式分解，然后求解 $K \alpha = y$ 得到预测均值。Cholesky 因子还能给出边缘似然的对数行列式：$\log \det(K) = 2 \sum \log(\mathop{\mathrm{diag}}(L))$。
+
+### 最小二乘：当 Ax = b 没有精确解
+
+如果 $A$ 是 $m \times n$ 且 $m > n$（方程多于未知量），系统就是超定的。没有精确解。于是你最小化平方误差：
+
+```
+minimize ||Ax - b||^2
+
+This is the sum of squared residuals:
+  sum((A[i,:] @ x - b[i])^2 for i in range(m))
+```
+
+极小值点满足正规方程：
+
+```math
+A^T A x = A^T b
+```
+
+推导：展开 $\lVert Ax - b \rVert^2 = (Ax - b)^T (Ax - b) = x^T A^T A x - 2 x^T A^T b + b^T b$。对 $x$ 求梯度并令其为零：$2 A^T A x - 2 A^T b = 0$。
+
+```
+Original system (overdetermined, 4 equations, 2 unknowns):
+| 1  1 |         | 3 |
+| 1  2 | x     = | 5 |       No exact x satisfies all 4 equations.
+| 1  3 |         | 6 |
+| 1  4 |         | 8 |
+
+Normal equations:
+A^T A = | 4  10 |    A^T b = | 22 |
+        | 10 30 |            | 63 |
+
+Solve: x = [1.5, 1.7]
+
+This is linear regression. x[0] is the intercept, x[1] is the slope.
+```
+
+### 正规方程即线性回归
+
+两者之间的联系是精确的。在线性回归中，数据矩阵 $X$ 每行一个样本、每列一个特征，目标向量 $y$ 每样本一个元素。权重向量 $w$ 满足：
+
+```math
+\begin{aligned}
+X^T X w &= X^T y \\
+w &= (X^T X)^{-1} X^T y
+\end{aligned}
+```
+
+这就是线性回归的闭式解。每次调用 `sklearn.linear_model.LinearRegression.fit()` 都在计算这个（或者通过 QR 或 SVD 计算等价结果）。
+
+给矩阵加上正则项 $\lambda I$ 就得到岭回归：
+
+```math
+\begin{aligned}
+(X^T X + \lambda I) w &= X^T y \\
+w &= (X^T X + \lambda I)^{-1} X^T y
+\end{aligned}
+```
+
+正则化让矩阵条件更好（更容易准确求逆），并通过将权重向零收缩来防止过拟合。当 $\lambda > 0$ 时，$X^T X + \lambda I$ 总是对称正定，因此可以用 Cholesky 求解。
+
+### 伪逆（Moore-Penrose）
+
+伪逆 $A^+$ 将矩阵求逆推广到非方阵和奇异矩阵。对任意矩阵 $A$：
+
+```math
+\begin{aligned}
+x &= A^+ b \\[4pt]
+\text{where } A^+ &= V \Sigma^+ U^T \quad \text{(computed via SVD)}
+\end{aligned}
+```
+
+$\Sigma^+$ 的构造方式是对每个非零奇异值取倒数，然后转置结果。若 $A = U \Sigma V^T$，则 $A^+ = V \Sigma^+ U^T$。
+
+```
+A = U Sigma V^T        (SVD)
+
+Sigma = | 5  0 |       Sigma+ = | 1/5  0  0 |
+        | 0  2 |                | 0  1/2  0 |
+        | 0  0 |
+
+A+ = V Sigma+ U^T
+```
+
+伪逆给出最小范数最小二乘解。若系统：
+- 有唯一解：$A^+ b$ 给出该解。
+- 无解：$A^+ b$ 给出最小二乘解。
+- 有无穷多解：$A^+ b$ 给出范数 $\lVert x \rVert$ 最小的那个。
+
+NumPy 的 `np.linalg.lstsq` 和 `np.linalg.pinv` 内部都使用 SVD。
+
+### 条件数
+
+条件数衡量解对输入微小变化的敏感程度。对矩阵 $A$，条件数为：
+
+```math
+\kappa(A) = \lVert A \rVert \cdot \lVert A^{-1} \rVert = \frac{\sigma_{\max}}{\sigma_{\min}}
+```
+
+其中 $\sigma_{\max}$ 和 $\sigma_{\min}$ 分别是最大和最小奇异值。
+
+```
+Well-conditioned (kappa ~ 1):        Ill-conditioned (kappa ~ 10^15):
+Small change in b -->                Small change in b -->
+small change in x                    huge change in x
+
+| 2  0 |   kappa = 2/1 = 2          | 1   1          |   kappa ~ 10^15
+| 0  1 |   safe to solve            | 1   1+10^(-15) |   solution is garbage
+```
+
+经验法则：
+- $\kappa < 100$：安全，解是准确的。
+- $\kappa \approx 10^k$：你会从浮点运算中丢失约 $k$ 位有效数字。
+- $\kappa \approx 10^{16}$（float64 下）：解毫无意义，矩阵实际上奇异。
+
+在机器学习中，当特征几乎共线时会出现病态。正则化（加 $\lambda I$）将条件数从 $\sigma_{\max} / \sigma_{\min}$ 改善为 $(\sigma_{\max} + \lambda) / (\sigma_{\min} + \lambda)$。
+
+### 迭代方法：共轭梯度
+
+对于非常大的稀疏系统（数百万未知量），LU 或 Cholesky 等直接方法代价太高。迭代方法通过多次迭代改进猜测来逼近解。
+
+共轭梯度（CG）在 $A$ 对称正定时求解 $Ax = b$。在精确算术中，它最多 $n$ 次迭代即可找到精确解；若 $A$ 的特征值聚集，实际收敛通常快得多。
+
+```
+Algorithm sketch:
+  x0 = initial guess (often zero)
+  r0 = b - A x0           (residual)
+  p0 = r0                 (search direction)
+
+  For k = 0, 1, 2, ...:
+    alpha = (rk . rk) / (pk . A pk)
+    x_{k+1} = xk + alpha * pk
+    r_{k+1} = rk - alpha * A pk
+    beta = (r_{k+1} . r_{k+1}) / (rk . rk)
+    p_{k+1} = r_{k+1} + beta * pk
+    if ||r_{k+1}|| < tolerance: stop
+```
+
+CG 用于：
+- 大规模优化（Newton-CG 方法）
+- 求解 PDE 离散化方程
+- 核矩阵太大无法因式分解的核方法
+- 其他迭代求解器的预处理
+
+收敛速度取决于条件数。条件更好的系统收敛更快，这是正则化有帮助的又一原因。
+
+### 全景：何时用哪种方法
+
+| Method | Requirements | Cost | Use case |
+|--------|-------------|------|----------|
+| Gaussian elimination | Square, nonsingular $A$ | $O(n^3)$ | One-off solve of a square system |
+| LU decomposition | Square, nonsingular $A$ | $O(n^3)$ factor + $O(n^2)$ solve | Multiple solves with the same $A$ |
+| QR decomposition | Any $A$ ($m \ge n$) | $O(mn^2)$ | Least squares, numerically stable |
+| Cholesky | Symmetric positive definite $A$ | $O(n^3/3)$ | Covariance matrices, Gaussian processes, ridge regression |
+| Normal equations | Overdetermined ($m > n$) | $O(mn^2 + n^3)$ | Linear regression (small $n$) |
+| SVD / pseudoinverse | Any $A$ | $O(mn^2)$ | Rank-deficient systems, minimum-norm solutions |
+| Conjugate gradient | Symmetric positive definite, sparse $A$ | $O(n \cdot k \cdot \text{nnz})$ | Large sparse systems, $k$ = iterations |
+
+### 与机器学习的联系
+
+本节课的每种方法都会出现在生产级机器学习中：
+
+**线性回归。** 闭式解求解正规方程 $X^T X w = X^T y$。具体实现通过 Cholesky（$n$ 较小）、QR（数值稳定性重要）或 SVD（矩阵可能秩亏）。
+
+**岭回归。** 给 $X^T X$ 加 $\lambda I$。正则化系统 $(X^T X + \lambda I) w = X^T y$ 总是可以通过 Cholesky 求解，因为当 $\lambda > 0$ 时 $X^T X + \lambda I$ 对称正定。
+
+**高斯过程。** 预测均值需要求解 $K \alpha = y$，其中 $K$ 是核矩阵。对 $K$ 做 Cholesky 因式分解是标准做法。边缘似然的对数行列式为 $\log \det(K) = 2 \sum \log(\mathop{\mathrm{diag}}(L))$。
+
+**神经网络初始化。** 正交初始化使用 QR 分解构造列标准正交的权重矩阵，防止深度网络中的信号崩溃。
+
+**预处理。** 大规模优化器使用不完全 Cholesky 或不完全 LU 作为共轭梯度求解器的预处理子。
+
+**特征工程。** $X^T X$ 的条件数告诉你特征是否共线。若 $\kappa$ 很大，应删除特征或添加正则化。
+
+```figure
+linear-system-conditioning
+```
+
+## 构建它
+
+### 第 1 步：带部分选主元的高斯消元
+
+```python
+import numpy as np
+
+def gaussian_elimination(A, b):
+    n = len(b)
+    Ab = np.hstack([A.astype(float), b.reshape(-1, 1).astype(float)])
+
+    for k in range(n):
+        max_row = k + np.argmax(np.abs(Ab[k:, k]))
+        Ab[[k, max_row]] = Ab[[max_row, k]]
+
+        if abs(Ab[k, k]) < 1e-12:
+            raise ValueError(f"Matrix is singular or nearly singular at pivot {k}")
+
+        for i in range(k + 1, n):
+            m = Ab[i, k] / Ab[k, k]
+            Ab[i, k:] -= m * Ab[k, k:]
+
+    x = np.zeros(n)
+    for i in range(n - 1, -1, -1):
+        x[i] = (Ab[i, -1] - Ab[i, i+1:n] @ x[i+1:n]) / Ab[i, i]
+
+    return x
+```
+
+### 第 2 步：LU 分解
+
+```python
+def lu_decompose(A):
+    n = A.shape[0]
+    L = np.eye(n)
+    U = A.astype(float).copy()
+    P = np.eye(n)
+
+    for k in range(n):
+        max_row = k + np.argmax(np.abs(U[k:, k]))
+        if max_row != k:
+            U[[k, max_row]] = U[[max_row, k]]
+            P[[k, max_row]] = P[[max_row, k]]
+            if k > 0:
+                L[[k, max_row], :k] = L[[max_row, k], :k]
+
+        for i in range(k + 1, n):
+            L[i, k] = U[i, k] / U[k, k]
+            U[i, k:] -= L[i, k] * U[k, k:]
+
+    return P, L, U
+
+def lu_solve(P, L, U, b):
+    n = len(b)
+    Pb = P @ b.astype(float)
+
+    y = np.zeros(n)
+    for i in range(n):
+        y[i] = Pb[i] - L[i, :i] @ y[:i]
+
+    x = np.zeros(n)
+    for i in range(n - 1, -1, -1):
+        x[i] = (y[i] - U[i, i+1:] @ x[i+1:]) / U[i, i]
+
+    return x
+```
+
+### 第 3 步：Cholesky 分解
+
+```python
+def cholesky(A):
+    n = A.shape[0]
+    L = np.zeros_like(A, dtype=float)
+
+    for i in range(n):
+        for j in range(i + 1):
+            s = A[i, j] - L[i, :j] @ L[j, :j]
+            if i == j:
+                if s <= 0:
+                    raise ValueError("Matrix is not positive definite")
+                L[i, j] = np.sqrt(s)
+            else:
+                L[i, j] = s / L[j, j]
+
+    return L
+```
+
+### 第 4 步：通过正规方程求最小二乘
+
+```python
+def least_squares_normal(A, b):
+    AtA = A.T @ A
+    Atb = A.T @ b
+    return gaussian_elimination(AtA, Atb)
+
+def ridge_regression(A, b, lam):
+    n = A.shape[1]
+    AtA = A.T @ A + lam * np.eye(n)
+    Atb = A.T @ b
+    L = cholesky(AtA)
+    y = np.zeros(n)
+    for i in range(n):
+        y[i] = (Atb[i] - L[i, :i] @ y[:i]) / L[i, i]
+    x = np.zeros(n)
+    for i in range(n - 1, -1, -1):
+        x[i] = (y[i] - L.T[i, i+1:] @ x[i+1:]) / L.T[i, i]
+    return x
+```
+
+### 第 5 步：条件数
+
+```python
+def condition_number(A):
+    U, S, Vt = np.linalg.svd(A)
+    return S[0] / S[-1]
+```
+
+## 使用它
+
+把这些部分组合起来，在真实数据上做线性回归和岭回归：
+
+```python
+np.random.seed(42)
+X_raw = np.random.randn(100, 3)
+w_true = np.array([2.0, -1.0, 0.5])
+y = X_raw @ w_true + np.random.randn(100) * 0.1
+
+X = np.column_stack([np.ones(100), X_raw])
+
+w_ols = least_squares_normal(X, y)
+print(f"OLS weights (ours):    {w_ols}")
+
+w_np = np.linalg.lstsq(X, y, rcond=None)[0]
+print(f"OLS weights (numpy):   {w_np}")
+print(f"Max difference: {np.max(np.abs(w_ols - w_np)):.2e}")
+
+w_ridge = ridge_regression(X, y, lam=1.0)
+print(f"Ridge weights (ours):  {w_ridge}")
+
+from sklearn.linear_model import Ridge
+ridge_sk = Ridge(alpha=1.0, fit_intercept=False)
+ridge_sk.fit(X, y)
+print(f"Ridge weights (sklearn): {ridge_sk.coef_}")
+```
+
+## 交付它
+
+本节课产出：
+- `code/linear_systems.py`，包含高斯消元、LU 分解、Cholesky 分解、最小二乘和岭回归的从零实现
+- 一个可工作的演示，证明正规方程与 sklearn 的 LinearRegression 给出相同的权重
+
+## 练习
+
+1. 用你自己的高斯消元、LU 求解器和 `np.linalg.solve` 求解系统 `[[1,2,3],[4,5,6],[7,8,10]] x = [6, 15, 27]`。验证三者在浮点容差内给出相同答案。
+
+2. 生成一个 50×5 的随机矩阵 $X$ 和目标 $y = X @ w_{\text{true}} + \text{noise}$。分别用正规方程、QR（通过 `np.linalg.qr`）、SVD（通过 `np.linalg.svd`）和 `np.linalg.lstsq` 求解 $w$。比较四种解。测量 $X^T X$ 的条件数，并解释它如何影响你信任哪种方法。
+
+3. 通过让两列几乎相同（例如 column 2 = column 1 + 1e-10 * noise）构造一个接近奇异的矩阵。计算其条件数。分别用无正则化和加 $0.01 I$ 的方式求解 $Ax = b$。比较解和残差。解释为什么正则化有帮助。
+
+4. 为一个 100×100 的随机对称正定矩阵实现共轭梯度算法。统计收敛到容差 1e-8 需要多少次迭代。与理论最大值 $n$ 比较。
+
+5. 在大小为 10、50、200、500 的对称正定矩阵上，分别计时你的 Cholesky 求解器、LU 求解器和 `np.linalg.solve`。绘制结果。验证 Cholesky 比 LU 大约快 2 倍。
+
+### 提示
+
+**练习 1。** 依次调用 `gaussian_elimination(A, b)`、`lu_decompose(A)` 和 `lu_solve(P, L, U, b)`，以及 `np.linalg.solve(A, b)`。用 `np.allclose(A @ x, b)` 检查每个答案，并用 `np.allclose` 比较三个答案。
+
+**练习 2。** 正规方程使用 `least_squares_normal`，其他三种方法使用对应的 NumPy 函数。四种答案都应接近 `w_true`。比较 `condition_number(X.T @ X)` 与 `condition_number(X)`：前者是后者的平方，因此正规方程会损失最多精度。
+
+**练习 3。** 预期条件数超过 $10^9$。分别用 `np.linalg.solve` 和 `ridge_regression(A, b, 0.01)` 求解，然后比较 `np.linalg.norm(x)` 和每种方法的残差范数。两者残差都可能很小，但无正则化的解通常具有非常大的元素。
+
+**练习 4。** 用 `B @ B.T + n * np.eye(n)` 构造对称正定矩阵，使每个特征值都为正。在你复制的 `conjugate_gradient` 循环中加入计数器，然后检查最终残差范数低于 1e-8 且计数不超过 100。
+
+**练习 5。** 对所有三个求解器使用同样的 `B @ B.T + n * np.eye(n)` 矩阵，用 `time.perf_counter` 多次运行取最佳。Cholesky 的运算量约为 LU 的一半，因此在较大尺寸上比例最清晰。
+
+## 关键术语
+
+| 术语 | 人们常说 | 实际含义 |
+|------|----------------|----------------------|
+| Linear system | "解出 x" | 一组线性方程 $Ax = b$。求 $x$ 就是找到在变换 $A$ 下产生输出 $b$ 的输入。 |
+| Gaussian elimination | "行约简" | 用行运算系统地消去对角线下方元素，得到可通过回代求解的上三角系统。$O(n^3)$。 |
+| Partial pivoting | "换行求稳定" | 消去第 $k$ 列前，将该列中绝对值最大的行换到主元位置。防止用小数做除法。 |
+| LU decomposition | "分解成三角" | 写成 $A = LU$，$L$ 为下三角（存储乘子），$U$ 为上三角（消元后的矩阵）。将 $O(n^3)$ 代价分摊到多次求解。 |
+| QR decomposition | "正交因式分解" | 写成 $A = QR$，$Q$ 的列标准正交，$R$ 为上三角。求解最小二乘比 LU 更稳定。 |
+| Cholesky decomposition | "矩阵的平方根" | 对于对称正定 $A$，写成 $A = LL^T$。代价约为 LU 的一半。用于协方差矩阵、核矩阵和岭回归。 |
+| Least squares | "精确解不可能时的最佳拟合" | 当系统超定（方程多于未知量）时，最小化残差平方和 $\lVert Ax - b \rVert^2$。 |
+| Normal equations | "微积分捷径" | $A^T A x = A^T b$。令 $\lVert Ax - b \rVert^2$ 的梯度为零。这就是线性回归的闭式解。 |
+| Pseudoinverse | "非方阵的求逆" | 通过 SVD 计算 $A^+ = V \Sigma^+ U^T$。对任意矩阵（方阵或矩形、奇异或非奇异）给出最小范数最小二乘解。 |
+| Condition number | "这个答案有多可信" | $\kappa = \sigma_{\max} / \sigma_{\min}$。衡量对输入扰动的敏感度。约丢失 $\log_{10}(\kappa)$ 位精度。 |
+| Ridge regression | "正则化最小二乘" | 求解 $(X^T X + \lambda I) w = X^T y$。加 $\lambda I$ 改善条件数并将权重向零收缩。防止过拟合。 |
+| Conjugate gradient | "大矩阵的迭代 Ax=b" | 对称正定系统的迭代求解器。最多 $n$ 步收敛。适用于因式分解太贵的大规模稀疏系统。 |
+| Overdetermined system | "数据多于参数" | $m > n$ 的 $m\text{×}n$ 系统。没有精确解。最小二乘给出最佳近似。每个回归问题都是它。 |
+| Back substitution | "自下而上求解" | 给定上三角系统，先解最后一个方程，再回代。$O(n^2)$。 |
+| Forward substitution | "自上而下求解" | 给定下三角系统，先解第一个方程，再前代。$O(n^2)$。用于 LU 求解的 L 步骤。 |
+
+## 延伸阅读
+
+- [MIT 18.06: Linear Algebra](https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/)（Gilbert Strang）—— 线性系统与矩阵因式分解的权威课程
+- [Numerical Linear Algebra](https://people.maths.ox.ac.uk/trefethen/text.html)（Trefethen & Bau）—— 理解数值稳定性、条件数以及算法为何失效的标准参考书
+- [Matrix Computations](https://www.press.jhu.edu/books/title/10678/matrix-computations)（Golub & Van Loan）—— 各种矩阵算法的百科全书式参考书
+- [3Blue1Brown: Inverse Matrices](https://www.3blue1brown.com/lessons/inverse-matrices)—— 求解 $Ax = b$ 几何含义的可视化直觉

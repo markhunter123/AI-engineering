@@ -1,0 +1,248 @@
+/* ==========================================================================
+   tokens.css — monochrome design tokens.
+   Strict black-and-white system: every surface, border, label, state and
+   syntax color is a pure neutral gray (R=G=B) — zero hue anywhere.
+   Hierarchy comes from lightness, font weight and spacing, never color.
+   Static ramp on :root; dark overrides on html[data-ds-dark-theme].
+   ========================================================================== */
+
+:root {
+  /* -- neutral ramp (pure grayscale, R=G=B, no blue tint) ---------------- */
+  --dsw-neutral-00: rgb(255, 255, 255);
+  --dsw-neutral-1000: rgb(0, 0, 0);
+  --dsw-neutral-50: rgb(250, 250, 250);
+
+  --dsw-bluish-00: rgb(255, 255, 255);
+  --dsw-bluish-50: rgb(250, 250, 250);
+  --dsw-bluish-60: rgb(247, 247, 247);
+  --dsw-bluish-75: rgb(242, 242, 242);
+  --dsw-bluish-100: rgb(237, 237, 237);
+  --dsw-bluish-150: rgb(232, 232, 232);
+  --dsw-bluish-200: rgb(226, 226, 226);
+  --dsw-bluish-300: rgb(212, 212, 212);
+  --dsw-bluish-400: rgb(179, 179, 179);
+  --dsw-bluish-500: rgb(153, 153, 153);
+  --dsw-bluish-600: rgb(128, 128, 128);
+  --dsw-bluish-700: rgb(102, 102, 102);
+  --dsw-bluish-750: rgb(82, 82, 82);
+  --dsw-bluish-800: rgb(64, 64, 64);
+  --dsw-bluish-850: rgb(46, 46, 46);
+  --dsw-bluish-875: rgb(36, 36, 36);
+  --dsw-bluish-900: rgb(26, 26, 26);
+  --dsw-bluish-950: rgb(16, 16, 16);
+  --dsw-bluish-1000: rgb(10, 10, 10);
+
+  /* accent ramp stays neutral: light accent is near-black, dark is white */
+  --dsw-deepseek-50: rgb(242, 242, 242);
+  --dsw-deepseek-100: rgb(232, 232, 232);
+  --dsw-deepseek-200: rgb(212, 212, 212);
+  --dsw-deepseek-300: rgb(179, 179, 179);
+  --dsw-deepseek-400: rgb(46, 46, 46);
+  --dsw-deepseek-450: rgb(31, 31, 31);
+  --dsw-deepseek-500: rgb(10, 10, 10);
+  --dsw-deepseek-800: rgb(51, 51, 51);
+  --dsw-deepseek-900: rgb(17, 17, 17);
+
+  /* status ramps collapse to grayscale as well */
+  --dsw-green-100: rgb(242, 242, 242);
+  --dsw-green-400: rgb(26, 26, 26);
+  --dsw-green-500: rgb(10, 10, 10);
+  --dsw-green-900: rgb(36, 36, 36);
+  --dsw-red-100: rgb(237, 237, 237);
+  --dsw-red-400: rgb(153, 153, 153);
+  --dsw-red-600: rgb(128, 128, 128);
+  --dsw-red-900: rgb(46, 46, 46);
+  --dsw-amber-100: rgb(247, 247, 247);
+  --dsw-amber-400: rgb(179, 179, 179);
+  --dsw-amber-500: rgb(102, 102, 102);
+  --dsw-amber-600: rgb(82, 82, 82);
+  --dsw-amber-900: rgb(31, 31, 31);
+  --dsw-blue-800: rgb(26, 26, 26);
+  --dsw-blue-900: rgb(10, 10, 10);
+
+  /* -- semantic aliases (light) ------------------------------------------- */
+  --ds-bg-base: var(--dsw-bluish-00);
+  --ds-bg-layer-1: var(--dsw-bluish-00);
+  --ds-bg-layer-2: var(--dsw-bluish-00);
+  --ds-bg-layer-3: var(--dsw-bluish-00);
+  --ds-bg-sidebar: var(--dsw-bluish-50);
+  --ds-bg-hover: rgba(0, 0, 0, 0.05);
+  --ds-bg-hover-strong: rgba(0, 0, 0, 0.09);
+  --ds-bg-active: rgba(0, 0, 0, 0.13);
+  --ds-bg-soft: var(--dsw-bluish-50);
+  --ds-bg-tip: var(--dsw-bluish-60);
+  --ds-bg-mask: rgba(0, 0, 0, 0.24);
+
+  --ds-label-primary: var(--dsw-bluish-1000);
+  --ds-label-secondary: var(--dsw-bluish-700);
+  --ds-label-tertiary: var(--dsw-bluish-600);
+  --ds-label-caption: var(--dsw-bluish-500);
+  --ds-label-on-brand: var(--dsw-bluish-00);
+
+  --ds-border-l1: rgba(0, 0, 0, 0.06);
+  --ds-border-l2: rgba(0, 0, 0, 0.1);
+  --ds-border-l3: rgba(0, 0, 0, 0.14);
+  --ds-border-l4: rgba(0, 0, 0, 0.18);
+
+  --ds-accent: var(--dsw-deepseek-500);        /* near-black */
+  --ds-accent-hover: var(--dsw-deepseek-400);
+  --ds-accent-soft: var(--dsw-deepseek-50);
+  --ds-accent-border: var(--dsw-deepseek-100);
+  --ds-accent-ink: var(--dsw-blue-900);
+
+  --ds-mark-code-block: var(--dsw-bluish-50);
+  --ds-mark-code-banner: var(--dsw-bluish-50);
+  --ds-mark-inline-code: var(--dsw-bluish-100);
+  --ds-mark-tag: var(--dsw-bluish-75);
+  --ds-mark-citation: var(--dsw-bluish-100);
+
+  --ds-success: var(--dsw-bluish-1000);         /* strongest = correct */
+  --ds-success-soft: var(--dsw-bluish-75);
+  --ds-warn: var(--dsw-bluish-750);
+  --ds-warn-ink: var(--dsw-bluish-800);
+  --ds-warn-soft: var(--dsw-bluish-60);
+  --ds-error: var(--dsw-bluish-700);            /* mid gray = wrong */
+  --ds-error-soft: var(--dsw-bluish-100);
+
+  --ds-tooltip-bg: var(--dsw-bluish-850);
+  --ds-tooltip-ink: var(--dsw-bluish-00);
+  --ds-scrollbar: var(--dsw-bluish-200);
+  --ds-scrollbar-hover: var(--dsw-bluish-300);
+
+  --ds-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --ds-shadow-2: 0 2px 6px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* -- syntax tokens (light): grayscale + weight carries the meaning ----- */
+  --syn-foreground: rgb(26, 26, 26);
+  --syn-background: var(--ds-mark-code-block);
+  --syn-constant: rgb(10, 10, 10);
+  --syn-string: rgb(85, 85, 85);
+  --syn-comment: rgb(138, 138, 138);
+  --syn-keyword: rgb(10, 10, 10);
+  --syn-parameter: rgb(85, 85, 85);
+  --syn-function: rgb(31, 31, 31);
+  --syn-punctuation: rgb(110, 110, 110);
+  --syn-number: rgb(68, 68, 68);
+
+  /* -- typography ---------------------------------------------------------- */
+  --ds-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial,
+    sans-serif;
+  --ds-font-code: 'SF Mono', 'JetBrains Mono', 'Fira Code', Consolas,
+    'Liberation Mono', Menlo, Courier, 'PingFang SC', 'Microsoft YaHei';
+
+  /* -- motion -------------------------------------------------------------- */
+  --ds-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-dur-fast: 0.1s;
+  --ds-dur: 0.2s;
+  --ds-dur-slow: 0.3s;
+
+  /* -- layout metrics ------------------------------------------------------- */
+  --ds-navbar-h: 56px;
+  --ds-sidebar-w: 288px;
+  --ds-toc-w: 232px;
+  --ds-radius-sm: 6px;
+  --ds-radius: 8px;
+  --ds-radius-lg: 12px;
+}
+
+/* ==========================================================================
+   Dark theme — true black canvas, white ink, fully inverted controls.
+   ========================================================================== */
+html[data-ds-dark-theme] {
+  color-scheme: dark;
+
+  --ds-bg-base: rgb(0, 0, 0);
+  --ds-bg-layer-1: rgb(13, 13, 13);
+  --ds-bg-layer-2: rgb(21, 21, 21);
+  --ds-bg-layer-3: rgb(30, 30, 30);
+  --ds-bg-sidebar: rgb(10, 10, 10);
+  --ds-bg-hover: rgba(255, 255, 255, 0.08);
+  --ds-bg-hover-strong: rgba(255, 255, 255, 0.12);
+  --ds-bg-active: rgba(255, 255, 255, 0.16);
+  --ds-bg-soft: rgb(16, 16, 16);
+  --ds-bg-tip: rgb(21, 21, 21);
+  --ds-bg-mask: rgba(0, 0, 0, 0.6);
+
+  --ds-label-primary: rgb(255, 255, 255);
+  --ds-label-secondary: rgb(199, 199, 199);
+  --ds-label-tertiary: rgb(163, 163, 163);
+  --ds-label-caption: rgb(125, 125, 125);
+  --ds-label-on-brand: rgb(0, 0, 0);
+
+  --ds-border-l1: rgba(255, 255, 255, 0.08);
+  --ds-border-l2: rgba(255, 255, 255, 0.14);
+  --ds-border-l3: rgba(255, 255, 255, 0.18);
+  --ds-border-l4: rgba(255, 255, 255, 0.22);
+
+  --ds-accent: rgb(255, 255, 255);
+  --ds-accent-hover: rgb(214, 214, 214);
+  --ds-accent-soft: rgba(255, 255, 255, 0.08);
+  --ds-accent-border: rgba(255, 255, 255, 0.2);
+  --ds-accent-ink: rgb(242, 242, 242);
+
+  --ds-mark-code-block: rgb(14, 14, 14);
+  --ds-mark-code-banner: rgb(21, 21, 21);
+  --ds-mark-inline-code: rgb(28, 28, 28);
+  --ds-mark-tag: rgb(28, 28, 28);
+  --ds-mark-citation: rgb(30, 30, 30);
+
+  --ds-success: rgb(255, 255, 255);
+  --ds-success-soft: rgba(255, 255, 255, 0.1);
+  --ds-warn: rgb(212, 212, 212);
+  --ds-warn-ink: rgb(226, 226, 226);
+  --ds-warn-soft: rgb(22, 22, 22);
+  --ds-error: rgb(153, 153, 153);
+  --ds-error-soft: rgba(255, 255, 255, 0.06);
+
+  --ds-tooltip-bg: rgb(82, 82, 82);
+  --ds-tooltip-ink: rgb(250, 250, 250);
+  --ds-scrollbar: rgb(64, 64, 64);
+  --ds-scrollbar-hover: rgb(102, 102, 102);
+
+  --ds-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --ds-shadow-2: 0 2px 6px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  /* -- syntax tokens (dark): grayscale + weight --------------------------- */
+  --syn-foreground: rgb(242, 242, 242);
+  --syn-background: var(--ds-mark-code-block);
+  --syn-constant: rgb(245, 245, 245);
+  --syn-string: rgb(181, 181, 181);
+  --syn-comment: rgb(128, 128, 128);
+  --syn-keyword: rgb(255, 255, 255);
+  --syn-parameter: rgb(181, 181, 181);
+  --syn-function: rgb(232, 232, 232);
+  --syn-punctuation: rgb(154, 154, 154);
+  --syn-number: rgb(207, 207, 207);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Lesson-figure theme bridge. The vendored upstream figure runtime styles */
+/* itself through these variable names; map them onto the monochrome       */
+/* tokens so every interactive figure follows the theme, light or dark.    */
+:root {
+  --bg: var(--ds-bg-base);
+  --bg-surface: var(--ds-bg-soft);
+  --ink: var(--ds-label-primary);
+  --ink-soft: var(--ds-label-secondary);
+  --ink-mute: var(--ds-label-tertiary);
+  --rule-soft: var(--ds-border-l2);
+  --blueprint: var(--ds-accent);
+  --blueprint-tint: var(--ds-accent-soft);
+  --blueprint-tint-strong: rgba(0, 0, 0, 0.14);
+  --code-bg: var(--ds-mark-code-block);
+  --warn: var(--ds-warn);
+  --danger: var(--ds-error);
+  --font-body: var(--ds-font);
+  --font-display: var(--ds-font);
+  --font-mono: var(--ds-font-code);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --motion-press: 160ms;
+  --motion-feedback: 180ms;
+  --motion-drawer: 250ms;
+}
+
+html[data-ds-dark-theme] {
+  --blueprint-tint-strong: rgba(255, 255, 255, 0.18);
+}

@@ -1,0 +1,4 @@
+dist/
+content/zh-tmp/
+node_modules/
+*.log

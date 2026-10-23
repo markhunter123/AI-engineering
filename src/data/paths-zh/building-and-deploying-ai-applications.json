@@ -1,0 +1,11 @@
+{
+  "id": "building-and-deploying-ai-applications",
+  "title": "构建与部署 AI 应用",
+  "summary": "从 prompt 和结构化输出出发，经过检索、评估、生产级 serving、可观测性与发布，完成一个 AI 功能。",
+  "decisionPrompt": null,
+  "prerequisites": [],
+  "responsibilities": null,
+  "goodFitIf": null,
+  "portfolio": null,
+  "stages": []
+}

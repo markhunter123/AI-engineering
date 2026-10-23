@@ -1,0 +1,16 @@
+{
+  "name": "ai-engineer-docs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bilingual (en/zh) static docs site for the AI Engineering from Scratch curriculum. Zero npm dependencies.",
+  "type": "commonjs",
+  "scripts": {
+    "export-zh": "node scripts/export-zh.mjs",
+    "build": "node build.js",
+    "serve": "node scripts/serve.mjs",
+    "verify": "node scripts/verify.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
