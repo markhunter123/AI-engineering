@@ -13,14 +13,24 @@ function svg(inner, size) {
 
 var ICONS = {
   brand: function () {
-    return svg('<path d="M2 3h20"/><path d="M4 7h16"/><path d="M6 11h12"/><path d="M9 15h6"/><path d="M11 19h2"/>', 16);
+    // Site mascot: a lamb (counterpart to GitHub's cat). Filled silhouette in
+    // the GitHub-mark spirit — scalloped wool, droopy ears, face as negative
+    // space. 24-unit viewBox, currentColor, legible at 16px.
+    return '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">'
+      + '<g transform="translate(0 1.7)">'
+      + '<ellipse cx="4.2" cy="8.6" rx="3" ry="1.3" transform="rotate(-24 4.2 8.6)"/>'
+      + '<ellipse cx="19.8" cy="8.6" rx="3" ry="1.3" transform="rotate(24 19.8 8.6)"/>'
+      + '<path fill-rule="evenodd" d="M12 3.5A2.57 2.57 0 0 1 16.74 5.46A2.57 2.57 0 0 1 18.7 10.2A2.57 2.57 0 0 1 16.74 14.94A2.57 2.57 0 0 1 12 16.9A2.57 2.57 0 0 1 7.26 14.94A2.57 2.57 0 0 1 5.3 10.2A2.57 2.57 0 0 1 7.26 5.46A2.57 2.57 0 0 1 12 3.5ZM12 7.4C14.1 7.4 15.1 9.2 15.1 11.3C15.1 13.9 13.8 15.2 12 15.2C10.2 15.2 8.9 13.9 8.9 11.3C8.9 9.2 9.9 7.4 12 7.4Z"/>'
+      + '</g></svg>';
   },
   menu: function () { return svg('<line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/>', 20); },
   search: function (size) { return svg('<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>', size || 16); },
   sun: function () { return svg('<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>', 18); },
   moon: function () { return svg('<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>', 18); },
   github: function () {
-    return svg('<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/>', 18);
+    // Official GitHub mark (Octicons "mark-github") — filled, 16-unit viewBox.
+    return '<svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor" aria-hidden="true">'
+      + '<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>';
   },
   chevronRight: function (size) { return svg('<path d="m9 18 6-6-6-6"/>', size || 14); },
   chevronLeft: function (size) { return svg('<path d="m15 18-6-6 6-6"/>', size || 14); },

@@ -32,7 +32,7 @@ const SITE = {
    *  plain-text footer credit (no link) until it has a profile URL. */
   author: 'Musen.Lin',
   coAuthor: 'LiuBin.Zhao',
-  github: 'https://github.com/markhunter123?tab=repositories',
+  github: 'https://github.com/markhunter123/AI-engineering',
   githubLabel: 'Musen.Lin',
   /** Original curriculum the lesson content comes from (footer attribution). */
   source: {

@@ -33,7 +33,9 @@ CDN.katexJs += '?v=' + ASSET_VER;
 CDN.mermaid += '?v=' + ASSET_VER;
 
 const LANGS = ['en', 'zh'];
-const GITHUB_TREE = SITE.github + '/tree/main/';
+/* Lesson-source links point at the upstream curriculum repo — the phases/
+ * tree lives there, not in this docs-site repo (SITE.github is the author's). */
+const GITHUB_TREE = SITE.source.url + '/tree/main/';
 
 /* ------------------------------------------------------------------ args */
 let BASE = config.BASE;
