@@ -124,7 +124,9 @@ function render(o) {
     + '<div class="search-head">' + ICONS.search(16)
     + '<input class="search-input" type="text" placeholder="' + esc(t.searchPlaceholder)
     + '" aria-label="' + esc(t.search) + '" autocomplete="off" spellcheck="false">'
-    + '<span class="search-esc">esc</span></div>\n'
+    + '<span class="search-esc">esc</span>'
+    + '<button type="button" class="search-close" data-search-close aria-label="'
+    + (lang === 'zh' ? '关闭搜索' : 'Close search') + '">' + ICONS.x() + '</button></div>\n'
     + '<ul class="search-results" role="listbox" aria-label="' + esc(t.search) + '"></ul>\n'
     + '<div class="search-foot">'
     + '<span><kbd>↑↓</kbd>' + esc(t.searchNavigate) + '</span>'

@@ -198,6 +198,9 @@
       if (debounce) clearTimeout(debounce);
       debounce = setTimeout(onInput, 100);
     });
+
+    var closeBtn = dialog.querySelector('[data-search-close]');
+    if (closeBtn) closeBtn.addEventListener('click', function () { dialog.close(); });
     dialog.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
       else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }

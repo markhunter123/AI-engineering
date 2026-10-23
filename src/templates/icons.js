@@ -34,6 +34,7 @@ var ICONS = {
   },
   chevronRight: function (size) { return svg('<path d="m9 18 6-6-6-6"/>', size || 14); },
   chevronLeft: function (size) { return svg('<path d="m15 18-6-6 6-6"/>', size || 14); },
+  x: function (size) { return svg('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>', size || 14); },
   arrowRight: function (size) { return svg('<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>', size || 15); },
   arrowLeft: function (size) { return svg('<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>', size || 15); },
   clock: function (size) { return svg('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>', size || 13); },

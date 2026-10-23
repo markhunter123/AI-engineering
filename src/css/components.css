@@ -61,6 +61,28 @@ html[data-ds-dark-theme] .icon-btn .icon-moon { display: none; }
   color: var(--ds-label-caption);
 }
 
+.search-head .search-close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--ds-radius-sm);
+  color: var(--ds-label-caption);
+  transition: background-color var(--ds-dur-fast) var(--ds-ease),
+    color var(--ds-dur-fast) var(--ds-ease);
+}
+
+.search-head .search-close:hover {
+  background: var(--ds-bg-hover);
+  color: var(--ds-label-primary);
+}
+
+.search-head .search-close svg {
+  width: 15px;
+  height: 15px;
+}
+
 .search-results {
   max-height: min(420px, 56vh);
   overflow-y: auto;
