@@ -219,8 +219,8 @@ html[data-ds-dark-theme] .brand-mark {
   padding: 7px 10px;
   border-radius: var(--ds-radius-sm);
   color: var(--ds-label-secondary);
-  font-size: 13.5px;
-  font-weight: 500;
+  font-size: 14.5px;
+  font-weight: 600;
   text-align: start;
   transition: background-color var(--ds-dur-fast) var(--ds-ease),
     color var(--ds-dur-fast) var(--ds-ease);
@@ -242,7 +242,7 @@ html[data-ds-dark-theme] .brand-mark {
   background: var(--ds-mark-tag);
   color: var(--ds-label-tertiary);
   font-family: var(--ds-font-code);
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 600;
 }
 
@@ -266,7 +266,7 @@ html[data-ds-dark-theme] .nav-group.current .nav-phase-num {
 
 .nav-group-count {
   flex: none;
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--ds-label-caption);
   font-variant-numeric: tabular-nums;
 }
@@ -305,7 +305,7 @@ html[data-ds-dark-theme] .nav-group.current .nav-phase-num {
   padding: 5px 10px;
   border-radius: var(--ds-radius-sm);
   color: var(--ds-label-tertiary);
-  font-size: 13px;
+  font-size: 13.5px;
   line-height: 1.5;
   transition: background-color var(--ds-dur-fast) var(--ds-ease),
     color var(--ds-dur-fast) var(--ds-ease);
@@ -326,7 +326,7 @@ html[data-ds-dark-theme] .nav-group.current .nav-phase-num {
 .nav-lessons .lesson-num {
   flex: none;
   font-family: var(--ds-font-code);
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--ds-label-caption);
   font-variant-numeric: tabular-nums;
 }
