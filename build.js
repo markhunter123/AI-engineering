@@ -59,7 +59,7 @@ const T_KEYS = [
   'How this works', 'Interactive Quizzes', 'Code Languages',
   'Loading lesson...', 'Copied!', 'Phase', 'Page not found',
   'The page you requested does not exist. Pick a language to continue:',
-  'Back to Home', 'Content from', 'MIT License', 'authored by',
+  'Back to Home', 'Content from', 'MIT License', 'Coauthored by',
   'Built as a static bilingual mirror of the open curriculum.',
   'How to use this site',
   'Pick a phase below — lessons build on each other within a phase.',
@@ -121,7 +121,7 @@ function makeT(lang) {
     copied: L('Copied!'),
     footerText: 'AI Engineering',
     footerLicense: L('MIT License'),
-    authoredBy: L('authored by'),
+    authoredBy: L('Coauthored by'),
   };
 }
 
@@ -381,6 +381,22 @@ function extractToc(bodyHtml) {
     toc.push({ id, text, level });
   }
   return toc;
+}
+
+/** Plain searchable text from lesson markdown — prose, headings and code
+ *  kept; markup syntax stripped. The caller caps its length. */
+function plainBody(md) {
+  let s = md.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, ''); // frontmatter
+  s = s.replace(/```[^\n]*\n?/g, '\n'); // fence markers (code text kept)
+  s = s.replace(/<[^>]+>/g, ' '); // inline / block html
+  s = s.replace(/!\[([^\]]*)\]\(([^)]*)\)/g, '$1 $2'); // images → alt + src
+  s = s.replace(/\[([^\]]*)\]\(([^)]*)\)/g, '$1 $2'); // links → text + href
+  s = s.replace(/^#{1,6} /gm, ''); // heading hashes
+  s = s.replace(/^>\s?/gm, ''); // blockquote markers
+  s = s.replace(/^[-*]\s+/gm, ''); // list bullets
+  s = s.replace(/\|/g, ' '); // table pipes
+  s = s.replace(/[*`~]+/g, ''); // emphasis / inline-code marks (underscores kept — snake_case identifiers must stay searchable)
+  return s.replace(/\s+/g, ' ').trim();
 }
 
 function renderMarkdown(lang, record) {
@@ -848,6 +864,7 @@ function main() {
         k: meta.keywords,
         p: phasesScan.phases.find((p) => p.slug === record.phaseSlug).title[lang],
         y: meta.type,
+        b: plainBody(lang === 'zh' ? record.zhMd || record.enMd : record.enMd).slice(0, 20000),
       });
     }
     write(path.join('assets', 'search', lang + '.json'), JSON.stringify(search));

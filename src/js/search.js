@@ -41,6 +41,17 @@
       }
       if (!s && entry.k && entry.k.toLowerCase().indexOf(tok) >= 0) s = 4;
       if (!s && entry.s && entry.s.toLowerCase().indexOf(tok) >= 0) s = 2;
+      if (!s && entry.b) {
+        var body = entry.b.toLowerCase();
+        var occ = 0;
+        var pos = body.indexOf(tok);
+        while (pos >= 0) {
+          occ++;
+          if (occ >= 5) break;
+          pos = body.indexOf(tok, pos + tok.length);
+        }
+        if (occ) s = occ >= 4 ? 3 : occ >= 2 ? 2 : 1;
+      }
       if (!s && entry.p && entry.p.toLowerCase().indexOf(tok) >= 0) s = 1;
       if (!s) return 0;
       total += s;
@@ -81,6 +92,21 @@
     return html;
   }
 
+  function snippet(entry, tokens) {
+    if (!entry.b) return '';
+    var lower = entry.b.toLowerCase();
+    var idx = -1;
+    for (var k = 0; k < tokens.length && idx < 0; k++) {
+      if (tokens[k]) idx = lower.indexOf(tokens[k]);
+    }
+    if (idx < 0) return '';
+    var start = Math.max(0, idx - 50);
+    var end = Math.min(entry.b.length, idx + 90);
+    return (start > 0 ? '…' : '')
+      + entry.b.slice(start, end).trim()
+      + (end < entry.b.length ? '…' : '');
+  }
+
   function esc(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
@@ -96,6 +122,7 @@
       list.innerHTML = '';
       current = -1;
       rows = [];
+      var tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
       if (!results.length) {
         var empty = document.createElement('li');
         empty.className = 'search-empty';
@@ -119,6 +146,13 @@
         phase.textContent = entry.p + (entry.y ? ' · ' + entry.y : '');
         meta.appendChild(phase);
         item.appendChild(title);
+        var snip = snippet(entry, tokens);
+        if (snip) {
+          var sn = document.createElement('span');
+          sn.className = 's-snippet';
+          sn.innerHTML = highlight(snip, query);
+          item.appendChild(sn);
+        }
         item.appendChild(meta);
         li.appendChild(item);
         list.appendChild(li);
@@ -134,14 +168,36 @@
       input.setAttribute('aria-activedescendant', '');
     }
 
+    function showLoading() {
+      list.innerHTML = '';
+      current = -1;
+      rows = [];
+      var loading = document.createElement('li');
+      loading.className = 'search-empty';
+      loading.textContent = t.searchLoading
+        || (page.lang === 'zh' ? '正在加载搜索索引…' : 'Loading search index…');
+      list.appendChild(loading);
+    }
+
     function onInput() {
       var q = input.value.trim();
       if (q === prevQuery) return;
       prevQuery = q;
+      if (!index) {
+        showLoading();
+        loadIndex().then(function () {
+          if (input.value.trim() === q) render(search(q), q);
+        });
+        return;
+      }
       render(search(q), q);
     }
 
-    input.addEventListener('input', onInput);
+    var debounce = null;
+    input.addEventListener('input', function () {
+      if (debounce) clearTimeout(debounce);
+      debounce = setTimeout(onInput, 100);
+    });
     dialog.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
       else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }

@@ -99,6 +99,20 @@ html[data-ds-dark-theme] .icon-btn .icon-moon { display: none; }
   font-weight: 650;
 }
 
+.search-item .s-snippet {
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ds-label-tertiary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-item .s-snippet mark {
+  background: none;
+  color: var(--ds-accent);
+}
+
 .search-item .s-meta {
   font-size: 12px;
   color: var(--ds-label-caption);
