@@ -96,7 +96,7 @@ Rectified flow 改变的是采样器，不是条件化机制。无分类器引�
 - **SDXL Turbo / FLUX schnell** —— 用对抗扩散蒸馏训练的 1-4 步模型。
 - **SD Turbo** —— OpenAI 风格 Consistency Model 在 latent 扩散上的适配。
 
-任何新模型的生产部署都会同时发布「完整质量」检查点和「turbo / schnell」变体。Schnell（德语「快速」，Black Forest Labs 的命名惯例）可在 1-4 步内运行，适合实时流程。
+任何新模型的生产部署都会同时发布「完整质量」checkpoint 和「turbo / schnell」变体。Schnell（德语「快速」，Black Forest Labs 的命名惯例）可在 1-4 步内运行，适合实时流程。
 
 ### 2026 年模型格局
 

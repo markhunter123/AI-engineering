@@ -1,6 +1,6 @@
-# 智能体的 actor 模型——异步消息与类型化运行时
+# Agent 的 actor 模型——异步消息与类型化运行时
 
-> 把智能体当作 actor：异步消息交换、事件驱动处理器、故障隔离、天然的并发。AutoGen v0.4（Microsoft Research，2025 年 1 月）围绕这一模型重新设计了智能体编排；该框架现已进入维护模式，Microsoft Agent Framework（2025 年 10 月公开预览）是其生产级继任者。
+> 把 Agent 当作 actor：异步消息交换、事件驱动处理器、故障隔离、天然的并发。AutoGen v0.4（Microsoft Research，2025 年 1 月）围绕这一模型重新设计了 Agent 编排；该框架现已进入维护模式，Microsoft Agent Framework（2025 年 10 月公开预览）是其生产级继任者。
 
 **Type:** Learn + Build
 **Languages:** Python (stdlib)
@@ -9,16 +9,16 @@
 
 ## 学习目标
 
-- 描述 actor 模型：智能体即 actor，消息是唯一的 IPC，每个 actor 的失败相互隔离。
+- 描述 actor 模型：Agent 即 actor，消息是唯一的 IPC，每个 actor 的失败相互隔离。
 - 说出 AutoGen v0.4 的三层 API——Core、AgentChat、Extensions——以及各自的用途。
 - 解释为什么把消息投递与处理解耦，能带来故障隔离和天然并发。
-- 用 Python 实现一个标准库 actor 运行时，并把双智能体代码审查流程移植到上面。
+- 用 Python 实现一个标准库 actor 运行时，并把双 Agent 代码审查流程移植到上面。
 
 ## 问题
 
-大多数智能体框架是同步的：一个智能体生产，另一个消费，都在同一个调用栈里。失败会炸掉整个栈。并发是后来硬加上去的。分布式需要重写。
+大多数 Agent 框架是同步的：一个 Agent 生产，另一个消费，都在同一个调用栈里。失败会炸掉整个栈。并发是后来硬加上去的。分布式需要重写。
 
-AutoGen v0.4 的答案是 actor 模型。每个智能体是一个带私有收件箱的 actor。消息是唯一的交互方式。运行时把投递与处理解耦。失败被隔离在单个 actor 内。并发是原生的。分布式只是换一种传输方式。
+AutoGen v0.4 的答案是 actor 模型。每个 Agent 是一个带私有收件箱的 actor。消息是唯一的交互方式。运行时把投递与处理解耦。失败被隔离在单个 actor 内。并发是原生的。分布式只是换一种传输方式。
 
 ## 概念
 
@@ -50,13 +50,13 @@ AutoGen v0.4 把接口面分成三层：
 
 ### 拓扑
 
-- **RoundRobinGroupChat。** 智能体按固定顺序轮流执行。
-- **SelectorGroupChat。** 选择器智能体根据对话上下文决定下一个是谁。
-- **Magentic-One。** 面向网页浏览、代码执行、文件处理的参考多智能体团队，构建在 AgentChat 之上。
+- **RoundRobinGroupChat。** Agent 按固定顺序轮流执行。
+- **SelectorGroupChat。** 选择器 Agent 根据对话上下文决定下一个是谁。
+- **Magentic-One。** 面向网页浏览、代码执行、文件处理的参考多 Agent 团队，构建在 AgentChat 之上。
 
 ### 可观测性
 
-内置 OpenTelemetry 支持。每条消息发出一个 span；工具调用按 2026 年 OTel GenAI 语义约定（第 23 课）携带 `gen_ai.*` 属性。
+内置 OpenTelemetry 支持。每条消息发出一个 span；Tool call 按 2026 年 OTel GenAI 语义约定（第 23 课）携带 `gen_ai.*` 属性。
 
 ### 状态：维护模式
 
@@ -85,14 +85,14 @@ trace 展示了消息投递、一个 actor 中的模拟故障（没有让另一�
 
 ## 使用它
 
-- **AutoGen v0.4/v0.7**（维护模式）—— 对研究、原型和多智能体模式是稳定的。
+- **AutoGen v0.4/v0.7**（维护模式）—— 对研究、原型和多 Agent 模式是稳定的。
 - **Microsoft Agent Framework** —— 生产级继任者（2025 年 10 月公开预览）；在更新的 API 中保留了同样的 actor 模型思想。
 - **LangGraph swarm 拓扑**（第 13 课）—— 通过共享工具交接的类似模式。
 - **自建 actor 运行时** —— 当你需要特定的传输方式（NATS、RabbitMQ、gRPC）时。
 
 ## 交付它
 
-`outputs/skill-actor-runtime.md` 为给定的多智能体任务生成一个最小 actor 运行时，外加团队模板（RoundRobin 或 Selector）。
+`outputs/skill-actor-runtime.md` 为给定的多 Agent 任务生成一个最小 actor 运行时，外加团队模板（RoundRobin 或 Selector）。
 
 ## 练习
 
@@ -106,15 +106,15 @@ trace 展示了消息投递、一个 actor 中的模拟故障（没有让另一�
 
 | 术语 | 人们怎么说 | 实际含义 |
 |------|----------------|------------------------|
-| Actor | 「智能体」 | 私有状态 + 收件箱 + 处理器；没有共享内存 |
+| Actor | 「Agent」 | 私有状态 + 收件箱 + 处理器；没有共享内存 |
 | 消息 | 「事件」 | 带类型的负载；actor 之间唯一的交互方式 |
 | 收件箱 | 「邮箱」 | 每个 actor 的待处理消息队列 |
-| 运行时 | 「智能体宿主」 | 路由消息并隔离故障的事件循环 |
+| 运行时 | 「Agent 宿主」 | 路由消息并隔离故障的事件循环 |
 | Topic | 「频道」 | actor 之间命名的发布-订阅路由 |
 | 故障隔离 | 「让它崩溃」 | 一个 actor 失败不会拖垮其他 actor |
-| RoundRobinGroupChat | 「固定轮转团队」 | 智能体按顺序轮流执行 |
+| RoundRobinGroupChat | 「固定轮转团队」 | Agent 按顺序轮流执行 |
 | SelectorGroupChat | 「按上下文路由的团队」 | 选择器挑选下一个执行者 |
-| Magentic-One | 「参考团队」 | 面向网页 + 代码 + 文件的多智能体小队 |
+| Magentic-One | 「参考团队」 | 面向网页 + 代码 + 文件的多 Agent 小队 |
 
 ## 延伸阅读
 

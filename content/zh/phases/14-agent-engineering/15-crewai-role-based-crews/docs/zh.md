@@ -1,4 +1,4 @@
-# 基于角色的智能体团队——角色、任务与流程
+# 基于角色的 Agent 团队——角色、任务与流程
 
 > 四个原语：Agent、Task、Crew、Process。两种顶层形态：Crews（自主的、基于角色的协作）与 Flows（事件驱动、确定性）。CrewAI 是 2026 年的参考实现，它的文档说得很直白：「任何生产级应用都应从 Flow 开始。」
 
@@ -14,14 +14,14 @@
 - 区分 Crews（自主的、基于角色）与 Flows（事件驱动、确定性），并解释文档给出的生产建议。
 - 用 `@tool` 装饰器和 `BaseTool` 子类接入工具；思考结构化输出与自由文本的取舍。
 - 说出 CrewAI 的四种记忆类型，以及各自何时值得使用。
-- 用标准库实现一个三智能体 crew（researcher、writer、editor），产出一份简报。
+- 用标准库实现一个三 Agent crew（researcher、writer、editor），产出一份简报。
 - 识别 CrewAI 的三种失败模式：prompt 膨胀、manager LLM 开销、脆弱的交接。
 
 ## 问题
 
-采用多智能体框架的团队都会撞上同一堵墙。「自主协作」在演示里听起来很好。然后客户报了一个 bug，你需要确定性回放。或者财务问，一个由 LLM 路由的 crew 每次运行要花多少钱。或者 on-call 需要知道凌晨 3 点哪个智能体卡住了。
+采用多 Agent 框架的团队都会撞上同一堵墙。「自主协作」在演示里听起来很好。然后客户报了一个 bug，你需要确定性回放。或者财务问，一个由 LLM 路由的 crew 每次运行要花多少钱。或者 on-call 需要知道凌晨 3 点哪个 Agent 卡住了。
 
-自由形式的 LLM 路由 crew 无法干净地回答这些问题。纯 DAG 能全部回答，但会失去头脑风暴型智能体所需的探索性形态。
+自由形式的 LLM 路由 crew 无法干净地回答这些问题。纯 DAG 能全部回答，但会失去头脑风暴型 Agent 所需的探索性形态。
 
 CrewAI 的拆分坦诚面对这种权衡。Crews 用于协作式、基于角色、探索性的工作。Flows 用于事件驱动、代码掌控、可审计的生产环境。同一个框架，两种形态，按场景选择。
 
@@ -31,12 +31,12 @@ CrewAI 的拆分坦诚面对这种权衡。Crews 用于协作式、基于角色�
 
 CrewAI 的接口面很小。记住这些，剩下的都是配置。
 
-- **Agent。** `role + goal + backstory + tools + (optional) llm`。backstory 不可或缺。它塑造语气、判断力，以及智能体何时停止。工具是智能体可以调用的函数（详见下文）。
+- **Agent。** `role + goal + backstory + tools + (optional) llm`。backstory 不可或缺。它塑造语气、判断力，以及 Agent 何时停止。工具是 Agent 可以调用的函数（详见下文）。
 - **Task。** `description + expected_output + agent + (optional) context + (optional) output_pydantic`。可复用的工作单元。`expected_output` 是契约。`context` 列出一个上游任务，其输出会传入。`output_pydantic` 强制产出结构化形状。
 - **Crew。** 容器。持有 `agents` 列表、`tasks` 列表、`process`，以及可选的 `memory` + `verbose` + `manager_llm` 设置。
 - **Process。** 执行策略。Sequential、Hierarchical、Consensus（计划中）。决定运行的形态。
 
-智能体之间不直接看到彼此。Task 引用 Agent。Crew 给 Task 排序。Process 决定由谁挑选下一个 Task。这就是完整的心智模型。
+Agent 之间不直接看到彼此。Task 引用 Agent。Crew 给 Task 排序。Process 决定由谁挑选下一个 Task。这就是完整的心智模型。
 
 > **已对照** CrewAI 0.86（2026-05）验证。较新版本可能重命名或合并 process 类型；在依赖具体形态之前，请查阅 [CrewAI Processes 文档](https://docs.crewai.com/concepts/processes)。
 
@@ -110,7 +110,7 @@ CrewAI 开箱提供四种记忆类型。它们可以组合：一个 Crew 可以�
 
 ### 基于角色的团队适合什么时候
 
-- 三到六个有命名角色和协作流程的智能体。起草、审查、规划、头脑风暴。
+- 三到六个有命名角色和协作流程的 Agent。起草、审查、规划、头脑风暴。
 - 路由决策中，LLM 对下一步的判断本身就是价值（Hierarchical）。
 - 团队更愿意读 `role + goal + backstory` 而不是读图定义的任何场景。
 
@@ -118,9 +118,9 @@ CrewAI 开箱提供四种记忆类型。它们可以组合：一个 Crew 可以�
 
 - 严格顺序的确定性 DAG。使用 LangGraph（第 13 课）。图形态才是正确的抽象；CrewAI 的角色框架反而是摩擦。
 - 亚秒级延迟预算。Hierarchical 增加往返。即便是 Sequential，也会逐个发送包含 backstory 和先前输出的 prompt。
-- 单智能体循环。跳过框架；一个智能体循环（第 1 课）加一个工具注册表更短。
+- 单 Agent 循环。跳过框架；一个 Agent 循环（第 1 课）加一个工具注册表更短。
 
-第 17 课（智能体框架取舍）用矩阵说明了这一点。简版：CrewAI 位于「协作式、基于角色」的角落。
+第 17 课（Agent 框架取舍）用矩阵说明了这一点。简版：CrewAI 位于「协作式、基于角色」的角落。
 
 ### 依赖形态
 
@@ -128,7 +128,7 @@ CrewAI 开箱提供四种记忆类型。它们可以组合：一个 Crew 可以�
 
 ### 这个模式会在哪里出错
 
-- **backstory 导致的 prompt 膨胀。** 每个智能体 2000 字的 backstory，五个智能体的 crew 在第一次工具调用之前就烧掉了上下文预算。把 backstory 控制在 200 字以内。在智能体之间复用措辞；不要把公司文风重复五遍。
+- **backstory 导致的 prompt 膨胀。** 每个 Agent 2000 字的 backstory，五个 Agent 的 crew 在第一次 tool call 之前就烧掉了上下文预算。把 backstory 控制在 200 字以内。在 Agent 之间复用措辞；不要把公司文风重复五遍。
 - **manager LLM 的 token 税。** Hierarchical 流程在每次专家调用前增加一次 manager LLM 调用。在五任务的 crew 上，就是六次 LLM 调用而不是五次，而且 manager 调用携带完整任务列表加先前输出。除非路由依赖输出，否则改用 Sequential。
 - **脆弱的交接。** 第 N 个任务的 `expected_output` 是「一份大纲」。第 N+1 个任务把它作为 `context` 读取，试图解析三个小节。LLM 却产出了四个。下游 Agent 开始即兴发挥。解法是给第 N 个任务加 `output_pydantic`，让第 N+1 个任务读取类型化对象，而不是自由文本。
 - **把 Crew 当生产。** 没有 Flow 包装就把自由形式的 Crew 上线。输出波动大；无法回放；on-call 无法把一次坏运行和好运行做 diff。用 Flow 包装。
@@ -139,7 +139,7 @@ ae-crew-vs-flow
 
 ## 构建它
 
-`code/main.py` 用标准库实现两种形态，外加一个三智能体 crew。
+`code/main.py` 用标准库实现两种形态，外加一个三 Agent crew。
 
 形态：
 
@@ -159,7 +159,7 @@ ae-crew-vs-flow
 python3 code/main.py
 ```
 
-Trace 覆盖：Sequential crew 通过 `context` 传递输出；Hierarchical crew 由 manager 挑选（researcher、writer、editor，然后 「done」）；flow 用显式 topic（`researched`、`drafted`、`edited`）运行同样的三个步骤；通过 `@tool` 路由的工具调用；以及跨两次 kickoff 存活的长期记忆。
+Trace 覆盖：Sequential crew 通过 `context` 传递输出；Hierarchical crew 由 manager 挑选（researcher、writer、editor，然后 「done」）；flow 用显式 topic（`researched`、`drafted`、`edited`）运行同样的三个步骤；通过 `@tool` 路由的 tool call；以及跨两次 kickoff 存活的长期记忆。
 
 Crew 的 trace 是流动的；manager 原则上可以重新排序。Flow 的 trace 是固定的。这个选择本身就是这节课的内容。
 
@@ -171,7 +171,7 @@ Crew 的 trace 是流动的；manager 原则上可以重新排序。Flow 的 tra
 - **LangGraph**（第 13 课）用于显式状态机、持久恢复、严格顺序。
 - **AutoGen v0.4**（第 14 课）用于 actor 模型的并发和故障隔离。
 - **OpenAI Agents SDK**（第 16 课）用于以 OpenAI 为先、带交接和防护栏的产品。
-- **Claude Agent SDK**（第 17 课）用于以 Claude 为先、带子智能体和 session 存储的产品。
+- **Claude Agent SDK**（第 17 课）用于以 Claude 为先、带子 Agent 和 session 存储的产品。
 
 ## 交付它
 
@@ -179,7 +179,7 @@ Crew 的 trace 是流动的；manager 原则上可以重新排序。Flow 的 tra
 
 ## 陷阱
 
-- **把 backstory 当调料。** 它会塑造输出。每个智能体测试三个变体；方差是真实的。选定一个，冻结它。
+- **把 backstory 当调料。** 它会塑造输出。每个 Agent 测试三个变体；方差是真实的。选定一个，冻结它。
 - **跳过 `expected_output`。** 每个任务没有契约，下游任务就会捡到 LLM 产出的任何东西。Crew 跑完了；审计失败了。
 - **记忆总是开着。** 长期记忆每次运行都写入。向量数据库不断增长。检索越来越嘈杂。把写入范围限制在事实确实持久存在的任务上。
 - **manager prompt 漂移。** Hierarchical 的 manager prompt 是隐式的。如果路由变得奇怪，在 verbose 模式下 dump 出来读一读。
@@ -201,7 +201,7 @@ Crew 的 trace 是流动的；manager 原则上可以重新排序。Flow 的 tra
 |------|----------------|------------------------|
 | Agent | 「人设」 | 角色 + 目标 + backstory + 工具 |
 | Task | 「工作单元」 | 描述 + 预期输出 + 执行者 + 可选的结构化输出 |
-| Crew | 「智能体团队」 | Agent + Task + Process 的容器 |
+| Crew | 「Agent 团队」 | Agent + Task + Process 的容器 |
 | Process | 「执行策略」 | Sequential / Hierarchical / Consensus（计划中） |
 | Flow | 「确定性工作流」 | 事件驱动、代码掌控、可测试 |
 | Backstory | 「人设 prompt」 | 塑造 Agent 语气与判断力的背景 |
@@ -210,7 +210,7 @@ Crew 的 trace 是流动的；manager 原则上可以重新排序。Flow 的 tra
 | 实体记忆 | 「按实体的事实」 | 作用域限定在客户 / 账户 / 问题上的记忆 |
 | 长期记忆 | 「跨运行记忆」 | 由向量支撑、在 kickoff 之间存活的记忆 |
 | 上下文记忆 | 「即时检索」 | 在 Agent 需要的那一刻拉取的记忆 |
-| Manager LLM | 「路由智能体」 | Hierarchical 流程中挑选下一个任务的额外 LLM |
+| Manager LLM | 「路由 Agent」 | Hierarchical 流程中挑选下一个任务的额外 LLM |
 | `expected_output` | 「任务契约」 | 告诉 Agent（以及审计）应返回何种形状的字符串 |
 
 ## 延伸阅读
@@ -219,5 +219,5 @@ Crew 的 trace 是流动的；manager 原则上可以重新排序。Flow 的 tra
 - [CrewAI Flows 指南](https://docs.crewai.com/en/concepts/flows)：事件驱动形态、`@start`、`@listen`
 - [CrewAI 工具参考](https://docs.crewai.com/en/concepts/tools)：`@tool`、`BaseTool`、内置工具包
 - [CrewAI 记忆](https://docs.crewai.com/en/concepts/memory)：短期、长期、实体、上下文
-- [Anthropic，Building Effective Agents](https://www.anthropic.com/research/building-effective-agents)：多智能体何时有帮助、何时没有
+- [Anthropic，Building Effective Agents](https://www.anthropic.com/research/building-effective-agents)：多 Agent 何时有帮助、何时没有
 - [LangGraph 概览](https://docs.langchain.com/oss/python/langgraph/overview)：状态机替代方案

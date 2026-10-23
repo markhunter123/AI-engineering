@@ -18,7 +18,7 @@
 
 经典服务把每个请求的 prompt 当作不透明的。即便 5,000 个 RAG 请求都以同样的 2,000 token system prompt 加同样的检索前导开头，vLLM 仍会把那 2,000 token 的前缀预填充 5,000 次。GPU 一遍又一遍地做同样的工作。
 
-观察到的现象是：智能体和 RAG 工作负载中的 prompt 几乎总是共享长前缀。system prompt、tool schema、few-shot 示例、检索头、对话历史——全都在请求之间重复。如果你把那部分前缀的 KV cache 存一次并复用，就不必再次预填充它。
+观察到的现象是：Agent 和 RAG 工作负载中的 prompt 几乎总是共享长前缀。system prompt、tool schema、few-shot 示例、检索头、对话历史——全都在请求之间重复。如果你把那部分前缀的 KV cache 存一次并复用，就不必再次预填充它。
 
 RadixAttention 正是这么做的。token 被索引进一棵基数树；每个节点拥有从其根路径上 token 序列对应的 KV block。新请求遍历这棵树：任何 token 匹配的节点都复用该节点的 KV block。预填充成本变成与「新增」后缀成正比，而不是与完整 prompt 成正比。
 
@@ -70,7 +70,7 @@ FCFS 同时违反这两条。一个共享 2,000 token 的请求排在一个只�
 
 赢：
 - RAG（相同检索前导，问题不同）。
-- 智能体（相同 tool schema，查询不同）。
+- Agent（相同 tool schema，查询不同）。
 - 带长 system prompt 的聊天。
 - 有重复前导的语音/视觉工作负载。
 

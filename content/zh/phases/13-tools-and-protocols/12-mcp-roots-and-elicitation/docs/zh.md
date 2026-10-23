@@ -250,7 +250,7 @@ python3 main.py
 python3 -m unittest discover tests -v
 ```
 
-预期的检查点：
+预期的 checkpoint：
 
 - 发现结果公布工具，但不公布 Roots。
 - 工具发现返回 `notes_delete`，带 `resultType`、服务器身份和缓存提示。

@@ -1,6 +1,6 @@
-# 检查点与回滚
+# Checkpoint 与回滚
 
-> 每一次图状态转换都会持久化。工作进程崩溃时，它的租约到期，另一个工作进程从最新检查点继续。Cloudflare Durable Objects 可以跨数小时或数周持有状态。先提议后提交（第 15 课）为每个操作定义回滚计划。行动后验证闭环。EU AI Act 第 14 条使有效的人类监督对高风险系统成为强制要求——在实践中，这意味着检查点必须可查询、回滚必须演练、审计轨迹必须经受住一次部署。最尖锐的失效模式：没有幂等键和前置条件检查，瞬时故障后的重试可能重复执行一个已经批准的操作。行动后验证正是捕捉它的手段。
+> 每一次图状态转换都会持久化。工作进程崩溃时，它的租约到期，另一个工作进程从最新 checkpoint 继续。Cloudflare Durable Objects 可以跨数小时或数周持有状态。先提议后提交（第 15 课）为每个操作定义回滚计划。行动后验证闭环。EU AI Act 第 14 条使有效的人类监督对高风险系统成为强制要求——在实践中，这意味着 checkpoint 必须可查询、回滚必须演练、审计轨迹必须经受住一次部署。最尖锐的失效模式：没有幂等键和前置条件检查，瞬时故障后的重试可能重复执行一个已经批准的操作。行动后验证正是捕捉它的手段。
 
 **Type:** Learn
 **Languages:** Python (stdlib, checkpoint and rollback state machine)
@@ -9,11 +9,11 @@
 
 ## 问题
 
-持久执行（第 12 课）让崩溃的智能体可恢复。先提议后提交（第 15 课）让已批准的操作可审计。本课把两者结合起来：一个已批准的操作部分执行、崩溃、然后恢复时会发生什么？回滚何时运行，针对什么状态？
+持久执行（第 12 课）让崩溃的 Agent 可恢复。先提议后提交（第 15 课）让已批准的操作可审计。本课把两者结合起来：一个已批准的操作部分执行、崩溃、然后恢复时会发生什么？回滚何时运行，针对什么状态？
 
 真实系统的接法各不相同：
 
-- **LangGraph** 把每一次图状态转换 checkpoint 到 PostgreSQL。工作进程崩溃时，租约释放，另一个工作进程从最新检查点恢复。工作流在 `interrupt()` 处暂停，`interrupt()` 本身也会持久化。
+- **LangGraph** 把每一次图状态转换 checkpoint 到 PostgreSQL。工作进程崩溃时，租约释放，另一个工作进程从最新 checkpoint 恢复。工作流在 `interrupt()` 处暂停，`interrupt()` 本身也会持久化。
 - **Cloudflare Durable Objects** 按 key 持有状态，跨越数小时或数周。把计算与被批准操作的存储同置。
 - **Microsoft Agent Framework** 在工作流 API 中暴露 `Checkpoint` 原语；重放加幂等覆盖重试。
 
@@ -27,7 +27,7 @@
 
 ### 租约恢复
 
-当工作进程崩溃时，工作流不会丢失；租约（一个短命的声明，表示该工作进程正在执行本次运行）只是到期。另一个工作进程拿起最新检查点并恢复。租约机制是生产系统能在滚动部署中存活而不丢失进行中工作的原因。
+当工作进程崩溃时，工作流不会丢失；租约（一个短命的声明，表示该工作进程正在执行本次运行）只是到期。另一个工作进程拿起最新 checkpoint 并恢复。租约机制是生产系统能在滚动部署中存活而不丢失进行中工作的原因。
 
 ### 幂等加前置条件
 
@@ -63,9 +63,9 @@
 
 第 14 条要求高风险系统具备「有效的人类监督」。在操作层面，实施者将其解读为：
 
-- 检查点可被审计员查询。
+- Checkpoint 可被审计员查询。
 - 回滚经过演练（至少端到端测试一次）。
-- 审计轨迹经受住一次部署（检查点后端不是短暂的）。
+- 审计轨迹经受住一次部署（checkpoint 后端不是短暂的）。
 - 失败的验证会触发告警，而不是被静默记录。
 
 一个在提交中途崩溃、恢复、并完成副作用却没有验证 + 回滚路径的工作流，无法通过第 14 条的检验。
@@ -88,11 +88,11 @@ checkpoint-replay
 
 ## 使用它
 
-`code/main.py` 实现一个带幂等、前置条件、验证和回滚的检查点工作流。驱动程序模拟四种场景：干净运行、崩溃后重试（幂等捕捉）、前置条件失败（工作流中止而不触发）、验证失败（回滚触发）。
+`code/main.py` 实现一个带幂等、前置条件、验证和回滚的 checkpoint 工作流。驱动程序模拟四种场景：干净运行、崩溃后重试（幂等捕捉）、前置条件失败（工作流中止而不触发）、验证失败（回滚触发）。
 
 ## 交付它
 
-`outputs/skill-rollback-rehearsal.md` 为拟议工作流设计一个回滚演练测试，并审计检查点后端的审计轨迹持久性。
+`outputs/skill-rollback-rehearsal.md` 为拟议工作流设计一个回滚演练测试，并审计 checkpoint 后端的审计轨迹持久性。
 
 ## 练习
 
@@ -110,19 +110,19 @@ checkpoint-replay
 
 | 术语 | 人们怎么说 | 实际含义 |
 |---|---|---|
-| 检查点 | 「保存点」 | 每一次图状态转换都持久化到持久存储 |
+| Checkpoint | 「保存点」 | 每一次图状态转换都持久化到持久存储 |
 | 租约 | 「工作进程声明」 | 工作进程正在执行一次运行的短命声明；崩溃时到期 |
 | 前置条件 | 「状态门」 | 断言状态仍与已批准操作一致 |
 | 行动后验证 | 「重读检查」 | 确认副作用确实发生在目标系统中 |
 | 带内回滚 | 「直接撤销」 | 用逆操作反转副作用 |
 | 补偿事务 | 「SAGA 撤销」 | 中和原始操作的新操作 |
 | 先标记完成 | 「状态写入顺序」 | 在从提交返回之前持久化已提交状态 |
-| 第 14 条 | 「EU AI Act 人类监督」 | 操作层面：可查询检查点、演练回滚、可审计轨迹 |
+| 第 14 条 | 「EU AI Act 人类监督」 | 操作层面：可查询 checkpoint、演练回滚、可审计轨迹 |
 
 ## 延伸阅读
 
-- [Microsoft Agent Framework —— Checkpointing 与 HITL](https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop) —— 检查点原语与租约恢复。
+- [Microsoft Agent Framework —— Checkpointing 与 HITL](https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop) —— checkpoint 原语与租约恢复。
 - [Cloudflare Agents —— 人在回路](https://developers.cloudflare.com/agents/concepts/human-in-the-loop/) —— Durable Objects 作为状态基座。
 - [EU AI Act —— 第 14 条：人类监督](https://artificialintelligenceact.eu/article/14/) —— 监管基线。
-- [Anthropic —— 在实践中衡量智能体自主性](https://www.anthropic.com/research/measuring-agent-autonomy) —— 长视野工作流的可靠性框架。
-- [Anthropic —— Claude Code Agent SDK：智能体循环](https://code.claude.com/docs/en/agent-sdk/agent-loop) —— Claude Code Routines 的工作流形态。
+- [Anthropic —— 在实践中衡量 Agent 自主性](https://www.anthropic.com/research/measuring-agent-autonomy) —— 长视野工作流的可靠性框架。
+- [Anthropic —— Claude Code Agent SDK：Agent 循环](https://code.claude.com/docs/en/agent-sdk/agent-loop) —— Claude Code Routines 的工作流形态。

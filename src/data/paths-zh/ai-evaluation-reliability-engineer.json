@@ -1,11 +1,11 @@
 {
   "id": "ai-evaluation-reliability-engineer",
   "title": "AI 评估与可靠性",
-  "summary": "度量模型与智能体行为，暴露故障模式，对运行时进行埋点，并围绕证据构建发布与事件控制。",
+  "summary": "度量模型与 Agent 行为，暴露故障模式，对运行时进行埋点，并围绕证据构建发布与事件控制。",
   "decisionPrompt": "你是否想把模型与系统的不确定性转化为评估、可观测性、发布和恢复证据？",
   "prerequisites": null,
   "responsibilities": [
-    "围绕真实故障风险设计模型、LLM 和智能体评估。",
+    "围绕真实故障风险设计模型、LLM 和 Agent 评估。",
     "用有用的 telemetry 对推理行为和系统健康进行埋点。",
     "在发布前测试负载、实验、金丝雀和回滚条件。",
     "用事件和混沌测试改进可靠性控制。"

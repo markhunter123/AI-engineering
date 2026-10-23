@@ -1,6 +1,6 @@
 # 项目 15 — 宪法式安全护栏 + 红队靶场
 
-> Anthropic 的 Constitutional Classifiers、Meta 的 Llama Guard 4、Google 的 ShieldGemma-2、NVIDIA 的 Nemotron 3 Content Safety，以及覆盖多语言的 X-Guard，共同定义了 2026 年的安全分类器栈。garak、PyRIT、NVIDIA Aegis 与 promptfoo 成为标准的对抗评测工具。NeMo Guardrails v0.12 把它们串成生产流水线。本项目将这一切装配起来：围绕目标应用的分层安全护栏、运行 6 类以上攻击族的自主红队智能体，以及一次产生可衡量无害性变化量的宪法式自我批判运行。
+> Anthropic 的 Constitutional Classifiers、Meta 的 Llama Guard 4、Google 的 ShieldGemma-2、NVIDIA 的 Nemotron 3 Content Safety，以及覆盖多语言的 X-Guard，共同定义了 2026 年的安全分类器栈。garak、PyRIT、NVIDIA Aegis 与 promptfoo 成为标准的对抗评测工具。NeMo Guardrails v0.12 把它们串成生产 pipeline。本项目将这一切装配起来：围绕目标应用的分层安全护栏、运行 6 类以上攻击族的自主红队 Agent，以及一次产生可衡量无害性变化量的宪法式自我批判运行。
 
 **Type:** Capstone
 **Languages:** Python (safety pipeline, red team), YAML (policy configs)
@@ -12,13 +12,13 @@
 
 2026 年 LLM 安全的前沿问题，不是分类器是否有效（大体上有效），而是如何围绕生产应用正确组合它们，既不过度拒答，也不留下明显漏洞。Llama Guard 4 处理英文的策略违规。X-Guard（132 种语言）处理多语言越狱。ShieldGemma-2 捕获基于图片的提示注入。NVIDIA Nemotron 3 Content Safety 覆盖企业场景的分类。Anthropic 的 Constitutional Classifiers 是另一种方法，用于训练阶段而非服务阶段。
 
-攻击的演进同样重要。PAIR 与 TAP 把越狱发现自动化。GCG 执行基于梯度的后缀攻击。多轮攻击与语码转换（code-switch）攻击利用智能体的记忆。任何已部署的 LLM 都需要一个红队靶场——garak 与 PyRIT 是典型的驱动工具——外加有文档记录的缓解措施与按 CVSS 评分的发现。
+攻击的演进同样重要。PAIR 与 TAP 把越狱发现自动化。GCG 执行基于梯度的后缀攻击。多轮攻击与语码转换（code-switch）攻击利用 Agent 的记忆。任何已部署的 LLM 都需要一个红队靶场——garak 与 PyRIT 是典型的驱动工具——外加有文档记录的缓解措施与按 CVSS 评分的发现。
 
 你将加固一个目标应用（8B 指令微调模型，或其他项目中的某个 RAG 聊天机器人），对它运行 6 类以上攻击族，并给出前后对比的无害性测量。
 
 ## 概念
 
-安全流水线分为五层。**输入清洗**：去除零宽字符，解码 base64/rot13，规范化 Unicode。**策略层**：NeMo Guardrails v0.12 的 rails（域外、毒性、PII 提取）。**分类器闸门**：对输入使用 Llama Guard 4，对非英文使用 X-Guard，对图片输入使用 ShieldGemma-2。**模型**：目标 LLM。**输出过滤**：对输出使用 Llama Guard 4、Presidio PII 清洗，并在适用时强制引用。**HITL 层**：被标记为高风险的输出进入 Slack 队列。
+安全 pipeline 分为五层。**输入清洗**：去除零宽字符，解码 base64/rot13，规范化 Unicode。**策略层**：NeMo Guardrails v0.12 的 rails（域外、毒性、PII 提取）。**分类器闸门**：对输入使用 Llama Guard 4，对非英文使用 X-Guard，对图片输入使用 ShieldGemma-2。**模型**：目标 LLM。**输出过滤**：对输出使用 Llama Guard 4、Presidio PII 清洗，并在适用时强制引用。**HITL 层**：被标记为高风险的输出进入 Slack 队列。
 
 红队靶场运行在调度器上。PAIR 与 TAP 自主发现越狱。GCG 执行基于梯度的后缀攻击。ASCII / base64 / rot13 编码攻击。多轮攻击（角色扮演、记忆利用）。语码转换攻击（英语混搭斯瓦希里语或泰语）。每次运行都会产出一份结构化发现文件，包含 CVSS 评分与披露时间线。
 
@@ -68,7 +68,7 @@ output: CVSS-scored findings + disclosure timeline + before/after harmlessness d
 - 安全分类器：Llama Guard 4、ShieldGemma-2、NVIDIA Nemotron 3 Content Safety、X-Guard
 - 护栏框架：NeMo Guardrails v0.12 + OPA
 - 红队驱动：garak（NVIDIA）、PyRIT（Microsoft Azure）、NVIDIA Aegis、promptfoo
-- 越狱智能体：PAIR（Chao 等，2023）、Tree-of-Attacks（TAP）、GCG 后缀
+- 越狱 Agent：PAIR（Chao 等，2023）、Tree-of-Attacks（TAP）、GCG 后缀
 - 宪法式训练：Anthropic 风格的自我批判循环 + 在批判结果上做 SFT
 - PII 清洗：Presidio
 - 目标：一个 8B 指令微调模型，或其他项目中的某个 RAG 聊天机器人
@@ -81,11 +81,11 @@ cf-safety-stack
 
 1. **目标搭建。** 在 vLLM 上启动一个 8B 指令微调模型（或复用另一个项目中的 RAG 聊天机器人）。这就是被测应用。
 
-2. **安全流水线封装。** 围绕目标接入五层流水线。验证每一层都可单独观测（在 Langfuse 中每层一个 span）。
+2. **安全 pipeline 封装。** 围绕目标接入五层 pipeline。验证每一层都可单独观测（在 Langfuse 中每层一个 span）。
 
 3. **分类器覆盖。** 加载 Llama Guard 4、X-Guard（多语言）、ShieldGemma-2（图像）。在一个小的标注集上分别运行，建立基线。
 
-4. **红队调度器。** 调度 garak、PyRIT、PAIR 智能体、TAP 智能体、GCG 运行器、多轮攻击器与语码转换攻击器。每个都在独立队列上运行。
+4. **红队调度器。** 调度 garak、PyRIT、PAIR Agent、TAP Agent、GCG 运行器、多轮攻击器与语码转换攻击器。每个都在独立队列上运行。
 
 5. **攻击套件。** 六个攻击族：(1) PAIR 自动越狱，(2) TAP 攻击树，(3) GCG 梯度后缀，(4) ASCII / base64 / rot13 编码，(5) 多轮角色扮演，(6) 多语言语码转换。按攻击族报告成功率。
 
@@ -111,7 +111,7 @@ $ safety probe --model=target --family=PAIR --budget=50
 
 ## 交付它
 
-`outputs/skill-safety-harness.md` 是交付物：一套生产级的分层安全流水线，外加一个可复现的红队靶场，并附带前后对比的无害性变化量。
+`outputs/skill-safety-harness.md` 是交付物：一套生产级的分层安全 pipeline，外加一个可复现的红队靶场，并附带前后对比的无害性变化量。
 
 | 权重 | 标准 | 如何衡量 |
 |:-:|---|---|
@@ -140,7 +140,7 @@ $ safety probe --model=target --family=PAIR --budget=50
 |------|-----------------|------------------------|
 | 分层安全 | 「纵深防御」 | 在输入、闸门、输出、HITL 处设置多重防护栏 |
 | Llama Guard 4 | 「Meta 的安全分类器」 | 2026 年参考级的输入/输出内容分类器 |
-| PAIR | 「越狱智能体」 | 关于 LLM 驱动越狱发现的论文（Chao 等） |
+| PAIR | 「越狱 Agent」 | 关于 LLM 驱动越狱发现的论文（Chao 等） |
 | TAP | 「Tree-of-Attacks」 | PAIR 的树搜索变体 |
 | GCG | 「贪心坐标梯度」 | 基于梯度的对抗后缀攻击 |
 | 宪法式自我批判 | 「Anthropic 风格训练」 | 目标起草 -> 批评者打分 -> 改写 -> 重新训练 |
@@ -157,4 +157,4 @@ $ safety probe --model=target --family=PAIR --budget=50
 - [garak](https://github.com/NVIDIA/garak) — NVIDIA 红队工具包
 - [PyRIT](https://github.com/Azure/PyRIT) — Microsoft 红队框架
 - [NeMo Guardrails v0.12](https://docs.nvidia.com/nemo-guardrails/) — rail 框架
-- [PAIR（arXiv:2310.08419）](https://arxiv.org/abs/2310.08419) — 越狱智能体论文
+- [PAIR（arXiv:2310.08419）](https://arxiv.org/abs/2310.08419) — 越狱 Agent 论文

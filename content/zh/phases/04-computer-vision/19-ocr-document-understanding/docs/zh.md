@@ -1,6 +1,6 @@
 # OCR 与文档理解
 
-> OCR 是一条三阶段流水线——检测文本框、识别字符、再排布版面。每个现代 OCR 系统都会重排这些阶段，或把它们合并。
+> OCR 是一条三阶段 pipeline——检测文本框、识别字符、再排布版面。每个现代 OCR 系统都会重排这些阶段，或把它们合并。
 
 **Type:** Learn + Use
 **Languages:** Python
@@ -9,7 +9,7 @@
 
 ## 学习目标
 
-- 梳理经典 OCR 流水线（检测 → 识别 → 版面）与现代端到端替代方案（Donut、Qwen-VL-OCR）
+- 梳理经典 OCR pipeline（检测 → 识别 → 版面）与现代端到端替代方案（Donut、Qwen-VL-OCR）
 - 为序列到序列的 OCR 训练实现 CTC（Connectionist Temporal Classification）损失
 - 使用 PaddleOCR 或 EasyOCR 做生产级文档解析，无需训练
 - 区分 OCR、版面解析与文档理解——并为每种任务选对工具
@@ -28,7 +28,7 @@
 
 ## 概念
 
-### 经典流水线
+### 经典 pipeline
 
 ```mermaid
 flowchart LR
@@ -65,9 +65,9 @@ CTC 是 CRNN 在 2015 年奏效的原因，也是 2026 年大多数生产 OCR �
 - **Donut**（Kim 等，2022）——ViT 编码器 + 文本解码器；读取图像直接输出 JSON。没有文本检测器，也没有版面模块。
 - **TrOCR**——ViT + Transformer 解码器，面向行级 OCR。
 - **Qwen-VL-OCR / InternVL**——为 OCR 任务微调的完整视觉-语言模型；在复杂文档上达到 2026 年最佳准确率。
-- **PaddleOCR**——把经典 DB + CRNN 流水线封装在成熟的生产级软件包中；仍是开源领域的主力。
+- **PaddleOCR**——把经典 DB + CRNN pipeline 封装在成熟的生产级软件包中；仍是开源领域的主力。
 
-端到端模型需要更多数据和算力，但避开了多阶段流水线的误差累积。
+端到端模型需要更多数据和算力，但避开了多阶段 pipeline 的误差累积。
 
 ### 版面解析
 
@@ -194,7 +194,7 @@ imgs, targets, lengths = build_batch(["hello", "world"], vocab)
 print(f"images: {imgs.shape}   targets: {targets.shape}   lengths: {lengths.tolist()}")
 ```
 
-真实的 OCR 数据集还会加入字体、噪声、旋转、模糊和颜色。上面的流水线完全相同。
+真实的 OCR 数据集还会加入字体、噪声、旋转、模糊和颜色。上面的 pipeline 完全相同。
 
 ### 第 4 步：训练骨架
 
@@ -236,7 +236,7 @@ model = VisionEncoderDecoderModel.from_pretrained("naver-clova-ix/donut-base-fin
 
 本节课产出：
 
-- `outputs/prompt-ocr-stack-picker.md` —— 一个根据文档类型、语言和结构，在 Tesseract / PaddleOCR / Donut / VLM-OCR 之间做选择的提示词。
+- `outputs/prompt-ocr-stack-picker.md` —— 一个根据文档类型、语言和结构，在 Tesseract / PaddleOCR / Donut / VLM-OCR 之间做选择的 prompt。
 - `outputs/skill-ctc-decoder.md` —— 一个从零编写贪心和 beam-search CTC 解码器的技能，包含长度归一化。
 
 ## 练习

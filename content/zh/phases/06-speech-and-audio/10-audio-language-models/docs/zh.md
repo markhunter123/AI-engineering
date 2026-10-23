@@ -149,7 +149,7 @@ print(f"Accuracy: {correct / len(mcq):.3f}")
 | 自由形式音频 QA（开源） | Qwen2.5-Omni-7B |
 | 长音频最佳开源 | Audio Flamingo Next |
 | 最佳闭源 | Gemini 2.5 Pro |
-| 语音输入 / 语音输出智能体 | Qwen2.5-Omni 或 GPT-4o Audio |
+| 语音输入 / 语音输出 Agent | Qwen2.5-Omni 或 GPT-4o Audio |
 | 音乐推理 | Audio Flamingo 3 或 2（音乐专用的 AF-CLAP） |
 | 呼叫中心审计 | 通过 API 使用 Gemini 2.5 Pro，并在你的政策文档上做 RAG |
 

@@ -20,7 +20,7 @@
 
 经验上，这表现为注意力头之间的干扰：长上下文 RAG 中幻觉的引用、100k token 检索任务上的「中间迷失」（lost-in-the-middle）失败，以及超过 32k 后 needle-in-haystack 基准上细微的准确率下降。Differential Transformer 论文（arXiv:2410.05258，ICLR 2025）测量了差距：DIFF Transformer 比同尺寸基线困惑度更低、长上下文准确率更高、幻觉更少。
 
-DIFF V1 有三个问题，使它无法进入前沿预训练流水线。它的 value cache 在每次解码步要加载两次；它需要自定义 CUDA kernel，破坏了 FlashAttention 兼容性；它的逐头 RMSNorm 在 70B 以上规模破坏长期训练的稳定性。DIFF V2（微软 unilm 博客，2026 年 1 月 20 日）修复了全部三点。本课讲解两个版本，构建差分算子，并在玩具查询上基准测试噪声抵消。
+DIFF V1 有三个问题，使它无法进入前沿预训练 pipeline。它的 value cache 在每次解码步要加载两次；它需要自定义 CUDA kernel，破坏了 FlashAttention 兼容性；它的逐头 RMSNorm 在 70B 以上规模破坏长期训练的稳定性。DIFF V2（微软 unilm 博客，2026 年 1 月 20 日）修复了全部三点。本课讲解两个版本，构建差分算子，并在玩具查询上基准测试噪声抵消。
 
 ## 概念
 

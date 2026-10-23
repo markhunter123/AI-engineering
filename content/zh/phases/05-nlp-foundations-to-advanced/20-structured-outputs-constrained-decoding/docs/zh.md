@@ -15,7 +15,7 @@
 
 2026 年存在三个层次。
 
-1. **提示词。** 好好请求。「只返回 JSON 对象。」在前沿模型上约 80% 有效，小模型上更低。
+1. **Prompt。** 好好请求。「只返回 JSON 对象。」在前沿模型上约 80% 有效，小模型上更低。
 2. **原生结构化输出 API。** OpenAI 的 `response_format`、Anthropic 的 tool use、Gemini 的 JSON 模式。在支持的 schema 上可靠。但被厂商锁定。
 3. **约束解码。** 在每个生成步骤修改 logit，使模型*无法*输出非法 token。从构造上保证 100% 合法。适用于任何本地模型。
 
@@ -32,7 +32,7 @@
 - **Outlines。** 把 JSON Schema 或正则编译成有限状态机。每个 token 都有 $O(1)$ 的合法下一 token 查询。基于 FSM，因此递归 schema 需要展平。
 - **XGrammar / llguidance。** 上下文无关文法引擎。能处理递归 JSON Schema。解码开销接近零。OpenAI 在 2025 年的结构化输出实现中致谢了 llguidance。
 - **vLLM guided decoding。** 内置 `guided_json`、`guided_regex`、`guided_choice`、`guided_grammar`，后端可选 Outlines、XGrammar 或 lm-format-enforcer。
-- **Instructor。** 基于 Pydantic 的包装层，可套在任何 LLM 上。校验失败时重试。跨厂商，但不修改 logit —— 它依赖重试加能识别结构化输出的提示词。
+- **Instructor。** 基于 Pydantic 的包装层，可套在任何 LLM 上。校验失败时重试。跨厂商，但不修改 logit —— 它依赖重试加能识别结构化输出的 prompt。
 
 ### 反直觉的结果
 
@@ -132,7 +132,7 @@ invoice = client.messages.create(
 )
 ```
 
-机制不同。Instructor 不碰 logit。它把 schema 格式化进提示词，解析输出，校验失败时重试（默认 3 次）。适用于任何厂商。重试会增加延迟和成本。跨厂商可移植性是它的卖点。
+机制不同。Instructor 不碰 logit。它把 schema 格式化进 prompt，解析输出，校验失败时重试（默认 3 次）。适用于任何厂商。重试会增加延迟和成本。跨厂商可移植性是它的卖点。
 
 ### 第 4 步：厂商原生 API
 

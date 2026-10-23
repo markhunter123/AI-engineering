@@ -1,6 +1,6 @@
 # 项目：无状态工具生态系统
 
-> 生产级智能体系统是一组边界，而不是一堆功能。这个项目把一个可读的进程内模拟，与真实部署仍然需要的协议客户端、授权服务器、沙箱和遥测导出器区分开来。
+> 生产级 Agent 系统是一组边界，而不是一堆功能。这个项目把一个可读的进程内模拟，与真实部署仍然需要的协议客户端、授权服务器、沙箱和遥测导出器区分开来。
 
 **Type:** Build
 **Languages:** Python (stdlib, in-process simulation)
@@ -9,7 +9,7 @@
 
 ## 学习目标
 
-- 将工具调用、任务形态的结果、委派工作、UI 资源、授权策略和 trace 记录组合成一条流程。
+- 将 tool call、任务形态的结果、委派工作、UI 资源、授权策略和 trace 记录组合成一条流程。
 - 在每个 MCP 请求上携带协议版本、客户端身份和能力，而不是依赖连接会话来维持状态。
 - 在使用服务器之前先发现它，并通过官方 Tasks 扩展驱动长时间工作。
 - 区分协议形态的模拟与 MCP、A2A、OAuth 或 OpenTelemetry 实现。
@@ -19,7 +19,7 @@
 
 ## 问题
 
-设计一个研究与报告系统。用户想要关于智能体协议的论文。系统搜索论文目录，委派摘要工作，生成报告，返回一个 UI 资源，并记录经过系统的路径。
+设计一个研究与报告系统。用户想要关于 Agent 协议的论文。系统搜索论文目录，委派摘要工作，生成报告，返回一个 UI 资源，并记录经过系统的路径。
 
 这句话隐藏着若干个彼此独立的契约：
 
@@ -83,7 +83,7 @@ flowchart TD
 |---|---|---|
 | MCP 发现 | 强制的 `server/discover` | 一个直接返回版本、能力与服务器身份的函数 |
 | MCP 请求上下文 | 每个 `params._meta` 中的版本、能力和客户端身份 | 传给每次模拟调用的新鲜请求元数据 |
-| MCP 工具调用 | `tools/call` | 直接的 Python 函数分发 |
+| MCP tool call | `tools/call` | 直接的 Python 函数分发 |
 | MCP 任务轮询 | `io.modelcontextprotocol/tasks` 与 `tasks/get` | 一个可用的句柄，随后是携带最终结果的已完成任务 |
 | A2A 委派 | gRPC 和 JSON-RPC 中的 `SendMessage`；HTTP+JSON 中的 `POST /message:send` | 一个嵌套 span，没有远程调用或人为延迟 |
 | 调用服务器工具的 MCP App | `app.callServerTool({ name, arguments })` | 一段没有实时桥接的 HTML 字符串 |
@@ -174,7 +174,7 @@ tags: [mcp, capstone, ecosystem, architecture, a2a, otel]
 | 搜索 | 静态论文夹具 | 搜索 API 或 MCP 服务器 | 来源溯源、排序和错误测试 |
 | 任务 | 本地句柄加立即 `tasks/get` | 持久化的 `io.modelcontextprotocol/tasks` 存储，支持 `tasks/get`、`tasks/update`、`tasks/cancel` 和 TTL | 状态转换、输入、取消和恢复测试 |
 | 委派 | sleep 加嵌套 span | A2A 客户端和远程 Agent Card | 契约、超时、重试和不透明性测试 |
-| 应用 | HTML 字符串和 URI | MCP Apps 资源与 `App` 桥接 | CSP、权限、工具调用和浏览器测试 |
+| 应用 | HTML 字符串和 URI | MCP Apps 资源与 `App` 桥接 | CSP、权限、tool call 和浏览器测试 |
 | 遥测 | 内存列表 | OTel SDK 与 exporter | collector 接收和 trace 父级断言 |
 | 沙箱 | 无 | 宿主强制隔离的执行器 | 逃逸、出网、密钥和资源限制测试 |
 
@@ -254,7 +254,7 @@ python3 code/main.py
 | 项目 | 「把所有东西接在一起」 | 一个分阶段集成，其中模拟边界与真实边界保持明确 |
 | 协议形态的模拟 | 「基本就是 MCP」 | 看起来像某种协议、但未实现其线路契约的本地数据和调用 |
 | Tasks 扩展 | 「长时间工具调用」 | 可选的 `io.modelcontextprotocol/tasks` 生命周期，具有持久身份、轮询、客户端输入、最终结果和取消语义 |
-| 不透明边界 | 「另一个智能体处理它」 | 调用方只能看到声明的接口和产物，看不到私有推理或内部状态 |
+| 不透明边界 | 「另一个 Agent 处理它」 | 调用方只能看到声明的接口和产物，看不到私有推理或内部状态 |
 | 运行时适配器 | 「技能集成」 | 把可移植流程映射到发现、调用、工具、策略和上下文的宿主代码 |
 | 集成证据 | 「它通过了」 | 证明真实边界已被跨越的记录、产物或接收端观察 |
 

@@ -1,6 +1,6 @@
 # 层级架构及其失效模式
 
-> 层级架构就是把监督员（supervisor）嵌套起来。管理者智能体之下是子管理者，再之下是工作者。CrewAI 的 `Process.hierarchical` 是教科书式的版本：`manager_llm` 动态分派任务并校验输出。LangGraph 中的对应写法是 `create_supervisor(create_supervisor(...))`。当任务本身就是一张真实的组织架构图时，这是最自然的模式。它也是最容易塌缩成「管理者循环」的模式——管理者智能体分派工作不当、误读子级输出，或者无法达成一致。顺序流程（sequential）往往能胜过它。
+> 层级架构就是把监督员（supervisor）嵌套起来。管理者 Agent 之下是子管理者，再之下是工作者。CrewAI 的 `Process.hierarchical` 是教科书式的版本：`manager_llm` 动态分派任务并校验输出。LangGraph 中的对应写法是 `create_supervisor(create_supervisor(...))`。当任务本身就是一张真实的组织架构图时，这是最自然的模式。它也是最容易塌缩成「管理者循环」的模式——管理者 Agent 分派工作不当、误读子级输出，或者无法达成一致。顺序流程（sequential）往往能胜过它。
 
 **Type:** Learn + Build
 **Languages:** Python (stdlib)
@@ -127,4 +127,4 @@ python3 code/main.py
 - [CrewAI 简介 —— Process.hierarchical](https://docs.crewai.com/en/introduction) —— 带管理者 LLM 的教科书式层级架构
 - [LangGraph supervisor 参考](https://reference.langchain.com/python/langgraph-supervisor) —— 通过 `create_supervisor` 实现嵌套监督员
 - [Anthropic 工程博客 —— Research 系统](https://www.anthropic.com/engineering/multi-agent-research-system) —— 为什么 Anthropic 刻意选择扁平监督员而非层级架构
-- [Cemri 等 —— 多智能体 LLM 系统为何失败？](https://arxiv.org/abs/2503.13657) —— MAST 分类法；协调失败一节记录了分解漂移
+- [Cemri 等 —— 多 Agent LLM 系统为何失败？](https://arxiv.org/abs/2503.13657) —— MAST 分类法；协调失败一节记录了分解漂移

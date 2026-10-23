@@ -147,7 +147,7 @@ python3 main.py --ablation=no-group-norm
 | 术语 | 人们常说 | 实际含义 |
 |------|---------|---------|
 | MLP policy | "微型神经策略" | 将 `(前缀均值嵌入, 目标 one-hot)` 映射到词表 logits 的两层网络，在所有状态间共享参数。 |
-| Frozen reference | "SFT 检查点" | 初始化策略的副本，从不更新；KL 惩罚让训练后的策略不要离它太远。 |
+| Frozen reference | "SFT checkpoint" | 初始化策略的副本，从不更新；KL 惩罚让训练后的策略不要离它太远。 |
 | Group baseline | "GRPO 技巧" | 用同一提示下 $G$ 条回复的奖励均值与标准差替代价值网络进行优势估计。 |
 | $k_3$ estimator | "KL 惩罚" | 非负、无偏的 KL 样本估计：$\pi_{\text{ref}}/\pi_\theta - \log(\pi_{\text{ref}}/\pi_\theta) - 1$。 |
 | Length control | "k1.5 技巧" | 奖励塑形：短且正确得更高分，长且错误受更重惩罚，以阻止回复膨胀。 |

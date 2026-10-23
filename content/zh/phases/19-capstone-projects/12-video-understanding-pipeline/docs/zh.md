@@ -1,6 +1,6 @@
-# 项目 12 —— 视频理解流水线（场景、问答、搜索）
+# 项目 12 —— 视频理解 pipeline（场景、问答、搜索）
 
-> Twelve Labs 把 Marengo + Pegasus 做成了产品。VideoDB 发布了面向视频的 CRUD API。AI2 的 Molmo 2 公开了 VLM checkpoint。Gemini 的长上下文原生支持数小时视频。TimeLens-100K 在规模上定义了时间定位。2026 年的流水线已经定型：场景分割、逐场景字幕 + embedding、转写对齐、多向量索引，以及用（start, end）时间戳加帧预览来回答的查询。项目要摄取 100 小时视频，跑通公开基准，并测量计数类和动作类问题上的幻觉。
+> Twelve Labs 把 Marengo + Pegasus 做成了产品。VideoDB 发布了面向视频的 CRUD API。AI2 的 Molmo 2 公开了 VLM checkpoint。Gemini 的长上下文原生支持数小时视频。TimeLens-100K 在规模上定义了时间定位。2026 年的 pipeline 已经定型：场景分割、逐场景字幕 + embedding、转写对齐、多向量索引，以及用（start, end）时间戳加帧预览来回答的查询。项目要摄取 100 小时视频，跑通公开基准，并测量计数类和动作类问题上的幻觉。
 
 **Type:** Capstone
 **Languages:** Python (pipeline), TypeScript (UI)
@@ -10,13 +10,13 @@
 
 ## 问题
 
-长视频问答是 2026 年规模下最吃带宽的多模态问题。Gemini 2.5 Pro 能原生读完一段 2 小时视频，但要把 100 小时视频摄取成可查询的语料，仍然需要场景级索引。生产形态把这几件事拼在一起：场景分割（TransNetV2 或 PySceneDetect）、用 VLM 做逐场景字幕（Gemini 2.5、Qwen3-VL-Max 或 Molmo 2）、转写对齐（带词级时间戳的 Whisper-v3-turbo），以及一个把字幕、帧 embedding 和转写并排存放的多向量索引。查询流水线用（start, end）时间戳加帧预览来回答。
+长视频问答是 2026 年规模下最吃带宽的多模态问题。Gemini 2.5 Pro 能原生读完一段 2 小时视频，但要把 100 小时视频摄取成可查询的语料，仍然需要场景级索引。生产形态把这几件事拼在一起：场景分割（TransNetV2 或 PySceneDetect）、用 VLM 做逐场景字幕（Gemini 2.5、Qwen3-VL-Max 或 Molmo 2）、转写对齐（带词级时间戳的 Whisper-v3-turbo），以及一个把字幕、帧 embedding 和转写并排存放的多向量索引。查询 pipeline 用（start, end）时间戳加帧预览来回答。
 
 基准是公开的（ActivityNet-QA、NeXT-GQA），再加上你自己 100 条查询的自定义集。计数类和动作类问题上的幻觉是已知的困难失效类别；这个项目会专门测量它。
 
 ## 概念
 
-摄取时三条流水线并行。**场景分割**把视频切成场景。**VLM 字幕**为每个场景生成一条字幕，并从关键帧生成一个帧 embedding。**ASR 对齐**产出词级时间戳。三条流按（scene_id, time range）连接。每个场景在多向量索引（Qdrant）里有三种向量：字幕 embedding、关键帧 embedding、转写 embedding。
+摄取时三条 pipeline 并行。**场景分割**把视频切成场景。**VLM 字幕**为每个场景生成一条字幕，并从关键帧生成一个帧 embedding。**ASR 对齐**产出词级时间戳。三条流按（scene_id, time range）连接。每个场景在多向量索引（Qdrant）里有三种向量：字幕 embedding、关键帧 embedding、转写 embedding。
 
 查询时，自然语言问题同时打向这三种向量；结果用 RRF 合并；一个时间定位适配器（TimeLens 风格）细化 top 场景内的（start, end）窗口。VLM 合成器（Gemini 2.5 Pro 或 Qwen3-VL-Max）拿到查询 + top 场景 + 裁剪后的帧，给出带引用时间戳和帧预览的回答。
 
@@ -103,7 +103,7 @@ citations: [scene 3: 00:12-00:58]
 
 ## 交付它
 
-`outputs/skill-video-qa.md` 是交付物。给定一个 YouTube URL 或上传的视频，流水线为场景建索引，并用带时间戳引用的方式回答问题。
+`outputs/skill-video-qa.md` 是交付物。给定一个 YouTube URL 或上传的视频，pipeline 为场景建索引，并用带时间戳引用的方式回答问题。
 
 | 权重 | 标准 | 衡量方式 |
 |:-:|---|---|

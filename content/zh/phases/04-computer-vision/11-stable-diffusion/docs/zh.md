@@ -227,7 +227,7 @@ for step, batch in enumerate(dataloader):
     optimizer.step()
 ```
 
-只有 LoRA 矩阵接收梯度；基础 U-Net、VAE 和文本编码器都冻结。batch size 为 1 并开启梯度检查点时，可放入 8 GB 显存。
+只有 LoRA 矩阵接收梯度；基础 U-Net、VAE 和文本编码器都冻结。batch size 为 1 并开启梯度 checkpoint 时，可放入 8 GB 显存。
 
 ## 使用它
 

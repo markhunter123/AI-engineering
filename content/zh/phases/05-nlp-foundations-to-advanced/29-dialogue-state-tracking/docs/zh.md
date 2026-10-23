@@ -16,7 +16,7 @@
 有了 LLM，为什么 2026 年它仍然重要：
 
 - 合规敏感领域（银行、医疗、机票预订）需要确定性的 slot 值，而不是自由生成的文本。
-- 工具使用型智能体在调用 API 之前仍然需要解析 slot。
+- 工具使用型 Agent 在调用 API 之前仍然需要解析 slot。
 - 多轮纠正比看起来难：「actually no, make it Thursday.」
 
 现代 pipeline：经典 DST 概念 + LLM 抽取器 + 结构化输出防护栏。

@@ -45,7 +45,7 @@
 
 为前沿实验室做部署前的图谋评估。著有 In-Context Scheming（第 8 课，arXiv:2412.04984）。是 2025 年 OpenAI 反图谋训练合作的伙伴。产出 Towards Safety Cases for AI Scheming（2024）。
 
-风格：让欺骗得以显现的智能体环境评估；三支柱分解（失准、目标导向性、情境感知）。
+风格：让欺骗得以显现的 Agent 环境评估；三支柱分解（失准、目标导向性、情境感知）。
 
 ### METR（Model Evaluation and Threat Research）
 

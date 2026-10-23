@@ -6,7 +6,7 @@
   "prerequisites": [
     {
       "title": "Python 与命令行基础",
-      "description": "能查看 JSON、编辑文件并运行 Python 命令。不需要 MCP 或智能体框架经验。"
+      "description": "能查看 JSON、编辑文件并运行 Python 命令。不需要 MCP 或 Agent 框架经验。"
     },
     {
       "title": "可执行网络证据所需 Python 3",
@@ -14,7 +14,7 @@
     },
     {
       "title": "工具接口",
-      "description": "如果你不熟悉带类型的工具调用和副作用边界，先快速浏览这节课。"
+      "description": "如果你不熟悉带类型的 tool call 和副作用边界，先快速浏览这节课。"
     },
     {
       "title": "工具 Schema 设计",

@@ -1,6 +1,6 @@
 # 有状态图编排——持久化执行与 checkpoint
 
-> 智能体就是一台状态机：节点是函数，边是转移，状态在每个节点之后写入 checkpoint。任何失败都能从最后一个成功的 checkpoint 恢复。LangGraph 是 2026 年这种底层有状态编排模型的参考实现。
+> Agent 就是一台状态机：节点是函数，边是转移，状态在每个节点之后写入 checkpoint。任何失败都能从最后一个成功的 checkpoint 恢复。LangGraph 是 2026 年这种底层有状态编排模型的参考实现。
 
 **Type:** Learn + Build
 **Languages:** Python (stdlib)
@@ -16,7 +16,7 @@
 
 ## 问题
 
-智能体和工作流有同一个问题：一次 40 步的运行在第 38 步失败时，你希望从第 38 步恢复，而不是从头开始。把状态当作二等公民的模型，逼得运维人员在一个默认每次全新运行的库外面拼凑重试逻辑。
+Agent 和工作流有同一个问题：一次 40 步的运行在第 38 步失败时，你希望从第 38 步恢复，而不是从头开始。把状态当作二等公民的模型，逼得运维人员在一个默认每次全新运行的库外面拼凑重试逻辑。
 
 LangGraph 的设计答案是：状态是一等公民的类型化对象，变更显式声明，每个节点之后都持久化 checkpoint。恢复就是一次 `load_state(session_id)` 调用。
 
@@ -31,7 +31,7 @@ LangGraph 的设计答案是：状态是一等公民的类型化对象，变更�
 - **边。** 节点之间的条件转移或直接转移。
 - **入口与出口。** `START` 和 `END` 哨兵节点标记边界。
 
-示例：一个包含 `classify`、`refund`、`bug`、`sales`、`done` 节点的智能体——把路由工作流表示成一张图。
+示例：一个包含 `classify`、`refund`、`bug`、`sales`、`done` 节点的 Agent——把路由工作流表示成一张图。
 
 ### 持久化执行
 
@@ -53,8 +53,8 @@ LangGraph 文档明确列出了依赖这一能力的生产用户：Klarna、Uber
 
 ### 三种拓扑
 
-1. **Supervisor。** 中央路由 LLM 把任务分派给专家子智能体。`langgraph-supervisor` 里提供 `create_supervisor()`（不过 LangChain 团队在 2026 年建议直接通过 tool calling 实现，以获得更多上下文控制）。
-2. **Swarm / peer-to-peer。** 智能体通过共享的工具面直接交接，没有中央路由器。
+1. **Supervisor。** 中央路由 LLM 把任务分派给专家子 Agent。`langgraph-supervisor` 里提供 `create_supervisor()`（不过 LangChain 团队在 2026 年建议直接通过 tool calling 实现，以获得更多上下文控制）。
+2. **Swarm / peer-to-peer。** Agent 通过共享的工具面直接交接，没有中央路由器。
 3. **Hierarchical。** 监督者管理子监督者，用嵌套子图实现。
 
 ### 这个模式会在哪里出错
@@ -108,18 +108,18 @@ trace 显示了第一次运行在 human gate 处失败、状态被持久化，�
 
 | 术语 | 人们怎么说 | 实际含义 |
 |------|----------------|------------------------|
-| 状态图（state graph） | 「智能体即状态机」 | 类型化状态 + 节点 + 边 + reducer |
+| 状态图（state graph） | 「Agent 即状态机」 | 类型化状态 + 节点 + 边 + reducer |
 | Checkpointer | 「持久化后端」 | 在每个节点后序列化状态，使恢复成为可能 |
 | Reducer | 「状态合并器」 | 把当前状态与节点更新合并的函数 |
 | 条件边 | 「分支」 | 由作用于状态的函数选出的边 |
 | 子图 | 「嵌套图」 | 作为节点用在另一张图里的图 |
 | 持久化执行 | 「从失败处恢复」 | 从最后一个成功节点带着精确状态重启 |
-| Supervisor | 「路由 LLM」 | 面向专家子智能体的中央分派器 |
-| Swarm | 「P2P 智能体」 | 智能体通过共享工具交接；没有中央路由器 |
+| Supervisor | 「路由 LLM」 | 面向专家子 Agent 的中央分派器 |
+| Swarm | 「P2P Agent」 | Agent 通过共享工具交接；没有中央路由器 |
 
 ## 延伸阅读
 
 - [LangGraph 概览](https://docs.langchain.com/oss/python/langgraph/overview) —— 参考文档
 - [langgraph-supervisor 参考](https://reference.langchain.com/python/langgraph/supervisor/) —— supervisor 模式 API
 - [AutoGen v0.4，Microsoft Research](https://www.microsoft.com/en-us/research/articles/autogen-v0-4-reimagining-the-foundation-of-agentic-ai-for-scale-extensibility-and-robustness/) —— actor 模型替代方案
-- [Claude Agent SDK 概览](https://platform.claude.com/docs/en/agent-sdk/overview) —— session 存储与子智能体
+- [Claude Agent SDK 概览](https://platform.claude.com/docs/en/agent-sdk/overview) —— session 存储与子 Agent

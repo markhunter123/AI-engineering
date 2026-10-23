@@ -1,6 +1,6 @@
 # 宪法式 AI 与 RLAIF
 
-> Bai 等人（arXiv:2212.08073，2022）提出一个问题：如果用一个读着一份原则清单的 AI 取代人类标注者，会怎样？宪法式 AI（Constitutional AI）有两个阶段——在宪法下自我批评与修订，然后用 AI 反馈做 RL。这项技术创造了 RLAIF 一词，并进入了 Claude 1 的后训练流水线。2026 年 1 月 21 日，Anthropic 发布了一份重写的 Claude 宪法：以解释性推理取代规定性规则、四级优先层级，以及主要实验室首次正式承认对模型道德地位的不确定性。以 CC0 1.0 发布。
+> Bai 等人（arXiv:2212.08073，2022）提出一个问题：如果用一个读着一份原则清单的 AI 取代人类标注者，会怎样？宪法式 AI（Constitutional AI）有两个阶段——在宪法下自我批评与修订，然后用 AI 反馈做 RL。这项技术创造了 RLAIF 一词，并进入了 Claude 1 的后训练 pipeline。2026 年 1 月 21 日，Anthropic 发布了一份重写的 Claude 宪法：以解释性推理取代规定性规则、四级优先层级，以及主要实验室首次正式承认对模型道德地位的不确定性。以 CC0 1.0 发布。
 
 **Type:** Learn
 **Languages:** Python (stdlib, toy self-critique-and-revise loop)
@@ -10,7 +10,7 @@
 ## 学习目标
 
 - 描述宪法式 AI 的两个阶段（批评与修订的 SFT、来自 AI 反馈的 RL）以及宪法在每个阶段的作用。
-- 解释为什么用 AI 标注者取代人类偏好标注者并不是「更便宜的 RLHF」——它改变了流水线的失败模式。
+- 解释为什么用 AI 标注者取代人类偏好标注者并不是「更便宜的 RLHF」——它改变了 pipeline 的失败模式。
 - 概括 2026 年 Claude 宪法的四级优先结构，以及相对 2023 年改写版的变化。
 - 描述宪法分类器（Constitutional Classifiers），以及从 23.7% 计算开销（v1）降到约 1%（v2 / 2026）的过程。
 
@@ -30,9 +30,9 @@ RLHF 需要标注者。标注者慢、有偏、昂贵。你可以用一个阅读
 
 ### 阶段 2——来自 AI 反馈的 RL（RLAIF）
 
-生成成对的补全。一个「反馈模型」依据采样到的宪法原则给每个补全打分。偏好信号就是反馈模型的排序。在 AI 生成的偏好上训练奖励模型；对它跑 PPO。其余部分就是 InstructGPT 的流水线（第 1 课）。
+生成成对的补全。一个「反馈模型」依据采样到的宪法原则给每个补全打分。偏好信号就是反馈模型的排序。在 AI 生成的偏好上训练奖励模型；对它跑 PPO。其余部分就是 InstructGPT 的 pipeline（第 1 课）。
 
-「RLAIF」= 偏好信号由 AI 生成。流水线的其余部分仍是 RLHF 形态。
+「RLAIF」= 偏好信号由 AI 生成。Pipeline 的其余部分仍是 RLHF 形态。
 
 ### 为什么这不只是「更便宜的 RLHF」
 
@@ -99,8 +99,8 @@ constitutional-ai
 
 | 术语 | 人们怎么说 | 实际含义 |
 |------|-----------------|------------------------|
-| 宪法式 AI | “用原则训练的 AI” | 两阶段流水线：先自我批评与修订的 SFT，再来自 AI 反馈的 RL |
-| RLAIF | “没有人类的 RLHF” | 用 AI 标注者生成的偏好做 RL；流水线其余部分不变 |
+| 宪法式 AI | “用原则训练的 AI” | 两阶段 pipeline：先自我批评与修订的 SFT，再来自 AI 反馈的 RL |
+| RLAIF | “没有人类的 RLHF” | 用 AI 标注者生成的偏好做 RL；Pipeline 其余部分不变 |
 | 宪法 | “那些原则” | 一个有序的自然语言规则列表，批评/标注模型据此判断 |
 | 批评与修订 | “SFT 循环” | 生成回复 → 按原则批评 → 修订 → 作为 SFT 目标 |
 | 宪法分类器 | “输出守门员” | 依据宪法评估输出并拦截/记录的轻量分类器 |
@@ -109,7 +109,7 @@ constitutional-ai
 
 ## 延伸阅读
 
-- [Bai 等人 —— Constitutional AI: Harmlessness from AI Feedback（arXiv:2212.08073）](https://arxiv.org/abs/2212.08073) —— 最初的两阶段流水线
+- [Bai 等人 —— Constitutional AI: Harmlessness from AI Feedback（arXiv:2212.08073）](https://arxiv.org/abs/2212.08073) —— 最初的两阶段 pipeline
 - [Anthropic —— Claude's Constitution（2026 年 1 月）](https://www.anthropic.com/news/claudes-constitution) —— 2026 年四级改写版，CC0 1.0
 - [Anthropic —— Constitutional Classifiers（2024-2026）](https://www.anthropic.com/research/constitutional-classifiers) —— 输出守门防御，v2 开销约 1%
 - [Lee 等人 —— RLAIF vs RLHF: Scaling Reinforcement Learning from Human Feedback（arXiv:2309.00267）](https://arxiv.org/abs/2309.00267) —— RLAIF 与 RLHF 的经验比较

@@ -21,7 +21,7 @@
 
 **STFT（短时傅里叶变换）。** 把波形切成重叠的帧（典型配置：25 ms 窗、10 ms 帧移，在 16 kHz 下即 400 个采样点 / 160 个采样点）。每帧乘一个窗函数（默认 Hann；Hamming 的取舍略有不同）。对每帧做 FFT。把幅值谱堆叠成形状为 `(n_frames, n_freq_bins)` 的矩阵。这就是频谱图。
 
-**对数幅值。** 原始幅值跨越 5–6 个数量级。取 `log(|X| + 1e-6)` 或 `20 * log10(|X|)` 来压缩动态范围。所有生产流水线都用对数幅值，而不是原始幅值。
+**对数幅值。** 原始幅值跨越 5–6 个数量级。取 `log(|X| + 1e-6)` 或 `20 * log10(|X|)` 来压缩动态范围。所有生产 pipeline 都用对数幅值，而不是原始幅值。
 
 **梅尔尺度。** 频率 `f`（Hz）按 $m = 2595 \cdot \log_{10}(1 + f / 700)$ 映射到梅尔值 `m`。这个映射在 1 kHz 以下大致线性，以上大致对数。覆盖 0–8 kHz 的 80 个梅尔 bin 是标准的 ASR 输入。
 
@@ -171,4 +171,4 @@ def dct_ii(x, n_coeffs):
 - [Stevens, Volkmann, Newman (1937). A Scale for the Measurement of the Psychological Magnitude Pitch](https://pubs.aip.org/asa/jasa/article-abstract/8/3/185/735757/) —— 梅尔尺度的原始论文。
 - [OpenAI — Whisper source, log_mel_spectrogram](https://github.com/openai/whisper/blob/main/whisper/audio.py) —— 阅读参考实现。
 - [librosa feature extraction docs](https://librosa.org/doc/latest/api/feature.html) —— `mfcc`、`melspectrogram` 以及帧移/窗参数参考。
-- [NVIDIA NeMo — audio preprocessing](https://docs.nvidia.com/deeplearning/nemo/user-guide/docs/en/main/asr/asr_all.html#featurizers) —— Parakeet + Canary 模型的生产级流水线。
+- [NVIDIA NeMo — audio preprocessing](https://docs.nvidia.com/deeplearning/nemo/user-guide/docs/en/main/asr/asr_all.html#featurizers) —— Parakeet + Canary 模型的生产级 pipeline。

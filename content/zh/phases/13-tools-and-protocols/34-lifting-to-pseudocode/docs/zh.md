@@ -42,9 +42,9 @@ undefined1  [16] percent_change(int param_1,int param_2,ulong param_3)
 
 源码只有四行。它接收两个 `int` 值，返回一个 `int`。Ghidra 却报告了一个 16 字节的返回值，以及一个源码中并不存在的第三个参数。这十六字节机器码本身是正确的，Ghidra 也确实把其中每一个字节都正确解码了。函数签名是猜出来的，而文本里没有任何标记说明这一点。
 
-rea 把这段文本作为 `procedure_pseudo_code` 结果返回，并在记录上附带一条限制说明。限制说明写道：「Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output」。`compare_functions` 工具按文本行对伪代码做 diff。它自己的维度记录写着「Assembly is opaque provider text」，并注明重定位归一化不可用。rea 看不到这段文本的内部，只会阅读文本的智能体同样看不到。
+rea 把这段文本作为 `procedure_pseudo_code` 结果返回，并在记录上附带一条限制说明。限制说明写道：「Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output」。`compare_functions` 工具按文本行对伪代码做 diff。它自己的维度记录写着「Assembly is opaque provider text」，并注明重定位归一化不可用。rea 看不到这段文本的内部，只会阅读文本的 Agent 同样看不到。
 
-rea 的 DX-Ball 记录说明了代价。第一个反编译结果是 `FUN_00406400(void)` 调用 `__ftol()`。指令视图显示了一个栈输入和一个 x87 表达式。智能体之所以继续追查，仅仅是因为两个视图互相矛盾。
+rea 的 DX-Ball 记录说明了代价。第一个反编译结果是 `FUN_00406400(void)` 调用 `__ftol()`。指令视图显示了一个栈输入和一个 x87 表达式。Agent 之所以继续追查，仅仅是因为两个视图互相矛盾。
 
 本节课要构建反编译器所隐藏的那份推导。你从第 33 课解码出的 56 条指令出发，把它们提升为 IR，重命名为 SSA，再化简并恢复结构。然后，你把生成的伪代码与 Ghidra 为 `percent_change`、`grade` 和 `total` 生成的伪代码并排摆放，逐条解释每一处差异。测试会用 clang 编译你的输出，并在一个输入网格上对照源码运行。
 

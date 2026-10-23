@@ -11,7 +11,7 @@
 
 - 解释 CLIP 的双塔架构和对比训练目标
 - 使用预训练的 CLIP（或 SigLIP）做零样本分类，无需任何任务特定训练
-- 从零实现零样本分类：编码类别提示词、计算余弦相似度、取 argmax
+- 从零实现零样本分类：编码类别 prompt、计算余弦相似度、取 argmax
 - 区分 CLIP、SigLIP、OpenCLIP 与 LLaVA/LLaMA-vision 模型——各自在 2026 年的用途
 
 ## 问题
@@ -71,13 +71,13 @@ y_{ij} &= \begin{cases} +1 & \text{if matching} \\ -1 & \text{otherwise} \end{ca
 
 给定一个训练好的 CLIP：
 
-1. 对每个类别，拼一个提示词："a photo of a {class}"。
-2. 用文本编码器编码所有类别提示词 → `T`，形状 (C, d)。
+1. 对每个类别，拼一个 prompt："a photo of a {class}"。
+2. 用文本编码器编码所有类别 prompt → `T`，形状 (C, d)。
 3. 编码测试图像 → `I`，形状 (1, d)。
 4. 相似度 = `I @ T.T`，形状 (1, C)。
 5. 取 argmax → 预测类别。
 
-提示词工程很重要。OpenAI 为 ImageNet 发布了 80 个提示词模板（"a photo of a {}"、"a blurry photo of a {}"、"a sketch of a {}"……）。对每个类别，把所有模板的 embedding 取平均，可以再提升 1-3% 的 top-1 准确率。
+prompt 工程很重要。OpenAI 为 ImageNet 发布了 80 个 prompt 模板（"a photo of a {}"、"a blurry photo of a {}"、"a sketch of a {}"……）。对每个类别，把所有模板的 embedding 取平均，可以再提升 1-3% 的 top-1 准确率。
 
 ### 2026 年 CLIP 风格模型的用武之地
 
@@ -199,12 +199,12 @@ SigLIP 更新，在小规模训练下表现更好，新项目更倾向于它：`
 
 本节课产出：
 
-- `outputs/prompt-zero-shot-class-picker.md` —— 一个在给定类别列表和领域后，为零样本 CLIP 设计类别模板的提示词。
+- `outputs/prompt-zero-shot-class-picker.md` —— 一个在给定类别列表和领域后，为零样本 CLIP 设计类别模板的 prompt。
 - `outputs/skill-image-text-retriever.md` —— 一个用任意 CLIP checkpoint 构建图像 embedding 索引，支持按文本查询和按图像查询的技能。
 
 ## 练习
 
-1. **（简单）** 使用预训练的 OpenCLIP ViT-B/32，配合 80 个模板的提示词集，在 CIFAR-10 上做零样本分类。报告 top-1 准确率；应在 85-90% 左右。
+1. **（简单）** 使用预训练的 OpenCLIP ViT-B/32，配合 80 个模板的 prompt 集，在 CIFAR-10 上做零样本分类。报告 top-1 准确率；应在 85-90% 左右。
 2. **（中等）** 在同一 CIFAR-10 任务上比较单模板（"a photo of a {}"）与 80 模板平均 embedding。量化差距并解释模板为何有帮助。
 3. **（困难）** 构建一个零样本图像检索索引：用 CLIP 嵌入 1000 张图像，建立 FAISS 索引，用自然语言描述查询。对你手写的 20 条留出查询报告 recall@5。
 
@@ -218,7 +218,7 @@ SigLIP 更新，在小规模训练下表现更好，新项目更倾向于它：`
 | Prompt template | 「A photo of a {}」 | 包在类别名外面的自然语言模板；平均多个模板能提升零样本准确率 |
 | CLIP | 「图像+文本模型」 | 2021 年 OpenAI 的模型；2026 年该领域的通用词汇 |
 | SigLIP | 「Sigmoid CLIP」 | 用逐对 sigmoid 取代 softmax；小 batch 下训练更好 |
-| OpenCLIP | 「开放复现」 | 社区在 LAION 上训练的 CLIP 变体；开源流水线的生产默认 |
+| OpenCLIP | 「开放复现」 | 社区在 LAION 上训练的 CLIP 变体；开源 pipeline 的生产默认 |
 | VLM | 「视觉-语言模型」 | CLIP 家族编码器加一个 LLM，训练来回答关于图像的问题 |
 
 ## 延伸阅读

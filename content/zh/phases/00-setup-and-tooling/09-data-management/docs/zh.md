@@ -73,7 +73,7 @@ for i, example in enumerate(dataset):
 
 ### 步骤 4：数据集格式
 
-`datasets` 库底层使用 Apache Arrow。你可以根据流水线需要转换成其他格式。
+`datasets` 库底层使用 Apache Arrow。你可以根据 pipeline 需要转换成其他格式。
 
 ```python
 dataset = load_dataset("stanfordnlp/imdb", split="train")

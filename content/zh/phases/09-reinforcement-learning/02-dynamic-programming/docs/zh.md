@@ -48,7 +48,7 @@ value-iteration-gamma
 
 ### 第 1 步：构建 GridWorld 的 MDP 模型
 
-沿用第 01 课的 4×4 GridWorld。我们加入一个随机变体：以概率 `0.1`，智能体会滑向随机的垂直方向。
+沿用第 01 课的 4×4 GridWorld。我们加入一个随机变体：以概率 `0.1`，Agent 会滑向随机的垂直方向。
 
 ```python
 SLIP = 0.1

@@ -10,7 +10,7 @@
 
 ## 问题
 
-到 2026 年，投机解码已成为通用能力。EAGLE-3 草稿头在目标模型的隐藏状态上训练，向前预测 N 个 token；目标模型用一次前向完成校验。60-80% 的接受率可以转化为 2-3 倍的端到端吞吐。vLLM 0.7 原生集成了这一能力。SGLang + SpecForge 提供训练流水线。Red Hat 的 Speculators 为 Llama 3.3 70B、Qwen3-Coder-30B MoE、GPT-OSS-120B 发布了对齐草稿。
+到 2026 年，投机解码已成为通用能力。EAGLE-3 草稿头在目标模型的隐藏状态上训练，向前预测 N 个 token；目标模型用一次前向完成校验。60-80% 的接受率可以转化为 2-3 倍的端到端吞吐。vLLM 0.7 原生集成了这一能力。SGLang + SpecForge 提供训练 pipeline。Red Hat 的 Speculators 为 Llama 3.3 70B、Qwen3-Coder-30B MoE、GPT-OSS-120B 发布了对齐草稿。
 
 真正的工夫在服务运维，而不在模型。接受率会随流量分布漂移（ShareGPT、代码、领域数据各不相同）。发生拒绝时的尾延迟比不用投机更差——你必须报告多个 batch 规模下的 p99，而不只是稳态 tokens/sec。与 Anthropic / OpenAI API 相比的每百万 token 成本，是可信度的关键杠杆。
 
@@ -77,7 +77,7 @@ cf-spec-decode
 
 6. **领域流量。** 让 ShareGPT、HumanEval 与领域特定流量经过同一个服务器。按分布测量接受率。找出草稿发生漂移的情形。
 
-7. **第二个目标模型。** 在 Qwen3-Coder-30B MoE 上运行同样的流水线。草稿更难做（MoE 路由噪声）。报告结果。
+7. **第二个目标模型。** 在 Qwen3-Coder-30B MoE 上运行同样的 pipeline。草稿更难做（MoE 路由噪声）。报告结果。
 
 8. **K8s HPA。** 在 K8s 下部署，HPA 跟踪 `queue_wait_ms`。演示负载增至三倍时的扩容。
 
@@ -134,7 +134,7 @@ $ curl https://infer.example.com/v1/chat/completions -d '{"messages":[...]}'
 
 - [vLLM 的 EAGLE 与 P-EAGLE 文档](https://docs.vllm.ai) — 参考服务栈
 - [P-EAGLE（AWS 2026）](https://aws.amazon.com/blogs/machine-learning/p-eagle-faster-llm-inference-with-parallel-speculative-decoding-in-vllm/) — 并行投机解码论文 + 集成
-- [SGLang SpecForge](https://github.com/sgl-project/SpecForge) — 草稿头训练流水线
+- [SGLang SpecForge](https://github.com/sgl-project/SpecForge) — 草稿头训练 pipeline
 - [Red Hat Speculators](https://github.com/neuralmagic/speculators) — 对齐草稿中心
 - [TensorRT-LLM 投机解码](https://nvidia.github.io/TensorRT-LLM/) — 厂商替代方案
 - [Fireworks.ai 服务架构](https://fireworks.ai/blog) — 商业参考

@@ -626,7 +626,7 @@ def simulated_awq(weight_matrix, calibration_inputs, num_bits=4, salient_fractio
                     "n_salient": n_salient}
 ```
 
-### 第 8 步：完整流水线
+### 第 8 步：完整 pipeline
 
 把所有部分串起来。在同一个权重矩阵上比较朴素量化、逐通道、GPTQ 和 AWQ。
 

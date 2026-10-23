@@ -32,7 +32,7 @@ RLHF 解决了这个问题。它训练一个奖励模型来预测人类更偏好
 
 ### 三个阶段
 
-RLHF 不是单次训练，而是一个由三个顺序阶段组成的流水线，每个阶段都建立在前一个之上。
+RLHF 不是单次训练，而是一个由三个顺序阶段组成的 pipeline，每个阶段都建立在前一个之上。
 
 **阶段 1：SFT。** 在指令-回答对上训练基础模型（第 06 课）。这给你一个能遵循指令的模型，但它不知道哪些回答更好。
 
@@ -92,7 +92,7 @@ graph TD
 
 ### PPO：近端策略优化
 
-PPO 是一种强化学习算法。在 RLHF 中，「环境」是奖励模型，「智能体」是语言模型，「动作」是生成一个 token。
+PPO 是一种强化学习算法。在 RLHF 中，「环境」是奖励模型，「Agent」是语言模型，「动作」是生成一个 token。
 
 目标：
 
@@ -110,7 +110,7 @@ PPO 是一种强化学习算法。在 RLHF 中，「环境」是奖励模型，�
 
 KL 惩罚的意思是：你可以改进，但不能变成完全不同的模型。保持在已经相当合理的 SFT 版本附近。偏离太远，KL 代价就会压过奖励。
 
-**InstructGPT 的数字：** PPO 训练使用 lr=1.5e-5，KL 系数 $\beta=0.02$，256K 个 episode（prompt-回答对），每批 4 个 PPO epoch。整个 RLHF 流水线在 GPU 集群上耗时数天。
+**InstructGPT 的数字：** PPO 训练使用 lr=1.5e-5，KL 系数 $\beta=0.02$，256K 个 episode（prompt-回答对），每批 4 个 PPO epoch。整个 RLHF pipeline 在 GPU 集群上耗时数天。
 
 ```mermaid
 graph LR
@@ -168,7 +168,7 @@ RLHF 的阴暗面。语言模型针对奖励模型优化，而奖励模型只是
 
 缓解策略：更强的 KL 惩罚（防止模型偏离到足以利用弱点的程度）、在对抗样本上训练奖励模型（修补已知失败模式）、使用多个不同架构的奖励模型（更难同时黑掉全部）。
 
-### 真实的 RLHF 流水线
+### 真实的 RLHF pipeline
 
 | 模型 | 比较对 | 标注员 | RM 大小 | PPO 步数 | KL 系数 |
 |-------|-----------------|------------|---------|-----------|----------|
@@ -499,7 +499,7 @@ def compare_models(sft_model, rlhf_model, reward_model, prompts, max_seq_len=128
 
 ## 使用它
 
-### 完整的 RLHF 流水线演示
+### 完整的 RLHF pipeline 演示
 
 ```python
 if __name__ == "__main__":
@@ -598,7 +598,7 @@ if __name__ == "__main__":
 
 ## 交付它
 
-本课产出 `outputs/prompt-reward-model-designer.md`——一个用于设计奖励模型训练流水线的 prompt。给定目标行为（有用性、编码能力、安全性），它会生成数据收集协议、标注员指南和奖励模型评估标准。
+本课产出 `outputs/prompt-reward-model-designer.md`——一个用于设计奖励模型训练 pipeline 的 prompt。给定目标行为（有用性、编码能力、安全性），它会生成数据收集协议、标注员指南和奖励模型评估标准。
 
 ## 练习
 
@@ -616,7 +616,7 @@ if __name__ == "__main__":
 
 | 术语 | 大家怎么说 | 实际含义 |
 |------|----------------|----------------------|
-| RLHF | 「用人类反馈训练」 | Reinforcement Learning from Human Feedback：三阶段流水线（SFT、奖励模型、PPO），利用人类偏好信号优化语言模型输出 |
+| RLHF | 「用人类反馈训练」 | Reinforcement Learning from Human Feedback：三阶段 pipeline（SFT、奖励模型、PPO），利用人类偏好信号优化语言模型输出 |
 | Reward model | 「给回答打分的模型」 | 带标量输出头的 Transformer，使用 Bradley-Terry 损失在成对人类偏好上训练 |
 | Bradley-Terry | 「比较模型」 | 一种概率模型，$P(A > B) = \mathop{\mathrm{sigmoid}}(\text{score}(A) - \text{score}(B))$，把成对偏好转换为一致的评分函数 |
 | PPO | 「那个 RL 算法」 | Proximal Policy Optimization：更新策略以最大化奖励，同时裁剪更新幅度以防不稳定 |

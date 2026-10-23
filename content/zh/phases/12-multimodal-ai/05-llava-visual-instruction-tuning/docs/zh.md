@@ -76,7 +76,7 @@ batch 128、单 epoch，几个小时就能完成。投影器学会把 ViT 空间
 - 没有阶段 1 专属的损失要调。全程 LM 损失。
 - 投影器数小时就能训完，不是数天。
 - LLM 可以换（LLaVA-Llama2、LLaVA-Mistral、LLaVA-Llama3），只需重训投影器。
-- 视觉指令数据流水线用 GPT-4，针对新领域重新生成很便宜。
+- 视觉指令数据 pipeline 用 GPT-4，针对新领域重新生成很便宜。
 
 ### LLaVA-1.5 与 LLaVA-NeXT
 
@@ -135,7 +135,7 @@ mm-llava-projector
 `code/main.py` 实现：
 
 1. 纯 Python 的 2 层 MLP 投影器（玩具规模 dim 16 → 32 → 32）。
-2. prompt 构建流水线：系统 prompt + `<image>` 替换为 N 个投影 token + 用户轮次 + 助手生成占位。
+2. prompt 构建 pipeline：系统 prompt + `<image>` 替换为 N 个投影 token + 用户轮次 + 助手生成占位。
 3. 一个可视化器，展示 576-token 视觉块在 LLM 上下文中的样子（占 2k / 32k / 128k 上下文的百分比）。
 
 ## 交付它
@@ -152,7 +152,7 @@ mm-llava-projector
 
 4. LLaVA 阶段 1 的投影器用标题上的 LM 损失训练。如果跳过阶段 1 直接进入阶段 2（视觉指令微调）会怎样？引用 Prismatic VLMs 的消融实验（arXiv:2402.07865）给出答案。
 
-5. LLaVA-Instruct-150k 用 GPT-4 加 COCO 标题生成指令。对于一个新领域（医学 X 光、卫星影像），描述生成领域指令的四步数据流水线。每一步可能出什么问题？
+5. LLaVA-Instruct-150k 用 GPT-4 加 COCO 标题生成指令。对于一个新领域（医学 X 光、卫星影像），描述生成领域指令的四步数据 pipeline。每一步可能出什么问题？
 
 ## 关键术语
 

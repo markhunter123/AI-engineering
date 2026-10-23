@@ -26,7 +26,7 @@ cap-bpe-merge
 
 我们要构建的是字节级变体。字母表是 256 个原始字节，而不是 Unicode 码点。正因如此，这个 tokenizer 才能处理任意 UTF-8 输入，而不必回退到未知 token。
 
-## 流水线
+## Pipeline
 
 ```mermaid
 flowchart LR

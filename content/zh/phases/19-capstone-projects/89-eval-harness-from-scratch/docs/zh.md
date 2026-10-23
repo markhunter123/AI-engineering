@@ -45,7 +45,7 @@
 | **HELM** | Stanford CRFM | 全场景覆盖与透明披露 | 场景 × 指标矩阵 + 模型卡片报告 |
 | **lighteval** | Hugging Face | 训练流程中快速、库集成的评测 | 训练脚本可调用的 Task 注册表 + 指标函数 |
 
-尽管表面不同，五个栈共享同一个核心流水线：
+尽管表面不同，五个栈共享同一个核心 pipeline：
 
 ```mermaid
 flowchart LR

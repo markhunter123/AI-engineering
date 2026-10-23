@@ -18,7 +18,7 @@
 
 在 N 个 rank 上做朴素 allreduce，需要把张量发送 N 次到根节点，再广播 N 次回来。每个 rank 的带宽按 $O(N)$ 扩展，根节点成为瓶颈，墙钟时间下限是最慢链路乘以 N。Ring allreduce 把它摊平成 $2(N-1)$ 个大小为 $T/N$ 的块，因此每个 rank 的字节数降到 $2T(N-1)/N$，与集群规模无关。Tree allreduce 在小 N 和高延迟链路上占优，因为深度是 $\log_2(N)$ 跳而不是 $2(N-1)$ 跳。为集群形状选错拓扑，最慢的 GPU 就会决定每步时间。
 
-本路线中你会读到的每个分布式训练框架都依赖这四个原语。PyTorch DDP 对每个参数 bucket 做一次 allreduce 来同步梯度。ZeRO 用 reduce_scatter 分片优化器状态，用 allgather 广播更新后的参数。FSDP 把完整的 forward 变成 allgather 加 reduce_scatter。流水线并行需要 broadcast 在阶段组之间传递激活。如果你无法实现这四种集合操作，就无法推理训练为何停滞、为什么第 3 个 rank 出现梯度不匹配，或者为什么换拓扑后流水线气泡翻倍。
+本路线中你会读到的每个分布式训练框架都依赖这四个原语。PyTorch DDP 对每个参数 bucket 做一次 allreduce 来同步梯度。ZeRO 用 reduce_scatter 分片优化器状态，用 allgather 广播更新后的参数。FSDP 把完整的 forward 变成 allgather 加 reduce_scatter。Pipeline 并行需要 broadcast 在阶段组之间传递激活。如果你无法实现这四种集合操作，就无法推理训练为何停滞、为什么第 3 个 rank 出现梯度不匹配，或者为什么换拓扑后 pipeline 气泡翻倍。
 
 ## 概念
 
@@ -97,7 +97,7 @@ python3 code/main.py
 
 ## 交付它
 
-在第 77 到 81 课中使用这个 queue 网格原语。第 77 课把 allreduce 接进 DDP。第 78 课把 reduce_scatter 接进 ZeRO。第 79 课把 broadcast 接进流水线激活。第 81 课把四者组合成端到端演示。
+在第 77 到 81 课中使用这个 queue 网格原语。第 77 课把 allreduce 接进 DDP。第 78 课把 reduce_scatter 接进 ZeRO。第 79 课把 broadcast 接进 pipeline 激活。第 81 课把四者组合成端到端演示。
 
 ## 练习
 

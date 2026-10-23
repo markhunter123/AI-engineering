@@ -1,6 +1,6 @@
-# 项目 16 — GitHub Issue 到 PR 的自主智能体
+# 项目 16 — GitHub Issue 到 PR 的自主 Agent
 
-> 给 issue 打上标签，就得到一个 PR——这是 2026 年自主编码智能体的产品形态：在云沙箱中运行智能体，验证测试通过，并提交一个附有变更理由、可进入评审的 PR。AWS Remote SWE Agents、Cursor Background Agents、OpenAI Codex cloud 与 Google Jules 都已交付这一形态。难点在于自动复现仓库的构建环境、防止凭据泄露、按仓库执行预算，以及确保智能体无法 force-push。本项目构建自托管版本，并在成本与通过率上与托管方案对比。
+> 给 issue 打上标签，就得到一个 PR——这是 2026 年自主编码 Agent 的产品形态：在云沙箱中运行 Agent，验证测试通过，并提交一个附有变更理由、可进入评审的 PR。AWS Remote SWE Agents、Cursor Background Agents、OpenAI Codex cloud 与 Google Jules 都已交付这一形态。难点在于自动复现仓库的构建环境、防止凭据泄露、按仓库执行预算，以及确保 Agent 无法 force-push。本项目构建自托管版本，并在成本与通过率上与托管方案对比。
 
 **Type:** Capstone
 **Languages:** Python (agent), TypeScript (GitHub App), YAML (Actions)
@@ -10,17 +10,17 @@
 
 ## 问题
 
-异步云端编码智能体是与交互式编码智能体（项目 01）不同的产品品类。它的交互界面就是一个 GitHub 标签。你给 issue 打上 `@agent fix this` 标签，一个 worker 会在云沙箱中启动，克隆仓库、运行测试、编辑文件、验证，然后开一个 PR，PR 正文中包含智能体的变更理由。没有交互循环，也没有终端。AWS Remote SWE Agents、Cursor Background Agents、OpenAI Codex cloud、Google Jules 与 Factory Droids 都汇聚到这一形态。
+异步云端编码 Agent 是与交互式编码 Agent（项目 01）不同的产品品类。它的交互界面就是一个 GitHub 标签。你给 issue 打上 `@agent fix this` 标签，一个 worker 会在云沙箱中启动，克隆仓库、运行测试、编辑文件、验证，然后开一个 PR，PR 正文中包含 Agent 的变更理由。没有交互循环，也没有终端。AWS Remote SWE Agents、Cursor Background Agents、OpenAI Codex cloud、Google Jules 与 Factory Droids 都汇聚到这一形态。
 
-工程挑战很具体：环境复现（智能体必须在没有缓存开发镜像的情况下从零构建仓库）、不稳定测试（必须重跑或隔离）、凭据作用域（使用最小细粒度权限的 GitHub App）、按仓库按天执行预算，以及禁止 force-push 的策略。本项目衡量通过率、成本与安全性，并与托管方案对比。
+工程挑战很具体：环境复现（Agent 必须在没有缓存开发镜像的情况下从零构建仓库）、不稳定测试（必须重跑或隔离）、凭据作用域（使用最小细粒度权限的 GitHub App）、按仓库按天执行预算，以及禁止 force-push 的策略。本项目衡量通过率、成本与安全性，并与托管方案对比。
 
 ## 概念
 
-触发器是 GitHub webhook（issue 标签或 PR 评论）。分发器把工作入队到 ECS Fargate 或 Lambda。worker 把仓库拉取到 Daytona 或 E2B 沙箱中，并依据仓库推断出一个通用 Dockerfile（语言、框架）。智能体针对 Claude Opus 4.7 或 GPT-5.4-Codex 运行 mini-swe-agent 或 SWE-agent v2 循环。它反复迭代：读代码、提出修复、应用补丁、运行测试。
+触发器是 GitHub webhook（issue 标签或 PR 评论）。分发器把工作入队到 ECS Fargate 或 Lambda。worker 把仓库拉取到 Daytona 或 E2B 沙箱中，并依据仓库推断出一个通用 Dockerfile（语言、框架）。Agent 针对 Claude Opus 4.7 或 GPT-5.4-Codex 运行 mini-swe-agent 或 SWE-agent v2 循环。它反复迭代：读代码、提出修复、应用补丁、运行测试。
 
-验证是门禁步骤。PR 创建之前，完整 CI 必须在沙箱中通过。系统会计算覆盖率变化；如果下降超过阈值，PR 仍然会创建，但会被打上 `needs-review` 标签。智能体把变更理由作为 PR 描述发布，并开一个 `@agent` 线程，评审者可以在此 @ 它追问。
+验证是门禁步骤。PR 创建之前，完整 CI 必须在沙箱中通过。系统会计算覆盖率变化；如果下降超过阈值，PR 仍然会创建，但会被打上 `needs-review` 标签。Agent 把变更理由作为 PR 描述发布，并开一个 `@agent` 线程，评审者可以在此 @ 它追问。
 
-安全性通过 GitHub 的两个不同界面来限定：App 提供一个短期 installation token，具有 `workflows: read` 以及较窄的仓库内容/PR 权限；分支保护（而非 App 权限）强制执行「不得直接写入 `main`」与「禁止 force-push」——App 永远不加入绕过名单。对 `.github/workflows` 做路径级只读访问并非 GitHub App 的真实原语，因此智能体对文件编辑的允许列表必须在 worker 侧执行。按仓库按天的预算上限在分发器处执行（例如每个仓库每天最多 5 个 PR，每个 PR 20 美元）。
+安全性通过 GitHub 的两个不同界面来限定：App 提供一个短期 installation token，具有 `workflows: read` 以及较窄的仓库内容/PR 权限；分支保护（而非 App 权限）强制执行「不得直接写入 `main`」与「禁止 force-push」——App 永远不加入绕过名单。对 `.github/workflows` 做路径级只读访问并非 GitHub App 的真实原语，因此 Agent 对文件编辑的允许列表必须在 worker 侧执行。按仓库按天的预算上限在分发器处执行（例如每个仓库每天最多 5 个 PR，每个 PR 20 美元）。
 
 ## 架构
 
@@ -59,7 +59,7 @@ GitHub issue labeled `@agent fix` or PR comment
 - 触发：带细粒度 token 的 GitHub App；通过 Lambda 或 Fly.io 接收 webhook
 - Worker：ECS Fargate 任务（或 GitHub Actions 自托管 runner）
 - 沙箱：每个任务一个 Daytona devcontainer 或 E2B 沙箱
-- 智能体循环：mini-swe-agent 基线，或基于 Claude Opus 4.7 / GPT-5.4-Codex 的 SWE-agent v2
+- Agent 循环：mini-swe-agent 基线，或基于 Claude Opus 4.7 / GPT-5.4-Codex 的 SWE-agent v2
 - 检索：tree-sitter 仓库地图 + ripgrep
 - 验证：沙箱内完整 CI + 覆盖率变化门禁
 - 可观测性：Langfuse，按 PR 归档追踪，并从 PR 正文链接
@@ -79,11 +79,11 @@ cf-issue-to-pr
 
 4. **环境推断。** 检测语言（Python、Node、Go、Rust）与包管理器（uv、pnpm、go mod、cargo）。如果不存在 Dockerfile，则即时生成一个。
 
-5. **智能体循环。** mini-swe-agent 或 SWE-agent v2，使用 Claude Opus 4.7。工具：ripgrep、tree-sitter 仓库地图、read_file、edit_file、run_tests、git。硬性限制：20 美元成本、30 分钟墙钟时间、30 个智能体轮次。
+5. **Agent 循环。** mini-swe-agent 或 SWE-agent v2，使用 Claude Opus 4.7。工具：ripgrep、tree-sitter 仓库地图、read_file、edit_file、run_tests、git。硬性限制：20 美元成本、30 分钟墙钟时间、30 个 Agent 轮次。
 
 6. **验证。** 循环结束后，在沙箱内运行完整测试套件。通过 jacoco / coverage.py 计算覆盖率变化。若 CI 失败：停止，不创建 PR。若覆盖率下降超过 2%：创建 PR 并打上 `needs-review` 标签。
 
-7. **PR 发布。** 推送智能体分支。通过 GitHub API 创建 PR，包含：标题、变更理由、diff 摘要、追踪 URL、成本、轮次。
+7. **PR 发布。** 推送 Agent 分支。通过 GitHub API 创建 PR，包含：标题、变更理由、diff 摘要、追踪 URL、成本、轮次。
 
 8. **凭据卫生。** worker 使用短期的 GitHub App installation token 运行。日志在归档前清除密钥。
 
@@ -133,16 +133,16 @@ cf-issue-to-pr
 | 术语 | 人们常说的 | 实际含义 |
 |------|-----------------|------------------------|
 | GitHub App | 「限定作用域的机器人身份」 | 具有细粒度权限 + 短期 installation token 的 App |
-| 异步云智能体 | 「后台智能体」 | 在云沙箱而非终端中运行的非交互式 worker |
+| 异步云 Agent | 「后台 Agent」 | 在云沙箱而非终端中运行的非交互式 worker |
 | 环境推断 | 「Dockerfile 合成」 | 检测语言 + 包管理器，不存在 Dockerfile 时生成一个 |
 | 验证 | 「沙箱内 CI」 | 创建 PR 之前在 worker 内运行完整测试套件 |
-| 覆盖率变化 | 「覆盖率保持」 | 从基线到智能体分支的测试覆盖率百分比变化 |
+| 覆盖率变化 | 「覆盖率保持」 | 从基线到 Agent 分支的测试覆盖率百分比变化 |
 | 按仓库预算 | 「每日上限」 | 在分发器处执行的美元与 PR 数量上限 |
-| 变更理由 | 「PR 正文说明」 | 智能体对改动内容与原因的总结；PR 正文中必需 |
+| 变更理由 | 「PR 正文说明」 | Agent 对改动内容与原因的总结；PR 正文中必需 |
 
 ## 延伸阅读
 
-- [AWS Remote SWE Agents](https://github.com/aws-samples/remote-swe-agents) — 典型的异步云智能体参考
+- [AWS Remote SWE Agents](https://github.com/aws-samples/remote-swe-agents) — 典型的异步云 Agent 参考
 - [SWE-agent](https://github.com/SWE-agent/SWE-agent) — CLI 参考
 - [Cursor Background Agents](https://docs.cursor.com/background-agent) — 商业替代方案
 - [OpenAI Codex（云端）](https://openai.com/codex) — 托管竞品

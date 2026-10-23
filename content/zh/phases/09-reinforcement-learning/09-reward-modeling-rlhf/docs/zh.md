@@ -15,7 +15,7 @@
 
 RLHF（Christiano 等人 2017；Ouyang 等人 2022）把偏好转换成奖励模型，再用 PPO 对着这个奖励优化 LM。分三步：SFT → RM → PPO。这就是让 ChatGPT、Claude、Gemini，以及 2023–2025 年所有其他对齐 LLM 上线的配方。
 
-2026 年，PPO 那一步大多被 DPO（Phase 10 · 08）取代，因为后者更便宜，对对齐调优的效果也几乎一样好。但*奖励模型*这一块仍然支撑着每一个 Best-of-N 采样器、每一条从可验证奖励做 RL 的流水线，以及每一个使用过程奖励模型的推理模型。理解了 RLHF，你就理解了整个对齐栈。
+2026 年，PPO 那一步大多被 DPO（Phase 10 · 08）取代，因为后者更便宜，对对齐调优的效果也几乎一样好。但*奖励模型*这一块仍然支撑着每一个 Best-of-N 采样器、每一条从可验证奖励做 RL 的 pipeline，以及每一个使用过程奖励模型的推理模型。理解了 RLHF，你就理解了整个对齐栈。
 
 ## 概念
 
@@ -60,7 +60,7 @@ reward-model
 
 ## 构建它
 
-本课使用极小的合成「提示」和「回复」，都用字符串表示。RM 是基于词袋表示的线性打分器。没有真正的 LLM——重要的是流水线的*形状*，不是规模。见 `code/main.py`。
+本课使用极小的合成「提示」和「回复」，都用字符串表示。RM 是基于词袋表示的线性打分器。没有真正的 LLM——重要的是 pipeline 的*形状*，不是规模。见 `code/main.py`。
 
 ### 第 1 步：合成偏好数据
 
@@ -117,7 +117,7 @@ def rlhf_step(theta, ref, w, prompt, rng, eps=0.2, beta=0.1, lr=0.05):
 
 ### 第 5 步：用 TRL 的生产配方
 
-一旦理解了玩具流水线，下面是真实库用户写出的同一个循环。Hugging Face 的 [TRL](https://huggingface.co/docs/trl) 是参考实现——阶段 2 用 `RewardTrainer`，阶段 3 用 `PPOTrainer`（内置对参考的 KL）。
+一旦理解了玩具 pipeline，下面是真实库用户写出的同一个循环。Hugging Face 的 [TRL](https://huggingface.co/docs/trl) 是参考实现——阶段 2 用 `RewardTrainer`，阶段 3 用 `PPOTrainer`（内置对参考的 KL）。
 
 ```python
 # Stage 2: reward model from pairwise preferences
@@ -178,12 +178,12 @@ for batch in dataloader:
 |-------|--------|--------|
 | 指令跟随、有帮助性、无害性 | 对齐 | 优先用 DPO（Phase 10 · 08）而非 RLHF-PPO。 |
 | 推理正确性（数学、代码） | 能力 | 带验证器奖励的 GRPO（Phase 9 · 12）。 |
-| 长时程多步任务 | 智能体 | 在步骤上用过程奖励模型的 PPO / GRPO。 |
+| 长时程多步任务 | Agent | 在步骤上用过程奖励模型的 PPO / GRPO。 |
 | 安全 / 拒绝行为 | 安全 | 用独立安全 RM 的 RLHF-PPO，或 Constitutional AI。 |
 | 推理时 Best-of-N | 快速对齐 | 在解码时使用 RM；无需训练策略。 |
 | 奖励蒸馏 | 推理算力 | 在冻结 LM 之上训练一个小「奖励头」。 |
 
-RLHF 是 2022–2024 年*那个*方法。到了 2026 年，生产对齐流水线以 DPO 优先，只有 RM 密集或安全关键的步骤才用 PPO。
+RLHF 是 2022–2024 年*那个*方法。到了 2026 年，生产对齐 pipeline 以 DPO 优先，只有 RM 密集或安全关键的步骤才用 PPO。
 
 ## 交付它
 
@@ -214,19 +214,19 @@ Refuse to ship RLHF-PPO without a KL monitor. Refuse to use an RM smaller than t
 
 1. **简单。** 在 `code/main.py` 里用 500 组合成偏好对训练 Bradley-Terry 奖励模型。在留出的 100 对上测量成对准确率。应该超过 90%。
 2. **中等。** 用 $\beta \in \lbrace 0.0, 0.1, 1.0 \rbrace$ 跑玩具 PPO-RLHF 循环。对每个值，画出 RM 分数与对参考 KL 随更新次数的变化。哪些运行发生了奖励作弊？
-3. **困难。** 在同一份偏好数据上实现 DPO（闭式偏好似然损失），与 RLHF-PPO 流水线对比所用算力和最终达到的 RM 分数。
+3. **困难。** 在同一份偏好数据上实现 DPO（闭式偏好似然损失），与 RLHF-PPO pipeline 对比所用算力和最终达到的 RM 分数。
 
 ## 关键术语
 
 | 术语 | 人们怎么说 | 它实际指什么 |
 |------|-----------------|-----------------------|
-| RLHF | "对齐 RL" | 三阶段 SFT + RM + PPO 流水线（Christiano 2017，Ouyang 2022）。 |
+| RLHF | "对齐 RL" | 三阶段 SFT + RM + PPO pipeline（Christiano 2017，Ouyang 2022）。 |
 | Reward Model (RM) | "打分网络" | 通过 Bradley-Terry 拟合到成对偏好的学习标量函数。 |
 | Bradley-Terry | "成对逻辑损失" | $P(y_+ \succ y_-) = \sigma(R(y_+) - R(y_-))$；标准的 RM 目标。 |
 | KL penalty | "待在参考附近" | 奖励里的 $\beta \cdot \mathrm{KL}(\pi_\theta \Vert \pi_{\text{ref}})$；反奖励作弊的正则项。 |
 | Reward hacking | "古德哈特定律" | 策略利用 RM 的缺陷；症状：奖励上升，人类评估持平。 |
 | RLAIF | "AI 标注的偏好" | 标签来自另一个 LM 而不是人类的 RLHF。 |
-| PRM | "Process Reward Model" | 给部分推理步骤打分；用于推理流水线。 |
+| PRM | "Process Reward Model" | 给部分推理步骤打分；用于推理 pipeline。 |
 | Constitutional AI | "Anthropic 的方法" | 由显式规则引导的 AI 生成偏好。 |
 
 ## 延伸阅读
@@ -238,6 +238,6 @@ Refuse to ship RLHF-PPO without a KL monitor. Refuse to use an RM smaller than t
 - [Bai et al. (2022). Constitutional AI: Harmlessness from AI Feedback](https://arxiv.org/abs/2212.08073) — RLAIF 与自我批评循环。
 - [Anthropic RLHF paper (Bai et al. 2022). Training a Helpful and Harmless Assistant](https://arxiv.org/abs/2204.05862) — HH 论文。
 - [Hugging Face TRL library](https://huggingface.co/docs/trl) — 生产级的 `RewardTrainer` 和 `PPOTrainer`。阅读 trainer 源码了解自适应 KL 和价值头的细节。
-- [Hugging Face — Illustrating Reinforcement Learning from Human Feedback](https://huggingface.co/blog/rlhf)，作者 Lambert、Castricato、von Werra、Havrilla — 配图讲解三阶段流水线的经典文章。
+- [Hugging Face — Illustrating Reinforcement Learning from Human Feedback](https://huggingface.co/blog/rlhf)，作者 Lambert、Castricato、von Werra、Havrilla — 配图讲解三阶段 pipeline 的经典文章。
 - [von Werra et al. (2020). TRL: Transformer Reinforcement Learning](https://github.com/huggingface/trl) — 这个库；`examples/` 里有 Llama、Mistral 和 Qwen 的端到端 RLHF 脚本。
 - [Sutton & Barto (2018). Ch. 17.4 — Designing Reward Signals](http://incompleteideas.net/book/RLbook2020.pdf) — 奖励假设的视角；思考奖励作弊的必备前提。

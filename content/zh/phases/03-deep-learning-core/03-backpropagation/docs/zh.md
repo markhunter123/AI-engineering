@@ -393,7 +393,7 @@ for epoch in range(2000):
         print(f"Epoch {epoch:4d} | Loss: {total_loss_val:.4f} | Accuracy: {accuracy:.1f}%")
 ```
 
-这里我们使用在线 SGD——每个样本之后就更新权重，而不是累积整个批次。这能更快地打破对称性，并避免在整个损失曲面上出现 sigmoid 饱和。每个 epoch 打乱数据，防止网络记住样本顺序。
+这里我们使用在线 SGD——每个样本之后就更新权重，而不是累积整个 batch。这能更快地打破对称性，并避免在整个损失曲面上出现 sigmoid 饱和。每个 epoch 打乱数据，防止网络记住样本顺序。
 
 无需手动调优。网络自己就能发现圆形决策边界。这就是反向传播的力量：你定义架构、损失函数和数据，算法自己找出权重。
 
@@ -431,7 +431,7 @@ with torch.no_grad():
         print(f"  {X[i].tolist()} -> {pred.item():.4f} (expected {y[i].item()})")
 ```
 
-`loss.backward()` 就是你的 `total_loss.backward()`。`optimizer.step()` 就是你手写的 `p.data -= lr * p.grad`。`optimizer.zero_grad()` 就是你的 `net.zero_grad()`。同样的算法，工业级实现。PyTorch 还处理 GPU 加速、混合精度、梯度检查点和数百种层类型。但反向传播还是同一个链式法则在同一张计算图上的应用。
+`loss.backward()` 就是你的 `total_loss.backward()`。`optimizer.step()` 就是你手写的 `p.data -= lr * p.grad`。`optimizer.zero_grad()` 就是你的 `net.zero_grad()`。同样的算法，工业级实现。PyTorch 还处理 GPU 加速、混合精度、梯度 checkpoint 和数百种层类型。但反向传播还是同一个链式法则在同一张计算图上的应用。
 
 训练时运行前向传播、再反向传播、然后更新权重。推理时只运行前向传播，没有梯度、没有更新。这个区别很重要，因为生产环境中发生的是推理。当你调用 Claude 或 GPT 这样的 API 时，你正在运行推理——你的提示通过网络正向流动，token 从另一端出来，权重不变。理解反向传播之所以重要，是因为它塑造了网络中每一个权重的值。
 

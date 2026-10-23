@@ -257,7 +257,7 @@ def combined_loss(logits, targets, num_classes, lam=1.0):
     return ce + lam * dc, {"ce": ce.item(), "dice": dc.item()}
 ```
 
-Dice 按类计算再平均（macro Dice）。`eps` 防止批次中不存在的类别出现除零。
+Dice 按类计算再平均（macro Dice）。`eps` 防止 batch 中不存在的类别出现除零。
 
 ### Step 5: IoU 指标
 
@@ -275,7 +275,7 @@ def iou_per_class(logits, targets, num_classes):
     return ious
 ```
 
-返回长度为 C 的向量。`nan` 标记批次中不存在的类别——计算 mIoU 时不要对它们取平均。
+返回长度为 C 的向量。`nan` 标记 batch 中不存在的类别——计算 mIoU 时不要对它们取平均。
 
 ### Step 6: 用于端到端验证的合成数据集
 
@@ -347,7 +347,7 @@ def train_one_epoch(model, loader, optimizer, device, num_classes):
     return loss_sum / total, iou_sum / len(loader)
 ```
 
-在合成数据集上运行 10-30 个 epoch，观察形状类别的 mIoU 超过 0.9。注意 `nan_to_num(0)` 把批次中不存在的类别当作零处理；若要精确计算每类 IoU，应按存在性 mask 并在评估时跨批次使用 `torch.nanmean`，而不是在这里简单平均。
+在合成数据集上运行 10-30 个 epoch，观察形状类别的 mIoU 超过 0.9。注意 `nan_to_num(0)` 把 batch 中不存在的类别当作零处理；若要精确计算每类 IoU，应按存在性 mask 并在评估时跨 batch 使用 `torch.nanmean`，而不是在这里简单平均。
 
 ## 使用它
 

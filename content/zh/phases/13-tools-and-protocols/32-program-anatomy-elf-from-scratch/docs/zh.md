@@ -405,7 +405,7 @@ python3 code/lab.py
 
 ## 课程产物
 
-本课产出 `outputs/skill-program-anatomy-elf-from-scratch.md`。可与 Claude、Cursor、Codex、OpenClaw、Hermes 或任何读取 SKILL.md 的智能体配合使用。该技能把用户自行构建的编译目标文件或可执行文件转换成布局报告。报告给出每个结构、符号和重定位的文件范围，并与捕获的工具输出核对。
+本课产出 `outputs/skill-program-anatomy-elf-from-scratch.md`。可与 Claude、Cursor、Codex、OpenClaw、Hermes 或任何读取 SKILL.md 的 Agent 配合使用。该技能把用户自行构建的编译目标文件或可执行文件转换成布局报告。报告给出每个结构、符号和重定位的文件范围，并与捕获的工具输出核对。
 
 ## 验证它
 

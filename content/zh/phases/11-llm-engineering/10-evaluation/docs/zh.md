@@ -107,9 +107,9 @@ graph TD
 
 **Best-of-N** 为每个输入生成 N 个输出，让评判者选出最好的一个。这衡量系统的上限。如果 best-of-5 始终优于 best-of-1，你也许能从采样多个回答并选择中获益。
 
-### 评估流水线
+### 评估 pipeline
 
-每次评估都遵循相同的 6 步流水线。
+每次评估都遵循相同的 6 步 pipeline。
 
 ```mermaid
 flowchart LR
@@ -763,7 +763,7 @@ if __name__ == "__main__":
 # View: promptfoo view
 ```
 
-promptfoo 是从零到评估流水线的最快路径。YAML 配置、内置 LLM 评判、Web 查看器、对 CI 友好的输出。它开箱即支持 15+ 提供商，以及用 JavaScript 或 Python 编写的自定义评分函数。
+promptfoo 是从零到评估 pipeline 的最快路径。YAML 配置、内置 LLM 评判、Web 查看器、对 CI 友好的输出。它开箱即支持 15+ 提供商，以及用 JavaScript 或 Python 编写的自定义评分函数。
 
 ### DeepEval 集成
 

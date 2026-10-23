@@ -65,7 +65,7 @@ DeepSeek-V3 引入了无辅助损失方案。把每个专家的偏置项加到�
 
 ### 训练：DualPipe
 
-从第 10 阶段 · 第 19 课你知道，DualPipe 是一种双向流水线，把前向和反向的 chunk 与跨节点 all-to-all 通信重叠起来。在 DeepSeek-V3 的 2,048 块 H800 规模下，它大约挽回了 245k GPU 小时——这些时间原本会被 1F1B 浪费在流水线气泡上。
+从第 10 阶段 · 第 19 课你知道，DualPipe 是一种双向 pipeline，把前向和反向的 chunk 与跨节点 all-to-all 通信重叠起来。在 DeepSeek-V3 的 2,048 块 H800 规模下，它大约挽回了 245k GPU 小时——这些时间原本会被 1F1B 浪费在 pipeline 气泡上。
 
 ### 配置，逐字段解读
 

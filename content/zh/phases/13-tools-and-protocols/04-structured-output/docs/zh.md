@@ -16,7 +16,7 @@
 
 ## 问题
 
-一个读取采购订单邮件的智能体需要把自由文本变成 `{customer, line_items, total_usd}`。有三种做法。
+一个读取采购订单邮件的 Agent 需要把自由文本变成 `{customer, line_items, total_usd}`。有三种做法。
 
 **做法一：提示模型输出 JSON。** 「用 JSON 回复，字段为 customer、line_items、total_usd。」在前沿模型上有 85% 到 95% 的成功率。它以六种方式失败：缺花括号、尾逗号、类型错误、幻觉字段、在 token 上限处被截断、泄漏散文（如 “Here is your JSON:”）。
 
@@ -27,7 +27,7 @@
 2026 年每家前沿供应商都提供做法三的某种形式。
 
 - **OpenAI。** `response_format: {type: "json_schema", strict: true}`，模型拒绝时响应中出现 `refusal`。
-- **Anthropic。** 对 `tool_use` 输入强制执行 schema；不存在 `stop_reason: "refusal"` 这种东西，但没有工具调用的 `end_turn` 就是信号。
+- **Anthropic。** 对 `tool_use` 输入强制执行 schema；不存在 `stop_reason: "refusal"` 这种东西，但没有 tool call 的 `end_turn` 就是信号。
 - **Gemini。** 请求级别的 `responseSchema`；2026 年 Gemini 为选定类型提供 token 级语法约束。
 - **Pydantic AI。** `output_type=InvoiceModel` 产出类型为 `InvoiceModel` 的结构化 `RunResult`。
 - **Zod（TypeScript）。** 运行时解析器，按 Zod schema 校验供应商输出；与 OpenAI 的 `beta.chat.completions.parse` 配合使用。
@@ -61,7 +61,7 @@ class Invoice(BaseModel):
     total_usd: Decimal
 ```
 
-然后智能体框架在边界处把 schema 翻译成 OpenAI 严格模式、Anthropic 的 `input_schema` 或 Gemini 的 `responseSchema`。模型的输出以类型化的 `Invoice` 实例返回。校验错误抛出带类型化错误路径的 `ValidationError`。
+然后 Agent 框架在边界处把 schema 翻译成 OpenAI 严格模式、Anthropic 的 `input_schema` 或 Gemini 的 `responseSchema`。模型的输出以类型化的 `Invoice` 实例返回。校验错误抛出带类型化错误路径的 `ValidationError`。
 
 ### Zod：TypeScript 绑定
 

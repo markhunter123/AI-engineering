@@ -1,6 +1,6 @@
 # 仓库记忆与持久状态
 
-> 聊天历史是易失的，仓库是持久的。工作台把智能体状态存进带版本控制的文件，让下一个会话、下一个智能体和下一个评审者都读取同一事实源。
+> 聊天历史是易失的，仓库是持久的。工作台把 Agent 状态存进带版本控制的文件，让下一个会话、下一个 Agent 和下一个评审者都读取同一事实源。
 
 **Type:** Build
 **Languages:** Python (stdlib + `jsonschema` optional)
@@ -16,7 +16,7 @@
 
 ## 问题
 
-智能体结束一次会话，聊天关闭。下一个会话打开，问从哪里开始。模型说“我看看文件”，读到过时的笔记，然后把已经完成的工作又做一遍。更糟的是，它可能重写一个已完成的文件，因为没人告诉它这个文件已完成。
+Agent 结束一次会话，聊天关闭。下一个会话打开，问从哪里开始。模型说“我看看文件”，读到过时的笔记，然后把已经完成的工作又做一遍。更糟的是，它可能重写一个已完成的文件，因为没人告诉它这个文件已完成。
 
 工作台的解决办法是仓库记忆：状态以 JSON 文件形式存放在仓库中，按 schema 写入，以原子方式持久化，在代码评审中 diff 友好。聊天是瞬态信息流；仓库是权威记录系统。
 
@@ -38,7 +38,7 @@ flowchart LR
 |---------|-----------------|
 | 活动任务 id | 原始聊天记录 |
 | 本会话触及的文件 | token 级推理轨迹 |
-| 智能体做出的假设 | “用户看起来有些沮丧” |
+| Agent 做出的假设 | “用户看起来有些沮丧” |
 | 未解决的阻塞项 | 采样得到的补全 |
 | 下一步操作 | 厂商特定的模型 id |
 
@@ -46,7 +46,7 @@ flowchart LR
 
 ### Schema 优先的状态
 
-JSON Schema 是契约。没有它，每个智能体都会发明新字段，每个评审者都要学一种新形态，每个 CI 脚本都得为历史版本写特例。有了它，坏写入就是被拒绝的写入。
+JSON Schema 是契约。没有它，每个 Agent 都会发明新字段，每个评审者都要学一种新形态，每个 CI 脚本都得为历史版本写特例。有了它，坏写入就是被拒绝的写入。
 
 schema 覆盖：
 
@@ -87,15 +87,15 @@ python3 code/main.py
 
 ## 生产环境中的模式
 
-以下四种模式，把本课的最小实现变成多智能体 monorepo 也能存活的东西。
+以下四种模式，把本课的最小实现变成多 Agent monorepo 也能存活的东西。
 
 **原子“先临时后重命名”不是可选项。** 2026 年 3 月的一份 Hive 项目 bug 报告清楚地记录了这个失败模式：`state.json` 通过 `write_text()` 写入，异常被捕获后静默吞掉。部分写入让会话在损坏的状态上继续恢复，却没有任何信号。修复方式始终是：在目标文件同一目录使用 `tempfile.mkstemp`，写入，`fsync`，`os.replace`（在 POSIX 和 Windows 上都是原子重命名）。本课的 `atomic_write` 正是这样做的。
 
-**每个非幂等工具调用都带幂等键。** 如果智能体调用工具后、在将结果写入 checkpoint 之前崩溃，恢复时会重试该工具调用。对读取安全；对发邮件、数据库插入、文件上传很危险。模式是：在执行前把每次工具调用的 ID 记入 `pending_calls.jsonl`。重试时检查该 ID；若存在，跳过调用并使用缓存结果。Anthropic 和 LangChain 在 2026 年的指南中都强调了这一点；LangGraph 的 checkpointer 出于同样原因持久化待处理的写入。
+**每个非幂等 tool call 都带幂等键。** 如果 Agent 调用工具后、在将结果写入 checkpoint 之前崩溃，恢复时会重试该 tool call。对读取安全；对发邮件、数据库插入、文件上传很危险。模式是：在执行前把每次 tool call 的 ID 记入 `pending_calls.jsonl`。重试时检查该 ID；若存在，跳过调用并使用缓存结果。Anthropic 和 LangChain 在 2026 年的指南中都强调了这一点；LangGraph 的 checkpointer 出于同样原因持久化待处理的写入。
 
 **把大型产物与状态分开。** 不要把 CSV、长对话记录或生成文件塞进 `agent_state.json`。把产物保存为独立文件（或上传到对象存储），状态里只保留路径。checkpoint 保持小而快；产物独立增长。
 
-**审计用事件溯源，恢复用快照。** 每次变更都追加到事件日志（`state.events.jsonl`）；定期快照到 `state.json`。恢复时读取快照，然后重放快照时间戳之后的所有事件。这会多占磁盘，但能逐字重放智能体的决策——调试长时运行时至关重要。这与 Postgres 内部使用 WAL 的形态相同。
+**审计用事件溯源，恢复用快照。** 每次变更都追加到事件日志（`state.events.jsonl`）；定期快照到 `state.json`。恢复时读取快照，然后重放快照时间戳之后的所有事件。这会多占磁盘，但能逐字重放 Agent 的决策——调试长时运行时至关重要。这与 Postgres 内部使用 WAL 的形态相同。
 
 **要么做 schema 迁移，要么拒绝加载。** `schema_version` 整数就是契约。管理器加载未知版本的文件时，拒绝读取。schema 升级时附上迁移脚本；`tools/migrate_state.py` 在每次启动时幂等运行。
 
@@ -113,11 +113,11 @@ python3 code/main.py
 
 ## 练习
 
-1. 增加 `last_human_touch` 时间戳。人类编辑后五秒内拒绝任何智能体写入。
+1. 增加 `last_human_touch` 时间戳。人类编辑后五秒内拒绝任何 Agent 写入。
 2. 扩展校验器以支持 `oneOf`，让任务可以是构建任务或评审任务，各自有不同的必填字段。
 3. 增加 `schema_version` 字段，并编写从 v1 到 v2 的迁移（把 `blockers` 重命名为 `risks`）。
 4. 把存储后端从本地文件改为 SQLite。保持 `StateManager` API 完全不变。
-5. 让两个智能体以 50 毫秒的写入竞争访问同一个状态文件。会出什么问题，原子重命名又如何挽救？
+5. 让两个 Agent 以 50 毫秒的写入竞争访问同一个状态文件。会出什么问题，原子重命名又如何挽救？
 
 ## 关键术语
 
@@ -137,7 +137,7 @@ python3 code/main.py
 - [Fast.io, AI Agent State Checkpointing: A Practical Guide](https://fast.io/resources/ai-agent-state-checkpointing/)——带幂等性的 schema 优先 checkpoint
 - [Fast.io, AI Agent Workflow State Persistence: Best Practices 2026](https://fast.io/resources/ai-agent-workflow-state-persistence/)——并发控制、TTL、事件溯源
 - [Hive Issue #6263 — non-atomic state.json writes silently ignored](https://github.com/aden-hive/hive/issues/6263)——真实项目中的失败模式
-- [eunomia, Checkpoint/Restore Systems: Evolution, Techniques, Applications](https://eunomia.dev/blog/2025/05/11/checkpointrestore-systems-evolution-techniques-and-applications-in-ai-agents/)——把操作系统历史中的 CR 原语应用到智能体
+- [eunomia, Checkpoint/Restore Systems: Evolution, Techniques, Applications](https://eunomia.dev/blog/2025/05/11/checkpointrestore-systems-evolution-techniques-and-applications-in-ai-agents/)——把操作系统历史中的 CR 原语应用到 Agent
 - [Indium, 7 State Persistence Strategies for Long-Running AI Agents in 2026](https://www.indium.tech/blog/7-state-persistence-strategies-ai-agents-2026/)
 - [Microsoft Agent Framework, Compaction](https://learn.microsoft.com/en-us/agent-framework/agents/conversations/compaction)——厂商提供的 checkpoint 管理器
 - 第 14 阶段 · 08——记忆块与睡眠期计算

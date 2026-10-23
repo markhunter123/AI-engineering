@@ -1,6 +1,6 @@
-# 项目 07 —— 端到端微调流水线（从数据到 SFT 到 DPO 到服务）
+# 项目 07 —— 端到端微调 pipeline（从数据到 SFT 到 DPO 到服务）
 
-> 训练一个 8B 模型：用你自己的数据训练，用你自己的偏好做 DPO 对齐，然后量化、投机解码，并以可度量的 $/1M tokens 成本对外提供服务。2026 年的开源技术栈是 Axolotl v0.8、TRL 0.15、用于快速迭代的 Unsloth、用于量化的 GPTQ/AWQ/GGUF，以及带 EAGLE-3 的 vLLM 0.7 用于服务。这个项目要求以可复现的方式跑完整条流水线——输入 YAML，输出可服务的端点——并按 2026 年 Model Openness Framework 发布模型卡。
+> 训练一个 8B 模型：用你自己的数据训练，用你自己的偏好做 DPO 对齐，然后量化、投机解码，并以可度量的 $/1M tokens 成本对外提供服务。2026 年的开源技术栈是 Axolotl v0.8、TRL 0.15、用于快速迭代的 Unsloth、用于量化的 GPTQ/AWQ/GGUF，以及带 EAGLE-3 的 vLLM 0.7 用于服务。这个项目要求以可复现的方式跑完整条 pipeline——输入 YAML，输出可服务的端点——并按 2026 年 Model Openness Framework 发布模型卡。
 
 **Type:** Capstone
 **Languages:** Python (pipeline), YAML (configs), Bash (scripts)
@@ -10,13 +10,13 @@
 
 ## 问题
 
-2026 年，每一支认真做 AI 的团队都会常备一条微调流水线。原因不是他们要发布前沿基础模型，而是可度量的收益来自下游适配：领域 SFT、针对标注偏好的 DPO、用于投机解码的蒸馏草稿模型，以及用 EAGLE-3 提供服务。Axolotl v0.8 负责多 GPU 的 SFT 配置。TRL 0.15 负责 DPO 和 GRPO。Unsloth 让你在单 GPU 上快速迭代。带 EAGLE-3 的 vLLM 0.7 能把解码吞吐量提升 2-3 倍而不损失质量。工具已经可用；真正的功夫在 YAML、数据卫生和评估纪律上。
+2026 年，每一支认真做 AI 的团队都会常备一条微调 pipeline。原因不是他们要发布前沿基础模型，而是可度量的收益来自下游适配：领域 SFT、针对标注偏好的 DPO、用于投机解码的蒸馏草稿模型，以及用 EAGLE-3 提供服务。Axolotl v0.8 负责多 GPU 的 SFT 配置。TRL 0.15 负责 DPO 和 GRPO。Unsloth 让你在单 GPU 上快速迭代。带 EAGLE-3 的 vLLM 0.7 能把解码吞吐量提升 2-3 倍而不损失质量。工具已经可用；真正的功夫在 YAML、数据卫生和评估纪律上。
 
-你会让一个 8B 基础模型（Llama 3.3、Qwen3 或 Gemma 3）在任务数据上先做 SFT 再做 DPO，然后量化用于服务，并用 lm-evaluation-harness、RewardBench-2、MT-Bench-v2 和 MMLU-Pro 衡量增益。你要产出一份符合 2026 年 Model Openness Framework 的模型卡。重点是可复现性：一条命令即可端到端重跑整条流水线。
+你会让一个 8B 基础模型（Llama 3.3、Qwen3 或 Gemma 3）在任务数据上先做 SFT 再做 DPO，然后量化用于服务，并用 lm-evaluation-harness、RewardBench-2、MT-Bench-v2 和 MMLU-Pro 衡量增益。你要产出一份符合 2026 年 Model Openness Framework 的模型卡。重点是可复现性：一条命令即可端到端重跑整条 pipeline。
 
 ## 概念
 
-流水线有五个阶段。**数据**：去重（MinHash / Datatrove）、质量过滤（Nemotron-CC 风格分类器）、PII 清洗，以及针对公开基准污染的切分卫生检查。**SFT**：Axolotl YAML，8xH100 上 ZeRO-3，余弦调度，序列打包，2-3 个 epoch。**DPO 或 GRPO**：TRL 配置，1 个 epoch，偏好对可以人工标注或由模型判定，调 beta。**量化**：GPTQ + AWQ + GGUF，保证部署灵活性。**服务**：带 EAGLE-3 投机头的 vLLM 0.7（或带 SpecForge 的 SGLang）、K8s 部署、基于队列等待的 HPA。
+pipeline 有五个阶段。**数据**：去重（MinHash / Datatrove）、质量过滤（Nemotron-CC 风格分类器）、PII 清洗，以及针对公开基准污染的切分卫生检查。**SFT**：Axolotl YAML，8xH100 上 ZeRO-3，余弦调度，序列打包，2-3 个 epoch。**DPO 或 GRPO**：TRL 配置，1 个 epoch，偏好对可以人工标注或由模型判定，调 beta。**量化**：GPTQ + AWQ + GGUF，保证部署灵活性。**服务**：带 EAGLE-3 投机头的 vLLM 0.7（或带 SpecForge 的 SGLang）、K8s 部署、基于队列等待的 HPA。
 
 消融实验才是交付物：在三个任务特定基准上对比仅 SFT、SFT+DPO、SFT+GRPO。服务指标：batch 1 / 8 / 32 下的 tokens/s、EAGLE-3 接受率、$/1M tokens。安全评估：Llama Guard 4 通过率。模型卡：偏差评估、可复现随机种子、数据许可。
 
@@ -72,7 +72,7 @@ ce-finetune-stages
 
 ## 构建它
 
-1. **数据流水线。** 在原始语料上运行 Datatrove 去重。应用 Nemotron-CC 风格的质量分类器。Presidio 清洗 PII。用显式种子写出训练/验证切分。
+1. **数据 pipeline。** 在原始语料上运行 Datatrove 去重。应用 Nemotron-CC 风格的质量分类器。Presidio 清洗 PII。用显式种子写出训练/验证切分。
 
 2. **污染检查。** 对每个验证切分，计算它与 MMLU-Pro、MT-Bench-v2、RewardBench-2 测试集之间的 MinHash 重叠。拒绝任何重叠。
 
@@ -110,7 +110,7 @@ $ ./pipeline.sh config/llama3.3-8b-domainX.yaml
 | 权重 | 标准 | 衡量方式 |
 |:-:|---|---|
 | 25 | 相对 base 的评估增益 | 在目标任务（MMLU-Pro、MT-Bench-v2、任务特定基准）上的实测增益 |
-| 20 | 流水线可复现性 | 一条命令以相同种子端到端重跑 |
+| 20 | Pipeline 可复现性 | 一条命令以相同种子端到端重跑 |
 | 20 | 数据卫生 | 去重率、PII 清洗覆盖率、污染检查全绿 |
 | 20 | 服务效率 | bs=1/8/32 下的 tokens/s、EAGLE-3 接受率、$/1M tokens |
 | 15 | 模型卡 + 安全评估 | 2026 MOF 完整度 + Llama Guard 4 通过率 |

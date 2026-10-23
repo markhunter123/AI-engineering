@@ -1,6 +1,6 @@
 # Serverless LLM 的冷启动缓解
 
-> 一个 20 GB 的模型镜像从冷态到开始服务需要 5-10 分钟（7B）到 20 分钟以上（70B）。在真正的 serverless 世界里，这不是热身——这是故障。缓解手段在五个层面展开：预热节点镜像（AWS 上的 Bottlerocket、双卷架构）、模型流式加载（NVIDIA Run:ai Model Streamer，vLLM 原生支持）、GPU 内存快照（Modal checkpoint，重启最快提升 10 倍）、热池（`min_workers=1`）、分层加载（ServerlessLLM 的 NVMe→DRAM→HBM 流水线，延迟降低 10-200 倍），以及迁移输入 token（KB）而非 KV cache（GB）的在线迁移。Modal 公布 2-4 秒冷启动为下限；Baseten 默认 5-10 秒，预热后可小于 1 秒。本课教你测量、预算并叠加这五个层面。
+> 一个 20 GB 的模型镜像从冷态到开始服务需要 5-10 分钟（7B）到 20 分钟以上（70B）。在真正的 serverless 世界里，这不是热身——这是故障。缓解手段在五个层面展开：预热节点镜像（AWS 上的 Bottlerocket、双卷架构）、模型流式加载（NVIDIA Run:ai Model Streamer，vLLM 原生支持）、GPU 内存快照（Modal checkpoint，重启最快提升 10 倍）、热池（`min_workers=1`）、分层加载（ServerlessLLM 的 NVMe→DRAM→HBM pipeline，延迟降低 10-200 倍），以及迁移输入 token（KB）而非 KV cache（GB）的在线迁移。Modal 公布 2-4 秒冷启动为下限；Baseten 默认 5-10 秒，预热后可小于 1 秒。本课教你测量、预算并叠加这五个层面。
 
 **Type:** Learn
 **Languages:** Python (stdlib, toy cold-start path simulator)
@@ -59,7 +59,7 @@ ServerlessLLM 把存储视为层级结构：NVMe（快但容量大）、DRAM（�
 
 对于一个 TTFT P99 SLA 为 2 秒的服务，问题不是「要不要热池」，而是「要几个热副本，哪些路径得到它们」。
 
-- 高价值交互路径（实时聊天、语音智能体）：`min_workers=1-2`。
+- 高价值交互路径（实时聊天、语音 Agent）：`min_workers=1-2`。
 - 后台批处理路径（夜间分类）：可以接受缩容到零，5-10 分钟冷启动可容忍。
 - 高级层：按租户配置 `min_workers`，并分配专属容量。
 

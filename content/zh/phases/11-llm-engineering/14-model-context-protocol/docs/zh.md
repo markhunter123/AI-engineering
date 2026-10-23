@@ -121,7 +121,7 @@ MCP 使用 JSON-RPC 2.0，运行在 stdio 或 Streamable HTTP 之上。
 
 ### 无需服务器发起请求的客户端输入
 
-旧修订版允许服务器通过流发送 `sampling/createMessage`、`roots/list` 或 `elicitation/create` 之类的请求。当前协议改用 Multi Round-Trip Requests。符合条件的工具调用、资源读取或 prompt 获取会返回 `resultType: input_required`，并至少带有 `inputRequests` 或 `requestState` 之一。客户端收集所有被请求的输入，用新的 JSON-RPC ID 和相应的 `inputResponses` 重试原方法，并在提供了 `requestState` 时原样回传。如果没有 `inputRequests`，重试时省略 `inputResponses`。
+旧修订版允许服务器通过流发送 `sampling/createMessage`、`roots/list` 或 `elicitation/create` 之类的请求。当前协议改用 Multi Round-Trip Requests。符合条件的 tool call、资源读取或 prompt 获取会返回 `resultType: input_required`，并至少带有 `inputRequests` 或 `requestState` 之一。客户端收集所有被请求的输入，用新的 JSON-RPC ID 和相应的 `inputResponses` 重试原方法，并在提供了 `requestState` 时原样回传。如果没有 `inputRequests`，重试时省略 `inputResponses`。
 
 Roots、Sampling 和 Logging 仍然可用，但已废弃，因此新实现不应采用它们。现有的 Roots 或 Sampling 请求放在 MRTR 的 `inputRequests` 中传递，绝不能作为独立的服务器到客户端 JSON-RPC 请求。优先使用显式的文件或目录参数、资源 URI、服务器配置，以及直接的模型提供商集成。stdio 诊断信息写入 stderr，生产遥测使用 OpenTelemetry。
 
@@ -183,7 +183,7 @@ def request(method, params=None):
 
 先调用 `server/discover`，选择一个受支持的版本，再调用 `tools/list`。如果你已经知道版本并能处理 `-32022`，直接调用 `tools/list` 也合法。
 
-演示程序按名称顺序返回工具列表，并附带 `ttlMs`、`cacheScope`、`resultType` 和服务器身份。工具调用返回 complete、不可缓存的结果，因为其输出可能取决于当前状态。
+演示程序按名称顺序返回工具列表，并附带 `ttlMs`、`cacheScope`、`resultType` 和服务器身份。Tool call 返回 complete、不可缓存的结果，因为其输出可能取决于当前状态。
 
 ### 步骤 4：把同一个请求映射到 HTTP
 

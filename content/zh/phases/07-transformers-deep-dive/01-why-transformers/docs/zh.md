@@ -58,7 +58,7 @@ def attention_style(xs):
     return sum(xs) / len(xs)  # every x is independent
 ```
 
-我们对最多 100,000 个元素的序列计时。RNN 版本是 $O(N)$ 且只有一条 CPU 流水线。即使在纯 Python 中，注意力风格的归约在长度 ≥ 1,000 时也能胜出，因为 Python 的 `sum()` 用 C 实现，迭代时没有每步的解释器开销。
+我们对最多 100,000 个元素的序列计时。RNN 版本是 $O(N)$ 且只有一条 CPU pipeline。即使在纯 Python 中，注意力风格的归约在长度 ≥ 1,000 时也能胜出，因为 Python 的 `sum()` 用 C 实现，迭代时没有每步的解释器开销。
 
 ### 第 2 步：计算理论运算量
 

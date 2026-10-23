@@ -116,7 +116,7 @@ Cluster them by what they refer to. Output JSON:
 | 英语、单文档 | `en_coreference_web_trf`（spaCy-experimental）或 AllenNLP neural coref |
 | 多语言 | 在 OntoNotes 或 Multilingual CoNLL 上训练的 SpanBERT / XLM-R |
 | 跨文档事件共指 | 专用端到端模型（2025-26 年 SOTA） |
-| 快速 LLM 基线 | GPT-4o / Claude 配合结构化输出的共指提示词 |
+| 快速 LLM 基线 | GPT-4o / Claude 配合结构化输出的共指 prompt |
 | 生产对话系统 | 规则兜底 + 神经主模型 + 关键槽位人工复核 |
 
 2026 年落地的集成模式：先跑 NER，再跑共指，然后把共指簇合并进 NER 实体。下游任务看到的是每个簇一个实体，而不是每处提及一个实体。

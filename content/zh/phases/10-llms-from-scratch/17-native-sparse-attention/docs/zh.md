@@ -133,7 +133,7 @@ def compress(K, l):
 
 ## 使用它
 
-NSA 已在 DeepSeek 自家的长上下文预训练流水线中出货。截至 2026 年 4 月公开推理栈中的集成状态：
+NSA 已在 DeepSeek 自家的长上下文预训练 pipeline 中出货。截至 2026 年 4 月公开推理栈中的集成状态：
 
 - **DeepSeek 内部**：原生支持，公开权重使用 NSA 或其继任者 DSA（Deepseek Sparse Attention）。
 - **vLLM**：针对 DeepSeek-V3.x 权重的实验性 NSA 支持正在开发中。

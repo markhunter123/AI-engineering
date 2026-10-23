@@ -502,7 +502,7 @@ print(f"\nGenerated: {generated_text}")
 
 ## 交付它
 
-本课产出 `outputs/prompt-gpt-architecture-analyzer.md`——一个提示词（prompt），用于分析任何 GPT 风格模型的架构选择。把一个模型卡或技术报告喂给它，它会拆解参数分配、注意力设计和扩展决策。
+本课产出 `outputs/prompt-gpt-architecture-analyzer.md`——一个 prompt（prompt），用于分析任何 GPT 风格模型的架构选择。把一个模型卡或技术报告喂给它，它会拆解参数分配、注意力设计和扩展决策。
 
 ## 练习
 

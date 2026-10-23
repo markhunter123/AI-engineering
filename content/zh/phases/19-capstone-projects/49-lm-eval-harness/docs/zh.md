@@ -125,7 +125,7 @@ eval-harness-matrix
 
 ### 第四步：编写运行器
 
-`run_task` 遍历各批次，产生带分数、正确数、总数和延迟的 `TaskResult`。`run_leaderboard` 遍历所有任务，产生带总平均分的 `Leaderboard`。
+`run_task` 遍历各 batch，产生带分数、正确数、总数和延迟的 `TaskResult`。`run_leaderboard` 遍历所有任务，产生带总平均分的 `Leaderboard`。
 
 ### 第五步：输出 JSON
 

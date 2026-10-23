@@ -298,7 +298,7 @@ Tasks 是由 `io.modelcontextprotocol/tasks` 标识的官方扩展。它们并�
 
 网关为不透明的任务标识符记录已认证主体与后端路由。后续的 `tasks/get`、`tasks/update` 和 `tasks/cancel` 调用把 `params.taskId` 用作 `Mcp-Name`，从而为中间层提供路由键。`tasks/get` 返回 `resultType: complete` 以及当前任务状态，并在终态时内联最终结果或协议错误。`tasks/update` 针对未完成的任务输入发送带键的 `inputResponses`，并返回一个空的 complete 确认。`tasks/cancel` 是一种协作式意图，只返回空的 complete 确认，并不保证工作停止。
 
-不要实现新的 `tasks/list` 或 `tasks/result` 方法。它们属于较早的实验性模型。需要输入的任务通过 `tasks/get` 暴露完整的嵌入式请求；客户端通过 `tasks/update` 作答，而不是重试原始工具调用。客户端仍按建议的间隔轮询；任务的创建始终由服务器主导。
+不要实现新的 `tasks/list` 或 `tasks/result` 方法。它们属于较早的实验性模型。需要输入的任务通过 `tasks/get` 暴露完整的嵌入式请求；客户端通过 `tasks/update` 作答，而不是重试原始 tool call。客户端仍按建议的间隔轮询；任务的创建始终由服务器主导。
 
 持久化的任务路由状态是以任务句柄为键的应用数据，而不是协议会话。
 

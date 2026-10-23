@@ -95,7 +95,7 @@ for each block of Q (tile size ~128 × 128):
 | Flash 1 | 2022 | 分块 SRAM 内核 | A100 上 2× |
 | Flash 2 | 2023 | 更好的并行性，因果优先的顺序 | A100 上 3× |
 | Flash 3 | 2024 | Hopper 异步、FP8 | H100 上 1.5–2×（约 740 TFLOPs FP16） |
-| Flash 4 | 2026 | Blackwell 五级流水线，软件 exp2 | 推理优先（初期只支持前向） |
+| Flash 4 | 2026 | Blackwell 五级 pipeline，软件 exp2 | 推理优先（初期只支持前向） |
 
 Flash 4 发布时只支持前向传播。训练仍使用 Flash 3。Flash 4 的 GQA 与变长（varlen）支持尚待推出（2026 年中）。
 
@@ -204,7 +204,7 @@ vllm serve meta-llama/Llama-3.1-70B-Instruct \
     --kv-cache-dtype fp8
 ```
 
-跨请求的前缀缓存是 2026 年的一大收益——相同的系统 prompt、少样本示例或长上下文文档可以在多次调用间复用 KV。对于反复使用工具 prompt 的智能体负载，前缀缓存通常带来 5 倍吞吐提升。
+跨请求的前缀缓存是 2026 年的一大收益——相同的系统 prompt、少样本示例或长上下文文档可以在多次调用间复用 KV。对于反复使用工具 prompt 的 Agent 负载，前缀缓存通常带来 5 倍吞吐提升。
 
 ## 交付它
 
@@ -226,7 +226,7 @@ vllm serve meta-llama/Llama-3.1-70B-Instruct \
 | Flash Attention | 「分块注意力内核」 | 计算注意力时不必在 HBM 中物化 N×N 矩阵。 |
 | 连续批处理 | 「不等人的批处理」 | 把完成的序列换出、新序列换入，无需清空整个 batch。 |
 | PagedAttention | 「vLLM 的招牌」 | KV cache 按固定块分配并配有页表；消除内存碎片。 |
-| 前缀缓存 | 「复用长 prompt」 | 跨请求缓存共享前缀的 KV；为智能体大幅降低成本。 |
+| 前缀缓存 | 「复用长 prompt」 | 跨请求缓存共享前缀的 KV；为 Agent 大幅降低成本。 |
 | 投机解码 | 「草稿 + 验证」 | 廉价的草稿模型提议 token；大模型一次前向验证 k 个。 |
 
 ## 延伸阅读
@@ -234,7 +234,7 @@ vllm serve meta-llama/Llama-3.1-70B-Instruct \
 - [Dao et al. (2022). FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness](https://arxiv.org/abs/2205.14135) —— Flash 1。
 - [Dao (2023). FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning](https://arxiv.org/abs/2307.08691) —— Flash 2。
 - [Shah et al. (2024). FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision](https://arxiv.org/abs/2407.08608) —— Flash 3。
-- [FlashAttention-4 release notes (Dao-AILab, 2026)](https://github.com/Dao-AILab/flash-attention) —— Blackwell 五级流水线以及软件 exp2 技巧；本课提到的「发布时仅支持前向」等注意事项，可读该仓库 README。
+- [FlashAttention-4 release notes (Dao-AILab, 2026)](https://github.com/Dao-AILab/flash-attention) —— Blackwell 五级 pipeline 以及软件 exp2 技巧；本课提到的「发布时仅支持前向」等注意事项，可读该仓库 README。
 - [Kwon et al. (2023). Efficient Memory Management for Large Language Model Serving with PagedAttention](https://arxiv.org/abs/2309.06180) —— vLLM 论文。
 - [Leviathan et al. (2023). Fast Inference from Transformers via Speculative Decoding](https://arxiv.org/abs/2211.17192) —— 投机解码。
 - [Li et al. (2024). EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty](https://arxiv.org/abs/2401.15077) —— EAGLE-1/2 论文，本课引用的集成草稿方案。

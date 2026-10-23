@@ -1,6 +1,6 @@
 # LLM 路由层 — LiteLLM、OpenRouter、Portkey
 
-> 提供商锁定的代价很高。不同的工具调用工作负载适合不同的模型。路由网关提供统一的 API 表面、重试、故障转移、成本跟踪和防护栏。2026 年有三种典型形态占据主导：LiteLLM（开源自托管）、OpenRouter（托管 SaaS）、Portkey（生产级，2026 年 3 月开源）。本课给出决策标准，并走读一个用标准库实现的路由网关。
+> 提供商锁定的代价很高。不同的 tool calling 工作负载适合不同的模型。路由网关提供统一的 API 表面、重试、故障转移、成本跟踪和防护栏。2026 年有三种典型形态占据主导：LiteLLM（开源自托管）、OpenRouter（托管 SaaS）、Portkey（生产级，2026 年 3 月开源）。本课给出决策标准，并走读一个用标准库实现的路由网关。
 
 **Type:** Learn
 **Languages:** Python (stdlib, routing + failover + cost tracker)
@@ -53,7 +53,7 @@ on 5xx: refuse
 
 ### 语义缓存
 
-完全相同或近乎相同的 prompt 会命中缓存，而不是发给提供商。在重复的智能体循环中，节省可达 30% 到 60%。缓存键基于 embedding；近乎相同的 prompt 共享同一个缓存槽位。
+完全相同或近乎相同的 prompt 会命中缓存，而不是发给提供商。在重复的 Agent 循环中，节省可达 30% 到 60%。缓存键基于 embedding；近乎相同的 prompt 共享同一个缓存槽位。
 
 ### 防护栏
 

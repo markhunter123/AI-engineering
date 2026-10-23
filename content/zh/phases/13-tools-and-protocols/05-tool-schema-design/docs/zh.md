@@ -16,13 +16,13 @@
 
 ## 问题
 
-想象一个有 30 个工具的智能体。每次用户查询都会触发工具选择：模型读取每一份描述，然后选一个。会出现两种失败形态。
+想象一个有 30 个工具的 Agent。每次用户查询都会触发工具选择：模型读取每一份描述，然后选一个。会出现两种失败形态。
 
 **选错工具。** 模型选择了 `search_contacts`，而它本应选择 `get_customer_details`。原因：两份描述都说「查找人员」。模型无从区分。
 
 **明明有合适的工具却没选。** 用户询问股价；模型回复了一个看似合理但纯属幻觉的数字。原因：描述写的是「检索财务数据」，模型没有把「股价」映射过去。
 
-Composio 2025 年的实战指南在内部基准上测得，仅仅通过重命名和重写描述就能带来 10 到 20 个百分点的准确率波动。Anthropic 的 Agent SDK 文档也有类似说法。Databricks 的智能体模式文档更进一步：在一个有 50 个工具、描述含糊的注册表上，选择准确率跌到 62%；重写描述后，同一注册表达到 89%。
+Composio 2025 年的实战指南在内部基准上测得，仅仅通过重命名和重写描述就能带来 10 到 20 个百分点的准确率波动。Anthropic 的 Agent SDK 文档也有类似说法。Databricks 的 Agent 模式文档更进一步：在一个有 50 个工具、描述含糊的注册表上，选择准确率跌到 62%；重写描述后，同一注册表达到 89%。
 
 描述和名称的质量是你手上最便宜的杠杆。
 
@@ -91,7 +91,7 @@ notes_search(query)
 
 ### 把错误消息当作教学信号
 
-工具调用失败时，错误消息会到达模型。请为模型写错误消息。
+tool call 失败时，错误消息会到达模型。请为模型写错误消息。
 
 ```
 BAD  : TypeError: object of type 'NoneType' has no attribute 'lower'
@@ -161,7 +161,7 @@ tp-schema-routing
 | Atomic tool | “一工具一动作” | 名称唯一标识其行为的工具 |
 | Monolithic tool | “瑞士军刀” | 带 `action` 字符串参数的单一工具；选择准确率暴跌 |
 | Enum-closed set | “分类参数” | `{type: "string", enum: [...]}` 是封闭域的正确形状 |
-| Tool poisoning | “注入的描述” | 工具描述中的隐藏指令，劫持智能体 |
+| Tool poisoning | “注入的描述” | 工具描述中的隐藏指令，劫持 Agent |
 | Tool-selection accuracy | “选对了吗？” | 模型调用正确工具的查询百分比 |
 | Description linter | “schema 的 CI” | 强制执行命名、长度、消歧规则的自动审计 |
 | Namespace prefix | “notes_*” | 在大型注册表中分组相关工具的共享名称前缀 |
@@ -172,5 +172,5 @@ tp-schema-routing
 - [Composio — How to build tools for AI agents: field guide](https://composio.dev/blog/how-to-build-tools-for-ai-agents-a-field-guide) — 命名、描述与可测量的准确率提升
 - [OneUptime — Tool schemas for agents](https://oneuptime.com/blog/post/2026-01-30-tool-schemas/view) — 来自生产的参数设计模式
 - [Databricks — Agent system design patterns](https://docs.databricks.com/aws/en/generative-ai/guide/agent-system-design-patterns) — 带可测量基准的注册表级设计
-- [Anthropic — Building agents with the Claude Agent SDK](https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk) — 面向 Claude 智能体的描述模式
+- [Anthropic — Building agents with the Claude Agent SDK](https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk) — 面向 Claude Agent 的描述模式
 - [OpenAI — Function calling best practices](https://platform.openai.com/docs/guides/function-calling#best-practices) — 描述长度、严格模式要求与原子工具指导

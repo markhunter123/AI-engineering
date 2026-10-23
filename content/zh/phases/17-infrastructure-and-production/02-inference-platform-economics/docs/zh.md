@@ -26,7 +26,7 @@
 
 ### 三个细分市场
 
-**定制芯片**——Groq（LPU）、Cerebras（WSE）、SambaNova（RDU）。在相同模型上，解码速度通常比基于 GPU 的集群快 5-10 倍。每 token 价格更高（2025 年末 Groq 在 Llama-70B 上约为 $0.99/百万 token），但对延迟敏感的场景无可匹敌。Groq 是语音智能体和实时翻译的生产首选。
+**定制芯片**——Groq（LPU）、Cerebras（WSE）、SambaNova（RDU）。在相同模型上，解码速度通常比基于 GPU 的集群快 5-10 倍。每 token 价格更高（2025 年末 Groq 在 Llama-70B 上约为 $0.99/百万 token），但对延迟敏感的场景无可匹敌。Groq 是语音 Agent 和实时翻译的生产首选。
 
 **GPU 平台**——Baseten、Together、Fireworks、Modal、Anyscale。运行在 NVIDIA（2026 年的 H100、H200、B200）上，有时也用 AMD。它们处在「裸 GPU 租赁」（RunPod、Lambda）和「超大规模云托管服务」（Bedrock）之间的经济层。
 

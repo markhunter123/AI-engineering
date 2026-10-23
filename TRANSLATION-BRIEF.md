@@ -43,8 +43,8 @@
 | supervised / unsupervised | 监督 / 无监督 |
 | reinforcement learning | 强化学习 |
 | reward | 奖励 |
-| agent | 智能体 |
-| multi-agent | 多智能体 |
+| agent | Agent（不译） |
+| multi-agent | 多 Agent |
 | tool use | 工具使用 |
 | context window | 上下文窗口 |
 | fine-tuning | 微调 |

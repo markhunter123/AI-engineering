@@ -122,7 +122,7 @@ Apps 桥接仍有一个名为 `ui/initialize` 的方法。它属于 iframe postM
 
 ### 返回数据，让宿主绑定视图
 
-工具调用返回普通内容加结构化数据：
+tool call 返回普通内容加结构化数据：
 
 ```json
 {
@@ -226,7 +226,7 @@ Apps 桥接是 `postMessage` 上的 JSON-RPC 方言。它可以交换 `ui/initia
 
 View 发送带 `appInfo` 和 `appCapabilities` 对象的 `ui/initialize`。宿主返回自己的能力与宿主上下文。只有在该响应之后，View 才发送 `ui/notifications/initialized`。宿主在向 View 发送消息前必须等待这个 Apps 通知。
 
-这个本地握手在一个 iframe 与一个宿主框架之间建立桥接。它不协商 MCP 协议版本，不创建服务器状态，也不铸造传输会话。注意确切的前缀：核心的 `notifications/initialized` 已被移除，而 Apps 的 `ui/notifications/initialized` 仍然保留。经桥接的工具调用所生成的核心请求，是一个带新 JSON-RPC id 和完整请求元数据的、自包含的新请求。
+这个本地握手在一个 iframe 与一个宿主框架之间建立桥接。它不协商 MCP 协议版本，不创建服务器状态，也不铸造传输会话。注意确切的前缀：核心的 `notifications/initialized` 已被移除，而 Apps 的 `ui/notifications/initialized` 仍然保留。经桥接的 tool call 所生成的核心请求，是一个带新 JSON-RPC id 和完整请求元数据的、自包含的新请求。
 
 ### 宿主上下文、操作与撤销
 

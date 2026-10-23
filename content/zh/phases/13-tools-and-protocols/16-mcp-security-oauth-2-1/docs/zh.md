@@ -191,7 +191,7 @@ WWW-Authenticate: Bearer error="insufficient_scope",
 
 ### 授权与无状态 MCP 线路
 
-经过授权的工具调用仍然携带完整的当前请求信封：
+经过授权的 tool call 仍然携带完整的当前请求信封：
 
 ```text
 POST /mcp

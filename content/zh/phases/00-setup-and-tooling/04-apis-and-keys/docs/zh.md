@@ -16,7 +16,7 @@
 
 ## 问题
 
-从阶段 11 开始，你会调用 LLM API（Anthropic、OpenAI、Google）。在阶段 13-16，你会构建在循环中调用这些 API 的智能体。你需要了解 API 密钥的工作原理、如何安全存储它们，以及如何发起第一次 API 调用。
+从阶段 11 开始，你会调用 LLM API（Anthropic、OpenAI、Google）。在阶段 13-16，你会构建在循环中调用这些 API 的 Agent。你需要了解 API 密钥的工作原理、如何安全存储它们，以及如何发起第一次 API 调用。
 
 ## 概念
 
@@ -130,7 +130,7 @@ with urllib.request.urlopen(req) as resp:
 
 | API | 使用场景 | 免费额度 |
 |-----|-----------------|-----------|
-| Anthropic (Claude) | 阶段 11-16（智能体、工具） | 注册赠送 $5 额度 |
+| Anthropic (Claude) | 阶段 11-16（Agent、工具） | 注册赠送 $5 额度 |
 | OpenAI | 阶段 11（对比） | 注册赠送 $5 额度 |
 | Hugging Face | 阶段 4-10（模型、数据集） | 免费 |
 

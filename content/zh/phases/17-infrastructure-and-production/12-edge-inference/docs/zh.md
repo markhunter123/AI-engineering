@@ -76,7 +76,7 @@ Llama 3.1 的 128K 上下文是数据中心特性。在 8 GB RAM 的手机上，
 
 ### 语音是杀手级应用
 
-语音智能体对延迟敏感（首个 token < 500 ms）。本地推理彻底消除了网络延迟。再结合语音转文字（Whisper Turbo 变体可在边缘运行），边缘推理就成了生产级质量的语音闭环。
+语音 Agent 对延迟敏感（首个 token < 500 ms）。本地推理彻底消除了网络延迟。再结合语音转文字（Whisper Turbo 变体可在边缘运行），边缘推理就成了生产级质量的语音闭环。
 
 ### 应该记住的数字
 
@@ -97,7 +97,7 @@ edge-bandwidth-pipe
 
 ## 交付它
 
-本课产出 `outputs/skill-edge-target-picker.md`。给定平台（iOS/Android/浏览器/Jetson）、模型和延迟/内存预算，它选择量化格式和转换流水线。
+本课产出 `outputs/skill-edge-target-picker.md`。给定平台（iOS/Android/浏览器/Jetson）、模型和延迟/内存预算，它选择量化格式和转换 pipeline。
 
 ## 练习
 

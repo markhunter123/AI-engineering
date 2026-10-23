@@ -59,7 +59,7 @@ V-STaR 的验证器通过学会排序推理理由来缓解，但验证器在同�
 
 ### 它在 2026 年技术栈中的位置
 
-STaR 已经很老。但这个模式在 2025-2026 年到处重现。可验证数学问题上的 RL（DeepSeek-R1、Kimi-k1.5、o1）就是 STaR 的答案条件化梯度信号放大后的版本。过程奖励模型（Lightman 等，2023；OpenAI 的 "Let's verify step by step"）是过程监督的替代方案。AlphaEvolve（第 3 课）是面向代码的 STaR，用程序评测器代替标签。Darwin Godel Machine（第 4 课）是面向智能体脚手架本身的 STaR。
+STaR 已经很老。但这个模式在 2025-2026 年到处重现。可验证数学问题上的 RL（DeepSeek-R1、Kimi-k1.5、o1）就是 STaR 的答案条件化梯度信号放大后的版本。过程奖励模型（Lightman 等，2023；OpenAI 的 "Let's verify step by step"）是过程监督的替代方案。AlphaEvolve（第 3 课）是面向代码的 STaR，用程序评测器代替标签。Darwin Godel Machine（第 4 课）是面向 Agent 脚手架本身的 STaR。
 
 理解 STaR，这些就都能一下打通。它是最小可行的自我改进循环。
 
@@ -77,7 +77,7 @@ reflection-loop
 
 ## 交付它
 
-`outputs/skill-star-loop-reviewer.md` 帮你在训练之前审计一个拟议的自学推理流水线。
+`outputs/skill-star-loop-reviewer.md` 帮你在训练之前审计一个拟议的自学推理 pipeline。
 
 ## 练习
 

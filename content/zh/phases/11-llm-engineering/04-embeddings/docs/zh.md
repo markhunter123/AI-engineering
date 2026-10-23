@@ -470,7 +470,7 @@ embeddings = model.encode(["semantic search query", "another document"])
 
 本课产出：
 - `outputs/prompt-embedding-advisor.md` —— 用于为特定用例选择嵌入模型与策略的 prompt
-- `outputs/skill-embedding-patterns.md` —— 教智能体如何在生产中有效使用嵌入的 skill
+- `outputs/skill-embedding-patterns.md` —— 教 Agent 如何在生产中有效使用嵌入的 skill
 
 ## 练习
 

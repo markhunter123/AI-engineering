@@ -1,20 +1,20 @@
 {
   "id": "agent-skills",
-  "title": "智能体技能工程",
-  "summary": "在真实主机中构建、路由、保护、评估、打包和验证智能体技能。",
+  "title": "Agent 技能工程",
+  "summary": "在真实主机中构建、路由、保护、评估、打包和验证 Agent 技能。",
   "decisionPrompt": null,
   "prerequisites": [
     {
       "title": "文件、Python 和命令行",
-      "description": "能编辑文本文件、查看目录并运行 Python 命令。不需要智能体框架经验。"
+      "description": "能编辑文本文件、查看目录并运行 Python 命令。不需要 Agent 框架经验。"
     },
     {
       "title": "真实实验所需：Node.js、npx 和 Python 3",
-      "description": "安装和捆绑脚本检查点需要可用的 node、npx 和 python3 命令。当这些命令不可用时，网站和文档可作为概念性备选。"
+      "description": "安装和捆绑脚本 checkpoint 需要可用的 node、npx 和 python3 命令。当这些命令不可用时，网站和文档可作为概念性备选。"
     },
     {
       "title": "一个选定的支持技能的主机及安装范围",
-      "description": "安装前选择一个受支持的智能体主机以及一个可写的项目级或用户级技能范围。记录精确的主机、范围和安装路径；不要从安装成功推断已发现。"
+      "description": "安装前选择一个受支持的 Agent 主机以及一个可写的项目级或用户级技能范围。记录精确的主机、范围和安装路径；不要从安装成功推断已发现。"
     },
     {
       "title": "工具接口",

@@ -177,7 +177,7 @@ $r=16$ 的 LoRA 在大多数基准上与全量微调的差距在 1% 以内。$r=
 | **LLaMA-Factory** | PEFT + TRL 之上的 GUI/CLI/API | 你想要零代码微调；支持 100+ 模型系列 |
 | **torchtune** | 原生 PyTorch recipe，不依赖 `transformers` | 你想要最少的依赖，而且组织已经统一用 PyTorch |
 
-经验法则：研究用途或一次性实验 → PEFT。可重复的生产流水线 → 开启 Unsloth kernel 的 Axolotl。用完即弃的原型 → LLaMA-Factory。
+经验法则：研究用途或一次性实验 → PEFT。可重复的生产 pipeline → 开启 Unsloth kernel 的 Axolotl。用完即弃的原型 → LLaMA-Factory。
 
 ### 合并适配器
 
@@ -473,7 +473,7 @@ model = AutoModelForCausalLM.from_pretrained(
 model = get_peft_model(model, lora_config)
 ```
 
-就这样。同样的训练循环，同样的数据流水线。基座模型现在以 4-bit 存放，LoRA 适配器以 fp16 训练，整套东西装进 6GB。
+就这样。同样的训练循环，同样的数据 pipeline。基座模型现在以 4-bit 存放，LoRA 适配器以 fp16 训练，整套东西装进 6GB。
 
 用 Hugging Face Trainer 训练：
 
@@ -513,7 +513,7 @@ model.save_pretrained("./lora-adapter")
 本课产出：
 
 - `outputs/prompt-lora-advisor.md` —— 一个提示，帮你为特定任务决定 LoRA 的秩、目标模块和超参数
-- `outputs/skill-fine-tuning-guide.md` —— 一个 skill，教智能体判断何时以及如何微调的决策树
+- `outputs/skill-fine-tuning-guide.md` —— 一个 skill，教 Agent 判断何时以及如何微调的决策树
 
 ## 练习
 

@@ -21,7 +21,7 @@
 | 渲染 → 扬声器 | 20 ms |
 | **总计** | **~400 ms** |
 
-Moshi（Kyutai，2024）实现了 200 ms 的全双工。GPT-4o-realtime（2024）约为 320 ms。2022 年的级联 pipeline 交付时是 2500 ms。这 10 倍的提升来自三项技术：(1) 全链路流式，(2) 带部分结果的异步流水线，(3) 可中断生成。
+Moshi（Kyutai，2024）实现了 200 ms 的全双工。GPT-4o-realtime（2024）约为 320 ms。2022 年的级联 pipeline 交付时是 2500 ms。这 10 倍的提升来自三项技术：(1) 全链路流式，(2) 带部分结果的异步 pipeline，(3) 可中断生成。
 
 ## 概念
 
@@ -169,6 +169,6 @@ class Dialog:
 
 - [Macháček et al. (2023). Whisper-Streaming](https://arxiv.org/abs/2307.14743) —— 分块近流式 Whisper。
 - [Kyutai (2024). Moshi](https://kyutai.org/Moshi.pdf) —— 全双工，200 ms 延迟。
-- [LiveKit Agents framework (2024)](https://docs.livekit.io/agents/) —— 生产级音频智能体编排。
+- [LiveKit Agents framework (2024)](https://docs.livekit.io/agents/) —— 生产级音频 Agent 编排。
 - [Silero VAD repo](https://github.com/snakers4/silero-vad) —— 亚毫秒级 VAD，Apache 2.0。
 - [WebRTC AEC3 paper](https://webrtc.googlesource.com/src/+/main/modules/audio_processing/aec3/) —— 开源实现下的回声消除。

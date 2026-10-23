@@ -1,6 +1,6 @@
 # OpenAI 准备度框架与 DeepMind 前沿安全框架
 
-> OpenAI Preparedness Framework v2（2025 年 4 月）引入「研究类别」（Research Categories）——长程自主性、沙袋式表现（sandbagging）、自主复制与适应、破坏防护——并与「受追踪类别」（Tracked Categories）区分。受追踪类别触发能力报告（Capabilities Reports）和安全防护报告（Safeguards Reports），由安全顾问组（Safety Advisory Group）审阅。DeepMind 的 FSF v3（2025 年 9 月，2026 年 4 月 17 日加入受追踪能力水平）将自主性并入 ML R&D 和网络（Cyber）领域（ML R&D 自主性水平 1 = 以有竞争力的成本、相对于人类 + AI 工具完全自动化 AI R&D 流水线）。FSF v3 明确通过针对工具性推理（instrumental reasoning）滥用的自动监控来应对欺骗性对齐。需要诚实指出：PF v2 中的研究类别（包括长程自主性）不会自动触发缓解措施；政策措辞是「潜在」。DeepMind 自己表示，如果工具性推理增强，自动监控「长期将不再足够」。
+> OpenAI Preparedness Framework v2（2025 年 4 月）引入「研究类别」（Research Categories）——长程自主性、沙袋式表现（sandbagging）、自主复制与适应、破坏防护——并与「受追踪类别」（Tracked Categories）区分。受追踪类别触发能力报告（Capabilities Reports）和安全防护报告（Safeguards Reports），由安全顾问组（Safety Advisory Group）审阅。DeepMind 的 FSF v3（2025 年 9 月，2026 年 4 月 17 日加入受追踪能力水平）将自主性并入 ML R&D 和网络（Cyber）领域（ML R&D 自主性水平 1 = 以有竞争力的成本、相对于人类 + AI 工具完全自动化 AI R&D pipeline）。FSF v3 明确通过针对工具性推理（instrumental reasoning）滥用的自动监控来应对欺骗性对齐。需要诚实指出：PF v2 中的研究类别（包括长程自主性）不会自动触发缓解措施；政策措辞是「潜在」。DeepMind 自己表示，如果工具性推理增强，自动监控「长期将不再足够」。
 
 **Type:** Learn
 **Languages:** Python (stdlib, three-framework decision-table diff tool)
@@ -31,7 +31,7 @@ v2 的关键框架：研究类别不会自动触发缓解措施。政策措辞�
 结构：
 
 - **关键能力水平（Critical Capability Levels, CCLs）**：跨五个领域的能力阈值：网络（Cyber）、生物（Bio）、ML R&D、CBRN、自主性（并入 ML R&D 和 Cyber）。
-- **受追踪能力水平（Tracked Capability Levels）**：2026 年 4 月加入的额外粒度。具体例子：ML R&D 自主性水平 1 = 以有竞争力的成本、相对于人类 + AI 工具完全自动化 AI R&D 流水线。
+- **受追踪能力水平（Tracked Capability Levels）**：2026 年 4 月加入的额外粒度。具体例子：ML R&D 自主性水平 1 = 以有竞争力的成本、相对于人类 + AI 工具完全自动化 AI R&D pipeline。
 - **欺骗性对齐监控**：明确承诺对工具性推理滥用进行自动监控。
 
 自主性的框架与 OpenAI 不同。DeepMind 不把「自主性」保留为顶层领域；它被并入自主性会造成危害的领域（ML R&D 和 Cyber）。其论点是，没有领域的自主性是没有风险的能力；反驳论点是，跨领域的自主性是一种元风险，框架应当予以命名。
@@ -95,7 +95,7 @@ a5-tracked-vs-research
 | 研究类别 | 「仅监控」 | 被追踪但不自动缓解；包括长程自主性 |
 | Frontier Safety Framework | 「DeepMind 的扩展政策」 | FSF v3（2025 年 9 月）+ 受追踪能力水平（2026 年 4 月） |
 | CCL | 「关键能力水平」 | DeepMind 按领域设定的阈值（Cyber、Bio、ML R&D、CBRN） |
-| ML R&D 自主性水平 1 | 「R&D 自动化」 | 以有竞争力的成本完全自动化 AI R&D 流水线 |
+| ML R&D 自主性水平 1 | 「R&D 自动化」 | 以有竞争力的成本完全自动化 AI R&D pipeline |
 | 沙袋式表现（sandbagging） | 「策略性表现不佳」 | 模型在评测中表现低于真实能力；属于 OpenAI 研究类别 |
 | 工具性推理 | 「手段—目的推理」 | 关于如何达成目标的推理；DeepMind 监控的对象 |
 

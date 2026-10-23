@@ -18,11 +18,11 @@
 
 ## 问题
 
-你问一个智能体：`ledger-x86_64-O1.o` 中的 `grade` 在分数为 55 时返回什么。智能体调用 rea，阅读 Ghidra 伪代码，回答 0。评审者问它凭什么知道。它手上只有一段 Ghidra 打印出来的文本。在默认路径上，这段文本写着 `uVar1 = -(param_1 >> 0x1f) ^ (uint)((ulong)((long)param_1 * 0x66666667) >> 0x3f);`，而该位置上的字节写的是 `xor eax, eax`。
+你问一个 Agent：`ledger-x86_64-O1.o` 中的 `grade` 在分数为 55 时返回什么。Agent 调用 rea，阅读 Ghidra 伪代码，回答 0。评审者问它凭什么知道。它手上只有一段 Ghidra 打印出来的文本。在默认路径上，这段文本写着 `uVar1 = -(param_1 >> 0x1f) ^ (uint)((ulong)((long)param_1 * 0x66666667) >> 0x3f);`，而该位置上的字节写的是 `xor eax, eax`。
 
-这个表达式和这条指令对任何输入都产生 0。智能体并不知道这一点。它信任那段文本，因为文本是某个工具产出的。2026 年的一项研究让三个智能体执行 24 个逆向工程任务（[NDSS BAR 2026](https://www.ndss-symposium.org/wp-content/uploads/bar2026-58.pdf)），指出了四类反复出现的弱点：训练偏差、对观察结果的过度信任、上下文限制，以及计划惯性（plan persistence）。另一项 2026 年研究把文本植入二进制文件，发现模型在 40 个案例中有 35 个提出了被植入的不安全操作（[arXiv 2607.12507](https://arxiv.org/abs/2607.12507)）。
+这个表达式和这条指令对任何输入都产生 0。Agent 并不知道这一点。它信任那段文本，因为文本是某个工具产出的。2026 年的一项研究让三个 Agent 执行 24 个逆向工程任务（[NDSS BAR 2026](https://www.ndss-symposium.org/wp-content/uploads/bar2026-58.pdf)），指出了四类反复出现的弱点：训练偏差、对观察结果的过度信任、上下文限制，以及计划惯性（plan persistence）。另一项 2026 年研究把文本植入二进制文件，发现模型在 40 个案例中有 35 个提出了被植入的不安全操作（[arXiv 2607.12507](https://arxiv.org/abs/2607.12507)）。
 
-rea 6.5.0 为此给智能体提供了一套词汇表。每次成功的工具调用都会产生一条 `Evidence` 记录，其中带有取值为 `observed`、`derived` 或 `inferred` 的 `confidence`，一个 `authority`，以及一组 `limitations`。随附的技能文件告诉智能体：「每个结论都必须区分观察、推断和未知。引用 Evidence ID，保留局限性与不完整的覆盖范围，并且绝不要暗示静态分析观察到了执行。」
+rea 6.5.0 为此给 Agent 提供了一套词汇表。每次成功的 tool call 都会产生一条 `Evidence` 记录，其中带有取值为 `observed`、`derived` 或 `inferred` 的 `confidence`，一个 `authority`，以及一组 `limitations`。随附的技能文件告诉 Agent：「每个结论都必须区分观察、推断和未知。引用 Evidence ID，保留局限性与不完整的覆盖范围，并且绝不要暗示静态分析观察到了执行。」
 
 有三件事 rea 留给你自己完成。它的快照缓存的是精确的查询结果，而不是分析本身。它的验证只要某个比较维度没有变化，就判定一条声明通过；而它自己的注释对此写道，一次通过「does not establish global implementation equivalence」。它的义务台账只从 JavaScript 和托管代码图中获取候选，因此原生函数永远无法通过它达到 `verified`。
 
@@ -293,11 +293,11 @@ rea 有三样看起来像缓存的东西。Ghidra 的目标快照是输入的私
 
 任何变更都会终结缓存。在 rea 6.5.0 中，重命名或添加注释会在 rea 把调用发给提供方之前清空快照缓存。失败的回复无法证明写入已经回滚，因此写入失败同样会终止重放。一次改变了数据库的元数据导入也一样。
 
-## 智能体为什么需要它
+## Agent 为什么需要它
 
-通过 MCP 驱动 rea 的智能体，每次调用都能看到完整记录，并可在报告中引用 `evidence_id`。2026 年的研究指出了问题所在。对工具输出的过度信任是 NDSS BAR 研究中四类弱点之一。在文本植入研究中，仅把二进制内容作为数据展示，40 个案例中仍有 15 个提出了不安全操作；加入来源校验与工具授权后，这些提议被消除。第三项研究观察了智能体通过 MCP 驱动 Ghidra 的过程（[arXiv 2606.06838](https://arxiv.org/abs/2606.06838)）。在包含数百个函数的二进制文件中，只有 10% 到 15% 的函数在智能体开始产出桩代码之前得到了真正的分析。
+通过 MCP 驱动 rea 的 Agent，每次调用都能看到完整记录，并可在报告中引用 `evidence_id`。2026 年的研究指出了问题所在。对工具输出的过度信任是 NDSS BAR 研究中四类弱点之一。在文本植入研究中，仅把二进制内容作为数据展示，40 个案例中仍有 15 个提出了不安全操作；加入来源校验与工具授权后，这些提议被消除。第三项研究观察了 Agent 通过 MCP 驱动 Ghidra 的过程（[arXiv 2606.06838](https://arxiv.org/abs/2606.06838)）。在包含数百个函数的二进制文件中，只有 10% 到 15% 的函数在 Agent 开始产出桩代码之前得到了真正的分析。
 
-台账用记录回应上述每一种情况，智能体只报告台账中已有的内容。没有观测运行的声明是 `unsupported`；只有部分运行的声明是 `unknown`；提供方文本只是关于该提供方的 `observed`，仅此而已。把 `outputs/` 中的技能文件交给智能体，并让台账成为它写下结论的唯一位置。无论用的是 Claude、Cursor、Codex、OpenClaw、Hermes，还是任何读取 SKILL.md 的智能体，都应如此。
+台账用记录回应上述每一种情况，Agent 只报告台账中已有的内容。没有观测运行的声明是 `unsupported`；只有部分运行的声明是 `unknown`；提供方文本只是关于该提供方的 `observed`，仅此而已。把 `outputs/` 中的技能文件交给 Agent，并让台账成为它写下结论的唯一位置。无论用的是 Claude、Cursor、Codex、OpenClaw、Hermes，还是任何读取 SKILL.md 的 Agent，都应如此。
 
 ## 构建它
 
@@ -451,7 +451,7 @@ python3 code/lab.py
 
 ## 课程产物
 
-本课产出 `outputs/skill-evidence-ledger.md`。它告诉智能体如何把每个结论写成带置信度、权威来源、局限性和链接的记录，如何把未知项保存为修订版本，以及一条声明在什么情况下是 `pass`、`fail`、`unknown` 或 `unsupported`。
+本课产出 `outputs/skill-evidence-ledger.md`。它告诉 Agent 如何把每个结论写成带置信度、权威来源、局限性和链接的记录，如何把未知项保存为修订版本，以及一条声明在什么情况下是 `pass`、`fail`、`unknown` 或 `unsupported`。
 
 ## 验证它
 
@@ -507,6 +507,6 @@ python3 -m unittest discover -s code/tests -v
 - [Ghidra 12.1.4 发布说明](https://github.com/NationalSecurityAgency/ghidra/releases)
 - [Agent Failure Patterns in CTF Reverse Engineering, NDSS BAR 2026](https://www.ndss-symposium.org/wp-content/uploads/bar2026-58.pdf)
 - [When Binaries Talk Back: Representation-Confusion Attacks on LLM-Assisted Reverse Engineering, arXiv 2607.12507](https://arxiv.org/abs/2607.12507)
-- [智能体反编译研究，arXiv 2606.06838](https://arxiv.org/abs/2606.06838)
+- [Agent 反编译研究，arXiv 2606.06838](https://arxiv.org/abs/2606.06838)
 - [When LLM Decompilers Recompile More and Preserve Less, arXiv 2609.05370](https://arxiv.org/abs/2609.05370)
 - 本课描述的 rea 6.5.0 源码（标签 `3b79af2`）：`src/domain/evidence.ts`、`.agents/skills/reverse-engineer-anything/SKILL.md`、`docs/cli.md`、`src/domain/reconstructionVerification.ts`、`src/application/ReconstructionObligationCandidates.ts`、`docs/tool-design.md`、`src/domain/evidenceCompletionLedger.ts`、`src/domain/residualUnknown.ts`、`src/application/investigation/UnknownEvidence.ts`、`.agents/skills/reverse-engineer-anything/references/evidence-workflows.md`、`src/application/binary/AnalysisSnapshotCache.ts`、`src/domain/analysisSnapshot.ts`、`src/application/binary/BinarySession.ts`、`src/application/binary/BinarySessionRecords.ts`、`docs/mcp-contracts.md`。

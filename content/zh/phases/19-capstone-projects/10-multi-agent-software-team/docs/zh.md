@@ -1,6 +1,6 @@
-# 项目 10 —— 多智能体软件工程团队
+# 项目 10 —— 多 Agent 软件工程团队
 
-> 2026 年多智能体工程团队的形态已经收敛：架构师做规划，N 个编码智能体在并行工作树里干活，一个评审者把关，一个测试者验证。SWE-AF 的工厂架构、MetaGPT 的基于角色的提示、AutoGen 0.4 的类型化 actor 图、Cognition 的 Devin，以及 Factory 的 Droids，都独立地落到了同一个形态上。并行工作树把墙钟时间转化为吞吐量。共享状态和交接协议则成为失效面。项目要搭建这支团队，在 SWE-bench Pro 上评估，并报告哪些交接会出问题、频率如何。
+> 2026 年多 Agent 工程团队的形态已经收敛：架构师做规划，N 个编码 Agent 在并行工作树里干活，一个评审者把关，一个测试者验证。SWE-AF 的工厂架构、MetaGPT 的基于角色的提示、AutoGen 0.4 的类型化 actor 图、Cognition 的 Devin，以及 Factory 的 Droids，都独立地落到了同一个形态上。并行工作树把墙钟时间转化为吞吐量。共享状态和交接协议则成为失效面。项目要搭建这支团队，在 SWE-bench Pro 上评估，并报告哪些交接会出问题、频率如何。
 
 **Type:** Capstone
 **Languages:** Python / TypeScript (agents), Shell (worktree scripts)
@@ -10,17 +10,17 @@
 
 ## 问题
 
-单智能体编码框架在大任务上会撞到天花板。原因不是单个智能体太弱，而是 200k token 的上下文装不下架构计划、四份并行的代码库切片、评审意见和测试输出。多智能体工厂把问题拆开：架构师拥有计划，编码者在并行工作树里各自实现，评审者把关，测试者验证。SWE-AF 的「工厂」架构、MetaGPT 的角色、AutoGen 的类型化 actor 图——这三种表述描述的是同一个形态。
+单 Agent 编码框架在大任务上会撞到天花板。原因不是单个 Agent 太弱，而是 200k token 的上下文装不下架构计划、四份并行的代码库切片、评审意见和测试输出。多 Agent 工厂把问题拆开：架构师拥有计划，编码者在并行工作树里各自实现，评审者把关，测试者验证。SWE-AF 的「工厂」架构、MetaGPT 的角色、AutoGen 的类型化 actor 图——这三种表述描述的是同一个形态。
 
 失效面在交接上。架构师规划了编码者无法实现的东西。编码者产出互相冲突的 diff。评审者批准了一个幻觉出来的修复。测试者和还在写代码的编码者抢跑。你会搭建这样一支团队，在 50 个 SWE-bench Pro issue 上运行，追踪每一次交接，并公布复盘报告。
 
 ## 概念
 
-角色就是类型化的智能体。**架构师**（Claude Opus 4.7）阅读 issue，写出计划，并拆成带显式接口的子任务。**编码者**（Claude Sonnet 4.7，N 个并行实例，各自位于一个 `git worktree` + Daytona 沙箱中）独立实现子任务。**评审者**（GPT-5.4）阅读合并后的 diff，要么批准，要么要求具体修改。**测试者**（Gemini 2.5 Pro）在隔离环境中跑测试套件，并带着产物报告通过/失败。
+角色就是类型化的 Agent。**架构师**（Claude Opus 4.7）阅读 issue，写出计划，并拆成带显式接口的子任务。**编码者**（Claude Sonnet 4.7，N 个并行实例，各自位于一个 `git worktree` + Daytona 沙箱中）独立实现子任务。**评审者**（GPT-5.4）阅读合并后的 diff，要么批准，要么要求具体修改。**测试者**（Gemini 2.5 Pro）在隔离环境中跑测试套件，并带着产物报告通过/失败。
 
 沟通通过共享任务板（文件后端或 Redis）进行。每个角色消费自己有权限处理的任务。交接是 A2A 协议类型化的消息。协调关注点包括：合并冲突解决（协调者角色或自动三方合并）、共享状态同步（编码者一旦开工，计划就冻结；重新规划是独立事件），以及评审把关（评审者不能批准自己做出的改动或自己提出的改动）。
 
-token 放大是隐藏成本。每个角色边界都会增加摘要提示和交接上下文。一次 40 轮的单智能体运行，在四个角色之间会变成总共 160 轮。评分标准特意对比 token 效率与单智能体基线，因为问题不是「多智能体能不能用」，而是「它在每美元上是否更划算」。
+token 放大是隐藏成本。每个角色边界都会增加摘要提示和交接上下文。一次 40 轮的单 Agent 运行，在四个角色之间会变成总共 160 轮。评分标准特意对比 token 效率与单 Agent 基线，因为问题不是「多 Agent 能不能用」，而是「它在每美元上是否更划算」。
 
 ## 架构
 
@@ -55,13 +55,13 @@ Coder A          Coder B          Coder C          Coder D          (4 parallel)
 
 ## 技术栈
 
-- 编排：LangGraph，带共享状态 + 每个智能体一个子图
-- 消息：A2A 协议（Google 2025），用于类型化的智能体间消息
+- 编排：LangGraph，带共享状态 + 每个 Agent 一个子图
+- 消息：A2A 协议（Google 2025），用于类型化的 Agent 间消息
 - 模型：Opus 4.7（架构师）、Sonnet 4.7（编码者）、GPT-5.4（评审者）、Gemini 2.5 Pro（测试者）
 - 工作树隔离：每个编码者一个 `git worktree add` + Daytona 沙箱
 - 合并协调者：自定义三方合并 + LLM 调解的冲突解决
 - 评估：SWE-bench Pro（50 个 issue）、SWE-AF 场景、HumanEval++ 用于单元测试
-- 可观测性：Langfuse，带角色标记的 span，逐智能体的 token 记账
+- 可观测性：Langfuse，带角色标记的 span，逐 Agent 的 token 记账
 - 部署：K8s，每个角色一个独立 Deployment，按积压量做 HPA
 
 ```figure
@@ -70,7 +70,7 @@ ce-team-handoff
 
 ## 构建它
 
-1. **任务板。** 文件后端的 JSONL，带类型化消息：`plan_request`、`subtask`、`diff_ready`、`review_needed`、`test_needed`、`approved`、`rejected`、`replan_needed`。智能体按标签订阅。
+1. **任务板。** 文件后端的 JSONL，带类型化消息：`plan_request`、`subtask`、`diff_ready`、`review_needed`、`test_needed`、`approved`、`rejected`、`replan_needed`。Agent 按标签订阅。
 
 2. **架构师。** 读 GitHub issue，用 Opus 4.7 跑一个计划模板，该模板要求显式的子任务接口（涉及哪些文件、公开函数、测试影响）。发出一个 `plan_request`，内含子任务 DAG。
 
@@ -84,7 +84,7 @@ ce-team-handoff
 
 7. **交接记账。** 每一条跨越角色边界的消息都在 Langfuse 里有一个 span，记录载荷大小和所用模型。计算每个子任务的 token 放大比（coder_tokens + reviewer_tokens + tester_tokens + architect_share / coder_tokens）。
 
-8. **评估。** 在 50 个 SWE-bench Pro issue 上运行。对比 pass@1 和每解决一个 issue 的美元成本，与单智能体基线（一个 Sonnet 4.7 在单个工作树里）比较。
+8. **评估。** 在 50 个 SWE-bench Pro issue 上运行。对比 pass@1 和每解决一个 issue 的美元成本，与单 Agent 基线（一个 Sonnet 4.7 在单个工作树里）比较。
 
 9. **复盘。** 对每个失败的 issue，找出断掉的交接（计划太含糊、合并冲突、评审者误批、测试者抖动）。产出一张交接失败直方图。
 
@@ -113,9 +113,9 @@ $ team run --issue https://github.com/acme/widget/issues/842
 | 权重 | 标准 | 衡量方式 |
 |:-:|---|---|
 | 25 | SWE-bench Pro pass@1 | 匹配的 50 issue 子集，pass@1 |
-| 20 | 并行加速比 | 墙钟时间对比单智能体基线 |
+| 20 | 并行加速比 | 墙钟时间对比单 Agent 基线 |
 | 20 | 评审质量 | 注入缺陷探针上的误批率 |
-| 20 | token 效率 | 每个已解决 issue 的总 token 对比单智能体 |
+| 20 | token 效率 | 每个已解决 issue 的总 token 对比单 Agent |
 | 15 | 协调工程 | 合并冲突解决、交接失败直方图 |
 | **100** | | |
 
@@ -136,20 +136,20 @@ $ team run --issue https://github.com/acme/widget/issues/842
 | 术语 | 常见说法 | 实际含义 |
 |------|-----------------|------------------------|
 | Parallel worktree | 「隔离分支」 | `git worktree add` 为每个编码者产出全新工作树 |
-| Task board | 「共享消息总线」 | 文件或 Redis 存储的类型化消息，智能体订阅 |
+| Task board | 「共享消息总线」 | 文件或 Redis 存储的类型化消息，Agent 订阅 |
 | Handoff | 「角色边界」 | 任何从一个角色上下文跨到另一个角色上下文的消息 |
-| Token amplification | 「多智能体开销」 | 同一任务下所有角色消耗的总 token / 单智能体 token |
-| A2A protocol | 「智能体到智能体」 | Google 2025 年的规范，定义类型化的智能体间消息 |
+| Token amplification | 「多 Agent 开销」 | 同一任务下所有角色消耗的总 token / 单 Agent token |
+| A2A protocol | 「Agent 到 Agent」 | Google 2025 年的规范，定义类型化的 Agent 间消息 |
 | Merge coordinator | 「集成者」 | 执行三方合并并调解冲突的组件 |
 | False approval | 「评审幻觉」 | 评审者批准了含已知缺陷的 diff |
 
 ## 延伸阅读
 
-- [SWE-AF 工厂架构](https://github.com/Agent-Field/SWE-AF) —— 2026 年多智能体工厂的参考
-- [MetaGPT](https://github.com/FoundationAgents/MetaGPT) —— 基于角色的多智能体框架
+- [SWE-AF 工厂架构](https://github.com/Agent-Field/SWE-AF) —— 2026 年多 Agent 工厂的参考
+- [MetaGPT](https://github.com/FoundationAgents/MetaGPT) —— 基于角色的多 Agent 框架
 - [AutoGen v0.4](https://github.com/microsoft/autogen) —— 微软的类型化 actor 框架
 - [Cognition AI（Devin）](https://cognition.ai) —— 参考产品
 - [Factory Droids](https://www.factory.ai) —— 另一个参考产品
-- [Google A2A 协议](https://a2a-protocol.org/latest/) —— 智能体间消息规范
+- [Google A2A 协议](https://a2a-protocol.org/latest/) —— Agent 间消息规范
 - [git worktree 文档](https://git-scm.com/docs/git-worktree) —— 隔离底座
 - [SWE-bench Pro](https://www.swebench.com) —— 评估目标

@@ -1,6 +1,6 @@
 # RAG（检索增强生成）
 
-> 你的 LLM 知道截至训练截止日期的一切，但对你公司的文档、你的代码库或上周的会议记录一无所知。RAG 通过检索相关文档并将其塞进提示来解决这个问题。它是生产 AI 中部署最广的模式。如果从这门课程中只构建一样东西，那就构建一条 RAG 流水线。
+> 你的 LLM 知道截至训练截止日期的一切，但对你公司的文档、你的代码库或上周的会议记录一无所知。RAG 通过检索相关文档并将其塞进提示来解决这个问题。它是生产 AI 中部署最广的模式。如果从这门课程中只构建一样东西，那就构建一条 RAG pipeline。
 
 **Type:** Build
 **Languages:** Python
@@ -10,7 +10,7 @@
 
 ## 学习目标
 
-- 构建完整的 RAG 流水线：文档加载、分块、embedding、向量存储、检索和生成
+- 构建完整的 RAG pipeline：文档加载、分块、embedding、向量存储、检索和生成
 - 使用向量数据库（ChromaDB、FAISS 或 Pinecone）并建立正确的索引，实现语义搜索
 - 解释为什么对于需要知识依据的应用，RAG 优于微调（成本、时效性、可归因性）
 - 使用检索指标（精确率、召回率）和生成指标（忠实度、相关性）评估 RAG 质量
@@ -145,7 +145,7 @@ Embedding 模型把文本转换成稠密向量。相似的文本在这个高维�
 
 本课中，我们构建一个简单的内存向量存储。它把向量存在列表里，做暴力余弦相似度搜索。这等价于带扁平索引的 FAISS。它大概能扩展到 10 万个向量，再大就会变慢。生产系统使用 HNSW 之类的近似最近邻（ANN）算法，在毫秒内搜索数百万个向量。
 
-### 完整流水线
+### 完整 pipeline
 
 ```mermaid
 graph TD
@@ -274,7 +274,7 @@ Question: {query}
 Answer:"""
 ```
 
-### 第 5 步：完整的 RAG 流水线
+### 第 5 步：完整的 RAG pipeline
 
 ```python
 class RAGPipeline:
@@ -369,7 +369,7 @@ def generate(prompt):
     return response.content[0].text
 ```
 
-流水线是一样的。替换 embedding 函数，替换生成函数。检索逻辑、分块、提示构造——无论使用哪种模型，全都相同。
+pipeline 是一样的。替换 embedding 函数，替换生成函数。检索逻辑、分块、提示构造——无论使用哪种模型，全都相同。
 
 要在规模上做向量存储，就把暴力搜索换成合适的向量数据库：
 
@@ -396,7 +396,7 @@ Chroma 在内部处理 embedding（默认使用 all-MiniLM-L6-v2），并把向�
 
 本课产出：
 - `outputs/prompt-rag-architect.md`——一个为特定用例设计 RAG 系统的提示
-- `outputs/skill-rag-pipeline.md`——一个教智能体构建和调试 RAG 流水线的技能
+- `outputs/skill-rag-pipeline.md`——一个教 Agent 构建和调试 RAG pipeline 的技能
 
 ## 练习
 
@@ -406,9 +406,9 @@ Chroma 在内部处理 embedding（默认使用 all-MiniLM-L6-v2），并把向�
 
 3. 为每个块添加元数据（来源文档名、块位置）。修改提示模板以包含来源标注，让 LLM 引用它的来源。
 
-4. 实现一个简单的评估：给定 10 组问答对，让每个问题跑一遍 RAG 流水线，测量检索到的块中包含答案的比例。这就是 k 处的检索召回率。
+4. 实现一个简单的评估：给定 10 组问答对，让每个问题跑一遍 RAG pipeline，测量检索到的块中包含答案的比例。这就是 k 处的检索召回率。
 
-5. 构建一个对话感知的 RAG 流水线：维护最近 3 轮交换的历史，并把它们与检索到的块一起放入提示。在询问定价之后用"What about enterprise?"之类的追问进行测试。
+5. 构建一个对话感知的 RAG pipeline：维护最近 3 轮交换的历史，并把它们与检索到的块一起放入提示。在询问定价之后用"What about enterprise?"之类的追问进行测试。
 
 ## 关键术语
 
@@ -429,8 +429,8 @@ Chroma 在内部处理 embedding（默认使用 all-MiniLM-L6-v2），并把向�
 
 - Lewis 等人，"Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks"（2020）——来自 Facebook AI Research 的原始 RAG 论文，形式化了"先检索再生成"的模式
 - Anthropic 的 RAG 文档（docs.anthropic.com）——关于块大小、提示构造和评估的实用指南
-- Pinecone Learning Center，"What is RAG?"——用清晰的图示解释 RAG 流水线及生产环境注意事项
+- Pinecone Learning Center，"What is RAG?"——用清晰的图示解释 RAG pipeline 及生产环境注意事项
 - Sentence-BERT: Reimers & Gurevych（2019）——all-MiniLM embedding 模型背后的论文，展示了如何训练双编码器实现语义相似度
 - [Karpukhin 等人，"Dense Passage Retrieval for Open-Domain Question Answering"（EMNLP 2020）](https://arxiv.org/abs/2004.04906)——DPR 论文，证明稠密双编码器检索在开放域问答上优于 BM25，并为现代 RAG 检索器奠定了模式。
-- [LlamaIndex High-Level Concepts](https://docs.llamaindex.ai/en/stable/getting_started/concepts.html)——构建 RAG 流水线时需要了解的主要概念：数据加载器、节点解析器、索引、检索器、响应合成器。
+- [LlamaIndex High-Level Concepts](https://docs.llamaindex.ai/en/stable/getting_started/concepts.html)——构建 RAG pipeline 时需要了解的主要概念：数据加载器、节点解析器、索引、检索器、响应合成器。
 - [LangChain RAG tutorial](https://python.langchain.com/docs/tutorials/rag/)——另一种风格的编排器；以"可运行链"（chain-of-runnables）的视角看同一个"先检索再生成"模式。

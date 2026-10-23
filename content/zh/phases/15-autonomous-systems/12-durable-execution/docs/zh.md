@@ -1,6 +1,6 @@
-# 长时间运行的后台智能体：持久化执行
+# 长时间运行的后台 Agent：持久化执行
 
-> 生产环境中的长时程智能体不会跑在 `while True` 里。每一次 LLM 调用都变成一个活动，带有 checkpoint、重试和重放。Temporal 的 OpenAI Agents SDK 集成于 2026 年 3 月 GA。Claude Code Routines（Anthropic）无需本地常驻进程即可运行定时调度的 Claude Code 调用。会话在等待人类输入时暂停，能挺过部署，并从以 `thread_id` 为键的最新 checkpoint 恢复。这套新的人机体验背后是一个老模式——工作流编排——只多了一种新输入：LLM 调用作为非确定性活动，必须在恢复时确定性地重放。
+> 生产环境中的长时程 Agent 不会跑在 `while True` 里。每一次 LLM 调用都变成一个活动，带有 checkpoint、重试和重放。Temporal 的 OpenAI Agents SDK 集成于 2026 年 3 月 GA。Claude Code Routines（Anthropic）无需本地常驻进程即可运行定时调度的 Claude Code 调用。会话在等待人类输入时暂停，能挺过部署，并从以 `thread_id` 为键的最新 checkpoint 恢复。这套新的人机体验背后是一个老模式——工作流编排——只多了一种新输入：LLM 调用作为非确定性活动，必须在恢复时确定性地重放。
 
 **Type:** Learn
 **Languages:** Python (stdlib, minimal durable-execution state machine)
@@ -9,9 +9,9 @@
 
 ## 问题
 
-设想一个运行四小时的智能体。它调用三个工具、两次提示用户、进行四十次 LLM 调用。中途，它所在的主机重启了。会发生什么？
+设想一个运行四小时的 Agent。它调用三个工具、两次提示用户、进行四十次 LLM 调用。中途，它所在的主机重启了。会发生什么？
 
-- 在朴素的 `while True` 循环中：一切丢失。运行从头开始。三个工具调用（带有真实副作用）再次执行。用户为已经批准过的事情再次被提示。四十次 LLM 调用被重复计费。
+- 在朴素的 `while True` 循环中：一切丢失。运行从头开始。三个 tool call（带有真实副作用）再次执行。用户为已经批准过的事情再次被提示。四十次 LLM 调用被重复计费。
 - 使用持久化执行：运行从最近的 checkpoint 恢复。已完成的活动不会重新执行；它们的结果从持久日志中重放。用户无需重新批准已经批准过的事。已完成的 LLM 调用不会被重复计费。
 
 这是工作流引擎已经交付了十年的模式（Temporal、Cadence、Uber 的 Cherami）。新变化在于，LLM 调用现在也成了一种活动——非确定性、昂贵、带副作用——并且它们与这个模式契合得很好。
@@ -23,7 +23,7 @@
 ### 活动、工作流与重放
 
 - **工作流（Workflow）**：确定性的编排代码。定义活动的顺序、分支和等待。必须是确定性的，才能从事件日志重放而不出现意外的分叉。
-- **活动（Activity）**：一个非确定性的、可能失败的工作单元。LLM 调用、工具调用、文件写入、HTTP 请求。每个活动都会记录其输入以及（完成后的）输出。
+- **活动（Activity）**：一个非确定性的、可能失败的工作单元。LLM 调用、tool call、文件写入、HTTP 请求。每个活动都会记录其输入以及（完成后的）输出。
 - **事件日志**：持久化的后备存储。每次活动的开始、完成、失败、重试，以及每个工作流决策都会被记录。
 - **重放（Replay）**：恢复时，工作流代码从头重新运行；每个已完成的活动直接返回其记录的结果，而不重新执行。只有尚未完成的活动才会真正运行。
 
@@ -56,7 +56,7 @@ LangGraph、Microsoft Agent Framework、Cloudflare Durable Objects 和 Claude Co
 
 ### 35 分钟退化
 
-METR 观察到，所测量的每一类智能体在连续运行约 35 分钟后都会出现可靠性衰减。任务时长翻倍，失败率大约变为四倍。持久化执行并不能修复这一点；它让你能运行得比可靠性画像支撑的更久。安全的模式是把持久化与「重新进入时需要新 HITL」的 checkpoint 结合起来，并结合预算熔断开关（第 13 课）——无论墙钟时间多长，都对总算力设上限。
+METR 观察到，所测量的每一类 Agent 在连续运行约 35 分钟后都会出现可靠性衰减。任务时长翻倍，失败率大约变为四倍。持久化执行并不能修复这一点；它让你能运行得比可靠性画像支撑的更久。安全的模式是把持久化与「重新进入时需要新 HITL」的 checkpoint 结合起来，并结合预算熔断开关（第 13 课）——无论墙钟时间多长，都对总算力设上限。
 
 ### 持久化执行不适用的场景
 
@@ -80,7 +80,7 @@ memory-consolidation
 
 ## 交付它
 
-`outputs/skill-durable-execution-review.md` 审查一个候选的长时运行智能体部署是否具备正确的持久化执行形态：活动、确定性、checkpoint 后端、人类输入状态，以及恢复时的 HITL 策略。
+`outputs/skill-durable-execution-review.md` 审查一个候选的长时运行 Agent 部署是否具备正确的持久化执行形态：活动、确定性、checkpoint 后端、人类输入状态，以及恢复时的 HITL 策略。
 
 ## 练习
 
@@ -98,8 +98,8 @@ memory-consolidation
 
 | 术语 | 常见说法 | 实际含义 |
 |---|---|---|
-| 工作流 | 「智能体的脚本」 | 确定性编排代码；可从事件日志重放 |
-| 活动 | 「一个步骤」 | 非确定性单元（LLM 调用、工具调用）；前后均有日志 |
+| 工作流 | 「Agent 的脚本」 | 确定性编排代码；可从事件日志重放 |
+| 活动 | 「一个步骤」 | 非确定性单元（LLM 调用、tool call）；前后均有日志 |
 | 事件日志 | 「后备存储」 | 每次状态转换的持久记录 |
 | 重放 | 「恢复」 | 重新运行工作流；已完成活动返回记录结果而不重新执行 |
 | Checkpoint | 「存档点」 | 以 thread_id 为键的持久化状态；恢复时最新者生效 |
@@ -109,8 +109,8 @@ memory-consolidation
 
 ## 延伸阅读
 
-- [Anthropic —— Claude Code Agent SDK：智能体循环](https://code.claude.com/docs/en/agent-sdk/agent-loop) —— 预算、轮次与恢复语义。
+- [Anthropic —— Claude Code Agent SDK：Agent 循环](https://code.claude.com/docs/en/agent-sdk/agent-loop) —— 预算、轮次与恢复语义。
 - [Microsoft —— Agent Framework：人在回路与 checkpointing](https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop) —— RequestInfoEvent 形态。
 - [LangChain —— The Runtime Behind Production Deep Agents](https://www.langchain.com/conceptual-guides/runtime-behind-production-deep-agents) —— 具体的运行时需求。
 - [OpenAI Agents SDK + Temporal 集成（Trigger.dev 公告）](https://trigger.dev) —— LLM 调用的活动形态。
-- [Anthropic —— 在实践中测量智能体自主性](https://www.anthropic.com/research/measuring-agent-autonomy) —— 35 分钟退化的出处。
+- [Anthropic —— 在实践中测量 Agent 自主性](https://www.anthropic.com/research/measuring-agent-autonomy) —— 35 分钟退化的出处。

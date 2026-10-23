@@ -1,4 +1,4 @@
-# 项目 05 — 自主研究智能体（AI-Scientist 级别）
+# 项目 05 — 自主研究 Agent（AI-Scientist 级别）
 
 > Sakana 的 AI-Scientist-v2 发表了完整论文。Agent Laboratory 跑通了实验。Allen AI 公开了 trace。2026 年的形态是：对实验做计划—执行—验证的树搜索、带预算的成本、沙箱化的代码执行、带视觉反馈的 LaTeX 写作器，以及自动化的 NeurIPS 风格评审团。这个项目要求你构建一个，把每篇论文的成本控制在 30 美元内端到端跑通，并通过 Sakana 记录的沙箱逃逸红队测试。
 
@@ -10,17 +10,17 @@
 
 ## 问题
 
-2026 年，自主研究智能体跨过了一道门槛。Sakana AI 的 AI-Scientist-v2 登上 Nature，其生成的论文通过了 workshop 同行评审。ShinkaEvolve（ICLR 2026）把这条路线扩展到可进化的假设。AMD 的 Agent Laboratory 发布了可复现的 trace。这些智能体并不神奇 —— 它们是运行在候选实验树上的计划—执行—验证循环，配有成本上限、种子绑定的沙箱和自动评审。功夫都在循环、预算和安全方案里。
+2026 年，自主研究 Agent 跨过了一道门槛。Sakana AI 的 AI-Scientist-v2 登上 Nature，其生成的论文通过了 workshop 同行评审。ShinkaEvolve（ICLR 2026）把这条路线扩展到可进化的假设。AMD 的 Agent Laboratory 发布了可复现的 trace。这些 Agent 并不神奇 —— 它们是运行在候选实验树上的计划—执行—验证循环，配有成本上限、种子绑定的沙箱和自动评审。功夫都在循环、预算和安全方案里。
 
-你要通过在一个狭窄领域里围绕一个种子想法实现这套循环来学习它（例如，在 1 亿参数的 Transformer 上做注意力稀疏性消融）。价值不在于第一次运行就发现新东西，而在于基础设施：树搜索、实验沙箱、写作—评审循环、红队报告。Sakana 团队记录了沙箱逃逸失败；你的智能体必须通过同样的红队测试。
+你要通过在一个狭窄领域里围绕一个种子想法实现这套循环来学习它（例如，在 1 亿参数的 Transformer 上做注意力稀疏性消融）。价值不在于第一次运行就发现新东西，而在于基础设施：树搜索、实验沙箱、写作—评审循环、红队报告。Sakana 团队记录了沙箱逃逸失败；你的 Agent 必须通过同样的红队测试。
 
 ## 概念
 
-这个智能体是一个最佳优先树搜索。节点是实验规格：(假设、配置、代码、预期结果)。expand 步骤通过小幅修改提出子节点（换优化器、调整 batch size、消融某个组件）。每个子节点都在全新的沙箱中运行，并受硬性资源上限约束。结果回馈给评分函数，按（新颖性 × 质量 × 剩余预算）给节点排序。树一直生长到预算耗尽，然后把最佳分支写成论文。
+这个 Agent 是一个最佳优先树搜索。节点是实验规格：(假设、配置、代码、预期结果)。expand 步骤通过小幅修改提出子节点（换优化器、调整 batch size、消融某个组件）。每个子节点都在全新的沙箱中运行，并受硬性资源上限约束。结果回馈给评分函数，按（新颖性 × 质量 × 剩余预算）给节点排序。树一直生长到预算耗尽，然后把最佳分支写成论文。
 
 写作器是多模态的。它生成 LaTeX 草稿，编译，渲染图表，再把渲染后的 PDF 送回 Claude Opus 4.7 的视觉模式，就版式、图表可读性和论断—证据对齐给出批评。由五位 LLM 评审组成的评审团给出 NeurIPS 风格评分（新颖性、严谨性、清晰度、可复现性、影响力）；如果平均分低于阈值，论文就带着批评意见退回给写作器。
 
-安全是承重结构。每个实验都在 E2B 或 Daytona 沙箱中运行，无网络出口、有墙钟时间上限、资源限制固定。智能体的代码生成步骤会经过一个策略层，拦截可能逃逸沙箱的系统调用。红队报告复现 Sakana 记录的攻面（fork 炸弹、文件系统逃逸、LLM 编写的网络调用）。
+安全是承重结构。每个实验都在 E2B 或 Daytona 沙箱中运行，无网络出口、有墙钟时间上限、资源限制固定。Agent 的代码生成步骤会经过一个策略层，拦截可能逃逸沙箱的系统调用。红队报告复现 Sakana 记录的攻面（fork 炸弹、文件系统逃逸、LLM 编写的网络调用）。
 
 ## 架构
 
@@ -67,7 +67,7 @@ seed idea + domain
 - 写作器：LaTeX 模板 + Claude Opus 4.7（视觉模式），负责图表批评和版式
 - 评审：5 位评审组成的评审团（Opus 4.7、GPT-5.4、Gemini 3 Pro、DeepSeek R1、Qwen3-Max），加权聚合
 - 实验框架：真实实验用 PyTorch 2.5，日志用 W&B
-- 可观测性：智能体 trace 用 Langfuse，每篇论文硬预算 30 美元
+- 可观测性：Agent trace 用 Langfuse，每篇论文硬预算 30 美元
 
 ```figure
 ce-experiment-tree
@@ -131,7 +131,7 @@ $ ai-scientist run --seed "attention sparsity in sub-1B transformers" --budget 3
 
 3. 把评审团换成单一评审。在由已知劣质论文组成的留出集上测量误接受率。
 
-4. 引入一个网络外泄红队测试：让智能体编写尝试 `curl` 外部地址的代码。确认 `--network=none` 策略将其拦截。记录这次尝试。
+4. 引入一个网络外泄红队测试：让 Agent 编写尝试 `curl` 外部地址的代码。确认 `--network=none` 策略将其拦截。记录这次尝试。
 
 5. 把你的树搜索与平坦随机基线（相同预算、没有扩展策略）对比。报告新颖性 × 质量的提升。
 
@@ -149,7 +149,7 @@ $ ai-scientist run --seed "attention sparsity in sub-1B transformers" --budget 3
 
 ## 延伸阅读
 
-- [Sakana AI-Scientist-v2 仓库](https://github.com/SakanaAI/AI-Scientist-v2) —— 生产级研究智能体的参考
+- [Sakana AI-Scientist-v2 仓库](https://github.com/SakanaAI/AI-Scientist-v2) —— 生产级研究 Agent 的参考
 - [Sakana AI-Scientist-v1 论文（arXiv:2408.06292）](https://arxiv.org/abs/2408.06292) —— 原始方法论
 - [ShinkaEvolve（Sakana，ICLR 2026）](https://sakana.ai) —— 进化式扩展
 - [Agent Laboratory（AMD）](https://github.com/SamuelSchmidgall/AgentLaboratory) —— 多角色研究实验室框架

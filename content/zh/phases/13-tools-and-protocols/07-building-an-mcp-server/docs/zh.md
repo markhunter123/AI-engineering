@@ -99,7 +99,7 @@ forget request-scoped metadata
 
 `tools/list` 返回确定性的工具描述符列表。稳定的顺序有助于响应缓存，并让模型上下文保持稳定。结果还要求包含 `ttlMs` 和 `cacheScope`。
 
-`tools/call` 返回内容块和 `isError`。当协议信封或方法参数无效时，使用 JSON-RPC 错误。当工具调用本身有效、但工具自身执行失败时，使用 `isError: true`。
+`tools/call` 返回内容块和 `isError`。当协议信封或方法参数无效时，使用 JSON-RPC 错误。当 tool call 本身有效、但工具自身执行失败时，使用 `isError: true`。
 
 工具注解始终只是提示，不是强制执行：
 
@@ -193,7 +193,7 @@ npx tsx main.ts --demo
 | 可缓存结果（Cacheable result） | 带 `ttlMs` 和 `cacheScope` 的发现、列表或资源读取结果 |
 | 确定性列表（Deterministic list） | 相同的逻辑注册表产生相同的条目顺序 |
 | 服务器身份（Server identity） | 结果 `_meta` 中推荐的 `io.modelcontextprotocol/serverInfo` |
-| 工具错误（Tool error） | 有效的工具调用返回带 `isError: true` 的内容 |
+| 工具错误（Tool error） | 有效的 tool call 返回带 `isError: true` 的内容 |
 | 协议错误（Protocol error） | 无效的 JSON-RPC 或 MCP 请求，通过 `error` 返回 |
 
 ## 延伸阅读

@@ -111,7 +111,7 @@ data-augmentation
 
 ## 构建它
 
-### 第 1 步：双视图增强流水线
+### 第 1 步：双视图增强 pipeline
 
 ```python
 import torch
@@ -218,7 +218,7 @@ with torch.no_grad():
     embedding = outputs.last_hidden_state[:, 0]  # CLS token
 ```
 
-得到的 768 维 embedding 是现代图像检索、稠密对应和零样本迁移流水线的骨干。在下游任务上微调，通常只需要一个线性头。
+得到的 768 维 embedding 是现代图像检索、稠密对应和零样本迁移 pipeline 的骨干。在下游任务上微调，通常只需要一个线性头。
 
 图像-文本 embedding 的对应选择是 SigLIP 或 OpenCLIP；MAE 风格的微调则可以用 `timm` 仓库提供的所有 MAE checkpoint。
 
@@ -226,7 +226,7 @@ with torch.no_grad():
 
 本节课产出：
 
-- `outputs/prompt-ssl-pretraining-picker.md` —— 一个根据数据集规模、算力和下游任务，在 SimCLR / MAE / DINOv2 之间做选择的提示词。
+- `outputs/prompt-ssl-pretraining-picker.md` —— 一个根据数据集规模、算力和下游任务，在 SimCLR / MAE / DINOv2 之间做选择的 prompt。
 - `outputs/skill-linear-probe-runner.md` —— 一个为任意冻结编码器加有标签数据集编写线性探针评估的技能。
 
 ## 练习

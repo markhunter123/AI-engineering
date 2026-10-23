@@ -100,7 +100,7 @@ def make_tokens(style, length, vocab_size, rng):
 | 背景音乐，快速 | Stable Audio 2.5 API、Suno 或 Udio |
 | 带歌词的音乐 | Suno v4 或 Udio v1.5 |
 | 音效 / Foley | AudioCraft 2、ElevenLabs SFX 或 Stable Audio Open |
-| 实时语音智能体 | GPT-4o realtime 或 Gemini Live |
+| 实时语音 Agent | GPT-4o realtime 或 Gemini Live |
 | 开放权重音乐研究 | MusicGen 3.3B、Stable Audio Open 1.0、AudioLDM 2 |
 | 配音 / 翻译 | HeyGen、ElevenLabs Dubbing |
 

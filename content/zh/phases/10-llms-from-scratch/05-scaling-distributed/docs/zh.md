@@ -9,7 +9,7 @@
 
 ## 学习目标
 
-- 解释三种并行方式（数据并行、张量并行、流水线并行），以及根据模型和集群规模判断各自何时必要
+- 解释三种并行方式（数据并行、张量并行、pipeline 并行），以及根据模型和集群规模判断各自何时必要
 - 使用 PyTorch DDP 实现数据并行训练，在多块 GPU 之间同步梯度
 - 计算给定模型规模的内存预算（权重 + 优化器状态 + 梯度 + 激活值），确定最低硬件要求
 - 配置 FSDP 或 DeepSpeed ZeRO 阶段，在多块 GPU 上分片模型状态，装下超出单 GPU 内存的模型
@@ -26,7 +26,7 @@
 
 Llama 3 405B 是在 16,384 块 NVIDIA H100 GPU 上训练的。这次训练估计花费了 1 亿美元算力。DeepSeek V3 训练了一个规模相当的模型，只花了约 560 万美元，靠的是巧妙的架构设计（混合专家意味着每个 token 只有一小部分参数被激活）和训练效率。
 
-本课覆盖让大规模训练成为可能的四种策略：数据并行、张量并行、流水线并行和全分片数据并行。你会在纯 Python 中逐一模拟，先理解机制，再去碰任何分布式训练框架。
+本课覆盖让大规模训练成为可能的四种策略：数据并行、张量并行、pipeline 并行和全分片数据并行。你会在纯 Python 中逐一模拟，先理解机制，再去碰任何分布式训练框架。
 
 ## 概念
 
@@ -91,13 +91,13 @@ graph TD
 
 **实际应用：** Megatron-LM 开创了张量并行。Llama 3 405B 在每个节点内使用 8 路张量并行。
 
-### 流水线并行
+### Pipeline 并行
 
-按层拆分模型。GPU 1 跑第 1-8 层。GPU 2 跑第 9-16 层。GPU 3 跑第 17-24 层。GPU 4 跑第 25-32 层。数据在流水线中流动：GPU 1 算完自己的层，把激活值发给 GPU 2，GPU 2 算完再发给 GPU 3，依此类推。
+按层拆分模型。GPU 1 跑第 1-8 层。GPU 2 跑第 9-16 层。GPU 3 跑第 17-24 层。GPU 4 跑第 25-32 层。数据在 pipeline 中流动：GPU 1 算完自己的层，把激活值发给 GPU 2，GPU 2 算完再发给 GPU 3，依此类推。
 
 **优点：** GPU 间通信极少——只有层边界处的激活值，相比梯度或权重很小。带宽需求低，因此可以跨节点。
 
-**缺点：** 流水线气泡（pipeline bubble）。当 GPU 4 在算 micro-batch 1 的前向传播时，GPU 1、2、3 处于空闲（它们已经完成了自己那部分前向）。反向传播时模式反转。朴素流水线下，N 个流水级，GPU 利用率只有 1/N。
+**缺点：** Pipeline 气泡（pipeline bubble）。当 GPU 4 在算 micro-batch 1 的前向传播时，GPU 1、2、3 处于空闲（它们已经完成了自己那部分前向）。反向传播时模式反转。朴素 pipeline 下，N 个流水级，GPU 利用率只有 1/N。
 
 **GPipe 和 PipeDream** 通过把 batch 拆成 micro-batch 来解决气泡问题。GPU 1 一完成 micro-batch 1 的前向，就开始处理 micro-batch 2。这样流水级之间的计算得以重叠。有 M 个 micro-batch 和 N 个级时，气泡比例降到 (N-1)/M。用 M=16 个 micro-batch、N=4 个级，气泡是 3/16 = 18.75% 的空闲时间。
 
@@ -205,14 +205,14 @@ Google 的 TPU 原生使用 BF16。NVIDIA 的 A100 和 H100 同时支持 FP16 �
 
 - **数据并行**跨节点组（扩大 batch size）
 - **张量并行**在节点内（把层拆到 8 块 GPU）
-- **流水线并行**跨节点（把层组分到多台机器）
+- **Pipeline 并行**跨节点（把层组分到多台机器）
 
 Llama 3 405B 在 16,384 块 H100 上：
 - 每个节点内 8 路张量并行（每节点 8 块 GPU）
-- 跨节点 16 路流水线并行（16 个流水级）
+- 跨节点 16 路 pipeline 并行（16 个流水级）
 - 剩余维度上 128 路数据并行（16,384 / 8 / 16 = 128）
 
-这种 3D 分解（8 × 16 × 128 = 16,384）就是扩展到数千块 GPU 的方式。每块 GPU 看到不同的数据分片（数据并行），持有每层的一个切片（张量并行），计算不同的一组层（流水线并行）。
+这种 3D 分解（8 × 16 × 128 = 16,384）就是扩展到数千块 GPU 的方式。每块 GPU 看到不同的数据分片（数据并行），持有每层的一个切片（张量并行），计算不同的一组层（pipeline 并行）。
 
 DeepSeek V3 走了一条不同的路。他们的混合专家（MoE）架构每个 token 只激活 671B 参数中的 37B。这意味着每块 GPU 只需计算激活参数，并存储它们的激活值。他们在 2,048 块 H800 GPU 上训练——不到 Meta GPU 数量的 1/8——花费 560 万美元，而 Meta 估计花费 1 亿美元。
 
@@ -309,7 +309,7 @@ def simulate_tensor_parallelism(input_data, weight_matrix, num_gpus):
 
 对于列并行（column-parallel）线性层（拆分输出维度），你做拼接。对于行并行（row-parallel，拆分输入维度），你做求和。在 Transformer 的 FFN 中，第一个线性层（扩张）用列并行，第二个线性层（收缩）用行并行。这样避免了两个层之间的一次 all-reduce。
 
-### 第 3 步：模拟流水线并行
+### 第 3 步：模拟 pipeline 并行
 
 把模型的层拆到虚拟 GPU 上。展示气泡问题：早期阶段空闲，而后期阶段在计算。
 
@@ -533,13 +533,13 @@ def run_all_demos():
 
 ## 交付它
 
-本课产出 `outputs/prompt-distributed-training-planner.md`——一个提示词，接收模型规模和可用硬件，然后生成完整的分布式训练方案：并行策略、内存预算、通信开销和预期吞吐量。
+本课产出 `outputs/prompt-distributed-training-planner.md`——一个 prompt，接收模型规模和可用硬件，然后生成完整的分布式训练方案：并行策略、内存预算、通信开销和预期吞吐量。
 
 ## 练习
 
 1. 修改内存计算器，加入激活 checkpoint。使用 checkpoint 时，只在每第 K 层存储激活值（典型 K=1，即全部重算）。展示内存与计算的权衡：checkpoint 节省多少内存，又让训练慢多少（完全 checkpoint 大约多 33% 计算）？
 
-2. 扩展流水线并行模拟，实现 PipeDream 使用的 1F1B（一前一后）调度。对 4 个级、8 个 micro-batch，比较气泡比例与朴素调度。1F1B 调度应当有更小的峰值内存，因为它更早开始反向传播。
+2. 扩展 pipeline 并行模拟，实现 PipeDream 使用的 1F1B（一前一后）调度。对 4 个级、8 个 micro-batch，比较气泡比例与朴素调度。1F1B 调度应当有更小的峰值内存，因为它更早开始反向传播。
 
 3. 实现梯度累积模拟器。不是每个 micro-batch 后都 all-reduce，而是在本地累积 K 步梯度，再 all-reduce。展示这如何把通信减少 K 倍，却产生相同的最终梯度（因而训练结果相同）。
 
@@ -553,20 +553,20 @@ def run_all_demos():
 |------|----------------|----------------------|
 | 数据并行（Data parallelism） | 「把模型复制到每块 GPU」 | 每块 GPU 处理不同的数据分片；每步之后通过 all-reduce 对梯度求平均 |
 | 张量并行（Tensor parallelism） | 「把一层拆到多块 GPU」 | 切分权重矩阵，让每块 GPU 计算部分矩阵乘法；需要快速 NVLink 互联 |
-| 流水线并行（Pipeline parallelism） | 「把层拆到多块 GPU」 | 每块 GPU 运行不同的一组层；数据以 micro-batch 流过流水线以减少气泡 |
+| Pipeline 并行（Pipeline parallelism） | 「把层拆到多块 GPU」 | 每块 GPU 运行不同的一组层；数据以 micro-batch 流过 pipeline 以减少气泡 |
 | FSDP | 「把所有东西分片」 | Fully Sharded Data Parallel——每块 GPU 持有 1/N 的权重、梯度和优化器状态；计算前 all-gather |
 | ZeRO | 「DeepSpeed 版的 FSDP」 | Zero Redundancy Optimizer，三个阶段：分片优化器（阶段 1）、+ 梯度（阶段 2）、+ 参数（阶段 3） |
 | All-reduce | 「跨 GPU 求平均」 | 一种集合通信操作，结束时每块 GPU 都拥有所有 GPU 输入的求和（或平均）——通常实现为 ring all-reduce |
 | All-gather | 「从所有 GPU 收集」 | 一种集合通信操作，结束时每块 GPU 都拥有所有 GPU 数据的拼接——FSDP 用它重建完整参数 |
 | Reduce-scatter | 「求和并分发」 | 一种集合通信操作，对数据做归约（求和）并把不同的块分发到不同 GPU——FSDP 用它做梯度分片 |
 | 混合精度（Mixed precision） | 「用半精度训练」 | 前向/反向用 FP16/BF16，优化器状态用 FP32——节省约 25% 内存而非 50%，因为优化器占大头 |
-| 流水线气泡（Pipeline bubble） | 「流水线中的空闲时间」 | GPU 空闲等待上一级数据的时长比例——通过使用更多 micro-batch 来降低 |
+| Pipeline 气泡（Pipeline bubble） | 「流水线中的空闲时间」 | GPU 空闲等待上一级数据的时长比例——通过使用更多 micro-batch 来降低 |
 
 ## 延伸阅读
 
 - [Rajbhandari 等，2020——「ZeRO: Memory Optimizations Toward Training Trillion Parameter Models」](https://arxiv.org/abs/1910.02054) —— 定义了三个分片阶段的 DeepSpeed ZeRO 论文
 - [Shoeybi 等，2020——「Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism」](https://arxiv.org/abs/1909.08053) —— NVIDIA 面向 Transformer 的张量并行
-- [Narayanan 等，2021——「Efficient Large-Scale Language Model Training on GPU Clusters Using Megatron-LM」](https://arxiv.org/abs/2104.04473) —— 结合数据、张量和流水线的 3D 并行
+- [Narayanan 等，2021——「Efficient Large-Scale Language Model Training on GPU Clusters Using Megatron-LM」](https://arxiv.org/abs/2104.04473) —— 结合数据、张量和 pipeline 的 3D 并行
 - [Zhao 等，2023——「PyTorch FSDP: Experiences on Scaling Fully Sharded Data Parallel」](https://arxiv.org/abs/2304.11277) —— PyTorch 原生 FSDP 实现
 - [Llama 3 技术报告](https://arxiv.org/abs/2407.21783) —— 16,384 块 GPU 训练与 3D 并行细节
 - [DeepSeek-V3 技术报告](https://arxiv.org/abs/2412.19437) —— MoE 架构如何把训练成本降低一个数量级

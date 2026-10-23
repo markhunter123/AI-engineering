@@ -1,6 +1,6 @@
 # 项目第 28 课：用 OTel GenAI span 与 Prometheus 指标做可观测性
 
-> 没有可观测性的智能体 harness，是一个只会烧钱的黑盒。本课手写一个 span 构建器，输出符合 OpenTelemetry GenAI 语义约定的记录，按每行一条 span 写入 JSON-Lines 文件，并以 Prometheus 文本格式暴露计数器和直方图。全部用 Python 标准库实现，可离线运行。
+> 没有可观测性的 Agent harness，是一个只会烧钱的黑盒。本课手写一个 span 构建器，输出符合 OpenTelemetry GenAI 语义约定的记录，按每行一条 span 写入 JSON-Lines 文件，并以 Prometheus 文本格式暴露计数器和直方图。全部用 Python 标准库实现，可离线运行。
 
 **Type:** Build
 **Languages:** Python (stdlib)
@@ -17,13 +17,13 @@
 
 ## 问题
 
-生产环境中的编码智能体，每一轮都会产生三类产物：一次模型调用、一次工具执行、一次验证门决策。没有结构化遥测，这些都没有用。
+生产环境中的编码 Agent，每一轮都会产生三类产物：一次模型调用、一次工具执行、一次验证门决策。没有结构化遥测，这些都没有用。
 
-第一类失败模式是缺失的 trace。周二出了点问题，唯一记录是一份 500 行的聊天日志。哪个工具跑过、跑了多久、prompt 里塞了多少 token、门是否拒绝过什么，全都没有记录。智能体的作者只能猜。
+第一类失败模式是缺失的 trace。周二出了点问题，唯一记录是一份 500 行的聊天日志。哪个工具跑过、跑了多久、prompt 里塞了多少 token、门是否拒绝过什么，全都没有记录。Agent 的作者只能猜。
 
 第二类失败模式是无法解析的 trace。harness 写了 span，但用的是自己临时定的字段名。Grafana、Honeycomb、Jaeger 或本地 CLI 都读不了。团队技术栈里有什么工具都白搭，因为 span 不合规范。
 
-第三类失败模式是没有聚合的指标。你能在 trace 里看见一次慢工具调用，却回答不了「过去一小时 read_file 调用的 p95 延迟是多少？」，因为没有指标，只有 trace。
+第三类失败模式是没有聚合的指标。你能在 trace 里看见一次慢 tool call，却回答不了「过去一小时 read_file 调用的 p95 延迟是多少？」，因为没有指标，只有 trace。
 
 OpenTelemetry GenAI 语义约定正是为此存在。它定义了一小组标准属性，让各 LLM 框架的 span 发射器共享同一套词汇。只要你的 harness 写入这些属性，任何兼容 OTel 的后端都能读取。
 
@@ -39,13 +39,13 @@ flowchart TD
   Metrics --> Prom[/metrics text/]
 ```
 
-harness 中的每个操作都产生一个 span。span 有 trace id（整个智能体调用）、span id（这一个操作）、名称（例如 `gen_ai.chat`、`gen_ai.tool.execution`）、遵循 GenAI 约定的属性、起止时间，以及状态。
+harness 中的每个操作都产生一个 span。span 有 trace id（整个 Agent 调用）、span id（这一个操作）、名称（例如 `gen_ai.chat`、`gen_ai.tool.execution`）、遵循 GenAI 约定的属性、起止时间，以及状态。
 
 GenAI 约定标准化了这些属性键：`gen_ai.system`（哪个提供商，例如 `anthropic`、`openai`）、`gen_ai.request.model`（模型 id）、`gen_ai.request.max_tokens`、`gen_ai.usage.input_tokens`、`gen_ai.usage.output_tokens`、`gen_ai.response.model`、`gen_ai.response.id`、`gen_ai.operation.name`，以及工具专用键 `gen_ai.tool.name` 和 `gen_ai.tool.call.id`。
 
 导出器写 JSONL。一行一个 JSON 对象。这是下游工具能流式读取、grep 和导入的最简单格式。真实的 OTel 导出器会说 OTLP gRPC；本课的 JSONL 导出器是离线等价物，在每台工作站上都能零退出。
 
-指标与 trace 并排存在。每次工具调用递增一个计数器：`tools_called_total{tool="read_file"}`。直方图记录观测到的延迟：`tool_latency_ms{tool="read_file"}`。两者都序列化为 Prometheus 文本暴露格式——拉取式指标的事实标准。
+指标与 trace 并排存在。每次 tool call 递增一个计数器：`tools_called_total{tool="read_file"}`。直方图记录观测到的延迟：`tool_latency_ms{tool="read_file"}`。两者都序列化为 Prometheus 文本暴露格式——拉取式指标的事实标准。
 
 ```figure
 trace-spans
@@ -75,7 +75,7 @@ span 构建器是一个小类，`span(name, attrs)` 方法返回上下文管理�
 4. `Counter` 与 `Histogram` 类，以及 `MetricsRegistry`。
 5. `prometheus_exposition(registry)`，生成文本格式输出。
 6. `wrap_tool_call(name)` 装饰器，发出 span 并更新指标。
-7. 演示：合成一次完整的智能体调用（工具 span 外层包 gen_ai.chat span），写入 traces.jsonl，打印 Prometheus 暴露文本，零退出。
+7. 演示：合成一次完整的 Agent 调用（工具 span 外层包 gen_ai.chat span），写入 traces.jsonl，打印 Prometheus 暴露文本，零退出。
 
 span id 与 trace id 是由 `os.urandom` 生成的 16 字节十六进制字符串。这与 OTel 的 W3C trace context 一致。导出器永不抛异常；IO 错误会暴露出来，但 harness 继续运行。
 

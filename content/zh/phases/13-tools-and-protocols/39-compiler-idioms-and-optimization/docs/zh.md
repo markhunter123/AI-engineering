@@ -18,7 +18,7 @@
 
 ## 问题
 
-你在 `-O2` 下编译了 `idioms.c`，然后问一个智能体 `div7u` 是做什么的。智能体读到 `imulq $0x24924925, %rax, %rax`，回答说这个函数乘以 613566757、移位、再相加。每一个字都是真的。而这个函数计算的是 `x / 7`。
+你在 `-O2` 下编译了 `idioms.c`，然后问一个 Agent `div7u` 是做什么的。Agent 读到 `imulq $0x24924925, %rax, %rax`，回答说这个函数乘以 613566757、移位、再相加。每一个字都是真的。而这个函数计算的是 `x / 7`。
 
 同一个目标文件里有一个七分支的 `switch`，完全没有跳转；一个五分支的 `switch`，是一张跳转表；一个两分支的 `switch`，是一条 `sete` 加一条 `cmovne`；还有一个遍历 `n` 个整数的循环，每轮在两个 `xmm` 寄存器里处理八个整数，剩下的部分在第二个循环里收尾。在 `-O0` 下，同样的源码生成的是 `divl`、七条目跳转表和单个标量循环。在 `-O1` 下，七分支 switch 变成了一张取值表，而向量循环还不存在。
 
@@ -110,7 +110,7 @@ clang 在 x86-64 上以 `-O2` 编译 `div10u` 时发出的正是这个：
 
 ## 降级 switch 的五种方式
 
-LLVM 在两个地方决定 `switch` 的形态。`SimplifyCFG::simplifySwitchLookup` 在 `-O1` 及以上运行，当一个 switch 的所有分支都产生常量、且至少有三个分支、目标平台能构建查找表时，它把该 switch 变成取值表。它的表类型有 `SingleValueKind`、`LinearMapKind`、`BitMapKind` 和 `ArrayKind`。`-O0` 流水线从不运行这一遍。其余的 switch 进入指令选择阶段的 `SwitchLowering::findJumpTables`：当簇中至少有 `min-jump-table-entries` 个条目（默认 4），并且足够稠密——`NumCases * 100 >= Range * MinDensity`，普通函数 `jump-table-density` 为 10，`-Os` 下为 40——就构建跳转表。剩下的部分变成对分支常量的二分查找，由 `splitWorkItem` 选择枢轴。测试夹具为每种结果各保留一个函数。
+LLVM 在两个地方决定 `switch` 的形态。`SimplifyCFG::simplifySwitchLookup` 在 `-O1` 及以上运行，当一个 switch 的所有分支都产生常量、且至少有三个分支、目标平台能构建查找表时，它把该 switch 变成取值表。它的表类型有 `SingleValueKind`、`LinearMapKind`、`BitMapKind` 和 `ArrayKind`。`-O0` Pipeline 从不运行这一遍。其余的 switch 进入指令选择阶段的 `SwitchLowering::findJumpTables`：当簇中至少有 `min-jump-table-entries` 个条目（默认 4），并且足够稠密——`NumCases * 100 >= Range * MinDensity`，普通函数 `jump-table-density` 为 10，`-Os` 下为 40——就构建跳转表。剩下的部分变成对分支常量的二分查找，由 `splitWorkItem` 选择枢轴。测试夹具为每种结果各保留一个函数。
 
 | 函数 | 源码 | `-O0` x86-64 | `-O2` x86-64 | `-O2` AArch64 |
 |---|---|---|---|---|
@@ -218,7 +218,7 @@ LLVM 的循环向量化器在 `-O2`、`-O3` 和 `-Os` 下开启，在 `-O0` 和 
 
 ## 两个看起来像惯用法的加固特性
 
-栈保护（stack protector）是编译器的特性，它留下的形态很容易被智能体误读成程序逻辑。用 `-fstack-protector-strong` 为 x86-64 Linux 编译的 `canary.c` 给出：
+栈保护（stack protector）是编译器的特性，它留下的形态很容易被 Agent 误读成程序逻辑。用 `-fstack-protector-strong` 为 x86-64 Linux 编译的 `canary.c` 给出：
 
 ```text
        7: 64 48 8b 04 25 28 00 00 00   	movq	%fs:0x28, %rax

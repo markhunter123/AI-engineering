@@ -1,6 +1,6 @@
 # 基准测试：SWE-bench、GAIA、AgentBench
 
-> 2026 年，有三个基准测试为智能体评估提供了锚点。SWE-bench 测试代码补丁能力。GAIA 测试通用工具使用能力。AgentBench 测试多环境推理能力。你需要了解它们的构成、它们的污染故事，以及它们没有衡量的东西。
+> 2026 年，有三个基准测试为 Agent 评估提供了锚点。SWE-bench 测试代码补丁能力。GAIA 测试通用工具使用能力。AgentBench 测试多环境推理能力。你需要了解它们的构成、它们的污染故事，以及它们没有衡量的东西。
 
 **Type:** Learn
 **Languages:** Python (stdlib)
@@ -30,15 +30,15 @@
 ### SWE-bench（Jimenez 等，ICLR 2024 oral）
 
 - 来自 12 个热门 Python 仓库的 2,294 个真实 GitHub issue。
-- 智能体收到：修复前提交的代码库 + 自然语言 issue 描述。
-- 智能体产出：一个补丁。
+- Agent 收到：修复前提交的代码库 + 自然语言 issue 描述。
+- Agent 产出：一个补丁。
 - 评估器：应用补丁，运行仓库的测试套件。补丁必须让 FAIL_TO_PASS 测试翻转（原先失败、现在通过），同时不破坏 PASS_TO_PASS 测试。
 
-SWE-agent（Yang 等，2024）在发布时达到 12.5%，靠的是强调智能体-计算机接口（文件编辑器命令、模型能理解的搜索语法）。
+SWE-agent（Yang 等，2024）在发布时达到 12.5%，靠的是强调 Agent-计算机接口（文件编辑器命令、模型能理解的搜索语法）。
 
 ### SWE-bench Verified
 
-OpenAI，2024 年 8 月。人工策展的 500 个任务子集。移除了有歧义的 issue、不可靠的测试，以及修复方案不明确的任务。这是回答「你的智能体能否交付真实补丁？」的主要基准。
+OpenAI，2024 年 8 月。人工策展的 500 个任务子集。移除了有歧义的 issue、不可靠的测试，以及修复方案不明确的任务。这是回答「你的 Agent 能否交付真实补丁？」的主要基准。
 
 ### 污染
 
@@ -85,7 +85,7 @@ ae-swebench-gate
 `code/main.py` 实现一个玩具式的类 SWE-bench 框架：
 
 - 合成的 bug 修复任务（3 个）。
-- 一个脚本化的「智能体」提出补丁。
+- 一个脚本化的「Agent」提出补丁。
 - 一个测试运行器，检查 FAIL_TO_PASS（bug 现已修复）和 PASS_TO_PASS（没有破坏其他东西）。
 - 一个 GAIA 风格的难度分类器，基于问题分解深度。
 
@@ -99,8 +99,8 @@ python3 code/main.py
 
 ## 使用它
 
-- **SWE-bench Verified** 用于代码智能体。始终报告 Verified 分数。
-- **GAIA** 用于通用智能体。使用私榜 split。
+- **SWE-bench Verified** 用于代码 Agent。始终报告 Verified 分数。
+- **GAIA** 用于通用 Agent。使用私榜 split。
 - **AgentBench** 用于多环境比较。
 - **自定义评估**（第 30 课）用于你产品的实际形态。
 
@@ -111,16 +111,16 @@ python3 code/main.py
 ## 练习
 
 1. 把这个玩具框架移植到真实仓库上（选你自己的一个）。为已知 bug 编写 3 个 FAIL_TO_PASS 测试。
-2. 增加一个步数指标。在你的 3 个任务上，每次解决平均需要多少智能体步骤？
+2. 增加一个步数指标。在你的 3 个任务上，每次解决平均需要多少 Agent 步骤？
 3. 阅读 SWE-bench+ 论文。实现一个解法泄漏检查（把 issue 文本与 diff 做模式匹配）。
-4. 从公开 split 下载一个 GAIA 问题。追踪一个 GPT-4 级智能体会怎么做。它需要哪些工具？
+4. 从公开 split 下载一个 GAIA 问题。追踪一个 GPT-4 级 Agent 会怎么做。它需要哪些工具？
 5. 阅读 AgentBench 的分环境拆解。哪个环境最像你的产品界面？那里的「SOTA」是什么样？
 
 ## 关键术语
 
 | 术语 | 人们怎么说 | 实际含义 |
 |------|----------------|------------------------|
-| SWE-bench | 「代码智能体基准」 | 2,294 个 GitHub issue；补丁必须翻转 FAIL_TO_PASS 测试 |
+| SWE-bench | 「代码 Agent 基准」 | 2,294 个 GitHub issue；补丁必须翻转 FAIL_TO_PASS 测试 |
 | SWE-bench Verified | 「干净的 SWE-bench」 | 500 个人工策展任务，OpenAI |
 | FAIL_TO_PASS | 「修复门槛」 | 原先失败、打补丁后必须通过的测试 |
 | PASS_TO_PASS | 「无回归门槛」 | 原先通过、现在必须仍然通过的测试 |

@@ -135,7 +135,7 @@ def reinforce_step(theta, trajectory, gamma, lr, baseline=0.0):
 
 ## 常见陷阱
 
-- **梯度爆炸。** 回报可能很大。在乘以 $\nabla \log \pi$ 之前，始终在一个批次内把 $G$ 归一化到 `~N(0, 1)`。
+- **梯度爆炸。** 回报可能很大。在乘以 $\nabla \log \pi$ 之前，始终在一个 batch 内把 $G$ 归一化到 `~N(0, 1)`。
 - **熵坍缩。** 策略过早收敛到近乎确定的动作，停止探索，卡住。修复：在目标里加熵奖励 $\beta \cdot H(\pi(\cdot \mid s))$。
 - **高方差。** 原始 REINFORCE 需要数千个回合。critic 基线（第 07 课）或 TRPO/PPO 的信任域（第 08 课）是标准修复。
 - **样本效率低。** 同策略意味着每次更新后丢弃所有转移。通过重要性采样做离策略修正能找回数据，代价是方差（PPO 的 ratio 就是裁剪的 IS 权重）。
@@ -151,7 +151,7 @@ def reinforce_step(theta, trajectory, gamma, lr, baseline=0.0):
 | 连续控制 | 带高斯策略的 PPO / SAC |
 | LLM RLHF | 带 KL 惩罚的 PPO，运行在 token 级策略上 |
 | LLM 推理（DeepSeek） | GRPO——带组相对基线的 REINFORCE，无 critic |
-| 多智能体 | 集中式 critic 的 REINFORCE（MADDPG、COMA） |
+| 多 Agent | 集中式 critic 的 REINFORCE（MADDPG、COMA） |
 | 离散动作机器人 | A2C、A3C、PPO |
 | 仅偏好设置 | DPO——把 REINFORCE 改写成偏好似然损失，无需采样 |
 

@@ -18,7 +18,7 @@
 
 ## 问题
 
-你在不带 `-g` 的情况下编译了 `account.c`，然后问一个智能体 `bump` 做了什么。智能体把目标文件交给 Ghidra 12.1.4，得到如下结果：
+你在不带 `-g` 的情况下编译了 `account.c`，然后问一个 Agent `bump` 做了什么。Agent 把目标文件交给 Ghidra 12.1.4，得到如下结果：
 
 ```c
 void bump(long param_1,int param_2)

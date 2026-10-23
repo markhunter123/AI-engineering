@@ -24,7 +24,7 @@
 
 ## 概念
 
-### 流水线
+### Pipeline
 
 ```mermaid
 flowchart LR
@@ -245,7 +245,7 @@ model = timm.create_model("vit_base_patch16_224", pretrained=True, num_classes=1
 
 本节课产出：
 
-- `outputs/prompt-vit-vs-cnn-picker.md` —— 一个根据数据集规模、算力和推理栈，在 ViT、ConvNeXt 与 Swin 之间做选择的提示词。
+- `outputs/prompt-vit-vs-cnn-picker.md` —— 一个根据数据集规模、算力和推理栈，在 ViT、ConvNeXt 与 Swin 之间做选择的 prompt。
 - `outputs/skill-vit-patch-and-pos-embed-inspector.md` —— 一个检查 ViT 的 patch 嵌入与位置嵌入形状是否匹配模型期望序列长度的技能，能抓住最常见的移植 bug。
 
 ## 练习

@@ -18,9 +18,9 @@
 
 ## 问题
 
-你在 `-O2` 下重新构建了 `ledger.c`，然后问一个智能体：与 `-O1` 构建相比有没有变化。智能体跑了一个差异工具，报告 `grade` 被修改了，因为它在这两个已加载程序中的字节不同。接着它花掉大量预算去解释一个并不存在的改动。`grade` 的 46 个字节在两个目标文件里完全相同。差异工具比较的是重定位之后的镜像，而在 `-O2` 程序中 `.rodata` 的位置比原来远了 0x70 个字节，于是 `grade` 里的一个位移量增大了 0x70。
+你在 `-O2` 下重新构建了 `ledger.c`，然后问一个 Agent：与 `-O1` 构建相比有没有变化。Agent 跑了一个差异工具，报告 `grade` 被修改了，因为它在这两个已加载程序中的字节不同。接着它花掉大量预算去解释一个并不存在的改动。`grade` 的 46 个字节在两个目标文件里完全相同。差异工具比较的是重定位之后的镜像，而在 `-O2` 程序中 `.rodata` 的位置比原来远了 0x70 个字节，于是 `grade` 里的一个位移量增大了 0x70。
 
-同一天下午，你问「哪个 score 会让 `grade` 返回 4」。智能体读了伪代码，回答「90」。这只是一个答案。该函数对 90 到 109 的每一个 score 都返回 4，而问题没有给出边界，于是智能体给出的答案只是样本，你需要的却是一个集合。
+同一天下午，你问「哪个 score 会让 `grade` 返回 4」。Agent 读了伪代码，回答「90」。这只是一个答案。该函数对 90 到 109 的每一个 score 都返回 4，而问题没有给出边界，于是 Agent 给出的答案只是样本，你需要的却是一个集合。
 
 这两个失败源自同一个缺口。一个匹配和一个解出的输入，背后都各自有一套方法支撑的断言。本课用标准库 Python 构建这两套方法，并在旁边运行生产工具。工具与代码一致的地方，你就有了两种推导。不一致的地方，你就有了一个地址、一个字节或一个边界可以去查。
 
@@ -415,7 +415,7 @@ python3 -m unittest discover -s code/tests -v
 - [Cadar、Sen《Symbolic execution for software testing: three decades later》（CACM 2013）](https://dl.acm.org/doi/10.1145/2408776.2408795)
 - [Cadar、Dunbar、Engler《KLEE: Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs》（OSDI 2008）](https://www.usenix.org/legacy/events/osdi08/tech/full_papers/cadar/cadar.pdf) 与 [KLEE 3.2 发布](https://github.com/klee/klee/releases/tag/v3.2)
 - [Shoshitaishvili 等《SoK: (State of) The Art of War: Offensive Techniques in Binary Analysis》（IEEE S&P 2016）](https://oaklandsok.github.io/papers/shoshitaishvili2016.pdf)
-- [angr 文档：加载、模拟管理器与模拟流水线](https://docs.angr.io/en/latest/core-concepts/toplevel.html) 与 [PyPI 上的 angr 10.0.3](https://pypi.org/project/angr/)
+- [angr 文档：加载、模拟管理器与模拟 pipeline](https://docs.angr.io/en/latest/core-concepts/toplevel.html) 与 [PyPI 上的 angr 10.0.3](https://pypi.org/project/angr/)
 - [Z3 5.1.0 发布](https://github.com/Z3Prover/z3/releases/tag/z3-5.1.0)
 - [Triton 动态二进制分析库](https://github.com/JonathanSalwan/Triton)
 - [System V 应用二进制接口，AMD64 架构处理器补充，表 4.9：重定位类型](https://gitlab.com/x86-psABIs/x86-64-ABI)

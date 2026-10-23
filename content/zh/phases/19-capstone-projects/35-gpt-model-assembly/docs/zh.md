@@ -81,7 +81,7 @@ cc-gpt-assembly
 - `class GPTModel`：包含 token 嵌入、位置嵌入、嵌入 dropout、十二个 `TransformerBlock`、最终 LayerNorm，以及一个在标志开启时与 token 嵌入绑定的 `lm_head`。
 - `count_parameters` 辅助函数，返回去重后的参数数量（因此权重绑定在计数时被正确对待）。
 - `generate` 函数，完成温度、top-k、多项式采样和滑动窗口上下文。
-- 一个演示：构建模型，打印参数数量并与参考 124M 对照，从固定 prompt 生成一段短序列，展示整条流水线端到端可用。
+- 一个演示：构建模型，打印参数数量并与参考 124M 对照，从固定 prompt 生成一段短序列，展示整条 pipeline 端到端可用。
 
 运行方式：
 

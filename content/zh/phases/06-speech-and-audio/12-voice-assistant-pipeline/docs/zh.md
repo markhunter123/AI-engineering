@@ -146,7 +146,7 @@ while True:
 - **永久记录 PII。** 完整轮次音频在大多数司法管辖区都属于 PII。保留 30 天，静态加密。
 - **没有 barge-in。** 用户会打断。你的助手必须停止说话。
 - **阻塞式 TTS。** 同步 TTS 会阻塞事件循环。使用异步或独立线程。
-- **没有工具调用错误处理。** 工具会失败。LLM 必须拿到错误信息 + 重试一次，然后优雅降级。
+- **没有 tool call 错误处理。** 工具会失败。LLM 必须拿到错误信息 + 重试一次，然后优雅降级。
 - **过度严格的幻觉过滤。** 过滤过度，助手就会反复说「我帮不了这个」。过滤不足，它就什么都说。在留出集上校准。
 - **没有唤醒词选项。** 一直监听是隐私隐患。加入唤醒词门控（Porcupine 或 openWakeWord）。
 
@@ -169,7 +169,7 @@ while True:
 | 唤醒词（Wake word） | 「嘿，助手」 | 短关键词检测器；Porcupine、Snowboy、openWakeWord。 |
 | 端点检测（End-pointing） | 轮次结束 | VAD + 最小静音判定用户已说完。 |
 | Pre-roll | 语音前缓冲 | 在 VAD 触发前保留 200-400 ms 音频，避免截掉第一个词。 |
-| Tool call | 函数调用 | LLM 输出 JSON；运行时派发；结果在循环内回灌。 |
+| Tool call | Function call | LLM 输出 JSON；运行时派发；结果在循环内回灌。 |
 
 ## 延伸阅读
 
@@ -178,4 +178,4 @@ while True:
 - [OpenAI Realtime API](https://platform.openai.com/docs/guides/realtime) —— 托管的语音原生路径。
 - [Kyutai Moshi](https://github.com/kyutai-labs/moshi) —— 全双工参考（第 15 课）。
 - [Porcupine wake-word](https://picovoice.ai/products/porcupine/) —— 唤醒词门控。
-- [Anthropic — tool use guide](https://docs.anthropic.com/en/docs/build-with-claude/tool-use) —— LLM 函数调用。
+- [Anthropic — tool use guide](https://docs.anthropic.com/en/docs/build-with-claude/tool-use) —— LLM function calling。

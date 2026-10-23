@@ -1,6 +1,6 @@
 # Vision Transformer 与 patch-token 原语
 
-> 在做任何多模态工作之前，图像必须先变成 Transformer 能处理的一段 token 序列。2020 年的 ViT 论文用 16x16 像素的 patch、一个线性投影和一个位置嵌入回答了这个问题。五年之后，每一个 2026 年的前沿模型（Claude Opus 4.7 原生 2576px、Gemini 3.1 Pro、Qwen3.5-Omni）仍然这样起步——编码器从 ViT 换成了 DINOv2、又换成 SigLIP 2，加入了 register token，位置方案演变为 2D-RoPE，但这个原语保留了下来。本节课从头到尾读一遍 patch-token 流水线，并用 stdlib Python 实现它，好让第 12 阶段剩下的课程对「视觉 token」有一个具体的心智模型。
+> 在做任何多模态工作之前，图像必须先变成 Transformer 能处理的一段 token 序列。2020 年的 ViT 论文用 16x16 像素的 patch、一个线性投影和一个位置嵌入回答了这个问题。五年之后，每一个 2026 年的前沿模型（Claude Opus 4.7 原生 2576px、Gemini 3.1 Pro、Qwen3.5-Omni）仍然这样起步——编码器从 ViT 换成了 DINOv2、又换成 SigLIP 2，加入了 register token，位置方案演变为 2D-RoPE，但这个原语保留了下来。本节课从头到尾读一遍 patch-token pipeline，并用 stdlib Python 实现它，好让第 12 阶段剩下的课程对「视觉 token」有一个具体的心智模型。
 
 **Type:** Learn
 **Languages:** Python (stdlib, patch tokenizer + geometry calculator)

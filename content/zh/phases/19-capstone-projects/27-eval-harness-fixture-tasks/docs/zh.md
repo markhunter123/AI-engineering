@@ -1,6 +1,6 @@
 # 项目第 27 课：带夹具任务的评估 harness
 
-> 编码智能体好不好，取决于你用来衡量它的那套任务。本课构建一个评估 harness：它接收一个装满夹具任务的文件夹，让每个任务经过候选智能体运行，用确定性验证器判定通过或失败，再把结果汇总成 pass@1、pass@k、平均延迟和平均成本。harness 是事实来源，有了它，你才能分辨一次改动是回归还是重构。
+> 编码 Agent 好不好，取决于你用来衡量它的那套任务。本课构建一个评估 harness：它接收一个装满夹具任务的文件夹，让每个任务经过候选 Agent 运行，用确定性验证器判定通过或失败，再把结果汇总成 pass@1、pass@k、平均延迟和平均成本。harness 是事实来源，有了它，你才能分辨一次改动是回归还是重构。
 
 **Type:** Build
 **Languages:** Python (stdlib)
@@ -17,11 +17,11 @@
 
 ## 问题
 
-没有评估 harness 的智能体基准，会被三类失败模式反复折磨。
+没有评估 harness 的 Agent 基准，会被三类失败模式反复折磨。
 
-第一类是没有验证的通过。智能体说它修好了 bug，人扫一眼 diff，测试套件标绿，三周后回归测试又把同一个 bug 揪出来。智能体推理得头头是道，实际上什么都没修。
+第一类是没有验证的通过。Agent 说它修好了 bug，人扫一眼 diff，测试套件标绿，三周后回归测试又把同一个 bug 揪出来。Agent 推理得头头是道，实际上什么都没修。
 
-第二类是没有被发现的回归。提示模板改了一处，智能体在显眼的那个任务上好 4%，在安静的那个任务上差 14%。没有黄金集和逐任务得分，这次回归就跟着进了主干，直到客户投诉才浮出水面。
+第二类是没有被发现的回归。提示模板改了一处，Agent 在显眼的那个任务上好 4%，在安静的那个任务上差 14%。没有黄金集和逐任务得分，这次回归就跟着进了主干，直到客户投诉才浮出水面。
 
 第三类是逐任务漂移。周一的评估跑了 100 个任务，周五只跑了 95 个，因为有人重命名了五个夹具。通过率看起来提升了 5%。其实并没有。
 
@@ -37,17 +37,17 @@ flowchart LR
   Harness --> Report[EvalReport<br/>pass@1 / pass@k<br/>mean ms / p95 ms<br/>mean cost]
 ```
 
-`FixtureTask` 是一个小 JSON 文件，外加可选的 `expected/` 目录。JSON 声明 `id`、`goal`（喂给智能体的 prompt）、`setup` 块（要放进临时目录的文件）和 `verifier` 块。verifier 块指定 harness 验证器注册表中的一个函数，并提供它的参数。
+`FixtureTask` 是一个小 JSON 文件，外加可选的 `expected/` 目录。JSON 声明 `id`、`goal`（喂给 Agent 的 prompt）、`setup` 块（要放进临时目录的文件）和 `verifier` 块。verifier 块指定 harness 验证器注册表中的一个函数，并提供它的参数。
 
 三种验证器形态覆盖了大多数有用的任务。
 
-第一种是 `file_equals`。智能体跑完后，把指定文件与期望内容比较。它捕捉「按这个确切方式修好这个 bug」这类任务。
+第一种是 `file_equals`。Agent 跑完后，把指定文件与期望内容比较。它捕捉「按这个确切方式修好这个 bug」这类任务。
 
 第二种是 `regex_match`。用正则匹配指定文件的内容。它捕捉「函数必须存在并返回 X」这类有多种可接受解的任务。
 
 第三种是 `shell_exit_zero`。harness 运行一条 shell 命令（通过第 26 课的沙箱），只有命令以零退出时才判定任务通过。它捕捉「测试必须通过」这类任务。
 
-harness 把每个任务跑 `k` 次。pass@k 为 `1 - (1 - p)^k`，其中 p 是经验通过率；harness 同时报告原始计数，方便你发现方差。延迟是每个样本的墙上时钟时间。成本取智能体自报的值（token 数、美元，或两者兼有）；harness 跨样本求和，给出逐任务与汇总数字。
+harness 把每个任务跑 `k` 次。pass@k 为 `1 - (1 - p)^k`，其中 p 是经验通过率；harness 同时报告原始计数，方便你发现方差。延迟是每个样本的墙上时钟时间。成本取 Agent 自报的值（token 数、美元，或两者兼有）；harness 跨样本求和，给出逐任务与汇总数字。
 
 ```figure
 pass-at-k
@@ -63,7 +63,7 @@ flowchart TD
   TaskReport -->|aggregate| EvalReport[EvalReport<br/>total tasks / pass@1 / pass@k / p95 latency]
 ```
 
-候选（candidate）是一个可调用对象：`Callable[[FixtureTask, str], SampleResult]`。harness 通过 `tempfile.mkdtemp()` 创建临时目录，并把路径作为普通字符串传入。harness 不关心 candidate 如何工作。candidate 可以是确定性的补丁应用器（用于 harness 自检）、真实的 LLM 智能体，或模糊测试器。契约就是 SampleResult。
+候选（candidate）是一个可调用对象：`Callable[[FixtureTask, str], SampleResult]`。harness 通过 `tempfile.mkdtemp()` 创建临时目录，并把路径作为普通字符串传入。harness 不关心 candidate 如何工作。candidate 可以是确定性的补丁应用器（用于 harness 自检）、真实的 LLM Agent，或模糊测试器。契约就是 SampleResult。
 
 ## 你将构建什么
 
@@ -87,9 +87,9 @@ flowchart TD
 
 ## 为什么用 pass@k 而不只是 pass@1
 
-真实 LLM 智能体是随机的。pass@1 为 0.6 看起来像失败。pass@5 为 0.95 则说明智能体大多数时候能给出正确答案，只是在前几次采样中选错了。解决办法是采样加排序，而不是一味增加训练。pass@k 让这一点变得可见。
+真实 LLM Agent 是随机的。pass@1 为 0.6 看起来像失败。pass@5 为 0.95 则说明 Agent 大多数时候能给出正确答案，只是在前几次采样中选错了。解决办法是采样加排序，而不是一味增加训练。pass@k 让这一点变得可见。
 
-pass@k 与 pass@1 并排报告，因为 pass@k 会掩盖一种真实失败：如果一个模型二十次里只对一次，你手上并没有可用的智能体。harness 两者都展示。
+pass@k 与 pass@1 并排报告，因为 pass@k 会掩盖一种真实失败：如果一个模型二十次里只对一次，你手上并没有可用的 Agent。harness 两者都展示。
 
 ## 本课如何与 Track A 的其余部分组合
 

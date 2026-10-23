@@ -57,7 +57,7 @@ L(\theta, \phi) = L^{\text{CLIP}}(\theta) - c_v \cdot (V_\phi(s_t) - V_t^{\text{
 1. 在 $N$ 个并行环境上各跑 $T$ 步，收集 $N \times T$ 条转移。
 2. 计算优势（GAE），把它们冻结为常数。
 3. 把 $\pi_{\theta_{\text{old}}}$ 冻结为当前 $\pi_\theta$ 的快照。
-4. 对 $K$ 个 epoch，对每个 `(s, a, A, V_target, log π_old(a|s))` 的小批次：
+4. 对 $K$ 个 epoch，对每个 `(s, a, A, V_target, log π_old(a|s))` 的小 batch：
    - 计算 $r_t(\theta) = \exp(\log \pi_\theta(a \mid s) - \log \pi_{\text{old}}(a \mid s))$。
    - 应用 $L^{\text{CLIP}}$ + 价值损失 + 熵。
    - 梯度步。
@@ -153,11 +153,11 @@ PPO 是 2026 年在多得惊人的领域里的默认强化学习算法：
 | MuJoCo / 机器人控制 | 高斯策略的 PPO，GAE(0.95) |
 | Atari / 离散游戏 | 类别策略的 PPO，滚动 128 步 rollout |
 | LLM 的 RLHF | 对参考模型加 KL 惩罚的 PPO，奖励在回复末尾由 RM 给出 |
-| 大规模游戏智能体 | IMPALA + PPO（AlphaStar、OpenAI Five） |
+| 大规模游戏 Agent | IMPALA + PPO（AlphaStar、OpenAI Five） |
 | 推理 LLM | GRPO（第 12 课）——去掉评论家的 PPO 变体 |
 | 仅偏好数据 | DPO —— PPO+KL 的闭式坍缩，无需在线采样 |
 
-PPO 的*损失形状*——裁剪替代目标 + 价值 + 熵——是 DPO、GRPO 以及几乎所有 RLHF 流水线的脚手架。
+PPO 的*损失形状*——裁剪替代目标 + 价值 + 熵——是 DPO、GRPO 以及几乎所有 RLHF pipeline 的脚手架。
 
 ## 交付它
 

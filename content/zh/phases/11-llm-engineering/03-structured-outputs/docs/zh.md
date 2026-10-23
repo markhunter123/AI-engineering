@@ -100,7 +100,7 @@ class Product(BaseModel):
 
 ### Function Calling 与工具使用
 
-这是解决同一问题的另一种接口。你不要求模型直接产出 JSON，而是定义带类型参数的「工具」（函数）。模型输出一次函数调用，参数是结构化的。OpenAI 称之为「function calling」，Anthropic 称之为「工具使用（tool use）」。结果一样：结构化数据。
+这是解决同一问题的另一种接口。你不要求模型直接产出 JSON，而是定义带类型参数的「工具」（函数）。模型输出一次 function call，参数是结构化的。OpenAI 称之为「function calling」，Anthropic 称之为「工具使用（tool use）」。结果一样：结构化数据。
 
 ```mermaid
 graph TD
@@ -480,7 +480,7 @@ OpenAI 的结构化输出模式内部使用约束解码。模型生成的每个 
 # )
 ```
 
-Anthropic 通过工具使用实现结构化输出。模型发出一次工具调用，参数是结构化的并符合 input_schema。结果相同，API 接口不同。
+Anthropic 通过工具使用实现结构化输出。模型发出一次 tool call，参数是结构化的并符合 input_schema。结果相同，API 接口不同。
 
 ### Instructor 库
 
@@ -533,7 +533,7 @@ Instructor 包装任意 LLM 客户端，并加上带校验的自动重试。如�
 | Constrained decoding | 「引导式生成」 | 在每个 token 位置屏蔽会产出非法输出的 token——保证 100% 符合 Schema |
 | JSON Schema | 「JSON 模板」 | 一种声明式语言，用于描述 JSON 数据的结构、类型和约束（被 OpenAPI、JSON Forms 等使用） |
 | Pydantic | 「Python 数据类增强版」 | 定义带类型校验的数据模型的 Python 库，FastAPI 和 Instructor 用它生成 JSON Schema |
-| Function calling | 「工具使用」 | LLM 输出结构化的函数调用（名称 + 带类型参数）而非自由文本——OpenAI 和 Anthropic 都支持 |
+| Function calling | 「工具使用」 | LLM 输出结构化的 function call（名称 + 带类型参数）而非自由文本——OpenAI 和 Anthropic 都支持 |
 | Instructor | 「面向 LLM 的 Pydantic」 | 包装 LLM 客户端、返回校验后的 Pydantic 实例的 Python 库，校验失败时自动重试 |
 | Token masking | 「过滤词表」 | 生成时把特定 token 的概率置零，使模型无法产出它们 |
 | Schema compliance | 「符合形状」 | 输出包含所有必填字段、类型正确、值在约束内，且没有多余的禁止字段 |

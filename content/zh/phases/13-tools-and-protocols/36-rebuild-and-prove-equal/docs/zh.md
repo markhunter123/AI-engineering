@@ -19,7 +19,7 @@
 
 ## 问题
 
-你向 rea 索取 fixture `ledger-x86_64-O1.o` 中 `percent_change` 的函数档案。Ghidra 12.1.4 返回了伪代码，智能体据此写出了这段 C：
+你向 rea 索取 fixture `ledger-x86_64-O1.o` 中 `percent_change` 的函数档案。Ghidra 12.1.4 返回了伪代码，Agent 据此写出了这段 C：
 
 ```c
 int percent_change(int before, int after) {
@@ -28,7 +28,7 @@ int percent_change(int before, int after) {
 }
 ```
 
-四个测试通过：`(100, 150)` 得到 50，`(200, 100)` 得到 -50，`(0, 5)` 得到 0，`(50, 100)` 得到 100。智能体还把 `grade` 重建为针对 90、80、70 和 60 的四条 `if` 语句。又有六个测试通过。报告写着「verified」。
+四个测试通过：`(100, 150)` 得到 50，`(200, 100)` 得到 -50，`(0, 5)` 得到 0，`(50, 100)` 得到 100。Agent 还把 `grade` 重建为针对 90、80、70 和 60 的四条 `if` 语句。又有六个测试通过。报告写着「verified」。
 
 这份报告回答不了下面任何一个问题：
 
@@ -36,7 +36,7 @@ int percent_change(int before, int after) {
 - 分数为 110 时，原始版本返回什么？
 - 重建版本编译后是否与原始版本相同的 16 个字节？
 - 当两个编译后的函数字节相同时，它们的重定位是否指向相同的常量？
-- 重建版本来自哪条证据记录？智能体读的是指令清单还是伪代码？
+- 重建版本来自哪条证据记录？Agent 读的是指令清单还是伪代码？
 - 在没有 C 编译器的主机上，证明会得到什么状态？
 
 本课中的每个目标都是我们自己编写并编译的程序。第 32 课关于授权范围与法律的规则依然适用。
@@ -47,7 +47,7 @@ re-36-prove-equal
 
 ## 证据怎么说
 
-`code/main.py` 中的智能体循环通过 stdio 对 rea 6.5.0 发起了六次调用。记录下来的运行保存在 `code/fixtures/runs/agent-run.json`。服务器以协议版本 `2025-11-25` 回应 `initialize`。其中三次调用返回了 Evidence 记录：
+`code/main.py` 中的 Agent 循环通过 stdio 对 rea 6.5.0 发起了六次调用。记录下来的运行保存在 `code/fixtures/runs/agent-run.json`。服务器以协议版本 `2025-11-25` 回应 `initialize`。其中三次调用返回了 Evidence 记录：
 
 | 步骤 | 工具 | 耗时 | 证据 id |
 |---|---|---|---|
@@ -199,7 +199,7 @@ Yang、Chen、Eide 和 Regehr 构建了 Csmith，用来生成没有未定义行�
 
 大小是诊断信息，不是验收标准。rea 的证据页面记录过一个 1,825 字节的候选，长度正确却有 467 个字节不同。`wide` 重建是 26 字节，因为 `movslq`、`imulq`、`cqto` 和 `idivq` 取代了 32 位形式。在编译之前，指令清单就已经告诉我们宽度。
 
-## 通过 rea 运行的智能体循环
+## 通过 rea 运行的 Agent 循环
 
 rea 的 MCP 工具中有 65 个没有对应的 CLI 命令，`verify_reconstruction` 就是其中之一。`code/main.py` 中的 `McpStdioClient` 是能访问这些工具的最小客户端。它启动 `npx -y rea-agents@6.5.0 mcp`，每行向 stdin 写一个 JSON-RPC 请求，并在线程中从 stdout 每行读取一个 JSON 对象。它先发送带协议版本 `2025-11-25` 的 `initialize`，再发送 `notifications/initialized`，然后发送 `tools/call`。每次调用的默认截止时间是 330 秒，与 rea 为 Ghidra 冷启动预留的时间相同。
 
@@ -273,7 +273,7 @@ cd phases/13-tools-and-protocols/36-rebuild-and-prove-equal
 python3 code/main.py
 ```
 
-clang 在 PATH 上时，演示会编译两组候选，并各运行 92 个单元。它会重新编译八个候选，重放智能体运行，并铸造证明记录。没有 clang 时，它读取已提交的目标文件，并把行为声明报告为 `unknown`。
+clang 在 PATH 上时，演示会编译两组候选，并各运行 92 个单元。它会重新编译八个候选，重放 Agent 运行，并铸造证明记录。没有 clang 时，它读取已提交的目标文件，并把行为声明报告为 `unknown`。
 
 在 arm64 Mac 上的预期输出大致如下：
 
@@ -438,7 +438,7 @@ python3 -m unittest discover -s code/tests -v
 - `grade_case10_wrong` 通过掩蔽后字节比较，只在常量检查上失败
 - 已记录的第一段运行显示十个朴素用例通过、28 个不匹配、零个模型分歧
 - 有编译器时，两组候选都以相同结果重建并重跑
-- 智能体运行按 SHA-256 定位到已提交的目标文件，步骤有序，每个 Evidence 步骤都有 `ev_` id
+- Agent 运行按 SHA-256 定位到已提交的目标文件，步骤有序，每个 Evidence 步骤都有 `ev_` id
 - `read_bytes` 记录与 ELF 读取器找到的表一致
 - 客户端驱动替身服务器，并记录与真实运行相同的证据 id
 - 来自服务器的错误结果会写入运行记录

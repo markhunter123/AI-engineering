@@ -35,7 +35,7 @@ V(s) \leftarrow V(s) + \alpha [r + \gamma V(s') - V(s)]
 Q(s, a) \leftarrow Q(s, a) + \alpha [r + \gamma \max_{a'} Q(s', a') - Q(s, a)]
 ```
 
-`max` 假定从 $s'$ 开始会遵循*贪心*策略，而不管智能体实际采取什么动作。这种解耦让 Q-learning 能在智能体通过 ε-greedy 探索的同时学到 $Q^{\ast}$。Mnih 等人（2015）把它改造成 Atari 上的深度 Q-learning（第 05 课）。
+`max` 假定从 $s'$ 开始会遵循*贪心*策略，而不管 Agent 实际采取什么动作。这种解耦让 Q-learning 能在 Agent 通过 ε-greedy 探索的同时学到 $Q^{\ast}$。Mnih 等人（2015）把它改造成 Atari 上的深度 Q-learning（第 05 课）。
 
 **SARSA。** 一种同策略 TD 方法：
 
@@ -43,7 +43,7 @@ Q(s, a) \leftarrow Q(s, a) + \alpha [r + \gamma \max_{a'} Q(s', a') - Q(s, a)]
 Q(s, a) \leftarrow Q(s, a) + \alpha [r + \gamma Q(s', a') - Q(s, a)]
 ```
 
-名字就是元组 $(s, a, r, s', a')$。SARSA 使用智能体*实际*下一步采取的动作 $a'$，而不是贪心的 `argmax`。它收敛到正在运行的 ε-greedy $\pi$ 对应的 $Q^\pi$；在 $\epsilon \to 0$ 的极限下变成 $Q^{\ast}$。
+名字就是元组 $(s, a, r, s', a')$。SARSA 使用 Agent*实际*下一步采取的动作 $a'$，而不是贪心的 `argmax`。它收敛到正在运行的 ε-greedy $\pi$ 对应的 $Q^\pi$；在 $\epsilon \to 0$ 的极限下变成 $Q^{\ast}$。
 
 **悬崖行走的差异。** 在经典的悬崖行走任务上（掉下悬崖 = 奖励 -100），Q-learning 学到沿悬崖边缘的最优路径，但探索时偶尔会吃到惩罚。SARSA 学到离悬崖一步远的更安全路径，因为它把探索噪声计入 Q 值。训练下去，两者在 $\epsilon \to 0$ 时都达到最优。实践中这一点很重要：部署时如果探索仍在发生，SARSA 的行为更保守。
 
@@ -116,7 +116,7 @@ def q_learning(env, episodes, alpha=0.1, gamma=0.99, epsilon=0.1):
 
 ### 第 4 步：与 DP 真值对比
 
-运行价值迭代（第 02 课）得到 $Q^{\ast}$。检查 $\max_{s,a} \lvert Q_{\text{learned}}(s,a) - Q^{\ast}(s,a) \rvert$。一个健康的表格型 TD 智能体在 10,000 个回合后，在 4×4 GridWorld 上的误差落在 `~0.5` 以内。
+运行价值迭代（第 02 课）得到 $Q^{\ast}$。检查 $\max_{s,a} \lvert Q_{\text{learned}}(s,a) - Q^{\ast}(s,a) \rvert$。一个健康的表格型 TD Agent 在 10,000 个回合后，在 4×4 GridWorld 上的误差落在 `~0.5` 以内。
 
 ## 常见陷阱
 

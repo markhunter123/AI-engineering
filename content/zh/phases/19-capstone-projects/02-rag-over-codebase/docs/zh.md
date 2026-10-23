@@ -10,7 +10,7 @@
 
 ## 问题
 
-到 2026 年，每个前沿编码智能体都自带代码库检索层，因为仅靠上下文窗口解决不了跨仓库问题。Claude 的 100 万 token 上下文有帮助，但并不能消除排序检索的必要性。对原始分块做朴素的余弦搜索，会在生成代码、monorepo 重复以及很少被导入的长尾符号上污染结果。生产环境的答案是：对 AST 感知的分块做混合（dense + BM25）搜索，配合重排序器，背后再支撑一张符号引用图。
+到 2026 年，每个前沿编码 Agent 都自带代码库检索层，因为仅靠上下文窗口解决不了跨仓库问题。Claude 的 100 万 token 上下文有帮助，但并不能消除排序检索的必要性。对原始分块做朴素的余弦搜索，会在生成代码、monorepo 重复以及很少被导入的长尾符号上污染结果。生产环境的答案是：对 AST 感知的分块做混合（dense + BM25）搜索，配合重排序器，背后再支撑一张符号引用图。
 
 你要通过索引一个真实的仓库集群 —— 而不是一个教程仓库 —— 并测量 MRR@10、引用忠实度和增量新鲜度来学会它。失败模式是基础设施层面的：10 万文件的 monorepo、一次改动半个文件的 push、一个需要跨四个仓库才能正确回答的查询。
 
@@ -57,7 +57,7 @@ git push --> webhook --> ingest worker (LlamaIndex Workflow)
 - 向量数据库：带混合搜索的 Qdrant 1.12；向量规模低于 5000 万的团队可用 pgvector + pgvectorscale
 - 分块摘要模型：Claude Haiku 4.5 或 Gemini 2.5 Flash，启用 prompt caching
 - 重排序器：Cohere rerank-3 或自托管的 bge-reranker-v2-gemma-2b
-- 编排：摄入用 LlamaIndex Workflows，查询智能体用 LangGraph
+- 编排：摄入用 LlamaIndex Workflows，查询 Agent 用 LangGraph
 - 合成器：Claude Sonnet 4.7（100 万上下文），启用 prompt caching
 - 符号图：Neo4j（托管）或 kuzu（嵌入式），存储导入和调用边
 - 可观测性：每个检索 + 合成步骤都有 Langfuse span
@@ -78,7 +78,7 @@ ce-hybrid-retrieval
 
 5. **符号图。** 为每个分块记录边：导入（本文件使用来自仓库 Z 的符号 Y）、调用（本函数调用类 C 上的方法 M）、继承。存入 kuzu。查询时用于跨仓库边界扩展检索。
 
-6. **查询智能体。** 一个含三个节点的 LangGraph。`retrieve` 并行触发 dense + BM25，按 (repo, path, symbol) 去重。`rerank` 对 top-50 运行 cross-encoder，保留 top-10。`synth` 把重排后的分块放进上下文调用 Claude Sonnet 4.7，缓存系统 prompt，要求提供 file:line 引用。
+6. **查询 Agent。** 一个含三个节点的 LangGraph。`retrieve` 并行触发 dense + BM25，按 (repo, path, symbol) 去重。`rerank` 对 top-50 运行 cross-encoder，保留 top-10。`synth` 把重排后的分块放进上下文调用 Claude Sonnet 4.7，缓存系统 prompt，要求提供 file:line 引用。
 
 7. **引用强制。** 解析模型输出；任何没有 `(repo/path:start-end)` 锚点的论断都会被标记为重新询问或丢弃。只把带引用的回答返回给用户。
 
@@ -103,7 +103,7 @@ answer:
 
 ## 交付它
 
-交付物 skill 为 `outputs/skill-codebase-rag.md`。给定一个仓库语料库，它会搭起摄入 pipeline、混合索引和查询智能体，并为任何跨仓库问题返回带引用的答案。评分标准：
+交付物 skill 为 `outputs/skill-codebase-rag.md`。给定一个仓库语料库，它会搭起摄入 pipeline、混合索引和查询 Agent，并为任何跨仓库问题返回带引用的答案。评分标准：
 
 | 权重 | 标准 | 衡量方式 |
 |:-:|---|---|

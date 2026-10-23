@@ -1,6 +1,6 @@
-# 智能体可观测性：Langfuse、Phoenix、Opik
+# Agent 可观测性：Langfuse、Phoenix、Opik
 
-> 2026 年，三个开源智能体可观测性平台占据主导。Langfuse（MIT）——每月 600 万+ 次安装，追踪 + prompt 管理 + 评估 + 会话重放。Arize Phoenix（Elastic 2.0）——深度智能体特定评估、RAG 相关性、OpenInference 自动 instrumentation。Comet Opik（Apache 2.0）——自动 prompt 优化、防护栏、LLM-judge 幻觉检测。
+> 2026 年，三个开源 Agent 可观测性平台占据主导。Langfuse（MIT）——每月 600 万+ 次安装，追踪 + prompt 管理 + 评估 + 会话重放。Arize Phoenix（Elastic 2.0）——深度 Agent 特定评估、RAG 相关性、OpenInference 自动 instrumentation。Comet Opik（Apache 2.0）——自动 prompt 优化、防护栏、LLM-judge 幻觉检测。
 
 **Type:** Learn
 **Languages:** Python (stdlib)
@@ -9,9 +9,9 @@
 
 ## 学习目标
 
-- 说出三个顶级开源智能体可观测性平台及其许可证。
+- 说出三个顶级开源 Agent 可观测性平台及其许可证。
 - 区分每个平台最强的部分：Langfuse（prompt 管理 + 会话）、Phoenix（RAG + 自动 instrumentation）、Opik（优化 + 防护栏）。
-- 解释为什么到 2026 年有 89% 的组织报告已部署智能体可观测性。
+- 解释为什么到 2026 年有 89% 的组织报告已部署 Agent 可观测性。
 - 实现一个标准库的 trace 到仪表盘 pipeline，带 LLM-judge 评估。
 
 ## 问题
@@ -29,7 +29,7 @@ OTel GenAI（第 23 课）给了你 schema。你仍然需要一个平台来摄�
 
 ### Arize Phoenix（Elastic License 2.0）
 
-- 更深的智能体特定评估：trace 聚类、异常检测、RAG 的检索相关性。
+- 更深的 Agent 特定评估：trace 聚类、异常检测、RAG 的检索相关性。
 - 原生 OpenInference 自动 instrumentation。
 - 与托管版 Arize AX 搭配用于生产。
 - 没有 prompt 版本管理——定位为漂移/行为回归工具，与更广泛的平台并列。
@@ -45,7 +45,7 @@ OTel GenAI（第 23 课）给了你 schema。你仍然需要一个平台来摄�
 
 ### 行业数据
 
-据 Maxim（2026 年现场分析）：89% 的组织已部署智能体可观测性；质量问题是最主要的生产障碍（32% 的受访者提到）。
+据 Maxim（2026 年现场分析）：89% 的组织已部署 Agent 可观测性；质量问题是最主要的生产障碍（32% 的受访者提到）。
 
 ### 如何选择
 
@@ -73,7 +73,7 @@ wb-trace-ingest
 
 - 摄取 GenAI 形状的 span。
 - 按会话分组，标记失败的运行（防护栏触发、低置信度评估）。
-- 一个脚本化的 LLM-judge，按评分标准给智能体回复打分。
+- 一个脚本化的 LLM-judge，按评分标准给 Agent 回复打分。
 - 类似仪表盘的摘要：失败率、主要失败原因、评估分数分布。
 
 运行它：
@@ -93,14 +93,14 @@ python3 code/main.py
 
 ## 交付它
 
-`outputs/skill-obs-platform-wiring.md` 选择一个平台，把 trace + 评估 + prompt 版本接入现有智能体。
+`outputs/skill-obs-platform-wiring.md` 选择一个平台，把 trace + 评估 + prompt 版本接入现有 Agent。
 
 ## 练习
 
 1. 把一周的 OTel trace 导出到 Langfuse 云版（免费层）。哪些会话失败了？为什么？
 2. 为你的领域写一份 LLM-judge 评分标准（事实正确性、语气、范围遵循）。在 50 条 trace 上测试。
 3. 比较 Langfuse 的 prompt 版本管理和 Phoenix 的 trace 聚类。哪一个更快告诉你哪里坏了？
-4. 阅读 Opik 的防护栏文档。给你的一个智能体运行接入 PII 脱敏防护栏。
+4. 阅读 Opik 的防护栏文档。给你的一个 Agent 运行接入 PII 脱敏防护栏。
 5. 在你的语料上对三者做基准测试。忽略厂商发布的数字；测量你自己的。
 
 ## 关键术语
@@ -109,7 +109,7 @@ python3 code/main.py
 |------|----------------|------------------------|
 | 追踪 | 「span 收集器」 | 摄取 OTel / SDK span；按会话索引 |
 | Prompt 管理 | 「prompt CMS」 | 与 trace 绑定的版本化 prompt |
-| LLM-as-judge | 「自动评估」 | 另一个 LLM 按评分标准给智能体输出打分 |
+| LLM-as-judge | 「自动评估」 | 另一个 LLM 按评分标准给 Agent 输出打分 |
 | 会话重放 | 「trace 回放」 | 逐步回放历史运行以调试 |
 | RAG 相关性 | 「检索质量」 | 检索到的上下文是否与查询匹配 |
 | Trace 聚类 | 「行为分组」 | 对相似运行聚类以检测漂移 |

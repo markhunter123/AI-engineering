@@ -23,7 +23,7 @@
 
 - 模型在一个相近但不同的任务上调用它。
 - 一个有效的请求用了不熟悉的措辞，模型因而漏掉它。
-- 主体告诉智能体要做什么，却没有说哪个产物证明完成。
+- 主体告诉 Agent 要做什么，却没有说哪个产物证明完成。
 - 脚本在空格、重复执行或部分状态下失败。
 - 包安装器复制了 `SKILL.md`，却把引用文件落在后面。
 - 另一个运行时忽略了调用标志和工具允许列表。
@@ -182,7 +182,7 @@ treatment: same model + same tools + same task, skill available
 |---|---|
 | 正确性 | 必需的测试和不变量通过 |
 | 完整性 | 产物契约的每个字段都存在 |
-| 效率 | 工具调用数、耗时、token 数或成本 |
+| 效率 | Tool call 数、耗时、token 数或成本 |
 | 证据 | 断言指向有效的文件或观察 |
 | 范围 | 禁止的文件和动作未被触碰 |
 | 恢复 | 中断的运行恢复时不产生重复副作用 |
@@ -301,7 +301,7 @@ skill-package-install
 | 人类/模型 2x2 策略 | 宿主扩展或应用策略 | 全局禁用隐式选择 |
 | 参数绑定 | 宿主解析器 | 激活后再询问参数值 |
 | 预批准工具 | 实验性特性或宿主特定 | 正常的权限提示 |
-| 委托上下文 | 宿主特定 | 在当前上下文或应用子智能体中运行 |
+| 委托上下文 | 宿主特定 | 在当前上下文或应用子 Agent 中运行 |
 | 生命周期钩子 | 宿主特定 | 外部自动化或不设钩子 |
 | 上下文保留 | 宿主特定 | 持久化状态并让重新进入显式化 |
 
@@ -448,11 +448,11 @@ skill-authoring-loop
 
 修改对失败负责的那一层。当真正的问题是安装器丢弃引用文件，或沙箱暴露了家目录时，不要往 `SKILL.md` 里塞更多文字。
 
-## 真实主机可移植性检查点
+## 真实主机可移植性 checkpoint
 
-确定性 fixture 证明了发布门的机制。这个检查点证明一个真实宿主会发现、加载、允许和移除什么。在把包描述为可移植之前，请完成它。
+确定性 fixture 证明了发布门的机制。这个 checkpoint 证明一个真实宿主会发现、加载、允许和移除什么。在把包描述为可移植之前，请完成它。
 
-这个检查点需要本地克隆、Node.js、`npx`、Python 3、一个选定的支持技能的主机，以及一个可写的项目级或用户级技能范围。先验证 `node --version`、`npx --version` 和 `python3 --version`，然后选择主机和范围再继续。如果无法进行这项预检，就在概念上走一遍检查点，并把每一项宿主观察标记为待定。阅读网站或手册不能建立可移植性。
+这个 checkpoint 需要本地克隆、Node.js、`npx`、Python 3、一个选定的支持技能的主机，以及一个可写的项目级或用户级技能范围。先验证 `node --version`、`npx --version` 和 `python3 --version`，然后选择主机和范围再继续。如果无法进行这项预检，就在概念上走一遍 checkpoint，并把每一项宿主观察标记为待定。阅读网站或手册不能建立可移植性。
 
 ### 1. 建立本地 fixture 边界
 
@@ -498,7 +498,7 @@ printf 'SKILL_ROOT=%s\nTARGET_BUNDLE=%s\n' "$SKILL_ROOT" "$TARGET_BUNDLE"
 | Claude Code | `/skill-release-gate`，后接评估请求 |
 | 可移植回退 | `Use skill-release-gate to evaluate the target bundle.` |
 
-把下面这些作为独立的智能体轮次运行，用上面打印的绝对值替换每一个占位符：
+把下面这些作为独立的 Agent 轮次运行，用上面打印的绝对值替换每一个占位符：
 
 ```text
 Use skill-release-gate to evaluate <TARGET_BUNDLE> in fixture mode. The installed skill root is <SKILL_ROOT>. Run python3 <SKILL_ROOT>/scripts/evaluate_skill.py --fixture-demo <TARGET_BUNDLE>. Show the fully resolved argv before execution. Do not make a production-readiness claim. Report the resolved script path, target path, cwd, argv, and exit code.

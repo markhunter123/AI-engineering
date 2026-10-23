@@ -1,4 +1,4 @@
-# 预训练的数据流水线
+# 预训练的数据 pipeline
 
 > 模型是一面镜子。你喂它什么数据，它就反射什么。喂它垃圾，它就会以完美的流利度反射垃圾。
 
@@ -9,22 +9,22 @@
 
 ## 学习目标
 
-- 构建流式数据流水线，对 TB 级文本执行分词、分块、打乱和批处理，而无需把全部数据载入内存
-- 实现真实预训练流水线中使用的数据质量过滤器（去重、语言检测、内容过滤）
+- 构建流式数据 pipeline，对 TB 级文本执行分词、分块、打乱和批处理，而无需把全部数据载入内存
+- 实现真实预训练 pipeline 中使用的数据质量过滤器（去重、语言检测、内容过滤）
 - 创建定长训练序列，配备正确的注意力掩码与文档边界处理
-- 剖析流水线吞吐量，确保 dataloader 跟得上 GPU 训练速度
+- 剖析 pipeline 吞吐量，确保 dataloader 跟得上 GPU 训练速度
 
 ## 问题
 
 你有分词器了。现在你需要数据。
 
-不是一份数据集。不是一份 CSV 文件。是 TB 级的文本——清洗、去重、按质量过滤、分词成定长序列，并以随机批次的形式、以足够快的速度供给，让你的 8 卡 GPU 集群永远不用等下一批。
+不是一份数据集。不是一份 CSV 文件。是 TB 级的文本——清洗、去重、按质量过滤、分词成定长序列，并以随机 batch 的形式、以足够快的速度供给，让你的 8 卡 GPU 集群永远不用等下一批。
 
 大多数人以为训练 LLM 的关键是模型架构。并非如此。Llama 3 用了 15.6 万亿 token。GPT-3 用了 3000 亿。DeepSeek-V2 用了 8.1 万亿。三者的架构大致相同：堆叠的 Transformer 块，带注意力层和前馈层。输出质量的差异绝大多数来自数据。
 
 DeepMind 的 Chinchilla 论文把这件事说得很精确。在给定算力预算下，模型参数量与训练 token 数之间存在一个最优比例。Chinchilla 表明 2022 年的大多数模型都严重欠训练——相对于它们见过的数据量，参数太多了。一个 700 亿参数、在 1.4 万亿 token 上训练的模型（Chinchilla 最优），胜过了在 3000 亿 token 上训练的 2800 亿参数模型（Gopher）。
 
-你的数据流水线决定了模型学到的到底是语言，还是噪声。
+你的数据 pipeline 决定了模型学到的到底是语言，还是噪声。
 
 ## 概念
 
@@ -157,7 +157,7 @@ graph TD
 
 注意力掩码必须设置正确。同一条打包序列中，文档 A 的 token 不应注意到文档 B 的 token。这需要块对角注意力掩码。
 
-长文档会被截断，或在序列边界处切块。切分点很重要：从句子中间切开会迫使模型看到不完整的想法。有些流水线在可能时会按段落或句子边界对齐切分点。
+长文档会被截断，或在序列边界处切块。切分点很重要：从句子中间切开会迫使模型看到不完整的想法。有些 pipeline 在可能时会按段落或句子边界对齐切分点。
 
 ### Chinchilla 扩展定律
 
@@ -318,7 +318,7 @@ def pack_sequences(token_ids, seq_length, pad_id=0):
 
 ### 第 4 步：训练用 DataLoader
 
-产出随机化的打包序列批次。这就是训练循环消费的东西。
+产出随机化的打包序列 batch。这就是训练循环消费的东西。
 
 ```python
 import random
@@ -394,7 +394,7 @@ def compute_statistics(documents, token_ids, sequences, tokenizer_vocab_size):
 
 ### 与 HuggingFace Datasets 对比
 
-通过 HuggingFace 的 datasets 库加载同一语料，并比较流水线速度。
+通过 HuggingFace 的 datasets 库加载同一语料，并比较 pipeline 速度。
 
 ```python
 from datasets import load_dataset
@@ -416,15 +416,15 @@ total_tokens = sum(len(t) for t in tokenized["input_ids"])
 print(f"HuggingFace: {total_tokens:,} tokens in {hf_time:.2f}s ({total_tokens/hf_time:,.0f} tokens/sec)")
 ```
 
-HuggingFace 流水线底层使用 Rust 分词器，并在 4 个核心上并行处理。你的纯 Python 流水线会慢 10-50 倍。这个差距就是生产团队使用编译型分词器的原因。算法相同，差别在实现语言。
+HuggingFace pipeline 底层使用 Rust 分词器，并在 4 个核心上并行处理。你的纯 Python pipeline 会慢 10-50 倍。这个差距就是生产团队使用编译型分词器的原因。算法相同，差别在实现语言。
 
 ## 交付它
 
-本课产出用于验证和调试 LLM 训练流水线数据质量的 prompt。见 `outputs/prompt-data-quality-checker.md`。
+本课产出用于验证和调试 LLM 训练 pipeline 数据质量的 prompt。见 `outputs/prompt-data-quality-checker.md`。
 
 ## 练习
 
-1. **简单：** 用简单启发式（字符集分析）给清洗流水线添加语言检测。只保留英文文档，并测量有多少文档被移除。
+1. **简单：** 用简单启发式（字符集分析）给清洗 pipeline 添加语言检测。只保留英文文档，并测量有多少文档被移除。
 2. **中等：** 在 MinHash 近似去重之外，用 SHA-256 哈希实现精确去重。在网页抓取语料上比较两种方法各自抓到的重复项数量。
 3. **困难：** 构建基于困惑度的质量过滤器。在 Wikipedia 文本上训练一个小型 bigram 语言模型，按困惑度为每篇文档打分，移除底部 20%。比较在过滤后与未过滤数据上训练的模型输出质量。
 
@@ -447,7 +447,7 @@ HuggingFace 流水线底层使用 Rust 分词器，并在 4 个核心上并行�
 
 - [Hoffmann et al., 2022 -- Training Compute-Optimal Large Language Models (Chinchilla)](https://arxiv.org/abs/2203.15556)——改变了我们对数据规模看法的论文
 - [Penedo et al., 2023 -- The RefinedWeb Dataset for Falcon LLM](https://arxiv.org/abs/2306.01116)——如何把 Common Crawl 过滤到高质量
-- [Touvron et al., 2023 -- Llama 2: Open Foundation and Fine-Tuned Chat Models](https://arxiv.org/abs/2307.09288)——Llama 2 的数据流水线细节
+- [Touvron et al., 2023 -- Llama 2: Open Foundation and Fine-Tuned Chat Models](https://arxiv.org/abs/2307.09288)——Llama 2 的数据 pipeline 细节
 - [Lee et al., 2022 -- Deduplicating Training Data Makes Language Models Better](https://arxiv.org/abs/2107.06499)——为什么去重比你想象的更重要
 - [Broder, 1997 -- On the Resemblance and Containment of Documents](https://ieeexplore.ieee.org/document/666900)——MinHash 的原始论文
-- [Meta, 2024 -- Llama 3 Technical Report](https://arxiv.org/abs/2407.21783)——15.6T token、数据混合比例、过滤流水线
+- [Meta, 2024 -- Llama 3 Technical Report](https://arxiv.org/abs/2407.21783)——15.6T token、数据混合比例、过滤 pipeline

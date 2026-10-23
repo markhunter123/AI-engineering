@@ -11,7 +11,7 @@
 
 Whisper 由 OpenAI 于 2022 年 9 月发布，是第一个以商品化形态交付的 ASR 模型：粘贴音频，得到文本，支持 99 种语言，对噪声鲁棒，能在笔记本上运行。到 2024 年，OpenAI 已发布 Large-v3 与 Turbo 变体；到 2026 年，Whisper 已成为从播客转写到语音助手再到 YouTube 字幕的默认基线。
 
-但 Whisper 不是一个可以永远当作黑盒的流水线。域偏移会杀死它——技术术语、说话人口音、专有名词、短音频、静音。你需要知道：
+但 Whisper 不是一个可以永远当作黑盒的 pipeline。域偏移会杀死它——技术术语、说话人口音、专有名词、短音频、静音。你需要知道：
 
 1. 它内部究竟是什么。
 2. 如何正确地喂给它分块、流式或长音频。
@@ -162,7 +162,7 @@ with torch.inference_mode():
 
 ## 交付它
 
-保存为 `outputs/skill-whisper-tuner.md`。为给定领域设计一个 Whisper 微调或推理流水线。
+保存为 `outputs/skill-whisper-tuner.md`。为给定领域设计一个 Whisper 微调或推理 pipeline。
 
 ## 练习
 

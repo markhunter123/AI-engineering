@@ -216,7 +216,7 @@ if torch.cuda.is_available():
 2. 使用 `torch.cuda.empty_cache()` 释放缓存内存
 3. 对大的中间张量使用 `del tensor` 后再 `torch.cuda.empty_cache()`
 4. 使用混合精度（`torch.cuda.amp`）让内存占用减半
-5. 对非常深的模型使用梯度检查点
+5. 对非常深的模型使用梯度 checkpoint
 
 ### 第 7 部分：常见 AI bug 及捕捉方法
 
@@ -366,7 +366,7 @@ tensorboard --logdir=runs
 
 点击行号旁的区域设置断点。用 Variables 面板检查张量属性。Debug Console 允许你在执行过程中运行任意 Python 表达式。
 
-这非常适合逐步查看数据预处理流水线的每一次转换。
+这非常适合逐步查看数据预处理 pipeline 的每一次转换。
 
 ## 使用它
 

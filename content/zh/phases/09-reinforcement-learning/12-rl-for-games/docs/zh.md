@@ -9,7 +9,7 @@
 
 ## 问题
 
-游戏拥有 RL 想要的一切。干净的奖励（赢/输）。无限的回合（自博弈重置）。完美的仿真（游戏*就是*仿真器）。离散或小的连续动作空间。强制对抗稳健性的多智能体结构。
+游戏拥有 RL 想要的一切。干净的奖励（赢/输）。无限的回合（自博弈重置）。完美的仿真（游戏*就是*仿真器）。离散或小的连续动作空间。强制对抗稳健性的多 Agent 结构。
 
 而且每一个重大 RL 突破都是在游戏上测试的。TD-Gammon（双陆棋，1992）。Atari-DQN（2013）。AlphaGo（2016）。AlphaZero（2017）。OpenAI Five（Dota 2，2019）。AlphaStar（StarCraft II，2019）。MuZero（学习到的模型，2019）。AlphaTensor（矩阵乘法，2022）。AlphaDev（排序算法，2023）。DeepSeek-R1（数学推理，2025）——游戏 RL 技术在文本上有效的最新证明。
 
@@ -32,7 +32,7 @@ while True:
 
 - 策略-价值网络：一个塔 $f_\theta(s) \to (p, v)$。$p$ 是合法着法的先验。$v$ 是期望游戏结果。
 - 蒙特卡洛树搜索（MCTS）：每一步，展开一棵可能后续的树。用 $(p, v)$ 作先验 + 自举。按 UCB（PUCT）选择节点：$a^{\ast} = \arg\max_a Q(s, a) + c \cdot p(a \mid s) \cdot \sqrt{N(s)} / (1 + N(s, a))$。
-- 自博弈：智能体对智能体下棋。在第 $t$ 步，MCTS 的访问分布 $\pi_t$ 成为策略训练目标。
+- 自博弈：Agent 对 Agent 下棋。在第 $t$ 步，MCTS 的访问分布 $\pi_t$ 成为策略训练目标。
 - 损失：$L = (v - z)^2 - \pi \cdot \log p + c \cdot \lVert \theta \rVert^2$。$z$ 是游戏结果（+1 / 0 / -1）。
 
 零人类知识。零手工启发式。一个配方，在每种游戏几千万局自博弈之后，精通了国际象棋、将棋和围棋。
@@ -65,7 +65,7 @@ while True:
 **完整的 R1 配方。** DeepSeek-R1（DeepSeek 2025）一篇论文里是两个模型：
 
 - **R1-Zero。** 从 DeepSeek-V3 基础模型开始。不做 SFT。直接用两个奖励分量应用 GRPO：*准确率奖励*（基于规则——最终答案能否解析出正确数字 / 代码能否通过单元测试）和*格式奖励*（补全是否把思维链包在 `<think>…</think>` 标签里）。数千步之后，平均回复长度从约 100 增长到约 10,000 token，数学基准分数攀升到接近 o1-preview 的水平。模型从零学会了推理。缺点：它的思维链常常难以阅读、中英混杂、缺少风格打磨。
-- **R1。** 用四阶段流水线修复 R1-Zero 的可读性问题：
+- **R1。** 用四阶段 pipeline 修复 R1-Zero 的可读性问题：
   1. **冷启动 SFT。** 收集几千条格式干净的长 CoT 示范。在它们上面监督微调基础模型。这给出一个可读的起点。
   2. **面向推理的 GRPO。** 应用 GRPO，使用准确率+格式奖励，外加*语言一致性*奖励以防代码切换。
   3. **拒绝采样 + 第二轮 SFT。** 从 RL checkpoint 采样约 60 万条推理轨迹，只保留最终答案正确且 CoT 可读的，再与约 20 万条非推理 SFT 示例（写作、问答、自我认知）合并。再次微调基础模型。
@@ -197,7 +197,7 @@ Refuse AlphaZero on imperfect-info games (route to CFR). Refuse GRPO without a t
 
 1. **简单。** 实现 `code/main.py` 里的 GRPO bandit。在 2 个提示 × 每个 4 个答案 token 上训练。用 $G=8$ 在不到 1,000 次更新内收敛。
 2. **中等。** 接入 PPO（裁剪版）和原版 REINFORCE。在同一个 bandit 上对比样本效率和奖励方差。
-3. **困难。** 扩展成长度 2 的「推理链」：智能体发出两个 token，验证器给这一对打分。测量 GRPO 如何处理跨两步序列的信用分配。（提示：按*完整序列*计算组优势，再传播到两个 token 位置。）
+3. **困难。** 扩展成长度 2 的「推理链」：Agent 发出两个 token，验证器给这一对打分。测量 GRPO 如何处理跨两步序列的信用分配。（提示：按*完整序列*计算组优势，再传播到两个 token 位置。）
 
 ## 关键术语
 
@@ -208,7 +208,7 @@ Refuse AlphaZero on imperfect-info games (route to CFR). Refuse GRPO without a t
 | MuZero | "有学习模型的 AlphaZero" | 同样的循环，但通过学到的动力学在隐空间里进行。 |
 | GRPO | "无评论家的 PPO" | Group Relative Policy Optimization；带组均值基线 + KL 的 REINFORCE。 |
 | PUCT | "AlphaZero 的 UCB" | $Q + c \cdot p \cdot \sqrt{N} / (1 + N_a)$——在价值估计与先验之间平衡。 |
-| Self-play | "智能体对抗过去的自己" | 零和的标准；对称训练信号。 |
+| Self-play | "Agent 对抗过去的自己" | 零和的标准；对称训练信号。 |
 | League play | "基于种群的自我对弈" | 将过去 + 当前 + 剥削者采样为对手。 |
 | Verifier reward | "可验证 RL" | 奖励来自确定性检查器（测试通过、答案匹配）。 |
 | Process reward | "PRM" | 给每个推理步骤打分，而不只是最终答案。 |

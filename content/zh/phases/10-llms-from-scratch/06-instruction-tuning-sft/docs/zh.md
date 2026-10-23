@@ -478,7 +478,7 @@ def measure_forgetting(model, test_text, seq_len=64):
 
 ## 使用它
 
-### 完整的 SFT 流水线演示
+### 完整的 SFT pipeline 演示
 
 ```python
 if __name__ == "__main__":
@@ -574,7 +574,7 @@ The model learns to predict the next token given all previous tokens."""
 
 1. 添加 system prompt 支持。修改 `tokenize_instruction_pair`，让它接受 system 消息并将其前置到指令之前。创建 5 个使用不同 system prompt 的样本（"You are a poet"、"You are a math tutor"），并验证模型在训练期间能看到不同的 system prompt。
 
-2. 实现数据混合。编写一个函数，接受 SFT 数据集和原始文本语料，生成训练批次，其中 5% 的样本是原始文本（不掩码），95% 是指令对（掩码）。运行 3 个 epoch，比较遗忘指标与纯 SFT 训练的差异。
+2. 实现数据混合。编写一个函数，接受 SFT 数据集和原始文本语料，生成训练 batch，其中 5% 的样本是原始文本（不掩码），95% 是指令对（掩码）。运行 3 个 epoch，比较遗忘指标与纯 SFT 训练的差异。
 
 3. 构建数据质量评分器。对每个指令-回答对计算：(a) 回答的 token 长度，(b) 指令与回答的比例，(c) 词汇多样性（唯一 token / 总 token）。过滤掉回答长度 < 10 token 或多样性 < 0.3 的样本。展示过滤如何影响最终损失。
 
@@ -599,6 +599,6 @@ The model learns to predict the next token given all previous tokens."""
 
 - [Ouyang et al., 2022 -- "Training language models to follow instructions with human feedback" (InstructGPT)](https://arxiv.org/abs/2203.02155) —— 在 OpenAI 引入指令微调 + RLHF 的论文
 - [Taori et al., 2023 -- "Stanford Alpaca: An Instruction-following LLaMA Model"](https://github.com/tatsu-lab/stanford_alpaca) —— 用 600 美元和 52K 个指令样本证明 SFT 在小数据集上可行
-- [Touvron et al., 2023 -- "Llama 2: Open Foundation and Fine-Tuned Chat Models"](https://arxiv.org/abs/2307.09288) —— Meta 的 SFT + RLHF 流水线，使用 27K 个高质量样本
+- [Touvron et al., 2023 -- "Llama 2: Open Foundation and Fine-Tuned Chat Models"](https://arxiv.org/abs/2307.09288) —— Meta 的 SFT + RLHF pipeline，使用 27K 个高质量样本
 - [Chiang et al., 2023 -- "Vicuna: An Open-Source Chatbot Impressing GPT-4"](https://lmsys.org/blog/2023-03-30-vicuna/) —— 在 70K 段 ShareGPT 对话上训练
 - [Zhou et al., 2023 -- "LIMA: Less Is More for Alignment"](https://arxiv.org/abs/2305.11206) —— 证明 1,000 个精心挑选的样本可以匹敌在更大数据集上做的 SFT

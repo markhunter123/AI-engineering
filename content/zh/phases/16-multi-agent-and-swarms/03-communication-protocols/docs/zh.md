@@ -1,6 +1,6 @@
 # 通信协议
 
-> 说不上同一种语言的智能体不是团队，而是一群对着虚空喊话的陌生人。
+> 说不上同一种语言的 Agent 不是团队，而是一群对着虚空喊话的陌生人。
 
 **Type:** Build
 **Languages:** TypeScript
@@ -9,23 +9,23 @@
 
 ## 学习目标
 
-- 实现 MCP 工具发现与调用，让智能体能够使用外部服务器暴露的工具
-- 构建 A2A 的 Agent Card 和任务端点，让一个智能体可以通过 HTTP 把工作委派给另一个智能体
-- 对比 MCP（工具访问）、A2A（智能体到智能体）、ACP（企业审计）与 ANP（去中心化信任），并说明每种协议解决什么问题
-- 在同一个系统中把多种协议串联起来：智能体通过 MCP 发现工具，通过 A2A 委派任务
+- 实现 MCP 工具发现与调用，让 Agent 能够使用外部服务器暴露的工具
+- 构建 A2A 的 Agent Card 和任务端点，让一个 Agent 可以通过 HTTP 把工作委派给另一个 Agent
+- 对比 MCP（工具访问）、A2A（Agent 到 Agent）、ACP（企业审计）与 ANP（去中心化信任），并说明每种协议解决什么问题
+- 在同一个系统中把多种协议串联起来：Agent 通过 MCP 发现工具，通过 A2A 委派任务
 
 ## 问题
 
-你把系统拆成了多个智能体：研究员、程序员、审查员。它们各自擅长自己的工作。但现在你需要让它们真正互相沟通。
+你把系统拆成了多个 Agent：研究员、程序员、审查员。它们各自擅长自己的工作。但现在你需要让它们真正互相沟通。
 
-第一次尝试很明显：传字符串。研究员返回一大段文本，程序员尽其所能地解析。直到程序员误解了一份研究摘要，或者两个智能体互相等待而死锁，或者你需要让不同团队构建的智能体协作，这套做法就崩溃了。突然之间，「传字符串就行」不成立了。
+第一次尝试很明显：传字符串。研究员返回一大段文本，程序员尽其所能地解析。直到程序员误解了一份研究摘要，或者两个 Agent 互相等待而死锁，或者你需要让不同团队构建的 Agent 协作，这套做法就崩溃了。突然之间，「传字符串就行」不成立了。
 
-这就是通信协议问题。如果没有一套共享约定来规定智能体如何交换信息，多智能体系统就会脆弱、不可审计，并且无法扩展到你自己写的那几个智能体之外。
+这就是通信协议问题。如果没有一套共享约定来规定 Agent 如何交换信息，多 Agent 系统就会脆弱、不可审计，并且无法扩展到你自己写的那几个 Agent 之外。
 
 AI 生态给出了四个协议，各解决这个问题的一个侧面：
 
 - **MCP** 用于工具访问
-- **A2A** 用于智能体之间的协作
+- **A2A** 用于 Agent 之间的协作
 - **ACP** 用于企业级可审计性
 - **ANP** 用于去中心化身份与信任
 
@@ -54,7 +54,7 @@ flowchart TD
 
 ### MCP（回顾）
 
-MCP 在 Phase 13 中有深入讲解。这里快速回顾：MCP 标准化了 LLM 如何连接外部工具和数据源。它是一个**客户端-服务器**协议，智能体（客户端）发现并调用服务器暴露的工具。
+MCP 在 Phase 13 中有深入讲解。这里快速回顾：MCP 标准化了 LLM 如何连接外部工具和数据源。它是一个**客户端-服务器**协议，Agent（客户端）发现并调用服务器暴露的工具。
 
 ```mermaid
 sequenceDiagram
@@ -67,15 +67,15 @@ sequenceDiagram
     MCP1-->>Agent: result
 ```
 
-MCP 是**智能体到工具**的通信。它不负责智能体之间的对话。
+MCP 是**Agent 到工具**的通信。它不负责 Agent 之间的对话。
 
 ### A2A（Agent2Agent 协议）
 
 **创建方：** Google（现由 Linux Foundation 托管，标识为 `lf.a2a.v1`）
 **规范版本：** 1.0.1
-**问题：** 自主智能体之间如何协作、协商，并互相委派任务？
+**问题：** 自主 Agent 之间如何协作、协商，并互相委派任务？
 
-A2A 是**点对点智能体协作**协议。MCP 把智能体连接到工具，A2A 则把智能体连接到其他智能体。每个智能体在众所周知的 URL 上发布一份 **Agent Card**，其他智能体据此发现它、与它协商，并向它委派任务。
+A2A 是**点对点 Agent 协作**协议。MCP 把 Agent 连接到工具，A2A 则把 Agent 连接到其他 Agent。每个 Agent 在众所周知的 URL 上发布一份 **Agent Card**，其他 Agent 据此发现它、与它协商，并向它委派任务。
 
 #### A2A 如何运作
 
@@ -163,8 +163,8 @@ sequenceDiagram
 
 需要注意的关键点：
 
-- **Skills** 是智能体能做的事情。每个 skill 都有 ID、标签，以及支持的输入/输出 MIME 类型。客户端智能体据此决定这个远程智能体能否处理自己的请求。
-- **supportedInterfaces** 列出了多个协议绑定。单个智能体可以同时使用 JSON-RPC、REST 和 gRPC。
+- **Skills** 是 Agent 能做的事情。每个 skill 都有 ID、标签，以及支持的输入/输出 MIME 类型。客户端 Agent 据此决定这个远程 Agent 能否处理自己的请求。
+- **supportedInterfaces** 列出了多个协议绑定。单个 Agent 可以同时使用 JSON-RPC、REST 和 gRPC。
 - **安全**内建在卡片中：`securitySchemes` 为每种方案命名，`securityRequirements` 说明适用哪些方案。客户端在发出第一个请求之前就知道需要什么认证。
 
 #### 任务生命周期
@@ -200,12 +200,12 @@ stateDiagram-v2
 |---|---|---|
 | `TASK_STATE_SUBMITTED` | 否 | 已确认，尚未处理 |
 | `TASK_STATE_WORKING` | 否 | 正在处理 |
-| `TASK_STATE_INPUT_REQUIRED` | 否 | 智能体需要客户端提供更多信息 |
+| `TASK_STATE_INPUT_REQUIRED` | 否 | Agent 需要客户端提供更多信息 |
 | `TASK_STATE_AUTH_REQUIRED` | 否 | 需要认证 |
 | `TASK_STATE_COMPLETED` | 是 | 成功完成 |
 | `TASK_STATE_FAILED` | 是 | 因错误结束 |
 | `TASK_STATE_CANCELED` | 是 | 完成前被取消 |
-| `TASK_STATE_REJECTED` | 是 | 智能体拒绝该任务 |
+| `TASK_STATE_REJECTED` | 是 | Agent 拒绝该任务 |
 
 任务一旦进入终止态就不可更改，不会再有更多消息。后续操作会在同一个 `contextId` 下创建新任务。
 
@@ -233,7 +233,7 @@ A2A 使用 JSON-RPC 2.0。下面是一次真实的消息交换：
 }
 ```
 
-**智能体以任务响应：**
+**Agent 以任务响应：**
 ```json
 {
   "jsonrpc": "2.0",
@@ -287,9 +287,9 @@ data: {"statusUpdate":{"taskId":"task-123","contextId":"ctx-123","status":{"stat
 **创建方：** IBM / BeeAI
 **规范版本：** 0.2.0（OpenAPI 3.1.1）
 **状态：** 正在 Linux Foundation 下并入 A2A
-**问题：** 智能体如何在进行通信时具备完整的可审计性、会话连续性和轨迹追踪？
+**问题：** Agent 如何在进行通信时具备完整的可审计性、会话连续性和轨迹追踪？
 
-ACP 是**企业协议**。与许多摘要文章的说法不同，ACP 并不使用 JSON-LD。它是一个通过 OpenAPI 定义的直白 REST/JSON API。它的特别之处在于 **TrajectoryMetadata**：每条智能体响应都可以携带生成该响应所经历的推理步骤和工具调用的详细日志。
+ACP 是**企业协议**。与许多摘要文章的说法不同，ACP 并不使用 JSON-LD。它是一个通过 OpenAPI 定义的直白 REST/JSON API。它的特别之处在于 **TrajectoryMetadata**：每条 Agent 响应都可以携带生成该响应所经历的推理步骤和 tool calls 的详细日志。
 
 ```mermaid
 sequenceDiagram
@@ -304,7 +304,7 @@ sequenceDiagram
     Note over Audit: Every step recorded:<br/>tool_name, tool_input,<br/>tool_output, reasoning
 ```
 
-#### ACP 中的智能体发现
+#### ACP 中的 Agent 发现
 
 ACP 定义了四种发现方式：
 
@@ -347,13 +347,13 @@ graph LR
 
 #### Run 生命周期
 
-ACP 使用 "Run" 而不是 "Task"。一次 Run 是一次智能体执行，有三种模式：
+ACP 使用 "Run" 而不是 "Task"。一次 Run 是一次 Agent 执行，有三种模式：
 
 | 模式 | 行为 |
 |---|---|
 | `sync` | 阻塞式。响应包含完整结果。 |
 | `async` | 立即返回 202。通过 `GET /runs/{id}` 轮询状态。 |
-| `stream` | SSE 流。智能体工作过程中持续推送事件。 |
+| `stream` | SSE 流。Agent 工作过程中持续推送事件。 |
 
 ```mermaid
 stateDiagram-v2
@@ -373,7 +373,7 @@ stateDiagram-v2
 
 #### TrajectoryMetadata（审计轨迹）
 
-这是 ACP 的关键差异点。消息的每个 part 都可以附带元数据，准确展示智能体做了什么：
+这是 ACP 的关键差异点。消息的每个 part 都可以附带元数据，准确展示 Agent 做了什么：
 
 ```json
 {
@@ -412,9 +412,9 @@ ACP 还支持用于来源署名的 **CitationMetadata**：
 
 **创建方：** 开源社区（由 GaoWei Chang 发起）
 **仓库：** [github.com/agent-network-protocol/AgentNetworkProtocol](https://github.com/agent-network-protocol/AgentNetworkProtocol)
-**问题：** 来自不同组织的智能体如何在没有中心权威的情况下互相信任？
+**问题：** 来自不同组织的 Agent 如何在没有中心权威的情况下互相信任？
 
-ANP 是**去中心化身份协议**。它用 W3C 去中心化标识符（DID）和端到端加密来建立信任。A2A 通过已知端点发现智能体，而 ANP 让智能体能够以密码学方式证明自己的身份。
+ANP 是**去中心化身份协议**。它用 W3C 去中心化标识符（DID）和端到端加密来建立信任。A2A 通过已知端点发现 Agent，而 ANP 让 Agent 能够以密码学方式证明自己的身份。
 
 ANP 有三层：
 
@@ -521,14 +521,14 @@ sequenceDiagram
 信任来自三个来源：
 
 1. **域名级 TLS** 验证 DID 文档的主机
-2. **DID 密码学签名**验证智能体身份
+2. **DID 密码学签名**验证 Agent 身份
 3. **最小信任原则**只授予最低权限
 
-这里没有基于流言的信任传播，也没有 PageRank 打分。你直接通过 DID 验证每一个智能体。
+这里没有基于流言的信任传播，也没有 PageRank 打分。你直接通过 DID 验证每一个 Agent。
 
 #### 元协议协商
 
-这是 ANP 最新颖的特性。当来自不同生态的两个智能体相遇时，它们不需要预先约定数据格式，而是用自然语言协商：
+这是 ANP 最新颖的特性。当来自不同生态的两个 Agent 相遇时，它们不需要预先约定数据格式，而是用自然语言协商：
 
 ```json
 {
@@ -551,9 +551,9 @@ sequenceDiagram
     Note over A,B: Agents dynamically generate code<br/>to handle the agreed format.<br/>Max 10 rounds, then timeout.
 ```
 
-智能体来回协商（最多 10 轮）直到就格式达成一致，然后动态生成代码来处理该格式。状态值包括：`negotiating`、`rejected`、`accepted`、`timeout`。
+Agent 来回协商（最多 10 轮）直到就格式达成一致，然后动态生成代码来处理该格式。状态值包括：`negotiating`、`rejected`、`accepted`、`timeout`。
 
-这意味着两个从未见过彼此的智能体也能找到通信方式，无需任何人预先定义共享 schema。
+这意味着两个从未见过彼此的 Agent 也能找到通信方式，无需任何人预先定义共享 schema。
 
 ### 对比（修正版）
 
@@ -561,10 +561,10 @@ sequenceDiagram
 |---|---|---|---|---|
 | **创建方** | Anthropic | Google / Linux Foundation | IBM / BeeAI | 社区 |
 | **规范格式** | JSON-RPC | JSON-RPC / REST / gRPC | OpenAPI 3.1（REST） | JSON-RPC |
-| **主要用途** | 智能体到工具 | 智能体到智能体 | 智能体到智能体 | 智能体到智能体 |
+| **主要用途** | Agent 到工具 | Agent 到 Agent | Agent 到 Agent | Agent 到 Agent |
 | **发现机制** | 工具列表 | `/.well-known/agent-card.json` | `GET /agents`、`/.well-known/agent.yml` | `/.well-known/agent-descriptions`、DID 服务端点 |
 | **身份** | 隐式（本地） | 安全方案（OAuth、mTLS） | 服务端级 | W3C DID（`did:wba`），配合 E2EE |
-| **审计轨迹** | 不适用 | 基础（任务历史） | TrajectoryMetadata（工具调用、推理） | 未正式规定 |
+| **审计轨迹** | 不适用 | 基础（任务历史） | TrajectoryMetadata（tool call、推理） | 未正式规定 |
 | **状态机** | 不适用 | 9 个任务状态 | 7 个 run 状态 | 不适用 |
 | **流式** | 不适用 | SSE | SSE | 与传输无关 |
 | **独特能力** | 工具 schema | Agent Card + Skills | 轨迹审计 | 元协议协商 |
@@ -597,10 +597,10 @@ graph TB
     style AUDIT fill:#fef3c7,stroke:#d97706
 ```
 
-- **MCP** 把每个智能体连接到它的工具
-- **A2A** 处理智能体之间的协作（内部与外部）
+- **MCP** 把每个 Agent 连接到它的工具
+- **A2A** 处理 Agent 之间的协作（内部与外部）
 - **ACP** 用轨迹元数据包装响应，实现可审计性
-- **ANP** 为你无法控制的智能体提供身份验证
+- **ANP** 为你无法控制的 Agent 提供身份验证
 
 ```figure
 swarm-message-bus
@@ -610,7 +610,7 @@ swarm-message-bus
 
 ### 第 1 步：核心消息类型
 
-每个多智能体系统都从消息格式开始。我们定义的类型对应真实协议中使用的内容：
+每个多 Agent 系统都从消息格式开始。我们定义的类型对应真实协议中使用的内容：
 
 ```typescript
 import crypto from "node:crypto";
@@ -662,7 +662,7 @@ function textMessage(role: MessageRole, text: string): AgentMessage {
 
 ### 第 2 步：A2A Agent Card 与注册表
 
-构建符合真实 A2A 规范的智能体发现机制：
+构建符合真实 A2A 规范的 Agent 发现机制：
 
 ```typescript
 type Skill = {
@@ -725,7 +725,7 @@ class AgentRegistry {
 }
 ```
 
-这比简单的「名称到能力」映射丰富得多。你可以按 skill 标签、按输入 MIME 类型或按名称发现智能体，与真实的 A2A 规范所支持的能力一致。
+这比简单的「名称到能力」映射丰富得多。你可以按 skill 标签、按输入 MIME 类型或按名称发现 Agent，与真实的 A2A 规范所支持的能力一致。
 
 ### 第 3 步：A2A 任务生命周期
 
@@ -1009,7 +1009,7 @@ class AuditableRunner {
 }
 ```
 
-每次智能体执行都会产生一条完整的审计条目：输入了什么、输出了什么，以及中间工具调用和推理步骤的完整轨迹。你可以按智能体、按会话或按单次 run 查询。
+每次 Agent 执行都会产生一条完整的审计条目：输入了什么、输出了什么，以及中间 tool call 和推理步骤的完整轨迹。你可以按 Agent、按会话或按单次 run 查询。
 
 ### 第 5 步：ANP 风格的身份验证
 
@@ -1132,7 +1132,7 @@ function signPayload(identity: AgentIdentity, payload: string): string {
 }
 ```
 
-这映射了真实的 ANP 身份模型：智能体拥有 DID 文档，其中认证密钥、密钥协商密钥和人工授权密钥相互分离。`IdentityRegistry` 模拟 DID 解析（在生产环境中，这会是对智能体域名的 HTTP 请求）。
+这映射了真实的 ANP 身份模型：Agent 拥有 DID 文档，其中认证密钥、密钥协商密钥和人工授权密钥相互分离。`IdentityRegistry` 模拟 DID 解析（在生产环境中，这会是对 Agent 域名的 HTTP 请求）。
 
 ### 第 6 步：协议网关
 
@@ -1224,7 +1224,7 @@ class ProtocolGateway {
 网关在一次调用中完成四件事：
 
 1. **ANP**：通过 DID 签名验证调用方身份
-2. **A2A**：发现目标智能体并检查能力
+2. **A2A**：发现目标 Agent 并检查能力
 3. **ACP**：把执行包装进带轨迹的审计记录
 4. **A2A**：创建一个带完整生命周期追踪的任务
 
@@ -1452,27 +1452,27 @@ protocolDemo().catch((err) => {
 
 协议解决的是理想路径。下面是生产环境会出问题的地方：
 
-**Schema 漂移。** 智能体 A 发布的 Agent Card 声称输出 `application/json`，但 JSON schema 在版本之间发生了变化。智能体 B 按旧格式解析，拿到一堆垃圾数据。修复方法：对 skill 和输出 schema 做版本管理。A2A 规范支持在 Agent Card 上标注 `version`，正是为此。
+**Schema 漂移。** Agent A 发布的 Agent Card 声称输出 `application/json`，但 JSON schema 在版本之间发生了变化。Agent B 按旧格式解析，拿到一堆垃圾数据。修复方法：对 skill 和输出 schema 做版本管理。A2A 规范支持在 Agent Card 上标注 `version`，正是为此。
 
-**违反状态机。** 某个智能体处理器 yield 了一个 `TASK_STATE_COMPLETED` 状态更新，随后又试图 yield 更多 artifact。任务此时已不可变。你的代码会静默丢弃这些更新，或者直接抛错。修复方法：在 yield 之前检查终止态。上面的 `TaskManager` 通过在终止态之后执行 `break` 来强制这一点。
+**违反状态机。** 某个 Agent 处理器 yield 了一个 `TASK_STATE_COMPLETED` 状态更新，随后又试图 yield 更多 artifact。任务此时已不可变。你的代码会静默丢弃这些更新，或者直接抛错。修复方法：在 yield 之前检查终止态。上面的 `TaskManager` 通过在终止态之后执行 `break` 来强制这一点。
 
-**信任解析失败。** 智能体 A 试图验证智能体 B 的 DID，但 B 的域名宕机了，DID 文档拉取不到。你是选择失败开放（接受未验证的智能体），还是失败关闭（拒绝一切）？ANP 建议采用失败关闭，并遵循最小信任原则。
+**信任解析失败。** Agent A 试图验证 Agent B 的 DID，但 B 的域名宕机了，DID 文档拉取不到。你是选择失败开放（接受未验证的 Agent），还是失败关闭（拒绝一切）？ANP 建议采用失败关闭，并遵循最小信任原则。
 
-**轨迹膨胀。** ACP 的轨迹日志很强大，但代价高昂。一个复杂的智能体每次 run 发起 200 次工具调用，会产生海量审计条目。修复方法：让轨迹日志的详细程度可配置。为合规记录工具名称和输入输出，对非监管负载跳过推理步骤。
+**轨迹膨胀。** ACP 的轨迹日志很强大，但代价高昂。一个复杂的 Agent 每次 run 发起 200 次 tool call，会产生海量审计条目。修复方法：让轨迹日志的详细程度可配置。为合规记录工具名称和输入输出，对非监管负载跳过推理步骤。
 
-**发现请求惊群。** 50 个智能体在启动时同时查询 `GET /agents`。修复方法：用 TTL 缓存 Agent Card，错开发现间隔，或者改用基于推送的注册而非轮询。
+**发现请求惊群。** 50 个 Agent 在启动时同时查询 `GET /agents`。修复方法：用 TTL 缓存 Agent Card，错开发现间隔，或者改用基于推送的注册而非轮询。
 
 ## 使用它
 
 ### 真实实现
 
-**A2A** 是最成熟的。Google 的[官方规范](https://github.com/google/A2A)在 Linux Foundation 下开源，提供 Python 和 TypeScript SDK。如果你的智能体需要动态发现和协作，从这里开始。
+**A2A** 是最成熟的。Google 的[官方规范](https://github.com/google/A2A)在 Linux Foundation 下开源，提供 Python 和 TypeScript SDK。如果你的 Agent 需要动态发现和协作，从这里开始。
 
 **ACP** 正在并入 A2A。IBM 的 [BeeAI 项目](https://github.com/i-am-bee/acp)把 ACP 创建为 REST 优先的替代方案，但轨迹元数据这一概念正在被 A2A 生态吸收。即使你用 A2A 作为传输层，也可以沿用 ACP 的模式（轨迹日志、run 生命周期）。
 
-**ANP** 是最实验性的。[社区仓库](https://github.com/agent-network-protocol/AgentNetworkProtocol)提供了 Python SDK（AgentConnect）。元协议协商这一概念确实新颖。跨组织的智能体部署值得关注。
+**ANP** 是最实验性的。[社区仓库](https://github.com/agent-network-protocol/AgentNetworkProtocol)提供了 Python SDK（AgentConnect）。元协议协商这一概念确实新颖。跨组织的 Agent 部署值得关注。
 
-**MCP** 已在 Phase 13 中讲解。如果你想让智能体使用工具，MCP 就是标准。
+**MCP** 已在 Phase 13 中讲解。如果你想让 Agent 使用工具，MCP 就是标准。
 
 ### 选择合适的协议
 
@@ -1506,36 +1506,36 @@ graph TD
 
 ## 练习
 
-1. **多跳任务委派。** 扩展 `TaskManager`，让智能体处理器可以把子任务委派给其他智能体。研究员收到一个任务后，把「搜索」和「总结」两个子任务分别委派给两个专家智能体，等待二者完成，再把结果合并进自己的 artifact。
+1. **多跳任务委派。** 扩展 `TaskManager`，让 Agent 处理器可以把子任务委派给其他 Agent。研究员收到一个任务后，把「搜索」和「总结」两个子任务分别委派给两个专家 Agent，等待二者完成，再把结果合并进自己的 artifact。
 
 2. **流式审计轨迹。** 修改 `AuditableRunner` 以支持流式模式。不要等待完整结果，而是在轨迹条目加入时实时 yield `AuditEntry` 更新。使用异步生成器产出审计快照。
 
-3. **DID 轮换。** 为 `IdentityRegistry` 添加密钥轮换。智能体应能发布带新密钥的 DID 文档，同时保留 `previousDid` 引用。在宽限期内，验证方应同时接受当前密钥和上一把密钥的签名。
+3. **DID 轮换。** 为 `IdentityRegistry` 添加密钥轮换。Agent 应能发布带新密钥的 DID 文档，同时保留 `previousDid` 引用。在宽限期内，验证方应同时接受当前密钥和上一把密钥的签名。
 
-4. **协议协商。** 实现 ANP 的元协议概念。两个智能体交换带候选格式的 `protocolNegotiation` 消息（例如「我会说 JSON-RPC」对「我偏好 REST」）。最多 3 轮后，它们要么就格式达成一致，要么超时。商定的格式决定它们使用哪个 `TaskManager` 或 `AuditableRunner`。
+4. **协议协商。** 实现 ANP 的元协议概念。两个 Agent 交换带候选格式的 `protocolNegotiation` 消息（例如「我会说 JSON-RPC」对「我偏好 REST」）。最多 3 轮后，它们要么就格式达成一致，要么超时。商定的格式决定它们使用哪个 `TaskManager` 或 `AuditableRunner`。
 
-5. **限速发现。** 添加一个 `RateLimitedRegistry` 包装器，用可配置 TTL 缓存 Agent Card 查询，并限制每个智能体每秒的发现查询数。模拟 100 个智能体在启动时互相发现的惊群场景，并测量差异。
+5. **限速发现。** 添加一个 `RateLimitedRegistry` 包装器，用可配置 TTL 缓存 Agent Card 查询，并限制每个 Agent 每秒的发现查询数。模拟 100 个 Agent 在启动时互相发现的惊群场景，并测量差异。
 
 ## 关键术语
 
 | 术语 | 常见说法 | 实际含义 |
 |------|----------------|----------------------|
-| MCP | 「AI 工具协议」 | 一种客户端-服务器协议，让智能体发现并使用工具。是智能体到工具，不是智能体到智能体。 |
-| A2A | 「Google 的智能体协议」 | Linux Foundation 下用于智能体协作的点对点协议。通过 Agent Card 发现，9 状态任务生命周期，SSE 流式传输。支持 JSON-RPC、REST 和 gRPC 绑定。 |
-| ACP | 「企业级智能体消息」 | IBM/BeeAI 的 REST API，用于带 TrajectoryMetadata 的智能体 run：每条响应都携带完整的推理与工具调用链。正在并入 A2A。 |
-| ANP | 「去中心化智能体身份」 | 社区协议，使用 `did:wba`（DID）实现密码学身份、HPKE 实现 E2EE，并用 AI 驱动的元协议协商服务于素未谋面的智能体。 |
-| Agent Card | 「智能体的名片」 | 位于 `/.well-known/agent-card.json` 的 JSON 文档，描述 skills、支持的 MIME 类型、安全方案和协议绑定。 |
-| DID | 「去中心化 ID」 | W3C 标准，用于托管在智能体自己域名上的、可密码学验证的身份。ANP 使用 `did:wba` 方法。 |
-| TrajectoryMetadata | 「审计回执」 | ACP 的机制，把推理步骤、工具调用及其输入/输出附加到每条智能体响应上。 |
-| Meta-protocol | 「智能体协商如何对话」 | ANP 的方法：智能体用自然语言动态商定数据格式，再生成代码来处理该格式。 |
+| MCP | 「AI 工具协议」 | 一种客户端-服务器协议，让 Agent 发现并使用工具。是 Agent 到工具，不是 Agent 到 Agent。 |
+| A2A | 「Google 的 Agent 协议」 | Linux Foundation 下用于 Agent 协作的点对点协议。通过 Agent Card 发现，9 状态任务生命周期，SSE 流式传输。支持 JSON-RPC、REST 和 gRPC 绑定。 |
+| ACP | 「企业级 Agent 消息」 | IBM/BeeAI 的 REST API，用于带 TrajectoryMetadata 的 Agent run：每条响应都携带完整的推理与 tool call 链。正在并入 A2A。 |
+| ANP | 「去中心化 Agent 身份」 | 社区协议，使用 `did:wba`（DID）实现密码学身份、HPKE 实现 E2EE，并用 AI 驱动的元协议协商服务于素未谋面的 Agent。 |
+| Agent Card | 「Agent 的名片」 | 位于 `/.well-known/agent-card.json` 的 JSON 文档，描述 skills、支持的 MIME 类型、安全方案和协议绑定。 |
+| DID | 「去中心化 ID」 | W3C 标准，用于托管在 Agent 自己域名上的、可密码学验证的身份。ANP 使用 `did:wba` 方法。 |
+| TrajectoryMetadata | 「审计回执」 | ACP 的机制，把推理步骤、tool call 及其输入/输出附加到每条 Agent 响应上。 |
+| Meta-protocol | 「Agent 协商如何对话」 | ANP 的方法：Agent 用自然语言动态商定数据格式，再生成代码来处理该格式。 |
 | Task | 「一个工作单元」 | A2A 中有状态的对象，追踪工作从提交到完成的整个过程。进入终止态后不可变。 |
 
 ## 延伸阅读
 
 - [Google A2A specification](https://github.com/google/A2A) —— 官方规范与 SDK（v1.0.1，Linux Foundation）
-- [IBM/BeeAI ACP specification](https://github.com/i-am-bee/acp) —— 面向智能体 run 与轨迹元数据的 OpenAPI 3.1 规范
+- [IBM/BeeAI ACP specification](https://github.com/i-am-bee/acp) —— 面向 Agent run 与轨迹元数据的 OpenAPI 3.1 规范
 - [Agent Network Protocol](https://github.com/agent-network-protocol/AgentNetworkProtocol) —— 基于 DID 的身份、E2EE、元协议协商
 - [Model Context Protocol docs](https://modelcontextprotocol.io/) —— Anthropic 的 MCP 规范（Phase 13 已讲解）
 - [W3C Decentralized Identifiers](https://www.w3.org/TR/did-core/) —— 支撑 ANP 的身份标准
 - [RFC 9180 (HPKE)](https://www.rfc-editor.org/rfc/rfc9180) —— ANP 用于 E2EE 的加密方案
-- [FIPA Agent Communication Language](http://www.fipa.org/specs/fipa00061/SC00061G.html) —— 现代智能体协议的学术前身
+- [FIPA Agent Communication Language](http://www.fipa.org/specs/fipa00061/SC00061G.html) —— 现代 Agent 协议的学术前身

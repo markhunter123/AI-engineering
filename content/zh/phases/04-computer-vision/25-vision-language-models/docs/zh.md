@@ -68,7 +68,7 @@ flowchart LR
 
 | 模型 | 参数量 | 视觉编码器 | LLM | 上下文长度 | 优势 |
 |-------|--------|----------------|-----|---------|-----------|
-| Qwen3-VL-235B-A22B (MoE) | 235B（22B 激活） | custom ViT + DeepStack | Qwen3 | 256K | 通用 SOTA、GUI 智能体 |
+| Qwen3-VL-235B-A22B (MoE) | 235B（22B 激活） | custom ViT + DeepStack | Qwen3 | 256K | 通用 SOTA、GUI Agent |
 | Qwen3-VL-30B-A3B (MoE) | 30B（3B 激活） | custom ViT + DeepStack | Qwen3 | 256K | 更小的 MoE 替代方案 |
 | Qwen3-VL-8B (dense) | 8B | custom ViT | Qwen3 | 128K | 生产级 dense 默认选择 |
 | InternVL3.5-38B | 38B | InternViT-6B | Qwen3 + GPT-OSS | 128K | MMBench / MMVet 表现强 |
@@ -77,11 +77,11 @@ flowchart LR
 | GLM-4.6V | ~70B | custom | GLM | 64K | 开源、OCR 强 |
 | MiniCPM-V-2.6 | 8B | SigLIP | MiniCPM | 32K | 适合边缘设备 |
 
-### 视觉智能体
+### 视觉 Agent
 
-Qwen3-VL-235B 在 OSWorld 上达到了全球顶尖性能 —— 这是一个操作 GUI（桌面、移动、网页）的**视觉智能体**基准。模型看到屏幕截图，理解 UI，并输出动作（点击、输入、滚动）。结合工具后，它能闭环完成常见桌面任务。这就是 2026 年大多数「AI PC」演示在底层运行的东西。
+Qwen3-VL-235B 在 OSWorld 上达到了全球顶尖性能 —— 这是一个操作 GUI（桌面、移动、网页）的**视觉 Agent**基准。模型看到屏幕截图，理解 UI，并输出动作（点击、输入、滚动）。结合工具后，它能闭环完成常见桌面任务。这就是 2026 年大多数「AI PC」演示在底层运行的东西。
 
-### 智能体能力 + RoPE 变体
+### Agent 能力 + RoPE 变体
 
 VLM 需要知道视频中的某一帧在**何时**出现。Qwen3-VL 从 T-RoPE（时间旋转位置编码）演进为**基于文本的时间对齐**—— 在视频帧之间插入显式的时间戳文本 token。模型看到「`<timestamp 00:32>` 帧，prompt」，就能推理时间关系。
 

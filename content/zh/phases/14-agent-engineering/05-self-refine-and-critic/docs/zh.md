@@ -16,7 +16,7 @@
 
 ## 问题
 
-智能体产出的答案几乎正确。也许某行代码有语法错误。也许摘要太长。也许计划漏掉了一个边界情况。你想要的是：智能体先批评自己的输出，然后修正它。
+Agent 产出的答案几乎正确。也许某行代码有语法错误。也许摘要太长。也许计划漏掉了一个边界情况。你想要的是：Agent 先批评自己的输出，然后修正它。
 
 Self-Refine 证明，用单个模型、不需要训练数据、不需要强化学习也能做到。但有一个问题：LLM 在硬事实上不擅长自我验证。CRITIC 给出了解法——把验证步骤交给外部工具（搜索、代码解释器、计算器、测试运行器）。
 
@@ -75,7 +75,7 @@ Anthropic 2024 年 12 月的文章把它列为五种工作流模式之一。两�
 
 ### OpenAI Agents SDK 的输出防护栏
 
-OpenAI Agents SDK 以「输出防护栏」的形式提供这个模式。防护栏是一个在智能体最终输出上运行的校验器。如果防护栏触发（抛出 `OutputGuardrailTripwireTriggered`），输出被拒绝，智能体可以重试。防护栏可以调用工具（CRITIC 风格），也可以是纯函数（Self-Refine 风格）。
+OpenAI Agents SDK 以「输出防护栏」的形式提供这个模式。防护栏是一个在 Agent 最终输出上运行的校验器。如果防护栏触发（抛出 `OutputGuardrailTripwireTriggered`），输出被拒绝，Agent 可以重试。防护栏可以调用工具（CRITIC 风格），也可以是纯函数（Self-Refine 风格）。
 
 ### 2026 年的陷阱
 
@@ -130,7 +130,7 @@ Anthropic 的 evaluator-optimizer 就是这个模式在 Claude 语境下的说�
 | Self-Refine | 「自我修复的 LLM」 | 在单个模型中循环执行生成 -> 反馈 -> 精炼，并保留历史 |
 | CRITIC | 「工具锚定的验证」 | 用外部验证器（搜索、代码、计算器、测试）取代反馈 |
 | Evaluator-Optimizer | 「Anthropic 工作流模式」 | 两个角色——评估器打分、优化器修订——循环至收敛 |
-| Output guardrail | 「事后检查」 | OpenAI Agents SDK 的校验器，在智能体产出输出之后运行 |
+| Output guardrail | 「事后检查」 | OpenAI Agents SDK 的校验器，在 Agent 产出输出之后运行 |
 | Verify step | 「批评阶段」 | 承重的决策：有外部依据，还是自评 |
 | Refine history | 「模型已经试过什么」 | 先前的输出 + 批评，前置到精炼 prompt；去掉它质量会崩塌 |
 | Rubber-stamp loop | 「自我认同失败」 | 同一 prompt 的批评返回「看着不错」；用结构不同的 prompt 修复 |

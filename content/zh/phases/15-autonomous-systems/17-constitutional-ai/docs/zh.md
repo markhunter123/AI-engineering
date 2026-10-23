@@ -9,7 +9,7 @@
 
 ## 问题
 
-一个已部署的智能体会看到其设计者从未见过的输入。没有哪个规则列表长到足以覆盖它们。也没有哪个规则列表短到能在计算压力下快速应用。实际问题：如何让智能体对齐到既能在长尾案例中存活、又能在快速推理中应用的原则？
+一个已部署的 Agent 会看到其设计者从未见过的输入。没有哪个规则列表长到足以覆盖它们。也没有哪个规则列表短到能在计算压力下快速应用。实际问题：如何让 Agent 对齐到既能在长尾案例中存活、又能在快速推理中应用的原则？
 
 基于规则的校准（RBA）：列出每一件不允许的事。检查快、易审计、无法保持最新、经常对它没有预料到的近似案例过度拒绝。基于推理的校准（2026 Claude 宪法）：编码原则，让模型推理。能扩展到未见案例、更难审计，失效模式是原则误用而不是漏掉规则。
 
@@ -97,7 +97,7 @@ mx-priority-tiers
 
 2. 阅读 Claude 宪法（公开，79 页，CC0）。找出你认为规定不足的一条原则。写两段说明具体的歧义，并提出更严格的表述。
 
-3. 为客服智能体设计一组软编码默认值。运营者调整什么？运营者不能触动什么？论证每个边界。
+3. 为客服 Agent 设计一组软编码默认值。运营者调整什么？运营者不能触动什么？论证每个边界。
 
 4. 阅读 Bai 等 2022 年的 CAI 论文。描述一个 Constitutional AI 的批评-修改循环会产生比一律禁止更差结果的情形。指出这个类别。
 
@@ -122,4 +122,4 @@ mx-priority-tiers
 - [Bai 等 —— Constitutional AI：来自 AI 反馈的无害性](https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback) —— 2022 年原始版本。
 - [Anthropic —— 集体宪法 AI（2023）](https://www.anthropic.com/research/collective-constitutional-ai-aligning-a-language-model-with-public-input) —— 参与式实验。
 - [Anthropic —— 负责任扩展政策 v3.0](https://anthropic.com/responsible-scaling-policy/rsp-v3-0) —— 宪法在 RSP 栈中的位置。
-- [Anthropic —— 在实践中衡量智能体自主性](https://www.anthropic.com/research/measuring-agent-autonomy) —— 宪法在长视野部署中的作用。
+- [Anthropic —— 在实践中衡量 Agent 自主性](https://www.anthropic.com/research/measuring-agent-autonomy) —— 宪法在长视野部署中的作用。

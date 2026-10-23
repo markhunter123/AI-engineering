@@ -21,7 +21,7 @@ Whisper 押了三个赌注：
 
 ## 概念
 
-![Whisper 流水线：音频 → mel → 编码器 → 解码器 → 文本](../assets/whisper.svg)
+![Whisper pipeline：音频 → mel → 编码器 → 解码器 → 文本](../assets/whisper.svg)
 
 ### 第 1 步——重采样并加窗
 
@@ -71,7 +71,7 @@ Whisper 押了三个赌注：
 | Large-v3 | 1550M | 32 | 1280 | 20 | ~10 GB |
 | Large-v3-turbo | 809M | 32 | 1280 | 20 | ~6 GB（4 层解码器） |
 
-Large-v3-turbo（2024）把解码器从 32 层砍到 4 层。解码速度快 8 倍，WER 回退不到 1 个点。解码速度的这一突破，使 Whisper-turbo 成为 2026 年实时语音智能体的默认选择。
+Large-v3-turbo（2024）把解码器从 32 层砍到 4 层。解码速度快 8 倍，WER 回退不到 1 个点。解码速度的这一突破，使 Whisper-turbo 成为 2026 年实时语音 Agent 的默认选择。
 
 ### Whisper 不做什么
 

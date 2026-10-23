@@ -69,10 +69,10 @@ UCT 公式：`Q(s, a) + c * sqrt(ln N(s) / N(s, a))`。第一项是利用，第�
 
 ### 2026 年的定位
 
-大多数生产智能体并不跑 LATS。它们跑的是 ReAct 加上工具锚定的验证（CRITIC，第 05 课）。搜索出现在一些专门领域：
+大多数生产 Agent 并不跑 LATS。它们跑的是 ReAct 加上工具锚定的验证（CRITIC，第 05 课）。搜索出现在一些专门领域：
 
-- 把测试当作价值函数的编码智能体（HumanEval 风格）。
-- 探索多条查询路径的深度研究智能体。
+- 把测试当作价值函数的编码 Agent（HumanEval 风格）。
+- 探索多条查询路径的深度研究 Agent。
 - LangGraph 子图里以规划为重的工作流。
 
 AlphaEvolve（第 11 课）是 2025 年的极端案例：对代码做进化搜索，适应度可机器验证，取得前沿进展（56 年来首次改进 4x4 矩阵乘法）。
@@ -99,7 +99,7 @@ python3 code/main.py
 
 ## 使用它
 
-LangGraph 以子图模式提供 ToT 风格的探索；LangChain 团队 2024 年 5 月关于 LATS 的博客是参考教程。LlamaIndex 提供了一个 `TreeOfThoughts` 智能体。对大多数 2026 年的生产智能体而言，这个模式藏在一个 `if task_complexity > threshold: use_search()` 的开关后面——参见第 05 课中的 evaluator-optimizer 模式。
+LangGraph 以子图模式提供 ToT 风格的探索；LangChain 团队 2024 年 5 月关于 LATS 的博客是参考教程。LlamaIndex 提供了一个 `TreeOfThoughts` Agent。对大多数 2026 年的生产 Agent 而言，这个模式藏在一个 `if task_complexity > threshold: use_search()` 的开关后面——参见第 05 课中的 evaluator-optimizer 模式。
 
 ## 交付它
 

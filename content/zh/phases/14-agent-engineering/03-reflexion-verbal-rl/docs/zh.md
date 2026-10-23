@@ -1,6 +1,6 @@
 # Reflexion：语言化强化学习
 
-> 基于梯度的强化学习要修复一种失败模式，需要上千次试验和 GPU 集群。Reflexion（Shinn 等，NeurIPS 2023）用自然语言做到同样的事：每次试验失败后，智能体写下一段反思，存入情景记忆，并让下一次试验以这段记忆为条件。Letta 的 sleep-time compute、Claude Code 的 CLAUDE.md 经验沉淀，以及 pro-workflow 的 learn-rule，背后的模式都是它。
+> 基于梯度的强化学习要修复一种失败模式，需要上千次试验和 GPU 集群。Reflexion（Shinn 等，NeurIPS 2023）用自然语言做到同样的事：每次试验失败后，Agent 写下一段反思，存入情景记忆，并让下一次试验以这段记忆为条件。Letta 的 sleep-time compute、Claude Code 的 CLAUDE.md 经验沉淀，以及 pro-workflow 的 learn-rule，背后的模式都是它。
 
 **Type:** Build
 **Languages:** Python (stdlib)
@@ -16,9 +16,9 @@
 
 ## 问题
 
-一个智能体在某项任务上失败了。在标准强化学习中，你会再跑上千次试验、计算梯度、更新权重。这既昂贵又缓慢，而且大多数生产智能体并没有为每一次失败准备训练预算。
+一个 Agent 在某项任务上失败了。在标准强化学习中，你会再跑上千次试验、计算梯度、更新权重。这既昂贵又缓慢，而且大多数生产 Agent 并没有为每一次失败准备训练预算。
 
-Reflexion（Shinn 等，arXiv:2303.11366）提出了另一个问题：如果智能体只是想清楚自己为什么失败，再带着这个想法重试呢？不更新权重。不算梯度。只是把自然语言存在两次试验之间。
+Reflexion（Shinn 等，arXiv:2303.11366）提出了另一个问题：如果 Agent 只是想清楚自己为什么失败，再带着这个想法重试呢？不更新权重。不算梯度。只是把自然语言存在两次试验之间。
 
 结果是：在 ALFWorld 上它胜过 ReAct 和其他未微调的基线。在 HotpotQA 上它优于 ReAct。在代码生成（HumanEval/MBPP）上，它创下了当时的最佳成绩。而这一切没有走一步梯度。
 
@@ -43,16 +43,16 @@ Episodic memory: list of prior reflections, prepended to the next trial's prompt
 ### 三类评估器
 
 1. **标量（Scalar）**——外部二值信号。ALFWorld 成功或失败。HumanEval 的测试通过或不通过。最简单，信号最强。
-2. **启发式（Heuristic）**——预定义的失败特征。「如果智能体连续两次产生同一个动作，标记为卡住。」「如果轨迹超过 50 步，标记为低效。」
+2. **启发式（Heuristic）**——预定义的失败特征。「如果 Agent 连续两次产生同一个动作，标记为卡住。」「如果轨迹超过 50 步，标记为低效。」
 3. **自评估（Self-evaluated）**——由 LLM 给自己的轨迹打分。在没有标准答案时需要它。信号较弱；适合与工具锚定的验证搭配使用（第 05 课——CRITIC）。
 
 2026 年的默认做法是混合使用：有标量信号时用标量，没有时用自评估，启发式规则当作安全护栏。
 
 ### 为什么它能推广
 
-与其说 Reflexion 是一种新算法，不如说它是一个被命名的模式。几乎所有生产环境中的「自愈」智能体都在跑它的某种变体：
+与其说 Reflexion 是一种新算法，不如说它是一个被命名的模式。几乎所有生产环境中的「自愈」Agent 都在跑它的某种变体：
 
-- Letta 的 sleep-time compute（第 08 课）：由一个独立的智能体回顾过去的对话，并写入记忆块。
+- Letta 的 sleep-time compute（第 08 课）：由一个独立的 Agent 回顾过去的对话，并写入记忆块。
 - Claude Code 的 `CLAUDE.md` /「保存记忆」模式：把反思记录为经验，在未来的会话前置。
 - pro-workflow 的 `/learn-rule` 命令：把修正记录为显式规则。
 - LangGraph 的反思节点：一个给输出打分、必要时路由到精炼环节的节点。
@@ -69,11 +69,11 @@ Reflexion 在以下情况有效：
 
 Reflexion 在以下情况无效：
 
-- 智能体第一次尝试就成功。
+- Agent 第一次尝试就成功。
 - 失败是外部原因（网络断了、工具坏了）——对「当时网络断了」的反思对未来运行没有帮助。
 - 反思变成了迷信——把一次偶发的不稳定运行当成规律存下来。
 
-2026 年的陷阱：记忆腐化。反思不断累积，其中有些已经过时或错误；情景缓冲区越大，重跑越慢。缓解办法：定期压缩（第 06 课）、给反思设 TTL，或用独立的 sleep-time 清理智能体（Letta）。
+2026 年的陷阱：记忆腐化。反思不断累积，其中有些已经过时或错误；情景缓冲区越大，重跑越慢。缓解办法：定期压缩（第 06 课）、给反思设 TTL，或用独立的 sleep-time 清理 Agent（Letta）。
 
 ```figure
 react-trace
@@ -100,7 +100,7 @@ python3 code/main.py
 
 ## 使用它
 
-LangGraph 把反思作为一个节点模式提供。Claude Code 的 `/memory` 命令和 pro-workflow 的 `/learn-rule` 把情景缓冲区外化成 markdown 文件。Letta 的 sleep-time compute 在空闲时间运行 Self-Reflector，让主智能体保持对延迟敏感。OpenAI Agents SDK 没有直接提供 Reflexion；你需要用一个按分数拒绝轨迹的自定义 Guardrail，和一个跨运行存活的记忆 `Session` 来自己搭建。
+LangGraph 把反思作为一个节点模式提供。Claude Code 的 `/memory` 命令和 pro-workflow 的 `/learn-rule` 把情景缓冲区外化成 markdown 文件。Letta 的 sleep-time compute 在空闲时间运行 Self-Reflector，让主 Agent 保持对延迟敏感。OpenAI Agents SDK 没有直接提供 Reflexion；你需要用一个按分数拒绝轨迹的自定义 Guardrail，和一个跨运行存活的记忆 `Session` 来自己搭建。
 
 ## 交付它
 
@@ -125,7 +125,7 @@ LangGraph 把反思作为一个节点模式提供。Claude Code 的 `/memory` �
 | Heuristic evaluator | 「基于模式的检测器」 | 预定义的失败特征（如卡死循环、步数过多） |
 | Self-evaluator | 「用自己的轨迹做 LLM 评审」 | 没有标准答案时的低信号兜底——与工具锚定的验证搭配 |
 | Memory rot | 「过时的反思」 | 情景缓冲区塞满废弃条目；用压缩 / TTL 修复 |
-| Sleep-time reflection | 「异步自我反思」 | 把 Self-Reflector 移出热路径运行，让主智能体保持快速 |
+| Sleep-time reflection | 「异步自我反思」 | 把 Self-Reflector 移出热路径运行，让主 Agent 保持快速 |
 
 ## 进一步阅读
 

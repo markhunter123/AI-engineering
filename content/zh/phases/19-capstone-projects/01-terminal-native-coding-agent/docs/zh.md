@@ -1,6 +1,6 @@
-# 项目 01 — 终端原生编码智能体
+# 项目 01 — 终端原生编码 Agent
 
-> 到 2026 年，编码智能体的形态已经定型。一个 TUI harness、一份有状态的计划、一套沙箱化的工具面，以及一个计划、行动、观察、恢复的循环。Claude Code、Cursor 3 和 OpenCode 远看如出一辙。这个项目要求你端到端地构建一个 —— 从 CLI 输入到 pull request 输出 —— 并在 SWE-bench Pro 上与 mini-swe-agent 和 Live-SWE-agent 对比评测。你会体会到，难点不在模型调用，而在工具循环、沙箱，以及 50 轮运行的成本上限。
+> 到 2026 年，编码 Agent 的形态已经定型。一个 TUI harness、一份有状态的计划、一套沙箱化的工具面，以及一个计划、行动、观察、恢复的循环。Claude Code、Cursor 3 和 OpenCode 远看如出一辙。这个项目要求你端到端地构建一个 —— 从 CLI 输入到 pull request 输出 —— 并在 SWE-bench Pro 上与 mini-swe-agent 和 Live-SWE-agent 对比评测。你会体会到，难点不在模型调用，而在工具循环、沙箱，以及 50 轮运行的成本上限。
 
 **Type:** Capstone
 **Languages:** TypeScript / Bun (harness), Python (eval scripts)
@@ -10,13 +10,13 @@
 
 ## 问题
 
-2026 年，编码智能体已成为主导性的 AI 应用类别。Claude Code（Anthropic）、带 Composer 2 和 Agent Tabs 的 Cursor 3（Cursor）、Amp（Sourcegraph）、OpenCode（112k stars）、Factory Droids 和 Google Jules，发布的都是同一架构的变体：终端 harness、带权限控制的工具面、沙箱，以及围绕前沿模型构建的计划—行动—观察循环。前沿很窄 —— Live-SWE-agent 借助 Opus 4.5 在 SWE-bench Verified 上达到 79.2% —— 但工程技艺很宽。大多数失败模式并不是模型的错误，而是工具循环不稳定、上下文污染、失控的 token 成本和破坏性的文件系统操作。
+2026 年，编码 Agent 已成为主导性的 AI 应用类别。Claude Code（Anthropic）、带 Composer 2 和 Agent Tabs 的 Cursor 3（Cursor）、Amp（Sourcegraph）、OpenCode（112k stars）、Factory Droids 和 Google Jules，发布的都是同一架构的变体：终端 harness、带权限控制的工具面、沙箱，以及围绕前沿模型构建的计划—行动—观察循环。前沿很窄 —— Live-SWE-agent 借助 Opus 4.5 在 SWE-bench Verified 上达到 79.2% —— 但工程技艺很宽。大多数失败模式并不是模型的错误，而是工具循环不稳定、上下文污染、失控的 token 成本和破坏性的文件系统操作。
 
-你无法从外部理解这些智能体。你必须亲手构建一个，看着循环在第 47 轮因为 ripgrep 返回 8MB 匹配结果而崩溃，然后重建截断层。这正是这个项目的意义所在。
+你无法从外部理解这些 Agent。你必须亲手构建一个，看着循环在第 47 轮因为 ripgrep 返回 8MB 匹配结果而崩溃，然后重建截断层。这正是这个项目的意义所在。
 
 ## 概念
 
-harness 有四个面。**Plan** 维护一个 TodoWrite 风格的状态对象，由模型每轮重写。**Act** 派发工具调用（读取、编辑、运行、搜索、git）。**Observe** 捕获 stdout / stderr / 退出码，截断后把摘要回传。**Recover** 处理工具错误，既不撑爆上下文窗口，也不无限循环。2026 年的形态还多了一样东西：**hooks**。`PreToolUse`、`PostToolUse`、`SessionStart`、`SessionEnd`、`UserPromptSubmit`、`Notification`、`Stop` 和 `PreCompact` —— 可配置的扩展点，运维者在这里注入策略、遥测和防护栏。
+harness 有四个面。**Plan** 维护一个 TodoWrite 风格的状态对象，由模型每轮重写。**Act** 派发 tool call（读取、编辑、运行、搜索、git）。**Observe** 捕获 stdout / stderr / 退出码，截断后把摘要回传。**Recover** 处理工具错误，既不撑爆上下文窗口，也不无限循环。2026 年的形态还多了一样东西：**hooks**。`PreToolUse`、`PostToolUse`、`SessionStart`、`SessionEnd`、`UserPromptSubmit`、`Notification`、`Stop` 和 `PreCompact` —— 可配置的扩展点，运维者在这里注入策略、遥测和防护栏。
 
 沙箱用 E2B 或 Daytona。每个任务都在全新的 devcontainer 中运行，并以读写方式挂载一个 git worktree。harness 从不触碰宿主机文件系统。无论成功还是失败，worktree 都会被销毁。成本控制在三个层面执行：每轮 token 上限、每会话美元预算，以及硬性轮次上限（通常为 50）。可观测性层是遵循 GenAI 语义约定的 OpenTelemetry span，发送到自托管的 Langfuse。
 
@@ -68,13 +68,13 @@ ce-agent-loop
 
 ## 构建它
 
-1. **TUI 与命令循环。** 用 Ink 搭建一个 Bun 项目。接受 `agent run <repo> "<task>"`。输出分栏视图：计划面板（上）、工具调用流（中）、token 预算（下）。加入 Ctrl-C 取消功能，在退出前触发 `SessionEnd` hook。
+1. **TUI 与命令循环。** 用 Ink 搭建一个 Bun 项目。接受 `agent run <repo> "<task>"`。输出分栏视图：计划面板（上）、tool call 流（中）、token 预算（下）。加入 Ctrl-C 取消功能，在退出前触发 `SessionEnd` hook。
 
-2. **计划状态。** 定义带类型的 TodoWrite schema（pending / in_progress / done 条目，各带备注）。模型每轮以工具调用的形式重写完整状态 —— 不要让它增量修改。把计划持久化到 `.agent/state.json`，以便崩溃后恢复。
+2. **计划状态。** 定义带类型的 TodoWrite schema（pending / in_progress / done 条目，各带备注）。模型每轮以 tool call 的形式重写完整状态 —— 不要让它增量修改。把计划持久化到 `.agent/state.json`，以便崩溃后恢复。
 
 3. **工具面。** 定义六个工具：`read_file`、`edit_file`（带 diff 预览）、`ripgrep`、`tree_sitter_symbols`、`run_shell`（带超时）、`git`（status / diff / commit / push）。通过 MCP StreamableHTTP 暴露，使 harness 与传输方式无关。每个工具都返回截断后的输出（每次调用上限 4k token）。
 
-4. **沙箱封装。** 每个任务启动一个 E2B 沙箱。用 `git worktree add -b agent/$TASK_ID` 创建全新分支。所有工具调用都在沙箱内执行。宿主机文件系统不可达。
+4. **沙箱封装。** 每个任务启动一个 E2B 沙箱。用 `git worktree add -b agent/$TASK_ID` 创建全新分支。所有 tool call 都在沙箱内执行。宿主机文件系统不可达。
 
 5. **Hooks。** 实现 2026 年的全部八种 hook 类型。至少接入四个用户自编 hook：(a) `PreToolUse` 破坏性命令防护，阻止 worktree 之外的 `rm -rf`；(b) `PostToolUse` token 计账；(c) `SessionStart` 预算初始化；(d) `Stop` 写出最终的 trace 包。
 
@@ -108,7 +108,7 @@ $ agent run ./my-repo "Fix the race condition in worker.rs"
 | 25 | SWE-bench Pro pass@1 对比基线 | 在 30 个对齐的 Python 任务上，你的 harness 对比 mini-swe-agent |
 | 20 | 架构清晰度 | 计划/行动/观察的分离、hook 面、工具 schema —— 对照 Live-SWE-agent 的布局评审 |
 | 20 | 安全性 | 沙箱逃逸测试、权限提示、破坏性命令防护通过红队测试 |
-| 20 | 可观测性 | trace 完整性（100% 的工具调用有 span）、每轮 token 计账 |
+| 20 | 可观测性 | trace 完整性（100% 的 tool call 有 span）、每轮 token 计账 |
 | 15 | 开发者体验 | 冷启动 < 2s、崩溃恢复能续上计划、Ctrl-C 能在工具执行中途干净取消 |
 | **100** | | |
 
@@ -116,7 +116,7 @@ $ agent run ./my-repo "Fix the race condition in worker.rs"
 
 1. 把后端模型从 Claude Sonnet 4.7 换成 vLLM 上服务的 Qwen3-Coder-30B。对比 pass@1 和每任务美元成本。报告开源模型在哪些地方表现较差。
 
-2. 增加一个 `reviewer` 子智能体，在提交 PR 前阅读 diff，并可要求进入修订循环。衡量误报的评审是否会让 SWE-bench 通过率降到单智能体基线以下（提示：通常是）。
+2. 增加一个 `reviewer` 子 Agent，在提交 PR 前阅读 diff，并可要求进入修订循环。衡量误报的评审是否会让 SWE-bench 通过率降到单 Agent 基线以下（提示：通常是）。
 
 3. 对沙箱做压力测试：写一个尝试 `curl` 外部 URL 的任务，再写一个尝试在 worktree 之外写入的任务。确认两者都被 PreToolUse hook 拦截。记录这些尝试。
 
@@ -128,8 +128,8 @@ $ agent run ./my-repo "Fix the race condition in worker.rs"
 
 | 术语 | 人们怎么说 | 实际含义 |
 |------|-----------------|------------------------|
-| Harness | 「智能体循环」 | 围绕模型、负责派发工具、维护计划状态并执行预算的代码 |
-| Hook | 「智能体事件监听器」 | 由 harness 在八种生命周期事件之一触发运行的用户自编脚本 |
+| Harness | 「Agent 循环」 | 围绕模型、负责派发工具、维护计划状态并执行预算的代码 |
+| Hook | 「Agent 事件监听器」 | 由 harness 在八种生命周期事件之一触发运行的用户自编脚本 |
 | Worktree | 「Git 沙箱」 | 挂在不同路径上的关联 git checkout；用完即弃，不影响主克隆 |
 | TodoWrite | 「计划状态」 | 模型每轮重写的待处理/进行中/已完成条目的带类型列表 |
 | StreamableHTTP | 「MCP 传输」 | 2026 版 MCP 修订：支持双向流式传输的长连接 HTTP；取代 SSE |
@@ -145,4 +145,4 @@ $ agent run ./my-repo "Fix the race condition in worker.rs"
 - [OpenCode](https://opencode.ai) —— 开源 harness，112k stars
 - [SWE-bench Pro 排行榜](https://www.swebench.com) —— 本项目针对的评测
 - [Model Context Protocol 2026 路线图](https://blog.modelcontextprotocol.io/posts/2026-mcp-roadmap/) —— StreamableHTTP、能力元数据
-- [OpenTelemetry GenAI 语义约定](https://opentelemetry.io/docs/specs/semconv/gen-ai/) —— 工具调用和 token 用量的 span schema
+- [OpenTelemetry GenAI 语义约定](https://opentelemetry.io/docs/specs/semconv/gen-ai/) —— tool call 和 token 用量的 span schema

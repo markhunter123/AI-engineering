@@ -1,6 +1,6 @@
 # Function Calling 深入剖析——OpenAI、Anthropic、Gemini
 
-> 三家前沿供应商在 2024 年收敛到同一个工具调用循环，然后又在其他一切上分道扬镳。OpenAI 用 `tools` 和 `tool_calls`。Anthropic 用 `tool_use` 和 `tool_result` 块。Gemini 用 `functionDeclarations` 和唯一 id 关联。本课并排对比三者，让你为一家供应商写的代码在移植时不会断裂。
+> 三家前沿供应商在 2024 年收敛到同一个 tool call 循环，然后又在其他一切上分道扬镳。OpenAI 用 `tools` 和 `tool_calls`。Anthropic 用 `tool_use` 和 `tool_result` 块。Gemini 用 `functionDeclarations` 和唯一 id 关联。本课并排对比三者，让你为一家供应商写的代码在移植时不会断裂。
 
 **Type:** Build
 **Languages:** Python (stdlib, schema translators)
@@ -11,7 +11,7 @@
 
 - 说出 OpenAI、Anthropic 和 Gemini function-calling 载荷之间的三处形状差异（声明、调用、结果）。
 - 把一份工具声明转换为三家供应商的格式，并预测严格模式约束会在哪里不同。
-- 在各供应商中使用 `tool_choice` 强制、禁止或自动选择工具调用。
+- 在各供应商中使用 `tool_choice` 强制、禁止或自动选择 tool call。
 - 了解各供应商的硬性限制（工具数量、schema 深度、参数长度），以及违反限制时它们各自发出的错误特征。
 
 ## 问题
@@ -24,7 +24,7 @@ function-calling 请求的形状因供应商而异。下面是 2026 年生产栈
 
 **Google Gemini API。** 你传入 `tools: [{functionDeclarations: [{name, description, parameters}]}]`（嵌套在 `functionDeclarations` 下）。响应以 `candidates[0].content.parts: [{functionCall: {name, args, id}}]` 到达，其中 `id` 在 Gemini 3 及以上版本中唯一，用于并行调用关联。你用 `{functionResponse: {name, id, response}}` 回复。
 
-同样的循环。不同的字段名、不同的嵌套、字符串与对象的不同约定、不同的关联机制。一个在 OpenAI 上写天气智能体的团队，仅管道接通就要为移植到 Anthropic 花两天，再为 Gemini 花一天。
+同样的循环。不同的字段名、不同的嵌套、字符串与对象的不同约定、不同的关联机制。一个在 OpenAI 上写天气 Agent 的团队，仅管道接通就要为移植到 Anthropic 花两天，再为 Gemini 花一天。
 
 本课构建一个翻译器，把三种格式统一为一份规范工具声明，并在边界处路由。第 13 阶段 · 17 把同一模式泛化为 LLM 网关。
 
@@ -80,7 +80,7 @@ OpenAI 的 `parallel_tool_calls: true`（默认）在一条 assistant 消息中�
 
 ### 流式
 
-三者都支持流式工具调用。线上的格式不同：
+三者都支持流式 tool call。线上的格式不同：
 
 - **OpenAI。** `tool_calls[i].function.arguments` 的增量块陆续到达。你持续累积，直到 `finish_reason: "tool_calls"`。
 - **Anthropic。** block-start / block-delta / block-stop 事件。`input_json_delta` 块携带部分参数。
@@ -110,7 +110,7 @@ Tool(
 )
 ```
 
-三个小函数把它转换成三种供应商形状。`code/main.py` 中的框架正是这样做的，然后把一次假工具调用在每家供应商的响应形状里往返一遍。无需网络——本课讲的是形状，不是 HTTP。
+三个小函数把它转换成三种供应商形状。`code/main.py` 中的框架正是这样做的，然后把一次假 tool call 在每家供应商的响应形状里往返一遍。无需网络——本课讲的是形状，不是 HTTP。
 
 生产团队会把这一翻译器包进 `AbstractToolset`（Pydantic AI）、`UniversalToolNode`（LangGraph）或 `BaseTool`（LlamaIndex）。第 13 阶段 · 17 交付一个网关，在三者中任意一个前面暴露 OpenAI 形状的 API。
 
@@ -142,20 +142,20 @@ function-call-args
 
 4. 从三家供应商中挑一家，从头到尾读它的 function-calling 指南。找出其 schema 规范中另外两家不支持的一个字段。候选：OpenAI `strict`、Anthropic `disable_parallel_tool_use`、Gemini `function_calling_config.allowed_function_names`。
 
-5. 写一个测试向量：一个参数违反已声明 schema 的工具调用。让它跑一遍各家供应商的校验器（第 01 课的标准库实现可作为代理），记录哪些错误会触发。记录在严格性方面你会为生产选择哪家供应商。
+5. 写一个测试向量：一个参数违反已声明 schema 的 tool call。让它跑一遍各家供应商的校验器（第 01 课的标准库实现可作为代理），记录哪些错误会触发。记录在严格性方面你会为生产选择哪家供应商。
 
 ## 关键术语
 
 | 术语 | 人们怎么说 | 它实际指什么 |
 |------|----------------|------------------------|
-| Function calling | “工具使用” | 供应商层面用于发出结构化工具调用的 API |
+| Function calling | “工具使用” | 供应商层面用于发出结构化 tool call 的 API |
 | Tool declaration | “工具规格” | 名称 + 描述 + JSON Schema 输入载荷 |
 | `tool_choice` | “强制 / 禁止” | auto / required / none / 指定名称模式 |
 | Strict mode | “schema 强制执行” | OpenAI 的标志，用受约束解码匹配 schema |
 | `tool_use` block | “Anthropic 的调用形状” | 带 id、name、input 的内联内容块 |
 | `functionCall` part | “Gemini 的调用形状” | 包含 name、args、id 的 `parts[]` 条目 |
 | Arguments-as-string | “字符串化 JSON” | OpenAI 以 JSON 字符串而非对象返回参数 |
-| Parallel tool calls | “单轮扇出” | 一条 assistant 消息中的多个工具调用 |
+| Parallel tool calls | “单轮扇出” | 一条 assistant 消息中的多个 tool call |
 | Refusal | “模型拒绝” | 仅严格模式下出现的拒绝块，替代调用 |
 | OpenAPI 3.0 subset | “Gemini schema 怪癖” | Gemini 使用带细微差异的类 JSON Schema 方言 |
 

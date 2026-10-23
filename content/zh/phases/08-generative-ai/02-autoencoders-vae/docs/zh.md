@@ -15,7 +15,7 @@
 
 Kingma 2013 年的 VAE 是这样解决的：训练编码器输出一个*分布* $q(z \mid x) = \mathcal{N}(\mu(x), \sigma(x)^2)$，用 KL 惩罚把这个分布拉向先验 $\mathcal{N}(0, I)$，然后在解码前从 $q(z \mid x)$ 中采样 $z$。推理时丢掉编码器，采样 $z \sim \mathcal{N}(0, I)$，解码。KL 惩罚就是让编码空间变得有结构的关键。
 
-2026 年，VAE 很少单独交付——在原始图像质量上它已被扩散模型超越——但它是每个潜在扩散模型（SD 1/2/XL/3、Flux、AudioCraft）首选的编码器。学会 VAE，你就学会了所用图像流水线中那层看不见的第一层。
+2026 年，VAE 很少单独交付——在原始图像质量上它已被扩散模型超越——但它是每个潜在扩散模型（SD 1/2/XL/3、Flux、AudioCraft）首选的编码器。学会 VAE，你就学会了所用图像 pipeline 中那层看不见的第一层。
 
 ## 概念
 
@@ -143,7 +143,7 @@ Skill 输入：数据集概况 + 目标 latent 维度 + 下游用途（重建、
 
 ## 生产说明：VAE 是扩散服务器里最热的路径
 
-在 Stable Diffusion / Flux / SD3 流水线中，每次请求 VAE 会被调用两次——一次编码（如果做 img2img / inpainting），一次解码。在 1024² 下，解码器的这一趟常常是整个流水线中最大的单次激活内存峰值，因为它要把 `128×128×16` 的 latent 上采样回 `1024×1024×3`。两个实际后果：
+在 Stable Diffusion / Flux / SD3 pipeline 中，每次请求 VAE 会被调用两次——一次编码（如果做 img2img / inpainting），一次解码。在 1024² 下，解码器的这一趟常常是整个 pipeline 中最大的单次激活内存峰值，因为它要把 `128×128×16` 的 latent 上采样回 `1024×1024×3`。两个实际后果：
 
 - **切片或分块解码。** `diffusers` 提供 `pipe.vae.enable_slicing()` 和 `pipe.vae.enable_tiling()`。分块用一点接缝伪影换取 $O(\text{tile}^2)$ 内存，而不是 $O(H \cdot W)$。在消费级 GPU 上跑 1024²+ 时必不可少。
 - **bf16 解码器，最终 resize 用 fp32 数值。** SD 1.x 的 VAE 以 fp32 发布，在 1024²+ 下被转成 fp16 时会*静默产生 NaN*。SDXL 提供 `madebyollin/sdxl-vae-fp16-fix`——优先用 fp16-fix 变体，或者用 bf16。

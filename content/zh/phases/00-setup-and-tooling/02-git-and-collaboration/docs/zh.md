@@ -11,7 +11,7 @@
 
 - 配置 git 身份，使用 add、commit、push 的日常工作流
 - 创建并合并分支，进行隔离实验而不破坏 main
-- 编写 `.gitignore`，排除模型检查点和大体积二进制文件
+- 编写 `.gitignore`，排除模型 checkpoint 和大体积二进制文件
 - 使用 `git log` 浏览提交历史，理解项目演进
 
 ## 问题
@@ -104,7 +104,7 @@ git push origin my-progress
 ## 练习
 
 1. Fork 本仓库，克隆你的 fork，创建一个名为 `my-progress` 的分支，创建一个文件，提交并推送
-2. 创建一个 `.gitignore`，排除模型检查点文件（`.pt`、`.pth`、`.safetensors`）
+2. 创建一个 `.gitignore`，排除模型 checkpoint 文件（`.pt`、`.pth`、`.safetensors`）
 3. 使用 `git log --oneline` 查看本仓库的提交历史，了解课程是如何被添加进来的
 
 ### 提示

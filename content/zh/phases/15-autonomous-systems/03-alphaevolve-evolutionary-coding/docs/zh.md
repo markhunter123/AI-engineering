@@ -1,4 +1,4 @@
-# AlphaEvolve —— 进化式编码智能体
+# AlphaEvolve —— 进化式编码 Agent
 
 > 把一个前沿编码模型与进化循环、机器可校验的评测器配在一起。让循环跑得足够久。它发现了一个只用 48 次标量乘法的 4x4 复数矩阵乘法过程——这是 56 年来对 Strassen 的首次改进。它还找到了一个 Google 全局的 Borg 调度启发式，在生产中回收了约 0.7% 的集群算力。这套架构刻意做得很无聊。收益来自评测器的严格。
 
@@ -67,7 +67,7 @@ LLM 能产生可编译、语义上合理的修改。在一个 2000 行的 Python
 | AlphaEvolve | Gemini | 正确性 + 基准 | 算法、内核、调度器 | 48 次乘法的 4x4 矩阵乘 |
 | FunSearch (DeepMind, 2023) | PaLM / Codey | 正确性 | 组合数学 | cap-set 下界 |
 | AI Scientist v2 (Sakana, L5) | GPT/Claude | LLM 批评 + 实验 | ML 研究 | ICLR workshop 论文 |
-| Darwin Godel Machine (L4) | 智能体脚手架 | SWE-bench / Polyglot | 智能体代码 | SWE-bench 20% → 50% |
+| Darwin Godel Machine (L4) | Agent 脚手架 | SWE-bench / Polyglot | Agent 代码 | SWE-bench 20% → 50% |
 
 四者都是同一配方的变体：生成器加评测器，循环。区别在于评测器评什么、有多严格。
 
@@ -105,7 +105,7 @@ alphaevolve-loop
 
 | 术语 | 常见说法 | 实际含义 |
 |---|---|---|
-| AlphaEvolve | 「DeepMind 的进化式编码智能体」 | Gemini + 程序数据库 + 机器可校验评测器 |
+| AlphaEvolve | 「DeepMind 的进化式编码 Agent」 | Gemini + 程序数据库 + 机器可校验评测器 |
 | MAP-elites | 「保持多样性的档案」 | 以特征向量为键的网格；每格保存具有该描述符的最佳变体 |
 | 岛屿模型 | 「并行进化的子种群」 | 独立种群定期迁移；防止过早收敛 |
 | 机器可校验评测器 | 「确定性预言机」 | LLM 无法伪造的单元测试、模拟器或基准——此循环的前提条件 |

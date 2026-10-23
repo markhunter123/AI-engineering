@@ -1,6 +1,6 @@
 # LLM 可观测性技术栈选型
 
-> 2026 年的可观测性市场分为两类。开发平台（LangSmith、Langfuse、Comet Opik）把监控与评估、prompt 管理、会话回放打包在一起。网关/埋点工具（Helicone、SigNoz、OpenLLMetry、Phoenix）专注于遥测。Langfuse 的核心采用 MIT 许可，开源与商业的平衡做得很好（云服务免费额度为每月 5 万事件）。Phoenix 是 OpenTelemetry 原生的，采用 Elastic License 2.0——非常适合漂移/RAG 可视化，但不是持久化的生产后端。Arize AX 采用零拷贝的 Iceberg/Parquet 集成，宣称比单体式可观测性方案便宜 100 倍。LangSmith 在 LangChain/LangGraph 场景领先，每用户每月 39 美元，仅企业版支持自托管。Helicone 基于代理，15-30 分钟即可接入，每月 10 万次请求免费，但在智能体轨迹方面的深度不足。常见的生产模式是：网关（Helicone/Portkey）+ 评估平台（Phoenix/TruLens），用 OpenTelemetry 粘合。
+> 2026 年的可观测性市场分为两类。开发平台（LangSmith、Langfuse、Comet Opik）把监控与评估、prompt 管理、会话回放打包在一起。网关/埋点工具（Helicone、SigNoz、OpenLLMetry、Phoenix）专注于遥测。Langfuse 的核心采用 MIT 许可，开源与商业的平衡做得很好（云服务免费额度为每月 5 万事件）。Phoenix 是 OpenTelemetry 原生的，采用 Elastic License 2.0——非常适合漂移/RAG 可视化，但不是持久化的生产后端。Arize AX 采用零拷贝的 Iceberg/Parquet 集成，宣称比单体式可观测性方案便宜 100 倍。LangSmith 在 LangChain/LangGraph 场景领先，每用户每月 39 美元，仅企业版支持自托管。Helicone 基于代理，15-30 分钟即可接入，每月 10 万次请求免费，但在 Agent 轨迹方面的深度不足。常见的生产模式是：网关（Helicone/Portkey）+ 评估平台（Phoenix/TruLens），用 OpenTelemetry 粘合。
 
 **Type:** Learn
 **Languages:** Python (stdlib, toy trace-sampling simulator)
@@ -61,7 +61,7 @@
 - 把 `OPENAI_API_BASE` 换成 Helicone 代理，15-30 分钟即可完成接入。
 - MIT 许可；每月 10 万次请求免费，付费每月 20 美元起。
 - 包含故障转移、缓存、速率限制——本身也充当网关。
-- 在智能体/多步轨迹方面深度不足。
+- 在 Agent/多步轨迹方面深度不足。
 - 最佳场景：快速起步、单栈应用、需要网关与可观测性二合一。
 
 ### Opik（Comet）——开源开发平台
@@ -86,7 +86,7 @@ OpenTelemetry 在 2025 年末发布了 GenAI 语义约定（`gen_ai.system`、`g
 
 ### 陷阱：在错误的层做埋点
 
-在智能体框架内部埋点（例如添加 LangSmith 轨迹）会让你与该框架耦合。在 HTTP/OpenAI SDK 层埋点（通过 OpenLLMetry 或你的网关）则是可移植的。
+在 Agent 框架内部埋点（例如添加 LangSmith 轨迹）会让你与该框架耦合。在 HTTP/OpenAI SDK 层埋点（通过 OpenLLMetry 或你的网关）则是可移植的。
 
 ### 采样——你不可能全部保留
 
@@ -132,7 +132,7 @@ i4-otel-glue
 | Arize AX | 「规模化可观测性」 | 商业化的零拷贝 Iceberg/Parquet 可观测性 |
 | Helicone | 「代理式可观测性」 | 收集 LLM 遥测的 HTTP 代理 + 网关功能 |
 | Opik | 「Comet 的 LLM 工具」 | Comet 出品的 Apache 2.0 开源开发平台 |
-| Session replay | 「轨迹重放」 | 连同工具调用一起重放完整的智能体会话 |
+| Session replay | 「轨迹重放」 | 连同 tool call 一起重放完整的 Agent 会话 |
 | Eval | 「离线测试」 | 在标注数据集上运行候选模型/prompt |
 
 ## 延伸阅读

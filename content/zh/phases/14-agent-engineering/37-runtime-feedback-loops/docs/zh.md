@@ -1,6 +1,6 @@
 # 运行时反馈回路
 
-> 看不到真实命令输出的智能体只能靠猜。反馈运行器（feedback runner）捕获 stdout、stderr、退出码和耗时，整理成结构化记录供下一轮读取。于是智能体依据事实行动，而不是依据自己对事实的预测。
+> 看不到真实命令输出的 Agent 只能靠猜。反馈运行器（feedback runner）捕获 stdout、stderr、退出码和耗时，整理成结构化记录供下一轮读取。于是 Agent 依据事实行动，而不是依据自己对事实的预测。
 
 **Type:** Build
 **Languages:** Python (stdlib)
@@ -16,9 +16,9 @@
 
 ## 问题
 
-智能体说「现在运行测试」。下一条消息说「所有测试通过」。现实是没有任何测试运行过。智能体想象了输出，或者它运行了命令却从未读取结果，又或者它读了结果，却悄悄截掉了失败的那一行。
+Agent 说「现在运行测试」。下一条消息说「所有测试通过」。现实是没有任何测试运行过。Agent 想象了输出，或者它运行了命令却从未读取结果，又或者它读了结果，却悄悄截掉了失败的那一行。
 
-反馈运行器消除这个缺口。每条命令都经过运行器。每条记录都包含命令、捕获的 stdout 与 stderr、退出码、实际耗时（wall-clock duration），以及一行智能体备注。智能体在下一轮读取记录。验证门在任务结束时读取这些记录。
+反馈运行器消除这个缺口。每条命令都经过运行器。每条记录都包含命令、捕获的 stdout 与 stderr、退出码、实际耗时（wall-clock duration），以及一行 Agent 备注。Agent 在下一轮读取记录。验证门在任务结束时读取这些记录。
 
 ## 概念
 
@@ -42,11 +42,11 @@ flowchart LR
 | `exit_code` | 明确无歧义的成功信号 |
 | `duration_ms` | 暴露缓慢的探测和失控的进程 |
 | `started_at` | 用于重放的时间戳 |
-| `agent_note` | 智能体写下的一行预期说明 |
+| `agent_note` | Agent 写下的一行预期说明 |
 
 ### 截断是确定性的
 
-一条 50 MB 的日志会毁掉整个回路。运行器用 `...truncated N lines...` 标记截取头部和尾部，过程是确定性的：同样的输出总是产生同样的记录。不做采样；智能体需要看到的部分（最终错误、最终汇总）都位于尾部。
+一条 50 MB 的日志会毁掉整个回路。运行器用 `...truncated N lines...` 标记截取头部和尾部，过程是确定性的：同样的输出总是产生同样的记录。不做采样；Agent 需要看到的部分（最终错误、最终汇总）都位于尾部。
 
 ### 反馈与遥测的区别
 
@@ -54,7 +54,7 @@ flowchart LR
 
 ### 没有反馈就不要推进
 
-如果运行器在捕获退出码之前出错，记录会带上 `exit_code: null` 和 `error: <reason>`。智能体回路必须拒绝在 `null` 退出码上宣称成功。没有退出码，就没有进展。
+如果运行器在捕获退出码之前出错，记录会带上 `exit_code: null` 和 `error: <reason>`。Agent 回路必须拒绝在 `null` 退出码上宣称成功。没有退出码，就没有进展。
 
 ```figure
 wb-feedback-loop
@@ -82,7 +82,7 @@ python3 code/main.py
 
 **在写入时脱敏，而不是在读取时。** 任何涉及 stdout 或 stderr 的记录都可能泄露机密。运行器在追加 JSONL 之前执行一遍脱敏：剔除匹配 `^Bearer `、`password=`、`api[_-]?key=`、`AKIA[0-9A-Z]{16}`（AWS）、`xox[baprs]-`（Slack）的行。在读取时脱敏是个陷阱；磁盘上的文件才是攻击者能触及的东西。每季度对照生产运行时观测到的机密格式，审计一次脱敏模式。
 
-**使用轮转策略，而不是单一文件。** 把 `feedback_record.jsonl` 限制为每文件 1 MB；溢出时轮转到 `.1`、`.2`，丢弃 `.5`。智能体回路只读当前文件，因此运行时开销有界。CI 制品存储保留完整的轮转集合。没有轮转，这个文件会在每次加载器调用时成为瓶颈。
+**使用轮转策略，而不是单一文件。** 把 `feedback_record.jsonl` 限制为每文件 1 MB；溢出时轮转到 `.1`、`.2`，丢弃 `.5`。Agent 回路只读当前文件，因此运行时开销有界。CI 制品存储保留完整的轮转集合。没有轮转，这个文件会在每次加载器调用时成为瓶颈。
 
 **为重试链记录父命令 id。** 每条记录都有 `command_id`；重试携带 `parent_command_id`，指向上一次尝试。审查者的「失败尝试」列表（第 14 阶段 · 40）与验证门的审计都会沿着这条链追溯。没有这个链接，重试看起来像彼此独立的成功，审计会掩盖失败历史。
 
@@ -90,7 +90,7 @@ python3 code/main.py
 
 生产模式：
 
-- **Claude Code Bash 工具。** 该工具本身已经捕获 stdout、stderr、退出码和耗时。本课中的运行器是与框架无关的等价物，适用于任何智能体产品。
+- **Claude Code Bash 工具。** 该工具本身已经捕获 stdout、stderr、退出码和耗时。本课中的运行器是与框架无关的等价物，适用于任何 Agent 产品。
 - **LangGraph 节点。** 把任意 shell 节点包进运行器，记录就能持久化在图状态之外。
 - **CI 日志。** 把 JSONL 管道到 CI 制品存储；审查者可以重放任何命令，而无需重跑会话。
 
@@ -98,7 +98,7 @@ python3 code/main.py
 
 ## 交付它
 
-`outputs/skill-feedback-runner.md` 生成一份项目专属的 `run_with_feedback.py`：包含合适的截断预算、接入工作台的 JSONL 写入器，以及智能体每轮都会读取的加载器。
+`outputs/skill-feedback-runner.md` 生成一份项目专属的 `run_with_feedback.py`：包含合适的截断预算、接入工作台的 JSONL 写入器，以及 Agent 每轮都会读取的加载器。
 
 ## 练习
 
@@ -115,7 +115,7 @@ python3 code/main.py
 | Feedback record | 「Run log」 | 包含命令、输出、退出码、耗时的结构化 JSONL 条目 |
 | Tail truncation | 「Trim the log」 | 确定性的头+尾捕获，让记录能放进 token 预算 |
 | Refuse-on-null | 「Block on missing data」 | `exit_code` 为 null 时，回路不得推进 |
-| Agent note | 「Expectation tag」 | 智能体在读取结果前写下的一行预测 |
+| Agent note | 「Expectation tag」 | Agent 在读取结果前写下的一行预测 |
 | Telemetry split | 「Two log files」 | 反馈给下一轮，遥测给操作员 |
 
 ## 延伸阅读
@@ -123,9 +123,9 @@ python3 code/main.py
 - [OpenTelemetry GenAI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/)
 - [Anthropic, Effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)
 - [Guardrails AI x MLflow — deterministic safety, PII, quality validators](https://guardrailsai.com/blog/guardrails-mlflow) —— 把脱敏模式当作回归测试
-- [Aport.io, Best AI Agent Guardrails 2026: Pre-Action Authorization Compared](https://aport.io/blog/best-ai-agent-guardrails-2026-pre-action-authorization-compared/) —— 工具调用前后的捕获
+- [Aport.io, Best AI Agent Guardrails 2026: Pre-Action Authorization Compared](https://aport.io/blog/best-ai-agent-guardrails-2026-pre-action-authorization-compared/) —— tool call 前后的捕获
 - [Andrii Furmanets, AI Agents in 2026: Practical Architecture for Tools, Memory, Evals, Guardrails](https://andriifurmanets.com/blogs/ai-agents-2026-practical-architecture-tools-memory-evals-guardrails) —— 可观测性表面
 - 第 14 阶段 · 23——遥测侧的 OTel GenAI 约定
-- 第 14 阶段 · 24——智能体可观测性平台（Langfuse、Phoenix、Opik）
+- 第 14 阶段 · 24——Agent 可观测性平台（Langfuse、Phoenix、Opik）
 - 第 14 阶段 · 33——要求在宣布完成前提供反馈的规则
 - 第 14 阶段 · 38——读取 JSONL 的验证门

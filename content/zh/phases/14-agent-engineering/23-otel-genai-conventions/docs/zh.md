@@ -1,6 +1,6 @@
 # OpenTelemetry GenAI 语义约定
 
-> OpenTelemetry 的 GenAI SIG（2024 年 4 月启动）为智能体遥测定义了标准 schema。span 名称、属性和内容捕获规则在各厂商之间趋于一致，因此智能体 trace 在 Datadog、Grafana、Jaeger 和 Honeycomb 中含义相同。
+> OpenTelemetry 的 GenAI SIG（2024 年 4 月启动）为 Agent 遥测定义了标准 schema。span 名称、属性和内容捕获规则在各厂商之间趋于一致，因此 Agent trace 在 Datadog、Grafana、Jaeger 和 Honeycomb 中含义相同。
 
 **Type:** Learn + Build
 **Languages:** Python (stdlib)
@@ -23,22 +23,22 @@
 ### Span 类别
 
 1. **Model / client span。** 覆盖原始 LLM 调用。由 provider SDK（Anthropic、OpenAI、Bedrock）和框架的模型适配器发出。
-2. **Agent span。** `create_agent`（智能体构建时）和 `invoke_agent`（运行时）。
-3. **Tool span。** 每次工具调用一个；通过父子关系连接到 agent span。
+2. **Agent span。** `create_agent`（Agent 构建时）和 `invoke_agent`（运行时）。
+3. **Tool span。** 每次 tool call 一个；通过父子关系连接到 agent span。
 
 ### Agent span 命名
 
 - Span 名称：若已命名，为 `invoke_agent {gen_ai.agent.name}`；否则回退到 `invoke_agent`。
 - Span 类型：
-  - **CLIENT** — 用于远程智能体服务（OpenAI Assistants API、Bedrock Agents）。
-  - **INTERNAL** — 用于进程内智能体框架（LangChain、CrewAI、本地 ReAct）。
+  - **CLIENT** — 用于远程 Agent 服务（OpenAI Assistants API、Bedrock Agents）。
+  - **INTERNAL** — 用于进程内 Agent 框架（LangChain、CrewAI、本地 ReAct）。
 
 ### 关键属性
 
 - `gen_ai.provider.name` — `anthropic`、`openai`、`aws.bedrock`、`google.vertex`。
 - `gen_ai.request.model` — 模型 ID。
 - `gen_ai.response.model` — 解析后的模型（可能因路由而与请求不同）。
-- `gen_ai.agent.name` — 智能体标识符。
+- `gen_ai.agent.name` — Agent 标识符。
 - `gen_ai.operation.name` — `chat`、`completion`、`invoke_agent`、`tool_call`。
 - `gen_ai.data_source.id` — 用于 RAG：咨询了哪个语料库或存储。
 
@@ -81,7 +81,7 @@ ae-genai-span-tree
 
 - `Span`，带 GenAI 属性 schema。
 - `Tracer`，带 `start_span`、嵌套上下文。
-- 一次脚本化的智能体运行，发出：`create_agent`、`invoke_agent`（INTERNAL）、每个工具一个 span、LLM 调用的 `chat` span。
+- 一次脚本化的 Agent 运行，发出：`create_agent`、`invoke_agent`（INTERNAL）、每个工具一个 span、LLM 调用的 `chat` span。
 - 一个内容捕获模式，把 prompt 存到外部并在 span 上记录 ID。
 
 运行它：
@@ -101,7 +101,7 @@ python3 code/main.py
 
 ## 交付它
 
-`outputs/skill-otel-genai.md` 把 OTel GenAI span 接入现有智能体，带内容捕获默认值和外部引用存储。
+`outputs/skill-otel-genai.md` 把 OTel GenAI span 接入现有 Agent，带内容捕获默认值和外部引用存储。
 
 ## 练习
 
@@ -116,9 +116,9 @@ python3 code/main.py
 | 术语 | 人们怎么说 | 实际含义 |
 |------|----------------|------------------------|
 | GenAI SIG | 「OpenTelemetry GenAI 小组」 | 定义 schema 的 OTel 工作组 |
-| invoke_agent | 「智能体 span」 | 表示一次智能体运行的 span 名称 |
-| CLIENT span | 「远程调用」 | 调用远程智能体服务的 span |
-| INTERNAL span | 「进程内」 | 进程内智能体运行的 span |
+| invoke_agent | 「Agent span」 | 表示一次 Agent 运行的 span 名称 |
+| CLIENT span | 「远程调用」 | 调用远程 Agent 服务的 span |
+| INTERNAL span | 「进程内」 | 进程内 Agent 运行的 span |
 | gen_ai.provider.name | 「provider」 | anthropic / openai / aws.bedrock / google.vertex |
 | gen_ai.data_source.id | 「RAG 来源」 | 检索命中来自哪个语料库/存储 |
 | 内容捕获 | 「prompt 日志」 | opt-in 捕获消息；生产环境存到外部 |

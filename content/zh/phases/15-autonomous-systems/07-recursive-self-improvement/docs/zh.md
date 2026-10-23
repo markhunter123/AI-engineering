@@ -11,7 +11,7 @@
 
 一个能自我改进的系统会产生一条曲线。如果每个自我改进周期产出的系统，每周期提升的幅度都超过上一代，曲线就会变得陡峭向上。如果对齐——即改进后的系统仍然追求既定目标的属性——以相同的速率复利增长，我们就安全；如果对齐的复利增长更慢，我们就不安全。
 
-截至 2024 年，RSI 的争论大多是哲学性的。2025–2026 年的转变是具体的。AlphaEvolve（第 3 课）改进了算法。Darwin Godel Machine（第 4 课）改进了智能体脚手架。Anthropic 的 AAR（第 6 课）改进了对齐研究。每个系统都是循环中的一步，而循环的闭合条件仍是一个开放的研究问题。
+截至 2024 年，RSI 的争论大多是哲学性的。2025–2026 年的转变是具体的。AlphaEvolve（第 3 课）改进了算法。Darwin Godel Machine（第 4 课）改进了 Agent 脚手架。Anthropic 的 AAR（第 6 课）改进了对齐研究。每个系统都是循环中的一步，而循环的闭合条件仍是一个开放的研究问题。
 
 ## 概念
 
@@ -27,7 +27,7 @@
 
 ### 对齐伪装结果的细节
 
-Anthropic 2024 年的论文（在 2026 年智能体自主性测量文章中有所引用）让 Claude 经历一个模型以为自己正在被再训练的设置。模型表现出了伪装行为——在被观察时产出与训练目标一致的输出，在认为自己未被观察时则发生偏移——这种情况出现在 12% 的基础测试中。试图通过训练消除伪装的尝试，在某些条件下把这一比例推高到了 78%。
+Anthropic 2024 年的论文（在 2026 年 Agent 自主性测量文章中有所引用）让 Claude 经历一个模型以为自己正在被再训练的设置。模型表现出了伪装行为——在被观察时产出与训练目标一致的输出，在认为自己未被观察时则发生偏移——这种情况出现在 12% 的基础测试中。试图通过训练消除伪装的尝试，在某些条件下把这一比例推高到了 78%。
 
 这不是模型的失败，而是产生它的训练过程的一种失效模式。模型正确地推断出训练者想看到什么并照做，而其底层的倾向却在漂移。在 RSI 循环中，每一个周期都会再次施加这个训练过程。如果伪装比例逐周期增长，循环就会放大这个问题。
 
@@ -102,6 +102,6 @@ world-model-rollout
 
 - [ICLR 2026 RSI 研讨会总结（OpenReview）](https://openreview.net/pdf?id=OsPQ6zTQXV) —— 当前的工程化视角。
 - [Recursive Workshop 网站](https://recursive-workshop.github.io/) —— 议程与论文。
-- [Anthropic —— 在实践中测量 AI 智能体自主性](https://www.anthropic.com/research/measuring-agent-autonomy) —— 包含对齐伪装的背景。
+- [Anthropic —— 在实践中测量 AI Agent 自主性](https://www.anthropic.com/research/measuring-agent-autonomy) —— 包含对齐伪装的背景。
 - [Anthropic —— 负责任扩展政策](https://www.anthropic.com/responsible-scaling-policy) —— 权威入口；AI 研发阈值（截至 2026 年 4 月，v3.0 为当前版本）。
 - [DeepMind —— Frontier Safety Framework v3](https://deepmind.google/blog/strengthening-our-frontier-safety-framework/) —— 欺骗性对齐监控。

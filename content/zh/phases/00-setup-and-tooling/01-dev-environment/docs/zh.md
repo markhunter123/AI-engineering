@@ -84,7 +84,7 @@ print(f"Vector: {a}, dot product with itself: {np.dot(a, a)}")
 
 ### 步骤 3：用 pnpm 安装 Node.js
 
-用于 TypeScript 课程（智能体、MCP 服务器、Web 应用）。
+用于 TypeScript 课程（Agent、MCP 服务器、Web 应用）。
 
 ```bash
 curl -fsSL https://fnm.vercel.app/install | bash
@@ -195,7 +195,7 @@ Next: python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vector
 | 语言 | 使用场景 | 包管理器 |
 |----------|---------|-----------------|
 | Python | 阶段 1-12（机器学习、深度学习、NLP、计算机视觉、音频、LLM） | uv |
-| TypeScript | 阶段 13-17（工具、智能体、群体智能、基础设施） | pnpm |
+| TypeScript | 阶段 13-17（工具、Agent、群体智能、基础设施） | pnpm |
 | Rust | 阶段 12、15-17（性能关键型系统） | cargo |
 | Julia | 阶段 1（数学基础） | Pkg |
 
@@ -203,7 +203,7 @@ Next: python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vector
 
 本节课产出一个验证脚本，任何人都可以运行它来检查自己的设置。
 
-查看 `outputs/prompt-env-check.md`，获取帮助 AI 助手诊断环境问题的提示词。
+查看 `outputs/prompt-env-check.md`，获取帮助 AI 助手诊断环境问题的 prompt。
 
 ## 练习
 

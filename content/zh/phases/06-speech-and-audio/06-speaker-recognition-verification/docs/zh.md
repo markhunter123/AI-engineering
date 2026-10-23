@@ -17,9 +17,9 @@
 
 ## 概念
 
-![注册 + 验证流水线：嵌入 + 余弦 + EER](../assets/speaker-verification.svg)
+![注册 + 验证 pipeline：嵌入 + 余弦 + EER](../assets/speaker-verification.svg)
 
-**流水线。** 注册：录制目标说话人 5–30 秒的音频；计算固定维度嵌入（ECAPA-TDNN 为 192 维，WavLM-large 为 256 维）。验证：获取测试话语的嵌入；计算余弦相似度；与阈值比较。
+**Pipeline。** 注册：录制目标说话人 5–30 秒的音频；计算固定维度嵌入（ECAPA-TDNN 为 192 维，WavLM-large 为 256 维）。验证：获取测试话语的嵌入；计算余弦相似度；与阈值比较。
 
 **ECAPA-TDNN（2020 年，2026 年仍占主导）。** Emphasized Channel Attention, Propagation and Aggregation - Time-Delay Neural Network。1D 卷积块带 squeeze-excitation，多头注意力池化，后接一个线性层输出 192 维。在 VoxCeleb 1+2（2,700 位说话人、110 万条话语）上用加性角度 margin 损失（AAM-softmax）训练。
 
@@ -47,7 +47,7 @@
 
 ### 说话人分离（Diarization）
 
-多说话人音频中的「谁在什么时候说话」。流水线：VAD → 分割 → 对每段计算嵌入 → 聚类（凝聚式或谱聚类）→ 平滑边界。现代技术栈：`pyannote.audio` 3.1，一次调用打包说话人分割 + 嵌入 + 聚类。2026 年 AMI 上的 SOTA DER 约为 15%（2022 年为 23%）。
+多说话人音频中的「谁在什么时候说话」。Pipeline：VAD → 分割 → 对每段计算嵌入 → 聚类（凝聚式或谱聚类）→ 平滑边界。现代技术栈：`pyannote.audio` 3.1，一次调用打包说话人分割 + 嵌入 + 聚类。2026 年 AMI 上的 SOTA DER 约为 15%（2022 年为 23%）。
 
 ```figure
 sp-eer-crossover
@@ -152,7 +152,7 @@ for turn, _, speaker in diarization.itertracks(yield_label=True):
 
 1. **简单。** 运行 `code/main.py`。它构建合成的「说话人」（不同音调轮廓），完成注册，并在 100 对的试验列表上计算 EER。
 2. **中等。** 在 30 条 VoxCeleb1 话语（5 位说话人 × 各 6 条）上使用 SpeechBrain ECAPA。分别用余弦与 PLDA 计算 EER。
-3. **困难。** 用 `pyannote.audio` 构建完整的注册 → 说话人分离 → 验证流水线。在 AMI 开发集上评估 DER。
+3. **困难。** 用 `pyannote.audio` 构建完整的注册 → 说话人分离 → 验证 pipeline。在 AMI 开发集上评估 DER。
 
 ## 关键术语
 

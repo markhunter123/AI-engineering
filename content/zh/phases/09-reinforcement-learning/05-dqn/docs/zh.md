@@ -1,6 +1,6 @@
 # 深度 Q 网络（DQN）
 
-> 2013 年：Mnih 用原始像素训练了一个 Q-learning 网络，在七款 Atari 游戏上击败了所有经典 RL 智能体。2015 年：扩展到 49 款游戏，发表在 Nature 上，点燃了深度 RL 时代。DQN 就是 Q-learning 加上三个让函数逼近稳定下来的技巧。
+> 2013 年：Mnih 用原始像素训练了一个 Q-learning 网络，在七款 Atari 游戏上击败了所有经典 RL Agent。2015 年：扩展到 49 款游戏，发表在 Nature 上，点燃了深度 RL 时代。DQN 就是 Q-learning 加上三个让函数逼近稳定下来的技巧。
 
 **Type:** Build
 **Languages:** Python
@@ -128,7 +128,7 @@ for episode in range(N):
         s = s_next
 ```
 
-在我们这个状态为 16 维 one-hot 的微型 GridWorld 上，智能体约 500 个回合学到接近最优的策略。Atari 上则要把这个规模放大到 2 亿帧，并加上 CNN 特征提取器。
+在我们这个状态为 16 维 one-hot 的微型 GridWorld 上，Agent 约 500 个回合学到接近最优的策略。Atari 上则要把这个规模放大到 2 亿帧，并加上 CNN 特征提取器。
 
 ## 常见陷阱
 

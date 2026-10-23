@@ -128,8 +128,8 @@ Refuse to deploy without (a) a zero-shot sim-variant test, (b) a safety shield, 
 
 ## 练习
 
-1. **简单。** 在固定打滑的 GridWorld（slip=0.0）上训练 Q-learning 智能体。在 $\text{slip} \in \lbrace 0.0, 0.1, 0.3, 0.5 \rbrace$ 上评估。画出回报随打滑的变化。
-2. **中等。** 训练一个采样 `slip ~ Uniform[0, 0.3]` 的 DR Q-learning 智能体。评估同样的扫描。在 slip=0.5（分布外）时 DR 带来了多少收益？
+1. **简单。** 在固定打滑的 GridWorld（slip=0.0）上训练 Q-learning Agent。在 $\text{slip} \in \lbrace 0.0, 0.1, 0.3, 0.5 \rbrace$ 上评估。画出回报随打滑的变化。
+2. **中等。** 训练一个采样 `slip ~ Uniform[0, 0.3]` 的 DR Q-learning Agent。评估同样的扫描。在 slip=0.5（分布外）时 DR 带来了多少收益？
 3. **困难。** 实现一个课程：从 slip=0.0 开始，每次政策达到最优的 90% 就加宽 DR 范围。测量达到 slip=0.3 零样本所需的总环境步数，与固定 DR 基线对比。
 
 ## 关键术语
@@ -153,5 +153,5 @@ Refuse to deploy without (a) a zero-shot sim-variant test, (b) a safety shield, 
 - [Miki et al. (2022). Learning robust perceptive locomotion for quadrupedal robots in the wild](https://www.science.org/doi/10.1126/scirobotics.abk2822) — ANYmal 的教师-学生。
 - [Makoviychuk et al. (2021). Isaac Gym: High Performance GPU Based Physics Simulation for Robot Learning](https://arxiv.org/abs/2108.10470) — 驱动 2025–2026 年部署的大规模并行仿真。
 - [Akkaya et al. (2019). Automatic Domain Randomization](https://arxiv.org/abs/1910.07113) — ADR 课程方法。
-- [Sutton & Barto (2018). Ch. 8 — Planning and Learning with Tabular Methods](http://incompleteideas.net/book/RLbook2020.pdf) — Dyna 框架（用模型做规划 + rollout），它是现代 sim-to-real 流水线的基础。
+- [Sutton & Barto (2018). Ch. 8 — Planning and Learning with Tabular Methods](http://incompleteideas.net/book/RLbook2020.pdf) — Dyna 框架（用模型做规划 + rollout），它是现代 sim-to-real pipeline 的基础。
 - [Zhao, Queralta & Westerlund (2020). Sim-to-Real Transfer in Deep Reinforcement Learning for Robotics: a Survey](https://arxiv.org/abs/2009.13303) — sim-to-real 方法的分类学与基准结果。

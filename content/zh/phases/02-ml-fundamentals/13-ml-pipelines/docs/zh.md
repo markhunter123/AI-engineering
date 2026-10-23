@@ -1,6 +1,6 @@
-# 机器学习流水线
+# 机器学习 pipeline
 
-> 模型不是产品，流水线才是。流水线涵盖从原始数据到部署预测的全过程，每一步都必须可复现。
+> 模型不是产品，pipeline 才是。Pipeline 涵盖从原始数据到部署预测的全过程，每一步都必须可复现。
 
 **Type:** Build
 **Language:** Python
@@ -9,10 +9,10 @@
 
 ## 学习目标
 
-- 从零构建一条机器学习流水线，把插补、缩放、编码和模型训练串联成单一可复现对象
-- 识别数据泄漏场景，并解释流水线如何仅在训练数据上拟合转换器来避免泄漏
+- 从零构建一条机器学习 pipeline，把插补、缩放、编码和模型训练串联成单一可复现对象
+- 识别数据泄漏场景，并解释 pipeline 如何仅在训练数据上拟合转换器来避免泄漏
 - 构建 ColumnTransformer，对数值特征和类别特征应用不同的预处理
-- 实现流水线序列化，并证明同一个拟合后的流水线在训练环境与生产环境产生一致结果
+- 实现 pipeline 序列化，并证明同一个拟合后的 pipeline 在训练环境与生产环境产生一致结果
 
 ## 问题
 
@@ -20,13 +20,13 @@
 
 一个月后有人重新训练模型，得到了不同结果。原来中位数是在包含测试数据的完整数据集上计算的（数据泄漏）。缩放参数没有保存，推理时用了不同的统计量。特征工程代码在训练端和服务端被复制粘贴，两份副本逐渐分化。某个类别特征在生产中出现了编码器从未见过的新取值。
 
-这些不是假设，而是机器学习系统在生产中最常见的失效原因。流水线把所有转换步骤打包成一个有序的、可复现的对象，一次性解决这些问题。
+这些不是假设，而是机器学习系统在生产中最常见的失效原因。Pipeline 把所有转换步骤打包成一个有序的、可复现的对象，一次性解决这些问题。
 
 ## 概念
 
-### 什么是流水线
+### 什么是 pipeline
 
-流水线是一组有序的数据转换后接一个模型。每一步以前一步的输出为输入。整条流水线在训练数据上拟合一次。推理时，同一个拟合后的流水线转换新数据并给出预测。
+pipeline 是一组有序的数据转换后接一个模型。每一步以前一步的输出为输入。整条 pipeline 在训练数据上拟合一次。推理时，同一个拟合后的 pipeline 转换新数据并给出预测。
 
 ```mermaid
 flowchart LR
@@ -37,15 +37,15 @@ flowchart LR
     E --> F[Prediction]
 ```
 
-流水线保证：
+pipeline 保证：
 - 转换器只在训练数据上拟合（无泄漏）
 - 推理时应用同样的转换
 - 整个对象可以序列化并作为一个工件部署
-- 交叉验证按折应用流水线，防止细微泄漏
+- 交叉验证按折应用 pipeline，防止细微泄漏
 
 ### 数据泄漏：无声的杀手
 
-当测试集或未来数据的信息污染了训练时，就发生了数据泄漏。流水线能防止最常见的泄漏形式。
+当测试集或未来数据的信息污染了训练时，就发生了数据泄漏。Pipeline 能防止最常见的泄漏形式。
 
 **错误（泄漏）：**
 ```python
@@ -70,7 +70,7 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 ```
 
-使用流水线时，你无需手动考虑这些。流水线自动处理。
+使用 pipeline 时，你无需手动考虑这些。Pipeline 自动处理。
 
 ### sklearn Pipeline
 
@@ -134,7 +134,7 @@ full_pipeline = Pipeline([
 
 ### 实验追踪
 
-流水线让训练可复现，但你还需要追踪每次实验发生了什么：用了哪些超参数、哪个数据集版本、什么指标、哪份代码在运行。
+pipeline 让训练可复现，但你还需要追踪每次实验发生了什么：用了哪些超参数、哪个数据集版本、什么指标、哪份代码在运行。
 
 **MLflow** 是最常见的开源方案：
 
@@ -220,7 +220,7 @@ def set_seed(seed=42):
         pass
 ```
 
-### 从 Notebook 到生产流水线
+### 从 Notebook 到生产 pipeline
 
 ```mermaid
 flowchart TD
@@ -244,15 +244,15 @@ flowchart TD
 4. **配置管理：** 把所有超参数移入 YAML/JSON 配置
 5. **实验追踪：** 加入 MLflow 或 wandb 记录
 6. **数据验证：** 训练前检查 schema、分布和缺失值模式
-7. **测试：** 转换器的单元测试、整条流水线的集成测试
-8. **部署：** 序列化流水线，用 API（FastAPI、Flask）封装，再容器化
+7. **测试：** 转换器的单元测试、整条 pipeline 的集成测试
+8. **部署：** 序列化 pipeline，用 API（FastAPI、Flask）封装，再容器化
 
-### 常见流水线错误
+### 常见 pipeline 错误
 
 | 错误 | 为什么不好 | 修复 |
 |------|------------|------|
 | 拆分前在全部数据上拟合 | 数据泄漏 | 用 Pipeline 配合 cross_val_score |
-| 在流水线外做特征工程 | 训练与服务端转换不一致 | 把所有转换放进 Pipeline |
+| 在 pipeline 外做特征工程 | 训练与服务端转换不一致 | 把所有转换放进 Pipeline |
 | 不处理未知类别 | 生产中遇到新取值时崩溃 | OneHotEncoder(handle_unknown="ignore") |
 | 硬编码列名 | schema 变化时失效 | 从配置中读取列名列表 |
 | 没有数据验证 | 坏数据进入时静默给出错误预测 | 预测前添加 schema 检查 |
@@ -264,7 +264,7 @@ f3-pipeline-flow
 
 ## 构建它
 
-`code/pipeline.py` 从零构建了一条完整的机器学习流水线：
+`code/pipeline.py` 从零构建了一条完整的机器学习 pipeline：
 
 ### 第 1 步：自定义转换器
 
@@ -287,7 +287,7 @@ class CustomTransformer:
         return self.fit(X).transform(X)
 ```
 
-### 第 2 步：从零实现流水线
+### 第 2 步：从零实现 pipeline
 
 ```python
 class PipelineFromScratch:
@@ -310,31 +310,31 @@ class PipelineFromScratch:
         return model.predict(X_current)
 ```
 
-### 第 3 步：带流水线的交叉验证
+### 第 3 步：带 pipeline 的交叉验证
 
-代码演示了如何用流水线做交叉验证来防止数据泄漏：scaler 在每一折的训练数据上分别拟合。
+代码演示了如何用 pipeline 做交叉验证来防止数据泄漏：scaler 在每一折的训练数据上分别拟合。
 
-### 第 4 步：完整的生产级 sklearn 流水线
+### 第 4 步：完整的生产级 sklearn pipeline
 
-一条包含 `ColumnTransformer`、多条预处理路径、模型、合理交叉验证和实验日志记录的完整流水线。
+一条包含 `ColumnTransformer`、多条预处理路径、模型、合理交叉验证和实验日志记录的完整 pipeline。
 
 ## 交付它
 
 本节课生成：
-- `outputs/prompt-ml-pipeline.md` -- 构建与调试机器学习流水线的 skill
-- `code/pipeline.py` -- 从零实现到 sklearn 的完整流水线
+- `outputs/prompt-ml-pipeline.md` -- 构建与调试机器学习 pipeline 的 skill
+- `code/pipeline.py` -- 从零实现到 sklearn 的完整 pipeline
 
 ## 练习
 
-1. 构建一条处理 3 个数值列和 2 个类别列的数据集的流水线。用 `ColumnTransformer` 对数值列做中位数插补 + 缩放，对类别列做最频繁值插补 + one-hot 编码。用 5 折交叉验证训练。
+1. 构建一条处理 3 个数值列和 2 个类别列的数据集的 pipeline。用 `ColumnTransformer` 对数值列做中位数插补 + 缩放，对类别列做最频繁值插补 + one-hot 编码。用 5 折交叉验证训练。
 
-2. 故意引入数据泄漏：在拆分前用全部数据拟合 scaler。比较泄漏的交叉验证分数与流水线交叉验证分数。差距有多大？
+2. 故意引入数据泄漏：在拆分前用全部数据拟合 scaler。比较泄漏的交叉验证分数与 pipeline 交叉验证分数。差距有多大？
 
-3. 用 `joblib.dump` 序列化你的流水线，在另一个脚本中加载并运行预测。验证预测结果完全一致。
+3. 用 `joblib.dump` 序列化你的 pipeline，在另一个脚本中加载并运行预测。验证预测结果完全一致。
 
-4. 向流水线中添加一个自定义转换器，为两个最重要的数值列创建二阶多项式特征。它应该放在流水线的哪个位置？
+4. 向 pipeline 中添加一个自定义转换器，为两个最重要的数值列创建二阶多项式特征。它应该放在 pipeline 的哪个位置？
 
-5. 为流水线设置 MLflow 追踪。运行 5 组不同超参数的实验。用 MLflow UI（`mlflow ui`）比较运行并选出最佳模型。
+5. 为 pipeline 设置 MLflow 追踪。运行 5 组不同超参数的实验。用 MLflow UI（`mlflow ui`）比较运行并选出最佳模型。
 
 ## 关键术语
 
@@ -342,7 +342,7 @@ class PipelineFromScratch:
 |------|----------|----------|
 | Pipeline | "转换 + 模型链" | 一组有序拟合转换器加一个模型，作为一个整体应用以防止泄漏 |
 | Data leakage | "测试信息漏进训练" | 使用训练集之外的信息构建模型，虚高性能估计 |
-| ColumnTransformer | "每列不同预处理" | 对不同列子集应用不同流水线，再合并结果 |
+| ColumnTransformer | "每列不同预处理" | 对不同列子集应用不同 pipeline，再合并结果 |
 | Experiment tracking | "记录运行" | 记录每次训练的参数、指标、工件和代码版本 |
 | MLflow | "追踪与部署模型" | 开源的实验追踪、模型注册与部署平台 |
 | DVC | "数据的 Git" | 大文件版本控制系统，哈希存在 git，数据存在远程存储 |
@@ -352,7 +352,7 @@ class PipelineFromScratch:
 
 ## 延伸阅读
 
-- [scikit-learn Pipeline docs](https://scikit-learn.org/stable/modules/compose.html) -- 官方流水线参考
+- [scikit-learn Pipeline docs](https://scikit-learn.org/stable/modules/compose.html) -- 官方 pipeline 参考
 - [MLflow documentation](https://mlflow.org/docs/latest/index.html) -- 实验追踪与模型注册
 - [DVC documentation](https://dvc.org/doc) -- 数据版本控制
 - [Sculley et al., Hidden Technical Debt in Machine Learning Systems (2015)](https://papers.nips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html) -- 机器学习系统复杂性的奠基论文

@@ -1,6 +1,6 @@
-# 工具使用与函数调用
+# 工具使用与 Function calling
 
-> Toolformer（Schick 等，2023）开创了自监督的工具标注。Berkeley Function Calling Leaderboard V4（Patil 等，2025）设定了 2026 年的标准：40% 智能体、30% 多轮、10% 实时、10% 非实时、10% 幻觉。单轮已经解决。记忆、动态决策和长时程工具链还没有。
+> Toolformer（Schick 等，2023）开创了自监督的工具标注。Berkeley Function Calling Leaderboard V4（Patil 等，2025）设定了 2026 年的标准：40% Agent、30% 多轮、10% 实时、10% 非实时、10% 幻觉。单轮已经解决。记忆、动态决策和长时程工具链还没有。
 
 **Type:** Build
 **Languages:** Python (stdlib)
@@ -16,9 +16,9 @@
 
 ## 问题
 
-早期的工具使用问的是：模型能否预测出正确的函数调用？现代的工具使用问的是：模型能否在 40 步中串联工具，带记忆、带部分可观测性、能从工具失败中恢复，而且不会幻觉出不存在的工具？
+早期的工具使用问的是：模型能否预测出正确的 function call？现代的工具使用问的是：模型能否在 40 步中串联工具，带记忆、带部分可观测性、能从工具失败中恢复，而且不会幻觉出不存在的工具？
 
-Toolformer 奠定了基线：模型可以通过自监督学会何时调用工具。BFCL V4 定义了 2026 年的评估目标。两者之间的差距，就是生产智能体所处的空间。
+Toolformer 奠定了基线：模型可以通过自监督学会何时调用工具。BFCL V4 定义了 2026 年的评估目标。两者之间的差距，就是生产 Agent 所处的空间。
 
 ## 概念
 
@@ -34,15 +34,15 @@ Toolformer 奠定了基线：模型可以通过自监督学会何时调用工具
 
 BFCL 是 2026 年事实上的评估基准。V4 的构成：
 
-- **智能体（Agentic，40%）**——完整的智能体轨迹：记忆、多轮、动态决策。
+- **Agent（Agentic，40%）**——完整的 Agent 轨迹：记忆、多轮、动态决策。
 - **多轮（Multi-Turn，30%）**——带工具链的交互式对话。
 - **实时（Live，10%）**——用户提交的真实 prompt（分布更难）。
 - **非实时（Non-Live，10%）**——合成测试用例。
 - **幻觉（Hallucination，10%）**——检测本不应调用任何工具的情况。
 
-V3 引入了基于状态的评估：在一串工具调用之后，检查 API 的实际状态（例如「文件是否已创建？」），而不是匹配工具调用的 AST。V4 增加了网页搜索、记忆和格式敏感性类别。
+V3 引入了基于状态的评估：在一串 tool call 之后，检查 API 的实际状态（例如「文件是否已创建？」），而不是匹配 tool call 的 AST。V4 增加了网页搜索、记忆和格式敏感性类别。
 
-2026 年的关键发现：单轮函数调用接近解决。失败集中在记忆（跨轮携带上下文）、动态决策（根据先前结果选择工具）、长时程链条（20 步后漂移）和幻觉检测（没有合适工具时拒绝调用）。
+2026 年的关键发现：单轮 function calling 接近解决。失败集中在记忆（跨轮携带上下文）、动态决策（根据先前结果选择工具）、长时程链条（20 步后漂移）和幻觉检测（没有合适工具时拒绝调用）。
 
 ### 工具 schema
 
@@ -58,7 +58,7 @@ Anthropic 直接使用 `input_schema`。OpenAI 使用 `function.parameters`。�
 
 ### 参数校验
 
-不要信任任何工具调用。要校验：
+不要信任任何 tool call。要校验：
 
 1. **类型强制转换。** 模型可能在 schema 要求 int 的地方返回字符串 "5"。无歧义时转换；有歧义时拒绝。
 2. **枚举校验。** 如果 schema 要求 `status in {"open", "closed"}` 而模型输出了 `"in_progress"`，就用带有说明的错误拒绝。
@@ -67,11 +67,11 @@ Anthropic 直接使用 `input_schema`。OpenAI 使用 `function.parameters`。�
 
 每一次校验失败都应返回结构化的观察，好让模型用正确的形状重试。
 
-### 并行工具调用
+### 并行 tool calls
 
 现代供应商支持在同一个助手轮中并行调用工具。循环是：
 
-1. 模型发出 3 次工具调用，各自带有不同的 `tool_use_id`。
+1. 模型发出 3 次 tool call，各自带有不同的 `tool_use_id`。
 2. 运行时执行它们（若相互独立则并行）。
 3. 每个结果作为一个 `tool_result` 块返回，通过 `tool_use_id` 关联。
 
@@ -101,11 +101,11 @@ tool-routing
 python3 code/main.py
 ```
 
-轨迹展示一个迷你智能体在一轮中调用三个工具，其中一个调用被故意写成畸形，被拒绝并返回模型可据以行动的描述性错误。
+轨迹展示一个迷你 Agent 在一轮中调用三个工具，其中一个调用被故意写成畸形，被拒绝并返回模型可据以行动的描述性错误。
 
 ## 使用它
 
-每个供应商都有自己的工具 schema——Anthropic、OpenAI、Gemini、Bedrock。如果你需要多供应商支持，就使用一层转换（OpenAI Agents SDK、Vercel AI SDK、LangChain 工具适配器）。BFCL 是参考基准——如果工具使用是产品的核心，上线前拿它跑一遍你的智能体。
+每个供应商都有自己的工具 schema——Anthropic、OpenAI、Gemini、Bedrock。如果你需要多供应商支持，就使用一层转换（OpenAI Agents SDK、Vercel AI SDK、LangChain 工具适配器）。BFCL 是参考基准——如果工具使用是产品的核心，上线前拿它跑一遍你的 Agent。
 
 ## 交付它
 
@@ -116,18 +116,18 @@ python3 code/main.py
 1. 增加一个「no-op」工具，让模型可以显式拒绝使用任何其他工具。在类 BFCL 的幻觉测试上度量效果。
 2. 为 int 写成字符串和 float 写成字符串实现参数强制转换。强制转换从什么时候开始掩盖真正的 bug？
 3. 增加按工具的超时和熔断器（连续 3 次失败后 60 秒内拒绝该工具）。这会如何改变模型的恢复方式？
-4. 阅读 BFCL V4 的说明。选一个类别（例如「多轮」），用你的智能体跑 10 个示例 prompt。报告通过率。
+4. 阅读 BFCL V4 的说明。选一个类别（例如「多轮」），用你的 Agent 跑 10 个示例 prompt。报告通过率。
 5. 把 stdlib 校验器移植到 Pydantic 或 Zod。Pydantic/Zod 抓住了哪些玩具实现漏掉的问题？
 
 ## 关键术语
 
 | 术语 | 人们常怎么说 | 实际含义 |
 |------|----------------|------------------------|
-| Function calling | 「工具使用」 | 带校验 schema 的结构化输出式工具调用 |
+| Function calling | 「工具使用」 | 带校验 schema 的结构化输出式 tool call |
 | Toolformer | 「自监督工具标注」 | Schick 2023——只保留结果能降低下一 token 损失的调用 |
-| BFCL | 「Berkeley Function Calling Leaderboard」 | 2026 年基准：40% 智能体、30% 多轮、10% 实时、10% 非实时、10% 幻觉 |
+| BFCL | 「Berkeley Function Calling Leaderboard」 | 2026 年基准：40% Agent、30% 多轮、10% 实时、10% 非实时、10% 幻觉 |
 | Tool schema | 「给模型看的函数签名」 | 名称、描述、参数的 JSON Schema |
-| tool_use_id | 「关联 ID」 | 把工具调用与结果绑定；并行分派必不可少 |
+| tool_use_id | 「关联 ID」 | 把 tool call 与结果绑定；并行分派必不可少 |
 | Hallucination detection | 「知道何时不该调用」 | V4 类别：没有合适工具时拒绝调用 |
 | Argument coercion | 「字符串转 int 修复」 | 针对可预测的 schema 不匹配做窄范围修复；有歧义时拒绝 |
 | Sandboxing | 「工具执行边界」 | 按工具限定读写范围、网络、超时、内存上限 |

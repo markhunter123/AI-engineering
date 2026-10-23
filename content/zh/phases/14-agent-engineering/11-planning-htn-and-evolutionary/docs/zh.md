@@ -16,7 +16,7 @@
 
 ## 问题
 
-ReWOO（第 02 课）、Plan-and-Execute 和 ReAct 覆盖了多数智能体规划。有两种情况它们覆盖得不好：
+ReWOO（第 02 课）、Plan-and-Execute 和 ReAct 覆盖了多数 Agent 规划。有两种情况它们覆盖得不好：
 
 1. **需要可证明正确性的计划。** 调度、飞行路径、合规工作流——计划必须在构造上就是可靠的。一个流利的 LLM 计划偶尔幻觉出一个步骤，是不可接受的。
 2. **具有机器可检查适应度函数的优化。** 矩阵乘法、调度启发式、编译器 pass——目标不是「一个正确的计划」，而是「最好的计划」。
@@ -85,7 +85,7 @@ AlphaEvolve（arXiv:2506.13131，DeepMind，2025 年 6 月）是另一类东西�
 
 - **没有算子的 HTN。** 没有前置条件/效果 schema，可靠性主张就会崩塌。ChatHTN 的「LLM 建议分解」要求 schema 能拒绝非法动作。
 - **没有真实评估器的 AlphaEvolve。** 「问 LLM 代码是不是更好」不是适应度函数。评估器必须是确定性的且快速。
-- **过度工程。** 多数智能体任务两者都不需要。先考虑 ReAct 或 ReWOO。
+- **过度工程。** 多数 Agent 任务两者都不需要。先考虑 ReAct 或 ReWOO。
 
 ```figure
 htn-tree-expand
@@ -111,7 +111,7 @@ python3 code/main.py
 - **HTN 规划器** —— `pyhop`、`SHOP3`，或为领域特定的策略执行自建一个。
 - **ChatHTN** —— 研究代码；该模式（符号 + LLM 回退）可以干净地移植到任何 HTN 规划器。
 - **AlphaEvolve** —— DeepMind 论文；该模式（集成 + 评估器）可复现。OpenEvolve 及类似开源分支正在出现。
-- **智能体框架** —— 尚无框架内置 HTN 或 AlphaEvolve。把它作为子智能体或后台 worker 来构建。
+- **Agent 框架** —— 尚无框架内置 HTN 或 AlphaEvolve。把它作为子 Agent 或后台 worker 来构建。
 
 ## 交付它
 

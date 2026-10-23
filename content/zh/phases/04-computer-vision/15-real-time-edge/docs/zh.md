@@ -244,7 +244,7 @@ def compare_regimes():
 
 本节课产出：
 
-- `outputs/prompt-edge-deployment-planner.md` —— 一个根据目标设备和延迟 SLA，选择骨干网络、量化策略和运行时的提示词。
+- `outputs/prompt-edge-deployment-planner.md` —— 一个根据目标设备和延迟 SLA，选择骨干网络、量化策略和运行时的 prompt。
 - `outputs/skill-latency-profiler.md` —— 一个编写完整延迟基准测试脚本的技能，包含预热、同步、百分位数和内存跟踪。
 
 ## 练习

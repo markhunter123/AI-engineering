@@ -224,7 +224,7 @@ graph LR
 
 在知识密集型任务上，ReAct 胜过纯 CoT，因为它能把推理扎根于真实数据。在多跳问答 HotpotQA 上，ReAct 配合 GPT-4 的精确匹配率为 35.1%，而单独 CoT 为 29.4%。真正的威力在于，推理错误会被观察结果纠正——模型可以在执行中途更新计划。
 
-ReAct 是现代 AI 智能体的基础。每个智能体框架（LangChain、CrewAI、AutoGen）都实现了 Thought-Action-Observation 循环的某种变体。你会在第 14 阶段构建完整的智能体。本课只讲 prompting 模式。
+ReAct 是现代 AI Agent 的基础。每个 Agent 框架（LangChain、CrewAI、AutoGen）都实现了 Thought-Action-Observation 循环的某种变体。你会在第 14 阶段构建完整的 Agent。本课只讲 prompting 模式。
 
 ### 结构化 prompt：XML 标签、分隔符与标题
 
@@ -570,7 +570,7 @@ result = dspy.majority(
 - [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903) —— Wei 等人，2022。Google Brain 的原始 CoT 论文。核心结果见第 2-3 节。
 - [Self-Consistency Improves Chain of Thought Reasoning in Language Models](https://arxiv.org/abs/2203.11171) —— Wang 等人，2023。自洽性论文。表 1 有你需要的数据。
 - [Tree of Thoughts: Deliberate Problem Solving with Large Language Models](https://arxiv.org/abs/2305.10601) —— Yao 等人，2023。ToT 论文。第 4 节的 Game of 24 结果最精彩。
-- [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629) —— Yao 等人，2022。现代 AI 智能体的基础。第 3 节解释了 Thought-Action-Observation 循环。
+- [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629) —— Yao 等人，2022。现代 AI Agent 的基础。第 3 节解释了 Thought-Action-Observation 循环。
 - [Large Language Models are Zero-Shot Reasoners](https://arxiv.org/abs/2205.11916) —— Kojima 等人，2022。「Let's think step by step」论文。方法简单得令人意外，却出奇有效。
 - [DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines](https://arxiv.org/abs/2310.03714) —— Khattab 等人，2023。把 prompting 当成编译问题。如果你想超越手工 prompt 工程，值得一读。
 - [OpenAI — Reasoning models guide](https://platform.openai.com/docs/guides/reasoning) —— 厂商指南：思维链何时变成内部的、按 token 计费的「推理」模式，何时只是 prompt 层面的技巧。

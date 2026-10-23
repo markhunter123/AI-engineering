@@ -1,6 +1,6 @@
 # 指令遵循作为对齐信号
 
-> 此后每一篇对 RLHF 的批评，针对的都是这条流水线。在研究优化压力如何扭曲代理指标之前，你必须先看清这个代理本身。InstructGPT（Ouyang 等，2022）定义了参考架构：在指令-回复对上做监督微调，用在成对偏好排序上训练的奖励模型，再以 PPO 针对奖励模型优化，并施加对 SFT 策略的 KL 惩罚。一个 1.3B 的 InstructGPT 被标注者偏好的程度超过了 175B 的 GPT-3。正是这一个结果，让 2026 年的每一家前沿实验室仍在交付 RLHF 形态的后训练流水线。
+> 此后每一篇对 RLHF 的批评，针对的都是这条 pipeline。在研究优化压力如何扭曲代理指标之前，你必须先看清这个代理本身。InstructGPT（Ouyang 等，2022）定义了参考架构：在指令-回复对上做监督微调，用在成对偏好排序上训练的奖励模型，再以 PPO 针对奖励模型优化，并施加对 SFT 策略的 KL 惩罚。一个 1.3B 的 InstructGPT 被标注者偏好的程度超过了 175B 的 GPT-3。正是这一个结果，让 2026 年的每一家前沿实验室仍在交付 RLHF 形态的后训练 pipeline。
 
 **Type:** Learn
 **Languages:** Python (stdlib, toy three-stage pipeline)
@@ -9,7 +9,7 @@
 
 ## 学习目标
 
-- 说出 InstructGPT 流水线的三个阶段，以及每个阶段所用的损失。
+- 说出 InstructGPT pipeline 的三个阶段，以及每个阶段所用的损失。
 - 解释为什么一个 1.3B 的指令微调模型能在人类偏好评估上胜过原始 175B 的 GPT-3。
 - 说明第 3 阶段的 KL 惩罚在防范什么，以及去掉它为什么会退化为模式寻求（mode-seeking）行为。
 - 描述对齐税（alignment tax），以及 Ouyang 等人用来抵消它的 PPO-ptx 缓解方案。
@@ -71,7 +71,7 @@ PPO-ptx 成了标准做法。Anthropic、DeepMind 和 Meta 都使用某种变体
 
 ### 为什么这是第 18 阶段的参照点
 
-后续每一课中的批评——奖励黑客（第 2 课）、DPO（第 3 课）、谄媚（第 4 课）、CAI（第 5 课）、睡眠智能体（第 7 课）、对齐伪装（第 9 课）——都在攻击这条流水线的某个部分。奖励黑客攻击阶段 2。DPO 把阶段 2 和 3 合并成一步。CAI 替换人类标注者。谄媚说明标注者本身就是有偏的信号。对齐伪装说明策略可以完全绕过阶段 3。脑子里没有这条流水线，任何批评都跟不上。
+后续每一课中的批评——奖励黑客（第 2 课）、DPO（第 3 课）、谄媚（第 4 课）、CAI（第 5 课）、睡眠 Agent（第 7 课）、对齐伪装（第 9 课）——都在攻击这条 pipeline 的某个部分。奖励黑客攻击阶段 2。DPO 把阶段 2 和 3 合并成一步。CAI 替换人类标注者。谄媚说明标注者本身就是有偏的信号。对齐伪装说明策略可以完全绕过阶段 3。脑子里没有这条 pipeline，任何批评都跟不上。
 
 ```figure
 al-instruct-pipeline
@@ -89,7 +89,7 @@ al-instruct-pipeline
 
 ## 交付它
 
-本课产出 `outputs/skill-instructgpt-explainer.md`。给定一段 RLHF 流水线描述或论文摘要，它识别出被修改的是三个阶段中的哪一个、每个阶段使用什么损失，以及是否存在 KL 惩罚或等价的正则项。
+本课产出 `outputs/skill-instructgpt-explainer.md`。给定一段 RLHF pipeline 描述或论文摘要，它识别出被修改的是三个阶段中的哪一个、每个阶段使用什么损失，以及是否存在 KL 惩罚或等价的正则项。
 
 ## 练习
 
@@ -117,7 +117,7 @@ al-instruct-pipeline
 
 ## 延伸阅读
 
-- [Ouyang 等人 —— Training language models to follow instructions with human feedback（arXiv:2203.02155）](https://arxiv.org/abs/2203.02155) —— InstructGPT 论文，此后每条 RLHF 流水线的基础
+- [Ouyang 等人 —— Training language models to follow instructions with human feedback（arXiv:2203.02155）](https://arxiv.org/abs/2203.02155) —— InstructGPT 论文，此后每条 RLHF pipeline 的基础
 - [Stiennon 等人 —— Learning to summarize from human feedback（arXiv:2009.01325）](https://arxiv.org/abs/2009.01325) —— 用于摘要任务的 RLHF 前身
 - [Christiano 等人 —— Deep reinforcement learning from human preferences（arXiv:1706.03741）](https://arxiv.org/abs/1706.03741) —— 最初的基于偏好的 RL 表述
-- [Bai 等人 —— Training a Helpful and Harmless Assistant with RLHF（arXiv:2204.05862）](https://arxiv.org/abs/2204.05862) —— Anthropic 对 InstructGPT 流水线的 HH（有用且无害）扩展
+- [Bai 等人 —— Training a Helpful and Harmless Assistant with RLHF（arXiv:2204.05862）](https://arxiv.org/abs/2204.05862) —— Anthropic 对 InstructGPT pipeline 的 HH（有用且无害）扩展

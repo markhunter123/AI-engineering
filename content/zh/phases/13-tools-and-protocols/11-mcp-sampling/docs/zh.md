@@ -213,7 +213,7 @@ python3 main.py
 python3 -m unittest discover tests -v
 ```
 
-预期的检查点：
+预期的 checkpoint：
 
 - 发现返回一个带 `ttlMs` 和 `cacheScope` 的完整结果。
 - 工具发现返回同一个已排序的描述符，带 `resultType`、服务器身份和缓存提示。

@@ -250,7 +250,7 @@ def sample(G, n=16, z_dim=64, device="cpu"):
     return imgs.clamp(0, 1)
 ```
 
-采样前务必切换到 eval 模式。对 DCGAN 而言这很重要，因为 batch norm 会使用运行统计量而非当前批次的统计量。
+采样前务必切换到 eval 模式。对 DCGAN 而言这很重要，因为 batch norm 会使用运行统计量而非当前 batch 的统计量。
 
 ### 第 6 步：谱归一化
 

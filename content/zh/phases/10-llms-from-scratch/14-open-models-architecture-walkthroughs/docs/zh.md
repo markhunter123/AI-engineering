@@ -196,13 +196,13 @@ Llama 3 8B 的 config：
 
 ### 激活内存预算
 
-在几十亿参数以上，激活值主导训练内存。预训练的经验法则（使用梯度检查点时）：
+在几十亿参数以上，激活值主导训练内存。预训练的经验法则（使用梯度 checkpoint 时）：
 
 ```
 activation_mem ~ batch_size * seq_len * hidden_size * num_layers * bytes_per_element
 ```
 
-对 Llama 3 8B，batch 1、序列 8192、BF16、32 层、hidden 4096：仅激活值，开检查点约 8 GB，不开约 40 GB。这就是 flash-attention 和 ring-attention 重要的原因——它们重写注意力计算，让激活值放得下。
+对 Llama 3 8B，batch 1、序列 8192、BF16、32 层、hidden 4096：仅激活值，开 checkpoint 约 8 GB，不开约 40 GB。这就是 flash-attention 和 ring-attention 重要的原因——它们重写注意力计算，让激活值放得下。
 
 ### KV Cache 预算
 

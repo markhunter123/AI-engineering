@@ -11,13 +11,13 @@
 ## 学习目标
 
 - 实现保留文档结构与上下文的高级分块策略（语义、递归、父子）
-- 构建混合搜索流水线，结合 BM25 关键词匹配、语义向量搜索和交叉编码器重排序器
+- 构建混合搜索 pipeline，结合 BM25 关键词匹配、语义向量搜索和交叉编码器重排序器
 - 应用查询变换技术（HyDE、多查询、步退查询）以改善模糊或复杂问题的检索
 - 诊断并修复常见的 RAG 故障：检索到错误的块、答案不在上下文中、多跳推理中断
 
 ## 问题
 
-你在第 06 课构建了一条基础 RAG 流水线。它能在小型语料库上回答直截了当的问题。现在试试这些：
+你在第 06 课构建了一条基础 RAG pipeline。它能在小型语料库上回答直截了当的问题。现在试试这些：
 
 **模糊查询**："上个季度的收入是多少？"语义搜索返回的是关于收入战略、收入预测以及 CFO 对收入增长看法的块。它们都与"收入"这个词语义相似，但没有一个包含实际数字。正确的块写着"2025 年 Q3 为 4720 万美元"，但用的是"收益"（earnings）而不是"收入"（revenue）。embedding 模型认为"收入战略"比"Q3 收益为 4720 万美元"更接近查询。
 
@@ -246,7 +246,7 @@ def reciprocal_rank_fusion(ranked_lists, k=60):
     return fused
 ```
 
-### 第 3 步：混合搜索流水线
+### 第 3 步：混合搜索 pipeline
 
 ```python
 def hybrid_search(query, chunks, vector_embeddings, vocab, idf, bm25_index, top_k=5, fusion_k=60):
@@ -502,7 +502,7 @@ alpha 参数控制平衡：0.0 = 纯关键词（BM25），1.0 = 纯向量，0.5 
 
 2. 实现元数据过滤。为每份文档添加 "category" 字段（security、billing、api、product）。在运行向量搜索之前，把块过滤到只保留相关类别。用 "What encryption is used?" 测试，验证它只搜索 security 类别的块。
 
-3. 使用第 06 课的简单生成函数构建完整的 HyDE 流水线。在全部 5 个测试查询上比较直接查询搜索与 HyDE 搜索的检索质量（top-3 相关性）。HyDE 应能改善模糊查询的结果。
+3. 使用第 06 课的简单生成函数构建完整的 HyDE pipeline。在全部 5 个测试查询上比较直接查询搜索与 HyDE 搜索的检索质量（top-3 相关性）。HyDE 应能改善模糊查询的结果。
 
 4. 在示例文档上实现父子分块策略。使用 child_size=30、parent_size=100。用子块搜索，但在提示中返回父块。把生成的答案与 chunk_size=50 的标准分块相比较。
 
@@ -529,7 +529,7 @@ alpha 参数控制平衡：0.0 = 纯关键词（BM25），1.0 = 纯向量，0.5 
 - Cormack 等人，"Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods"（2009）——RRF 的原始论文，表明它优于更复杂的融合方法
 - Gao 等人，"Precise Zero-Shot Dense Retrieval without Relevance Labels"（2022）——HyDE 论文，证明假设性文档 embedding 无需任何训练数据就能改善检索
 - Nogueira & Cho, "Passage Re-ranking with BERT"（2019）——表明在 BM25 之上做交叉编码器重排序能显著提升检索质量
-- [Khattab 等人，"DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines"（2023）](https://arxiv.org/abs/2310.03714)——把提示构造和权重选择视为检索流水线上的优化问题；读这篇了解如何"编程 LLM"而不是"提示 LLM"。
+- [Khattab 等人，"DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines"（2023）](https://arxiv.org/abs/2310.03714)——把提示构造和权重选择视为检索 pipeline 上的优化问题；读这篇了解如何"编程 LLM"而不是"提示 LLM"。
 - [Edge 等人，"From Local to Global: A Graph RAG Approach to Query-Focused Summarization"（Microsoft Research 2024）](https://arxiv.org/abs/2404.16130)——GraphRAG 论文：实体-关系抽取 + Leiden 社区检测用于查询聚焦摘要；全局检索与局部检索的区分。
-- [Asai 等人，"Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection"（ICLR 2024）](https://arxiv.org/abs/2310.11511)——带反思 token 的自我评估 RAG；超越静态"先检索再生成"的智能体式前沿。
+- [Asai 等人，"Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection"（ICLR 2024）](https://arxiv.org/abs/2310.11511)——带反思 token 的自我评估 RAG；超越静态"先检索再生成"的 Agent 式前沿。
 - [LangChain Query Construction 博客](https://blog.langchain.dev/query-construction/)——如何把自然语言查询转换为结构化数据库查询（Text-to-SQL、Cypher），作为检索前的步骤。

@@ -9,7 +9,7 @@
 
 ## 学习目标
 
-- 把推理流水线拆成 Thinker（文本推理）和 Talker（语音合成），并解释并行流式为何可行。
+- 把推理 pipeline 拆成 Thinker（文本推理）和 Talker（语音合成），并解释并行流式为何可行。
 - 逐组件计算一次对话交互的首个音频字节时间（TTFAB）预算。
 - 描述 TMRoPE 在 Thinker 内部跨越视觉、音频和文本的时间对齐位置编码。
 - 说出三种实时对话模式：半双工、轮流发言、全双工。
@@ -56,7 +56,7 @@ TMRoPE 给每个 token 分配绝对时间戳。视觉 token 在 t=2.3s。音频 
 
 ### 流式语音合成
 
-语音 token 必须流式输出。Mini-Omni（Xie & Wu，2024）提出了「语言模型可以在流式思考的同时听和说」：Thinker 的输出 token 和 Talker 的输出 token 交错在同一条序列里。Thinker 一旦确定下一个文本 token，Talker 立即启动。没有批次边界。
+语音 token 必须流式输出。Mini-Omni（Xie & Wu，2024）提出了「语言模型可以在流式思考的同时听和说」：Thinker 的输出 token 和 Talker 的输出 token 交错在同一条序列里。Thinker 一旦确定下一个文本 token，Talker 立即启动。没有 batch 边界。
 
 Moshi（Défossez 等，2024 年 10 月）是最快的开源实现。单张 A100 上 TTFAB 为 160ms。架构：单个 7B Transformer 在交替位置上输出文本和语音 token，并用「内心独白」把思考流和说话流分开。这实际上是通过精心训练把 Thinker + Talker 融为一个模型。
 
@@ -101,7 +101,7 @@ l5-thinker-talker
 
 `code/main.py`：
 
-- 用模拟的 token 输出速率仿真 Thinker-Talker 流水线。
+- 用模拟的 token 输出速率仿真 Thinker-Talker pipeline。
 - 为可配置的模型规模和麦克风采样率计算 TTFAB。
 - 演示带 VAD 静音阈值的半双工轮流发言。
 

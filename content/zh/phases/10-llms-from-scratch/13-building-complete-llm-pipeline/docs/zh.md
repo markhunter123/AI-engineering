@@ -184,7 +184,7 @@ graph LR
 多数前沿团队已经收敛到同一套骨架。
 
 - Tokenizer：128k BPE，带 byte fallback。在一个小而均衡的多语言切片上训练。
-- 预训练：10-20T token，以网页、代码和合成数据为主。Muon 或 AdamW 优化器。FSDP2 或 DeepSpeed ZeRO-3。梯度检查点。BF16 权重，FP32 master。
+- 预训练：10-20T token，以网页、代码和合成数据为主。Muon 或 AdamW 优化器。FSDP2 或 DeepSpeed ZeRO-3。梯度 checkpoint。BF16 权重，FP32 master。
 - SFT：50 万到 200 万条指令对，人类与合成数据混合，并严格对评估集去重。
 - 对齐：DPO 或 CAI + GRPO。只有当偏好信号对 DPO 来说过于多维时，才用 RLHF。
 - 评估：MMLU-Pro、MATH、HumanEval+、GPQA、SWE-Bench Verified、LiveBench，外加一个公众永远看不到的私有留出集。

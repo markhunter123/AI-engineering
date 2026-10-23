@@ -1,6 +1,6 @@
 # 人在回路：先提议后提交
 
-> 2026 年关于 HITL 的共识是具体的。它不是「智能体询问，用户点击 Approve」。它是先提议后提交：提议的操作以幂等键持久化到持久化存储；连同意图、数据血缘、触及的权限、爆炸半径和回滚计划一起呈现给审查者；只有在明确确认后才提交；执行后进行验证，确认副作用确实发生。LangGraph 的 `interrupt()` 加 PostgreSQL checkpointing、Microsoft Agent Framework 的 `RequestInfoEvent`、Cloudflare 的 `waitForApproval()` 都实现同一形态。典型的失效模式是橡皮图章式批准：「Approve?」未经审查就被点击。有文档记录的缓解措施是带明确检查清单的挑战-应答。
+> 2026 年关于 HITL 的共识是具体的。它不是「Agent 询问，用户点击 Approve」。它是先提议后提交：提议的操作以幂等键持久化到持久化存储；连同意图、数据血缘、触及的权限、爆炸半径和回滚计划一起呈现给审查者；只有在明确确认后才提交；执行后进行验证，确认副作用确实发生。LangGraph 的 `interrupt()` 加 PostgreSQL checkpointing、Microsoft Agent Framework 的 `RequestInfoEvent`、Cloudflare 的 `waitForApproval()` 都实现同一形态。典型的失效模式是橡皮图章式批准：「Approve?」未经审查就被点击。有文档记录的缓解措施是带明确检查清单的挑战-应答。
 
 **Type:** Learn
 **Languages:** Python (stdlib, propose-then-commit state machine with idempotency)
@@ -9,24 +9,24 @@
 
 ## 问题
 
-一个智能体执行一个操作。用户必须决定：批准还是不批准。如果决策是瞬间的，它很可能不是审查。如果决策是结构化的，它很慢但可信。工程问题是：如何让结构化审查成为阻力最小的路径。
+一个 Agent 执行一个操作。用户必须决定：批准还是不批准。如果决策是瞬间的，它很可能不是审查。如果决策是结构化的，它很慢但可信。工程问题是：如何让结构化审查成为阻力最小的路径。
 
-2023 年时代的 HITL 模式是同步提示：「智能体想向 X 发送正文为 Y 的邮件——批准？」用户点击 Approve。所有人都觉得系统是安全的。实践中这个界面被大量橡皮图章化：用户批准得很快，批准几乎预测不了什么，而当智能体出错时，审计轨迹显示一长串用户无法回忆的批准记录。
+2023 年时代的 HITL 模式是同步提示：「Agent 想向 X 发送正文为 Y 的邮件——批准？」用户点击 Approve。所有人都觉得系统是安全的。实践中这个界面被大量橡皮图章化：用户批准得很快，批准几乎预测不了什么，而当 Agent 出错时，审计轨迹显示一长串用户无法回忆的批准记录。
 
-2026 年的模式——先提议后提交——把 HITL 移到持久化基座上，附加结构化元数据，并要求明确提交。每个托管智能体 SDK 都提供一个版本：LangGraph `interrupt()`、Microsoft Agent Framework `RequestInfoEvent`、Cloudflare `waitForApproval()`。API 名称不同；形态相同。
+2026 年的模式——先提议后提交——把 HITL 移到持久化基座上，附加结构化元数据，并要求明确提交。每个托管 Agent SDK 都提供一个版本：LangGraph `interrupt()`、Microsoft Agent Framework `RequestInfoEvent`、Cloudflare `waitForApproval()`。API 名称不同；形态相同。
 
 ## 概念
 
 ### 先提议后提交状态机
 
-1. **提议。** 智能体产生一个提议的操作。持久化到持久化存储（PostgreSQL、Redis、Durable Object）。包括：
-   - 意图（智能体为什么这样做）
+1. **提议。** Agent 产生一个提议的操作。持久化到持久化存储（PostgreSQL、Redis、Durable Object）。包括：
+   - 意图（Agent 为什么这样做）
    - 数据血缘（是什么来源导致了这个提议）
    - 触及的权限（哪些 scope / 文件 / 端点）
    - 爆炸半径（最坏情况是什么）
    - 回滚计划（如果提交了，我们如何撤销）
    - 幂等键（每个提议唯一；重新提交返回同一条记录）
-2. **呈现。** 审查者看到带有全部元数据的提议。审查者是人（不是智能体自我审查）。
+2. **呈现。** 审查者看到带有全部元数据的提议。审查者是人（不是 Agent 自我审查）。
 3. **提交。** 明确确认。操作执行。
 4. **验证。** 执行后，读回副作用并确认。如果验证步骤失败，系统处于已知的坏状态，告警启动。
 
@@ -34,11 +34,11 @@
 
 没有幂等键，瞬时故障后的重试可能重复执行一个已批准的操作。具体例子：用户批准「从 A 向 B 转账 100 美元」。网络抖动。工作流重试。用户只批准了一次，但转账执行了两次。幂等键把批准绑定到单一、唯一的副作用上；第二次执行是空操作。
 
-这与 Stripe 和 AWS API 使用的幂等模式相同。把它复用到智能体批准上，在 Microsoft Agent Framework 文档中有明确说明。
+这与 Stripe 和 AWS API 使用的幂等模式相同。把它复用到 Agent 批准上，在 Microsoft Agent Framework 文档中有明确说明。
 
 ### 持久性：为什么批准能比进程活得久
 
-批准等待室是智能体不拥有的一块状态。工作流被暂停（第 12 课）。当批准到达时，工作流从正是那个点恢复。这就是为什么 LangGraph 把 `interrupt()` 与 PostgreSQL checkpointing 配对，而不只是内存状态——两天后到达的批准仍然能找到完好的工作流。
+批准等待室是 Agent 不拥有的一块状态。工作流被暂停（第 12 课）。当批准到达时，工作流从正是那个点恢复。这就是为什么 LangGraph 把 `interrupt()` 与 PostgreSQL checkpointing 配对，而不只是内存状态——两天后到达的批准仍然能找到完好的工作流。
 
 ### 橡皮图章式批准与挑战-应答缓解措施
 
@@ -48,7 +48,7 @@ HITL 的默认 UI（「Approve」/「Reject」按钮）产生快速、没有真�
 - 「你验证过爆炸半径可以接受吗？[ ]」
 - 「如果失败，你有回滚计划吗？[ ]」
 
-不是为官僚而官僚——而是强制函数。无法勾选的审查者要么要求澄清（升级），要么拒绝（安全默认）。Anthropic 的智能体安全研究明确把检查清单驱动的 HITL 列为橡皮图章批准模式的缓解措施。
+不是为官僚而官僚——而是强制函数。无法勾选的审查者要么要求澄清（升级），要么拒绝（安全默认）。Anthropic 的 Agent 安全研究明确把检查清单驱动的 HITL 列为橡皮图章批准模式的缓解措施。
 
 ### 什么算有后果
 
@@ -107,6 +107,6 @@ mx-propose-then-commit
 
 - [Microsoft Agent Framework —— 人在回路](https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop) —— `RequestInfoEvent`、持久化批准。
 - [Cloudflare Agents —— 人在回路](https://developers.cloudflare.com/agents/concepts/human-in-the-loop/) —— `waitForApproval()` 与 Durable Objects。
-- [Anthropic —— 在实践中衡量智能体自主性](https://www.anthropic.com/research/measuring-agent-autonomy) —— 作为长视野风险缓解措施的 HITL。
+- [Anthropic —— 在实践中衡量 Agent 自主性](https://www.anthropic.com/research/measuring-agent-autonomy) —— 作为长视野风险缓解措施的 HITL。
 - [EU AI Act —— 第 14 条：人类监督](https://artificialintelligenceact.eu/article/14/) —— 高风险系统的监管基线。
 - [Anthropic —— Claude 的宪法（2026 年 1 月）](https://www.anthropic.com/news/claudes-constitution) —— 围绕监督的宪法框架。

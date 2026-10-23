@@ -1,6 +1,6 @@
 # 编排模式：监督者、蜂群、层级式
 
-> 四种编排模式在 2026 年的框架中反复出现：监督者-工作者、蜂群 / 点对点、层级式、辩论。Anthropic 的指导：「关键在于为你的需求构建正确的系统。」从简单开始；只有当单个智能体加五种工作流模式不够用时，才增加拓扑。
+> 四种编排模式在 2026 年的框架中反复出现：监督者-工作者、蜂群 / 点对点、层级式、辩论。Anthropic 的指导：「关键在于为你的需求构建正确的系统。」从简单开始；只有当单个 Agent 加五种工作流模式不够用时，才增加拓扑。
 
 **Type:** Learn + Build
 **Languages:** Python (stdlib)
@@ -10,40 +10,40 @@
 ## 学习目标
 
 - 说出四种反复出现的编排模式，以及各自适用的场景。
-- 描述 2026 年 LangChain 的建议：基于工具调用的监督 vs 监督者库。
+- 描述 2026 年 LangChain 的建议：基于 tool call 的监督 vs 监督者库。
 - 解释 Anthropic 的「构建正确的系统」原则，以及它如何约束拓扑选择。
 - 在同一个脚本化 LLM 上，用 stdlib 实现全部四种模式。
 
 ## 问题
 
-团队在真正需要之前就伸手去够「多智能体」。四种模式在框架中反复出现；一旦你能叫出它们的名字，就能选对模式——或者完全跳过拓扑。
+团队在真正需要之前就伸手去够「多 Agent」。四种模式在框架中反复出现；一旦你能叫出它们的名字，就能选对模式——或者完全跳过拓扑。
 
 ## 概念
 
 ### 监督者-工作者（Supervisor-worker）
 
-- 一个中心路由 LLM 把任务分派给专家智能体。
+- 一个中心路由 LLM 把任务分派给专家 Agent。
 - 决策：回到自身循环、移交给专家、终止。
 - 专家之间不互相交谈；所有路由都经过监督者。
 
 框架：LangGraph `create_supervisor`、Anthropic orchestrator-workers、CrewAI Hierarchical Process。
 
-**2026 年 LangChain 建议：** 通过直接工具调用来做监督，而不是 `create_supervisor`。这样能更精细地控制上下文工程——你决定每位专家确切看到什么。
+**2026 年 LangChain 建议：** 通过直接 tool call 来做监督，而不是 `create_supervisor`。这样能更精细地控制上下文工程——你决定每位专家确切看到什么。
 
 ### 蜂群 / 点对点（Swarm / peer-to-peer）
 
-- 智能体通过共享工具面直接移交。
+- Agent 通过共享工具面直接移交。
 - 没有中心路由器。
 - 延迟低于监督者（跳数更少）。
 - 更难推理（没有单一控制点）。
 
-框架：LangGraph swarm 拓扑、OpenAI Agents SDK handoffs（当所有智能体都能移交给其他所有智能体时）。
+框架：LangGraph swarm 拓扑、OpenAI Agents SDK handoffs（当所有 Agent 都能移交给其他所有 Agent 时）。
 
 ### 层级式（Hierarchical）
 
 - 监督者管理子监督者，子监督者再管理工作者的结构。
 - 在 LangGraph 中实现为嵌套子图；在 CrewAI 中为嵌套 crew。
-- 能扩展到大规模智能体群体，代价是运维复杂度。
+- 能扩展到大规模 Agent 群体，代价是运维复杂度。
 
 何时需要：当单个监督者的上下文预算无法容纳所有专家的描述时。
 
@@ -67,7 +67,7 @@ CrewAI 形式化了两类部署模式：
 
 决策顺序：
 
-1. 单智能体 + 工作流模式（第 12 课）——从这里开始。
+1. 单 Agent + 工作流模式（第 12 课）——从这里开始。
 2. 监督者-工作者——当你有 2-4 位专家时。
 3. 蜂群——当延迟比推理清晰度更重要时。
 4. 层级式——只有当监督者的上下文预算不够时。
@@ -75,7 +75,7 @@ CrewAI 形式化了两类部署模式：
 
 ### 这个模式容易出错的地方
 
-- **拓扑先行思维。** 在明确多智能体要解决什么问题之前就说「我们需要多智能体」。
+- **拓扑先行思维。** 在明确多 Agent 要解决什么问题之前就说「我们需要多 Agent」。
 - **蜂群中的来回弹跳。** A -> B -> A -> B。使用跳数计数器。
 - **虚假层级。** 因为「企业级」而设三层；实际只有两个团队。合并掉。
 
@@ -129,13 +129,13 @@ python3 code/main.py
 | 蜂群（Swarm） | 「点对点」 | 通过共享工具直接移交；无中心路由器 |
 | 层级式（Hierarchical） | 「监督者的监督者」 | 面向大规模群体的嵌套子图 |
 | 辩论（Debate） | 「提议 + 批评」 | 并行提议者，交叉批评（第 25 课） |
-| 基于工具调用的监督（Tool-call-based supervision） | 「不用库的监督者」 | 把监督者实现为直接工具调用，以便控制上下文 |
+| 基于 tool call 的监督（Tool-call-based supervision） | 「不用库的监督者」 | 把监督者实现为直接 tool call，以便控制上下文 |
 | Crew | 「自主团队」 | CrewAI 基于角色的协作模式 |
 | Flow | 「确定性工作流」 | CrewAI 的事件驱动生产模式 |
 
 ## 进一步阅读
 
-- [Anthropic, Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) —— 五种模式 + 智能体 vs 工作流
+- [Anthropic, Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) —— 五种模式 + Agent vs 工作流
 - [LangGraph overview](https://docs.langchain.com/oss/python/langgraph/overview) —— 监督者、蜂群、层级式
 - [CrewAI docs](https://docs.crewai.com/en/introduction) —— Crew vs Flow
 - [Du et al., Society of Minds (arXiv:2305.14325)](https://arxiv.org/abs/2305.14325) —— 辩论模式

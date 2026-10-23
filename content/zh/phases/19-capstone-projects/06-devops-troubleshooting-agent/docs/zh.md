@@ -1,6 +1,6 @@
-# 项目 06 — Kubernetes 上的 DevOps 故障排查智能体
+# 项目 06 — Kubernetes 上的 DevOps 故障排查 Agent
 
-> AWS 的 DevOps Agent 正式发布（GA），Resolve AI 公开了其 K8s playbook，NeuBird 演示了语义监控，Metoro 把 AI SRE 与逐服务 SLO 绑定。生产形态已经确定：告警 webhook 触发，智能体读取遥测，遍历 K8s 对象图，对根因假设排序，并向 Slack 发送带审批按钮的简报。默认只读。每一次修复都由人工把关。这个项目就是这样一个智能体，在 20 个合成事故上评测，并在三个共享案例上与 AWS 的 Agent 对比。
+> AWS 的 DevOps Agent 正式发布（GA），Resolve AI 公开了其 K8s playbook，NeuBird 演示了语义监控，Metoro 把 AI SRE 与逐服务 SLO 绑定。生产形态已经确定：告警 webhook 触发，Agent 读取遥测，遍历 K8s 对象图，对根因假设排序，并向 Slack 发送带审批按钮的简报。默认只读。每一次修复都由人工把关。这个项目就是这样一个 Agent，在 20 个合成事故上评测，并在三个共享案例上与 AWS 的 Agent 对比。
 
 **Type:** Capstone
 **Languages:** Python (agent), TypeScript (Slack integration)
@@ -10,17 +10,17 @@
 
 ## 问题
 
-2025–2026 年的 SRE 叙事变成了：「AI 智能体分诊事故，人类批准修复。」AWS DevOps Agent、Resolve AI、NeuBird、Metoro、PagerDuty AIOps 都在生产环境交付这一形态。智能体读取 Prometheus 指标、Loki 日志、Tempo trace、kube-state-metrics，以及一张 K8s 对象知识图谱。它在五分钟内产出一份带遥测引用的排好序的根因假设，并且绝不在没有通过 Slack 获得明确人工批准的情况下执行破坏性命令。
+2025–2026 年的 SRE 叙事变成了：「AI Agent 分诊事故，人类批准修复。」AWS DevOps Agent、Resolve AI、NeuBird、Metoro、PagerDuty AIOps 都在生产环境交付这一形态。Agent 读取 Prometheus 指标、Loki 日志、Tempo trace、kube-state-metrics，以及一张 K8s 对象知识图谱。它在五分钟内产出一份带遥测引用的排好序的根因假设，并且绝不在没有通过 Slack 获得明确人工批准的情况下执行破坏性命令。
 
-大部分硬功夫在范围界定和安全，而不在推理。智能体需要默认只读的 RBAC 面、加固的 MCP 工具服务器，以及记录每条「考虑过」与「实际执行」命令的审计日志。它需要知道自己何时力有不逮并升级（escalate）。它还得跑得足够便宜，避免 OOM-kill 级联产生 5000 美元的智能体账单。
+大部分硬功夫在范围界定和安全，而不在推理。Agent 需要默认只读的 RBAC 面、加固的 MCP 工具服务器，以及记录每条「考虑过」与「实际执行」命令的审计日志。它需要知道自己何时力有不逮并升级（escalate）。它还得跑得足够便宜，避免 OOM-kill 级联产生 5000 美元的 Agent 账单。
 
 ## 概念
 
-智能体在一张知识图谱上工作。节点是 K8s 对象（Pod、Deployment、Service、Node、HPA、PVC）以及遥测来源（Prometheus series、Loki stream、Tempo trace）。边编码归属关系（Pod -> ReplicaSet -> Deployment）、调度关系（Pod -> Node）和观测关系（Pod -> Prometheus series）。图谱通过 kube-state-metrics 同步保持新鲜，并在每次告警时重新采样。
+Agent 在一张知识图谱上工作。节点是 K8s 对象（Pod、Deployment、Service、Node、HPA、PVC）以及遥测来源（Prometheus series、Loki stream、Tempo trace）。边编码归属关系（Pod -> ReplicaSet -> Deployment）、调度关系（Pod -> Node）和观测关系（Pod -> Prometheus series）。图谱通过 kube-state-metrics 同步保持新鲜，并在每次告警时重新采样。
 
-告警触发时，智能体从受影响的对象出发做根因分析。它沿边遍历，拉取相关的遥测切片（最近 15 分钟），并起草假设。假设按证据排序：有多少遥测引用支撑、有多新、有多具体。前 3 个假设会连同图路径可视化和修复操作的审批按钮一起发到 Slack。
+告警触发时，Agent 从受影响的对象出发做根因分析。它沿边遍历，拉取相关的遥测切片（最近 15 分钟），并起草假设。假设按证据排序：有多少遥测引用支撑、有多新、有多具体。前 3 个假设会连同图路径可视化和修复操作的审批按钮一起发到 Slack。
 
-修复是受门禁控制的。默认允许的操作都是只读的。破坏性操作（缩容、回滚、删除 Pod）需要 Slack 批准；ArgoCD 回滚 hook 所需的 auth token 智能体永远不持有。审计日志记录智能体考虑过的每一条命令 —— 不只是执行过的 —— 这样评审流程才能抓住险些酿成事故的操作。
+修复是受门禁控制的。默认允许的操作都是只读的。破坏性操作（缩容、回滚、删除 Pod）需要 Slack 批准；ArgoCD 回滚 hook 所需的 auth token Agent 永远不持有。审计日志记录 Agent 考虑过的每一条命令 —— 不只是执行过的 —— 这样评审流程才能抓住险些酿成事故的操作。
 
 ## 架构
 
@@ -57,7 +57,7 @@ PagerDuty / Alertmanager webhook
 
 - 可观测性来源：Prometheus、Loki、Tempo、kube-state-metrics
 - 知识图谱：K8s 对象 + 遥测边的 Neo4j（托管）或 kuzu（嵌入式）
-- 智能体：带逐工具 allow-list 的 LangGraph，默认只读
+- Agent：带逐工具 allow-list 的 LangGraph，默认只读
 - 工具传输：FastMCP over StreamableHTTP；破坏性工具放在审批门禁之后的独立服务器
 - 模型：根因推理用 Claude Sonnet 4.7，日志摘要用 Gemini 2.5 Flash
 - 修复：ArgoCD 回滚 webhook、PagerDuty 升级、Slack 审批卡片
@@ -76,17 +76,17 @@ ce-rootcause-walk
 
 3. **只读工具面。** 通过 FastMCP 封装 kubectl、Prometheus query、Loki logql、Tempo traceql。每个工具只对应狭窄的 RBAC 动词（「get」「list」「describe」）。默认服务器里没有「delete」「exec」「scale」。
 
-4. **根因智能体。** 一个含三个节点的 LangGraph：`sample` 拉取最近 15 分钟的遥测切片，`walk` 查询图谱中的邻近对象，`hypothesize` 起草带遥测引用的排好序的根因候选。
+4. **根因 Agent。** 一个含三个节点的 LangGraph：`sample` 拉取最近 15 分钟的遥测切片，`walk` 查询图谱中的邻近对象，`hypothesize` 起草带遥测引用的排好序的根因候选。
 
 5. **证据打分。** 每个假设的分数 = 新鲜度 * 具体度 * 图路径长度的倒数 * 引用数量。返回前 3 个。
 
 6. **Slack 简报。** 发布一条附件消息，包含假设、图路径可视化（服务端渲染的子图图像），以及至多一个修复操作的审批按钮。
 
-7. **修复门禁。** 破坏性工具（缩容、回滚、删除）位于第二个 MCP 服务器上，需要审批 token 才能访问。只有在 Slack 卡片获得人工批准后，智能体才能调用它们。
+7. **修复门禁。** 破坏性工具（缩容、回滚、删除）位于第二个 MCP 服务器上，需要审批 token 才能访问。只有在 Slack 卡片获得人工批准后，Agent 才能调用它们。
 
 8. **审计日志。** 仅追加的 JSONL：对每条候选命令，记录是否被考虑、是否被执行、由谁批准。每天发送到 S3。
 
-9. **合成事故套件。** 构建 20 个场景：OOMKill 级联、DNS 抖动、HPA 反复伸缩、PVC 写满、吵闹邻居、故障 sidecar、错误的 ConfigMap 发布、证书轮换、镜像拉取退避等。按根因准确率和假设耗时给智能体打分。
+9. **合成事故套件。** 构建 20 个场景：OOMKill 级联、DNS 抖动、HPA 反复伸缩、PVC 写满、吵闹邻居、故障 sidecar、错误的 ConfigMap 发布、证书轮换、镜像拉取退避等。按根因准确率和假设耗时给 Agent 打分。
 
 ## 使用它
 
@@ -104,7 +104,7 @@ webhook: alert.pagerduty.com -> checkout-api SLO breach, error rate 14%
 
 ## 交付它
 
-交付物是 `outputs/skill-devops-agent.md`。给定一个 K8s 集群和告警源，该智能体产出排好序的根因假设和一套由 Slack 门禁控制的修复流程。
+交付物是 `outputs/skill-devops-agent.md`。给定一个 K8s 集群和告警源，该 Agent 产出排好序的根因假设和一套由 Slack 门禁控制的修复流程。
 
 | 权重 | 标准 | 衡量方式 |
 |:-:|---|---|
@@ -117,9 +117,9 @@ webhook: alert.pagerduty.com -> checkout-api SLO breach, error rate 14%
 
 ## 练习
 
-1. 在 AWS DevOps Agent 演示所用的同样三个事故上运行你的智能体。发布并排对比。报告智能体在哪些地方出现分歧。
+1. 在 AWS DevOps Agent 演示所用的同样三个事故上运行你的 Agent。发布并排对比。报告 Agent 在哪些地方出现分歧。
 
-2. 增加「险肇」审计，标记智能体考虑过、若未经批准就会造成破坏的任何命令。测量一周内的险肇率。
+2. 增加「险肇」审计，标记 Agent 考虑过、若未经批准就会造成破坏的任何命令。测量一周内的险肇率。
 
 3. 把假设模型从 Claude Sonnet 4.7 换成自托管的 Llama 3.3 70B。测量 RCA 准确率差值和每事故美元成本。
 
@@ -132,10 +132,10 @@ webhook: alert.pagerduty.com -> checkout-api SLO breach, error rate 14%
 | 术语 | 人们怎么说 | 实际含义 |
 |------|-----------------|------------------------|
 | K8s 知识图谱 | 「集群图」 | 节点 = K8s 对象 + 遥测 series；边 = 归属、调度、观测 |
-| 默认只读 | 「限定范围的 RBAC」 | 智能体的 service account 只有 get/list/describe 动词；破坏性动词位于需审批的独立服务器 |
+| 默认只读 | 「限定范围的 RBAC」 | Agent 的 service account 只有 get/list/describe 动词；破坏性动词位于需审批的独立服务器 |
 | 审计日志 | 「考虑过 vs 已执行」 | 对每条候选命令的仅追加记录：是否运行、由谁批准 |
 | 假设排序 | 「证据分」 | 新鲜度 × 具体度 × 图路径长度倒数 × 引用数量 |
-| Slack 审批卡片 | 「HITL 门禁」 | 带修复按钮的交互式 Slack 消息；在人工点击前智能体无法继续 |
+| Slack 审批卡片 | 「HITL 门禁」 | 带修复按钮的交互式 Slack 消息；在人工点击前 Agent 无法继续 |
 | 遥测引用 | 「证据指针」 | 支撑某条论断的 Prometheus 查询、Loki 选择器或 Tempo trace URL |
 | MTTR | 「解决耗时」 | 从告警触发到 SLO 恢复的实际耗时 |
 
@@ -146,6 +146,6 @@ webhook: alert.pagerduty.com -> checkout-api SLO breach, error rate 14%
 - [NeuBird 语义监控](https://www.neubird.ai) —— 语义图谱路线
 - [Metoro AI SRE](https://metoro.io) —— SLO 优先的生产视角
 - [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics) —— 集群状态来源
-- [LangGraph](https://langchain-ai.github.io/langgraph/) —— 参考智能体编排器
+- [LangGraph](https://langchain-ai.github.io/langgraph/) —— 参考 Agent 编排器
 - [FastMCP](https://github.com/jlowin/fastmcp) —— Python MCP 服务器框架
 - [ArgoCD 回滚](https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd_app_rollback/) —— 受门禁控制的修复目标

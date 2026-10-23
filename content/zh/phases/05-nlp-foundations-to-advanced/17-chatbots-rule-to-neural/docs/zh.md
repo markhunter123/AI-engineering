@@ -1,4 +1,4 @@
-# 聊天机器人 —— 从规则到神经再到 LLM 智能体
+# 聊天机器人 —— 从规则到神经再到 LLM Agent
 
 > ELIZA 用模式匹配回复，DialogFlow 映射意图，GPT 从权重作答，Claude 运行工具并验证。每个时代都解决了上一个时代最糟糕的失败。
 
@@ -17,7 +17,7 @@
 
 ## 概念
 
-![聊天机器人演进：规则 → 检索 → 神经 → 智能体](../assets/chatbot.svg)
+![聊天机器人演进：规则 → 检索 → 神经 → Agent](../assets/chatbot.svg)
 
 ### 剧本化的半个世纪，1950-2001
 
@@ -33,7 +33,7 @@
 
 **1995。** ALICE 用 AIML 扩展了 ELIZA 配方，AIML 是一种用于模式-模板对的 XML 方言。约 40,000 个手写类别，三次 Loebner 奖。它证明了规则系统的扩展定律：更多规则买到覆盖，永远买不到通用性。每条规则都是某人必须维护的负债。
 
-**2001。** SmarterChild 把配方摆到 3000 万即时通讯用户面前，并加入后端查询——天气、股票、电影时刻——拼接进模板。眯眼一看，它就是穿着 2001 年戏服的工具调用：解析意图、调用服务、把结果渲染进回复。
+**2001。** SmarterChild 把配方摆到 3000 万即时通讯用户面前，并加入后端查询——天气、股票、电影时刻——拼接进模板。眯眼一看，它就是穿着 2001 年戏服的 tool call：解析意图、调用服务、把结果渲染进回复。
 
 五十年，一个机制，规则数不断上升。这个范式终结不是因为有人证伪了它，而是因为手写状态机的维护成本随覆盖线性增长，而用户期望随他们上周看到的任何东西增长。
 
@@ -47,9 +47,9 @@ chatbot-lineage
 
 **神经式（seq2seq）。** 在对话日志上训练的编码器-解码器。从零生成回复。流畅但容易输出泛泛之词（"I don't know"）和事实漂移。从未可靠地切题。这就是 Google、Facebook 和 Microsoft 在 2016-2019 年都推出过令人失望的聊天机器人的原因。
 
-**LLM 智能体。** 一个语言模型，包裹在能规划、调用工具并验证结果的循环中。不是带长 prompt 的聊天机器人。而是智能体循环：规划 → 调用工具 → 观察结果 → 决定下一步。检索优先的锚定（RAG）防止幻觉。工具调用让它真正做事。这是 2026 年的架构。
+**LLM Agent。** 一个语言模型，包裹在能规划、调用工具并验证结果的循环中。不是带长 prompt 的聊天机器人。而是 Agent 循环：规划 → 调用工具 → 观察结果 → 决定下一步。检索优先的锚定（RAG）防止幻觉。Tool call 让它真正做事。这是 2026 年的架构。
 
-四种范式不是顺序替换关系。2026 年的生产聊天机器人会经过全部四种：规则式用于认证和破坏性操作，检索式用于 FAQ，神经生成用于自然措辞，LLM 智能体用于模糊的开放式查询。
+四种范式不是顺序替换关系。2026 年的生产聊天机器人会经过全部四种：规则式用于认证和破坏性操作，检索式用于 FAQ，神经生成用于自然措辞，LLM Agent 用于模糊的开放式查询。
 
 ## 构建它
 
@@ -128,7 +128,7 @@ response = chatbot("Respond politely to: Hi there!", max_new_tokens=40)
 print(response[0]["generated_text"])
 ```
 
-### 第 4 步：LLM 智能体循环
+### 第 4 步：LLM Agent 循环
 
 2026 年的生产形态：
 
@@ -158,9 +158,9 @@ def agent_loop(user_message, tools, llm, max_steps=5):
     return "I could not complete the task in the step budget."
 ```
 
-有三样东西要命名。工具是 LLM 可以调用的可调用函数。当 LLM 返回最终答案而不是工具调用时，循环终止。步数预算防止在模糊任务上无限循环。
+有三样东西要命名。工具是 LLM 可以调用的可调用函数。当 LLM 返回最终答案而不是 tool call 时，循环终止。步数预算防止在模糊任务上无限循环。
 
-真实生产还会加入：检索优先的锚定（每次 LLM 调用前注入相关文档）、防护栏（未经确认拒绝破坏性操作）、可观测性（记录每一步）和评估（自动检查智能体行为是否保持在规范内）。
+真实生产还会加入：检索优先的锚定（每次 LLM 调用前注入相关文档）、防护栏（未经确认拒绝破坏性操作）、可观测性（记录每一步）和评估（自动检查 Agent 行为是否保持在规范内）。
 
 ### 第 5 步：混合路由
 
@@ -181,7 +181,7 @@ def is_destructive_action(text):
     return any(w in text.lower() for w in danger_words)
 ```
 
-模式：破坏性操作走确定性规则，预置 FAQ 走检索，其他一切走 LLM 智能体。这是 2026 年客服系统的出货形态。
+模式：破坏性操作走确定性规则，预置 FAQ 走检索，其他一切走 LLM Agent。这是 2026 年客服系统的出货形态。
 
 ## 使用它
 
@@ -191,24 +191,24 @@ def is_destructive_action(text):
 |---------|---------------|
 | 预订、支付、认证 | 规则式状态机 + 槽位填充 |
 | 客服 FAQ | 对精选答案的检索 |
-| 开放式帮助聊天 | 带 RAG + 工具调用的 LLM 智能体 |
-| 内部工具 / IDE 助手 | 带工具调用（搜索、读、写）的 LLM 智能体 |
+| 开放式帮助聊天 | 带 RAG + tool calling 的 LLM Agent |
+| 内部工具 / IDE 助手 | 带 tool calls（搜索、读、写）的 LLM Agent |
 | 陪伴 / 角色聊天机器人 | 带人格 system prompt 的调优 LLM，对知识做检索 |
 
 生产中始终使用混合路由。没有单一架构能处理好每个请求。路由层本身通常是一个小型意图分类器。
 
 ## 仍在出货的失败模式
 
-- **自信的编造。** LLM 智能体声称完成了它实际没完成的操作。缓解：验证结果，记录工具调用，绝不让 LLM 在工具没有成功返回的情况下声称做过某事。
-- **提示注入（Prompt injection）。** 用户插入文本覆盖 system prompt。在 OWASP Top 10 for LLM Applications 2025 中排名 LLM01。两种形式：直接注入（粘贴进聊天）和间接注入（隐藏在文档、邮件或智能体读取的工具输出中）。
+- **自信的编造。** LLM Agent 声称完成了它实际没完成的操作。缓解：验证结果，记录 tool call，绝不让 LLM 在工具没有成功返回的情况下声称做过某事。
+- **提示注入（Prompt injection）。** 用户插入文本覆盖 system prompt。在 OWASP Top 10 for LLM Applications 2025 中排名 LLM01。两种形式：直接注入（粘贴进聊天）和间接注入（隐藏在文档、邮件或 Agent 读取的工具输出中）。
 
-  攻击率因场景而异。在通用工具使用和编码基准中，前沿模型测得的成功率范围约为 0.5-8.5%。特定高风险设置（针对 AI 编码智能体的自适应攻击、脆弱的编排）曾达到约 84%。生产中的 CVE 包括 EchoLeak（CVE-2025-32711，CVSS 9.3）——Microsoft 365 Copilot 中一个由攻击者控制的邮件触发的零点击数据泄露漏洞。
+  攻击率因场景而异。在通用工具使用和编码基准中，前沿模型测得的成功率范围约为 0.5-8.5%。特定高风险设置（针对 AI 编码 Agent 的自适应攻击、脆弱的编排）曾达到约 84%。生产中的 CVE 包括 EchoLeak（CVE-2025-32711，CVSS 9.3）——Microsoft 365 Copilot 中一个由攻击者控制的邮件触发的零点击数据泄露漏洞。
 
-  缓解措施：在整个循环中把用户输入视为不可信；调用工具前做清洗；把工具输出与主 prompt 隔离；采用 Plan-Verify-Execute（PVE）模式，智能体先规划，然后在执行前对照计划验证每个动作（这能阻止工具结果注入新的计划外动作）；破坏性操作要求用户确认；对工具作用域应用最小权限。
+  缓解措施：在整个循环中把用户输入视为不可信；调用工具前做清洗；把工具输出与主 prompt 隔离；采用 Plan-Verify-Execute（PVE）模式，Agent 先规划，然后在执行前对照计划验证每个动作（这能阻止工具结果注入新的计划外动作）；破坏性操作要求用户确认；对工具作用域应用最小权限。
 
   任何 prompt 工程都无法完全消除这一风险。需要外部运行时防御层（LLM Guard、allowlist 校验、语义异常检测）。
-- **范围蔓延（Scope creep）。** 工具调用返回了带点关系的无关信息，导致智能体跑题。缓解：收窄工具契约；保持 system prompt 聚焦；为跑题率增加评估。
-- **无限循环。** 智能体不断调用同一个工具。缓解：步数预算、工具调用去重、用 LLM 裁判判断「我们是否在取得进展」。
+- **范围蔓延（Scope creep）。** Tool call 返回了带点关系的无关信息，导致 Agent 跑题。缓解：收窄工具契约；保持 system prompt 聚焦；为跑题率增加评估。
+- **无限循环。** Agent 不断调用同一个工具。缓解：步数预算、tool call 去重、用 LLM 裁判判断「我们是否在取得进展」。
 - **上下文窗口耗尽。** 长对话把最早的轮次挤出上下文。缓解：摘要旧轮次、按相似度检索相关过去轮次，或使用长上下文模型。
 
 ## 交付它
@@ -239,7 +239,7 @@ Refuse to recommend a pure-LLM agent for any destructive action (payments, accou
 
 1. **简单。** 用上面的规则式回复实现一个咖啡店点单机器人，10 条模式。测试边界情况：重复下单、修改、取消、意图不清。
 2. **中等。** 构建一个混合 FAQ + LLM 兜底。为某个 SaaS 产品准备 50 条预置 FAQ，LLM 兜底在文档站上做检索。在 100 个真实支持问题上测量拒答率和准确率。
-3. **困难。** 用三个工具（search、read-user-data、send-email）实现上面的智能体循环。用 50 个测试场景（包括提示注入尝试）运行评估。报告跑题率、任务失败率和任何注入成功。
+3. **困难。** 用三个工具（search、read-user-data、send-email）实现上面的 Agent 循环。用 50 个测试场景（包括提示注入尝试）运行评估。报告跑题率、任务失败率和任何注入成功。
 
 ## 关键术语
 
@@ -248,8 +248,8 @@ Refuse to recommend a pure-LLM agent for any destructive action (payments, accou
 | Intent | 用户想要什么 | 类别标签（book_flight、reset_password）。路由到处理器。 |
 | Slot | 一条信息 | 机器人需要的参数（日期、目的地）。槽位填充就是一连串提问。 |
 | RAG | 检索加生成 | 检索相关文档，再让 LLM 的回复有据可依。 |
-| Tool call | 函数调用 | LLM 发出带有名称 + 参数的结构化调用。运行时执行并返回结果。 |
-| Agent loop | 规划、行动、验证 | 控制器，让 LLM 调用与工具调用交错进行，直到任务完成。 |
+| Tool call | Function call | LLM 发出带有名称 + 参数的结构化调用。运行时执行并返回结果。 |
+| Agent loop | 规划、行动、验证 | 控制器，让 LLM 调用与 tool calls 交错进行，直到任务完成。 |
 | Prompt injection | 用户攻击 prompt | 试图覆盖 system prompt 的恶意输入。 |
 
 ## 延伸阅读
@@ -257,10 +257,10 @@ Refuse to recommend a pure-LLM agent for any destructive action (payments, accou
 - [Turing (1950). Computing Machinery and Intelligence](https://academic.oup.com/mind/article/LIX/236/433/986238) —— 让对话成为领域基准的论文。
 - [Weizenbaum (1966). ELIZA — A Computer Program For the Study of Natural Language Communication](https://web.stanford.edu/class/cs124/p36-weizenabaum.pdf) —— 原版基于规则的聊天机器人论文。
 - [Colby, Weber, Hilf (1971). Artificial Paranoia](https://doi.org/10.1016/0004-3702(71)90002-6) —— PARRY 的情感变量架构，第一个有状态的聊天机器人。
-- [Thoppilan et al. (2022). LaMDA: Language Models for Dialog Applications](https://arxiv.org/abs/2201.08239) —— Google 晚期的神经聊天机器人论文，就在 LLM 智能体接管之前。
-- [Yao et al. (2022). ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629) —— 命名智能体循环模式的论文。
-- [Anthropic 关于构建有效智能体的指南](https://www.anthropic.com/research/building-effective-agents) —— 2024 年的生产指导，在 2026 年依然成立。
+- [Thoppilan et al. (2022). LaMDA: Language Models for Dialog Applications](https://arxiv.org/abs/2201.08239) —— Google 晚期的神经聊天机器人论文，就在 LLM Agent 接管之前。
+- [Yao et al. (2022). ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629) —— 命名 Agent 循环模式的论文。
+- [Anthropic 关于构建有效 Agent 的指南](https://www.anthropic.com/research/building-effective-agents) —— 2024 年的生产指导，在 2026 年依然成立。
 - [Greshake et al. (2023). Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection](https://arxiv.org/abs/2302.12173) —— 提示注入论文。
 - [OWASP Top 10 for LLM Applications 2025 — LLM01 Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/) —— 让提示注入成为头号安全关切的排名。
 - [AWS — Securing Amazon Bedrock Agents against Indirect Prompt Injections](https://aws.amazon.com/blogs/machine-learning/securing-amazon-bedrock-agents-a-guide-to-safeguarding-against-indirect-prompt-injections/) —— 实用的编排层防御，包括 Plan-Verify-Execute 和用户确认流程。
-- [EchoLeak (CVE-2025-32711)](https://www.vectra.ai/topics/prompt-injection) —— 间接提示注入导致的典型零点击数据泄露 CVE。这是写权限智能体为何需要运行时防御的参考案例。
+- [EchoLeak (CVE-2025-32711)](https://www.vectra.ai/topics/prompt-injection) —— 间接提示注入导致的典型零点击数据泄露 CVE。这是写权限 Agent 为何需要运行时防御的参考案例。

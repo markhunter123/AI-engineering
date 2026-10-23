@@ -22,9 +22,9 @@
 
 第 41 课从 DWARF 中读出 `struct account`，并说 `balance` 位于偏移 4。第 33 课构建了 `classify` 的控制流图，并说当余额为负时，第一个分支走向 `return -1` 块。第 32 课说前两个参数分别通过 `x0` 和 `x1` 传入。这些句子全都从字节推导而来，没有一句经过实际观察。
 
-接着，一个智能体读取同一个程序，报告「`main` 调用了 `bump`、`classify` 和 `sum_balances`」。符号表列出了这三个函数，所以这句话看起来稳妥。你用 `-O2` 构建程序，在每个函数上设置断点并运行。进程打印出四行输出后退出。每个断点都报告 `hit count = 0`。
+接着，一个 Agent 读取同一个程序，报告「`main` 调用了 `bump`、`classify` 和 `sum_balances`」。符号表列出了这三个函数，所以这句话看起来稳妥。你用 `-O2` 构建程序，在每个函数上设置断点并运行。进程打印出四行输出后退出。每个断点都报告 `hit count = 0`。
 
-智能体对源码的判断没错，错的是它被问及的那次构建。编译器内联了全部三个调用，并把 `sum_balances(rows, 3)` 折叠为常量 315。要弄清这台机器上的这个二进制文件究竟如何，唯一的方法就是在调试器下运行并观察。
+Agent 对源码的判断没错，错的是它被问及的那次构建。编译器内联了全部三个调用，并把 `sum_balances(rows, 3)` 折叠为常量 315。要弄清这台机器上的这个二进制文件究竟如何，唯一的方法就是在调试器下运行并观察。
 
 本课构建一套测试台来做这件事。它编译 `account.c`，读取反汇编清单，规划一次 lldb 会话，运行会话，并针对停顿显示的内容给每条静态论断评分。评分有三种结果。`confirmed` 表示某次停顿表明该论断在这次运行中为真。`refuted` 表示某次停顿表明它为假。`not-observed` 表示没有任何停顿能检验它，记录中会写明原因。随后，第 35 课把每个判定保存为一条 `observed` 记录，权威级别为 `controlled-replay`。
 
@@ -487,7 +487,7 @@ broken = parse_transcript(text)
 
 ## 课程产出物
 
-本课包含 `outputs/skill-dynamic-analysis-of-your-own-program.md`。用它把你构建的程序、其清单和一组静态论断转化为一份保存的调试器会话记录，以及每条论断一个判定，并给出产生每个判定的停顿，以及每条仍为 not-observed 的论断的原因。它适用于 Claude、Cursor、Codex、OpenClaw、Hermes 或任何读取 SKILL.md 的智能体。
+本课包含 `outputs/skill-dynamic-analysis-of-your-own-program.md`。用它把你构建的程序、其清单和一组静态论断转化为一份保存的调试器会话记录，以及每条论断一个判定，并给出产生每个判定的停顿，以及每条仍为 not-observed 的论断的原因。它适用于 Claude、Cursor、Codex、OpenClaw、Hermes 或任何读取 SKILL.md 的 Agent。
 
 ## 验证它
 

@@ -9,7 +9,7 @@
 
 ## 问题
 
-LLM 输入和输出的分类器位于智能体栈中最窄的位置：每个请求都经过，每个响应都经过。好的分类器层快速、基于分类法，并以很小的计算成本捕捉大量明显滥用。糟糕的分类器层则是一种虚假的安全感。
+LLM 输入和输出的分类器位于 Agent 栈中最窄的位置：每个请求都经过，每个响应都经过。好的分类器层快速、基于分类法，并以很小的计算成本捕捉大量明显滥用。糟糕的分类器层则是一种虚假的安全感。
 
 2024–2026 年的分类器栈已经收敛到一小组生产就绪的选项。Llama Guard（Meta）以 Meta 社区许可证发布开放权重。NeMo Guardrails（NVIDIA）发布宽松许可的防护栏，外加用于对话流规则的 Colang。两者都设计为与基础模型配对，而不是取代其安全行为。
 
@@ -34,7 +34,7 @@ LLM 输入和输出的分类器位于智能体栈中最窄的位置：每个请�
 - 扩展分类法：S1–S14（新增 S14 代码解释器滥用）
 - Llama Guard 3 8B/11B 的直接替代品
 
-S14 对本阶段很重要。自主编程智能体（第 9 课）在沙箱中执行代码（第 11 课）；一个专门针对代码解释器滥用的分类器类别，能捕捉早期分类法没有命名的某类攻击。
+S14 对本阶段很重要。自主编程 Agent（第 9 课）在沙箱中执行代码（第 11 课）；一个专门针对代码解释器滥用的分类器类别，能捕捉早期分类法没有命名的某类攻击。
 
 ### NeMo Guardrails（NVIDIA）
 
@@ -126,4 +126,4 @@ a5-guard-sieve
 - [Meta —— Llama Guard 4 模型卡](https://www.llama.com/docs/model-cards-and-prompt-formats/llama-guard-4/) —— 多模态、S1–S14 分类法。
 - [NVIDIA NeMo Guardrails（GitHub）](https://github.com/NVIDIA-NeMo/Guardrails) —— v0.20.0，2026 年 1 月。
 - [Huang 等 —— 绕过 LLM 护栏中的提示注入与越狱检测](https://arxiv.org/abs/2504.11168) —— 各护栏系统的 ASR 数字。
-- [Anthropic —— 在实践中衡量智能体自主性](https://www.anthropic.com/research/measuring-agent-autonomy) —— 分类器加运行时的框架。
+- [Anthropic —— 在实践中衡量 Agent 自主性](https://www.anthropic.com/research/measuring-agent-autonomy) —— 分类器加运行时的框架。

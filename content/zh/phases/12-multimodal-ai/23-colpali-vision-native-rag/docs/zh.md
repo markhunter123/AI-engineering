@@ -18,7 +18,7 @@
 
 对 PDF 做文本 RAG，丢掉了文档的大部分内容。财务报告第三季度的收入增长通常在一张图里；医学报告的发现标注在图像上；法律合同的签署区块是版式事实，不是文本事实。
 
-文本 RAG 流水线：
+文本 RAG pipeline：
 
 1. PDF → 通过 OCR / pdftotext 得到文本。
 2. 文本 → 300-500 token 的块。
@@ -81,7 +81,7 @@ ColPali 的配套基准。Visual Document Retrieval Evaluation。任务包括财
 
 ColPali-v1 在 ViDoRe 上约 80% nDCG@5；文本 RAG 在相同文档上约 50-60%。
 
-### 端到端 RAG 流水线
+### 端到端 RAG pipeline
 
 对于视觉原生 RAG：
 
@@ -132,7 +132,7 @@ mm-maxsim
 
 3. ColPali 把页面索引为 patch 集合。如果我们改为按词级索引（如 ColBERT 所做），会有什么变化？权衡是什么？
 
-4. 为一个 100 万页语料设计端到端流水线，每次查询延迟预算 500ms。选择 ColQwen2 / VisRAG 并给出理由。
+4. 为一个 100 万页语料设计端到端 pipeline，每次查询延迟预算 500ms。选择 ColQwen2 / VisRAG 并给出理由。
 
 5. 阅读 M3DocRAG（arXiv:2411.04952）。描述多页注意力模式，以及它与单页 ColPali 检索的区别。
 

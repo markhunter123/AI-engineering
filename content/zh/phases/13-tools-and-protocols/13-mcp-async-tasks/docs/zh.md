@@ -228,7 +228,7 @@ result.status = working        means the represented job is still running
 }
 ```
 
-外层 `resultType` 表示 `tasks/get` RPC 已完成。嵌套的 `result.resultType` 表示原始工具调用已完成。这个嵌套判别字段是必需的。嵌套的 `CallToolResult` 还应携带自己的 `io.modelcontextprotocol/serverInfo`；本课将其包含在内，而不是存储无类型负载。
+外层 `resultType` 表示 `tasks/get` RPC 已完成。嵌套的 `result.resultType` 表示原始 tool call 已完成。这个嵌套判别字段是必需的。嵌套的 `CallToolResult` 还应携带自己的 `io.modelcontextprotocol/serverInfo`；本课将其包含在内，而不是存储无类型负载。
 
 没有 `tasks/list`。无会话的服务器无法安全推断哪些任务属于某个连接范围内的列表。需要历史记录的应用应暴露一个带显式过滤器和所有权规则的、经过授权的领域工具。
 
@@ -369,7 +369,7 @@ Mcp-Name: tsk_786512e29e0d
 
 ### 任务执行结果
 
-- 带 `isError: true` 的正常工具结果仍是一个 `completed` 任务，因为工具调用产生了其定义内的结果。
+- 带 `isError: true` 的正常工具结果仍是一个 `completed` 任务，因为 tool call 产生了其定义内的结果。
 - 延迟执行期间发生 JSON-RPC 错误会使任务变为 `failed`，并把该 JSON-RPC 错误存到 `error` 下。
 - 用户拒绝可能产生 `cancelled`、一个已完成的拒绝结果，或其他领域特定的安全结果。请记录你的选择。
 

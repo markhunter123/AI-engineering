@@ -1,6 +1,6 @@
-# 并行工具调用与流式工具调用
+# 并行 tool calls 与流式 tool calls
 
-> 三次独立的天气查询串行执行就是三次往返。并行执行时，总耗时坍缩为最慢的那一次调用。现在每家前沿供应商都能在单轮中发出多个工具调用。收益是真实的，管道是微妙的。本课走查两个部分：并行扇出和流式参数重组，重点讲 id 关联这个陷阱。
+> 三次独立的天气查询串行执行就是三次往返。并行执行时，总耗时坍缩为最慢的那一次调用。现在每家前沿供应商都能在单轮中发出多个 tool call。收益是真实的，管道是微妙的。本课走查两个部分：并行扇出和流式参数重组，重点讲 id 关联这个陷阱。
 
 **Type:** Build
 **Languages:** Python (stdlib, thread pool + streaming harness)
@@ -10,13 +10,13 @@
 ## 学习目标
 
 - 解释 `parallel_tool_calls: true` 为何存在，以及何时应关闭它。
-- 在并行扇出期间，把流式参数块关联到正确的工具调用 id。
+- 在并行扇出期间，把流式参数块关联到正确的 tool call id。
 - 把不完整的 `arguments` 字符串重组成完整 JSON，且不提前解析。
 - 运行三城市天气基准，展示串行与并行的延迟差异。
 
 ## 问题
 
-没有并行调用时，回答「班加罗尔、东京和苏黎世天气如何」的智能体会这样做：
+没有并行调用时，回答「班加罗尔、东京和苏黎世天气如何」的 Agent 会这样做：
 
 ```
 user -> LLM
@@ -68,7 +68,7 @@ LLM -> final text answer
 
 一个常见 bug：按调用列表顺序而非完成顺序回复结果。这通常也能工作，因为模型只关心 `tool_call_id`；但如果某个结果丢失或重复，乱序提交会让调试更困难。最好按完成顺序回复，并显式携带 id。
 
-### 流式工具调用
+### 流式 tool calls
 
 当模型流式输出时，`arguments` 分片到达。三个并行调用的三股块流会在线上交错。你需要为每个 id 维护一个累加器。
 
@@ -136,7 +136,7 @@ tp-parallel-fanout
 
 3. 用 `asyncio.gather` 替换线程池。对两者做基准测试。由于上下文切换成本更低，你应该会在异步上看到小幅收益——但前提是执行器执行真实的 I/O。
 
-4. 选择两个不应并行的工具（例如先 `create_file` 再 `write_file`）。向注册表添加一个 `ordering_dependency` 图，并基于该图对并行扇出做闸控。这是依赖感知调度的最小机制，未来的智能体工程阶段会将其形式化。
+4. 选择两个不应并行的工具（例如先 `create_file` 再 `write_file`）。向注册表添加一个 `ordering_dependency` 图，并基于该图对并行扇出做闸控。这是依赖感知调度的最小机制，未来的 Agent 工程阶段会将其形式化。
 
 5. 阅读 OpenAI 的并行 function calling 章节和 Anthropic 的 `disable_parallel_tool_use` 文档。找出 Anthropic 建议关闭并行的那一类真实工具场景。（提示：对同一资源的有后果变更。）
 
@@ -144,7 +144,7 @@ tp-parallel-fanout
 
 | 术语 | 人们怎么说 | 它实际指什么 |
 |------|----------------|------------------------|
-| Parallel tool calls | “单轮扇出” | 模型在一条 assistant 消息中发出多个工具调用 |
+| Parallel tool calls | “单轮扇出” | 模型在一条 assistant 消息中发出多个 tool call |
 | `parallel_tool_calls` | “OpenAI 的开关” | 启用或禁用多次调用发出 |
 | `disable_parallel_tool_use` | “Anthropic 的反向开关” | 退出标志；默认启用并行 |
 | Tool call id | “关联句柄” | 每个调用的标识符，结果消息必须回显 |

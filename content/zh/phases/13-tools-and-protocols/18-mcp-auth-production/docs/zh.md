@@ -247,7 +247,7 @@ if not result["valid"]:
     return {"status": result["status"], "WWW-Authenticate": result["www_authenticate"]}
 ```
 
-`validate` 解码 JWT，从 JWKS 缓存解析签名密钥（未命中时刷新一次），验证签名，然后对照允许列表检查 `iss`、对照本服务器的规范资源检查 `aud`，再检查 `exp` 和所需 scope——在第一个失败点返回 `WWW-Authenticate` 质询。把它保持在资源服务器上的单一例程中，意味着每个入口（每次工具调用、每种传输）都经过同样的检查；没有任何路径可以在未先校验的情况下到达工具。
+`validate` 解码 JWT，从 JWKS 缓存解析签名密钥（未命中时刷新一次），验证签名，然后对照允许列表检查 `iss`、对照本服务器的规范资源检查 `aud`，再检查 `exp` 和所需 scope——在第一个失败点返回 `WWW-Authenticate` 质询。把它保持在资源服务器上的单一例程中，意味着每个入口（每次 tool call、每种传输）都经过同样的检查；没有任何路径可以在未先校验的情况下到达工具。
 
 ### 不透明 token 使用内省，而不是猜测
 

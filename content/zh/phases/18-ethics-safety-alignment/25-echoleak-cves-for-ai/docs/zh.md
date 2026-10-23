@@ -74,7 +74,7 @@ an-echoleak-chain
 
 ## 使用它
 
-`code/main.py` 以状态转移日志的形式重建 EchoLeak 攻击轨迹。你可以观察邮件进入上下文、指令执行以及外泄 URL 的构造过程。一个简单的防御（作用域隔离：阻止由不可信内容触发的工具调用）就能阻止外泄。
+`code/main.py` 以状态转移日志的形式重建 EchoLeak 攻击轨迹。你可以观察邮件进入上下文、指令执行以及外泄 URL 的构造过程。一个简单的防御（作用域隔离：阻止由不可信内容触发的 tool call）就能阻止外泄。
 
 ## 交付它
 
@@ -99,7 +99,7 @@ an-echoleak-chain
 | EchoLeak | 「M365 Copilot 那个 CVE」 | CVE-2025-32711，CVSS 9.3，零点击提示注入 |
 | LLM Scope Violation | 「那个新类别」 | 不可信输入触发特权作用域访问并外泄数据 |
 | CamoLeak | 「GitHub Copilot 那个 CVE」 | 经 Camo 图片代理的 CVSS 9.6 漏洞；修复中禁用了图片渲染 |
-| Zero-click | 「无需用户操作」 | 攻击在智能体的常规运行中自动触发 |
+| Zero-click | 「无需用户操作」 | 攻击在 Agent 的常规运行中自动触发 |
 | XPIA | 「微软的 PI 过滤器」 | Cross-Prompt Injection Attack 过滤器；被 EchoLeak 绕过 |
 | OWASP LLM01 | 「头号 LLM 威胁」 | 提示注入；OWASP 2025 的排名 |
 | Three-boundary model | 「Aim Labs 框架」 | 检索、作用域、输出——每一层都必须独立控制 |
