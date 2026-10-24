@@ -1,0 +1,20 @@
+{
+  "DDPM: one net predicts noise, reversal does the rest": "DDPM：一个网络预测噪声，逆过程完成其余部分",
+  "forward q: add noise": "前向 q：加噪声",
+  "x_0": "x_0",
+  "x_1": "x_1",
+  "x_t": "x_t",
+  "x_T": "x_T",
+  "~ N(0, I)": "~ N(0, I)",
+  "q(x_t | x_0) = N(&#8730;(&#945;&#772;_t) &#183; x_0, (1 - &#945;&#772;_t) I)": "q(x_t | x_0) = N(&#8730;(&#945;&#772;_t) &#183; x_0, (1 - &#945;&#772;_t) I)",
+  "closed form: jump to any t in one shot": "闭式解：一步跳到任意时刻 t",
+  "reverse p_&#952;: denoise": "反向 p_&#952;：去噪",
+  "x_{T-1}": "x_{T-1}",
+  "x_0 (sample)": "x_0（样本）",
+  "x_{t-1} = (1/&#8730;&#945;_t) ( x_t - (&#946;_t / &#8730;(1-&#945;&#772;_t)) &#183; &#949;_&#952;(x_t, t) )  +  &#963;_t &#183; z": "x_{t-1} = (1/&#8730;&#945;_t) ( x_t - (&#946;_t / &#8730;(1-&#945;&#772;_t)) &#183; &#949;_&#952;(x_t, t) )  +  &#963;_t &#183; z",
+  "subtract the predicted noise, rescale, re-inject a bit of fresh noise": "减去预测的噪声，重新缩放，再注入一点新噪声",
+  "training loss": "训练损失",
+  "L = E_{x_0, t, &#949;}  ||&#949; - &#949;_&#952;(&#8730;&#945;&#772;_t &#183; x_0 + &#8730;(1-&#945;&#772;_t) &#183; &#949;,  t)||&#178;": "L = E_{x_0, t, &#949;}  ||&#949; - &#949;_&#952;(&#8730;&#945;&#772;_t &#183; x_0 + &#8730;(1-&#945;&#772;_t) &#183; &#949;,  t)||&#178;",
+  "one net, one MSE loss, no minimax, no KL divergence in the training loop": "一个网络、一个 MSE 损失，训练循环中没有 minimax，也没有 KL 散度",
+  "scales unchanged to images, video, audio, 3D Gaussians": "可不加改动地扩展到图像、视频、音频、3D 高斯"
+}

@@ -1,0 +1,12 @@
+{
+  "OTel GenAI span hierarchy for one agent turn": "单个智能体轮次的 OTel GenAI span 层级",
+  "agent.invoke_agent  INTERNAL  gen_ai.agent.name=research-agent": "agent.invoke_agent  INTERNAL  gen_ai.agent.name=research-agent",
+  "llm.chat  CLIENT  model=gpt-4o": "llm.chat  CLIENT  model=gpt-4o",
+  "tool.execute  INTERNAL  tool=get_weather(Bengaluru)": "tool.execute  INTERNAL  tool=get_weather(Bengaluru)",
+  "mcp.call  CLIENT  server=notes  transport=stdio  traceparent=...": "mcp.call  CLIENT  server=notes  transport=stdio  traceparent=...",
+  "tool.execute  INTERNAL  tool=get_weather(Tokyo)": "tool.execute  INTERNAL  tool=get_weather(Tokyo)",
+  "mcp.call  CLIENT": "mcp.call  CLIENT",
+  "tool.execute  INTERNAL  tool=get_weather(Zurich)": "tool.execute  INTERNAL  tool=get_weather(Zurich)",
+  "llm.chat  CLIENT  synthesize": "llm.chat  CLIENT  综合（synthesize）",
+  "one trace id; 11 spans; every GenAI attribute prefixed gen_ai.*  (spec v1.37+)": "一个 trace id；11 个 span；所有 GenAI 属性均以 gen_ai.* 为前缀（规范 v1.37+）"
+}

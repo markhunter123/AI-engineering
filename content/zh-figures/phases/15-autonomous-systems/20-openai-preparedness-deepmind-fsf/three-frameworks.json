@@ -1,0 +1,20 @@
+{
+  "Three scaling policies, same capability, three classifications": "三项扩展政策（scaling policy），同样的能力，三种分类结果",
+  "OpenAI PF v2 (Apr 2025)": "OpenAI PF v2（2025 年 4 月）",
+  "Anthropic RSP v3.0 (Feb 2026)": "Anthropic RSP v3.0（2026 年 2 月）",
+  "DeepMind FSF v3 (Sept 2025 + Apr 2026)": "DeepMind FSF v3（2025 年 9 月 + 2026 年 4 月）",
+  "long-range autonomy": "长程自主性",
+  "OpenAI: Research (not triggering) · Anthropic: named; affirmative case at threshold · DeepMind: folded into ML R&amp;D / Cyber": "OpenAI：Research（不触发）· Anthropic：已明确命名，越阈值须附肯定性论证 · DeepMind：并入 ML R&amp;D / Cyber",
+  "undermining safeguards": "削弱安全防护",
+  "OpenAI: Research · Anthropic: hardcoded prohibition (refusal) · DeepMind: deceptive-alignment monitoring": "OpenAI：Research · Anthropic：硬编码禁令（拒绝）· DeepMind：欺骗性对齐监测",
+  "R&amp;D automation": "R&amp;D 自动化",
+  "OpenAI: Tracked · Anthropic: AI R&amp;D-4 threshold (affirmative case) · DeepMind: ML R&amp;D autonomy level 1 (TCL, Apr 2026)": "OpenAI：跟踪中 · Anthropic：AI R&amp;D-4 触发阈值（肯定性论证）· DeepMind：ML R&amp;D 自主性 1 级（TCL，2026 年 4 月）",
+  "sandbagging": "sandbagging（在评测中隐藏实力）",
+  "OpenAI: Research · Anthropic: addressed via eval-context gap · DeepMind: deceptive-alignment monitoring (instrumental reasoning)": "OpenAI：Research · Anthropic：通过评估上下文差距加以处理 · DeepMind：欺骗性对齐监测（工具性推理）",
+  "cyber uplift": "网络能力增强",
+  "OpenAI: Tracked · Anthropic: ASL-3 trigger (security + deployment) · DeepMind: Cyber CCL": "OpenAI：跟踪中 · Anthropic：ASL-3 触发（安全 + 部署）· DeepMind：Cyber CCL",
+  "convergence + divergence": "趋同与分歧",
+  "converge: internal SAG, deceptive-alignment as a named risk class, standing artifacts": "趋同：内部 SAG、将欺骗性对齐列为独立的风险类别、常设产物（standing artifacts）",
+  "diverge: Tracked vs Research split only in PF v2; DeepMind folds autonomy; Anthropic removed pause clause": "分歧：仅在 PF v2 中出现 Tracked 与 Research 之分；DeepMind 将自主性并入其他类别；Anthropic 删除了暂停条款",
+  "measurement dependency: all three frameworks work only if the capability measurement is not gameable": "测量依赖：三个框架能否生效，取决于能力测量是否不可被操纵"
+}

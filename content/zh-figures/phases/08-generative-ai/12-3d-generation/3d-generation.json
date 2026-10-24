@@ -1,0 +1,21 @@
+{
+  "text / image -&gt; 3D in 2026": "2026 年：文本 / 图像 -&gt; 3D",
+  "prompt or image": "prompt 或图像",
+  "text, 1 photo, or 3-16 photos": "文本、1 张照片或 3-16 张照片",
+  "multi-view diffusion": "多视角扩散",
+  "SV3D, CAT3D, MVDream, Zero123": "SV3D、CAT3D、MVDream、Zero123",
+  "8 consistent views": "8 个一致的视角",
+  "3D fit": "3D 拟合",
+  "Gaussian splat or mesh extract": "高斯泼溅或网格提取",
+  "3D Gaussian Splatting (Kerbl 2023)": "3D 高斯泼溅（Kerbl 2023）",
+  "~1M Gaussians per scene, differentiable render, 100 fps": "每个场景约 100 万个高斯、可微分渲染、100 fps",
+  "direct text/image to mesh": "文本/图像直接生成网格",
+  "Meshy 4, Rodin Gen-1.5, Hunyuan3D 2.0": "Meshy 4、Rodin Gen-1.5、Hunyuan3D 2.0",
+  "output: PBR mesh (albedo, roughness,": "输出：PBR 网格（albedo、粗糙度、",
+  "metallic, normal)": "金属度、法线）",
+  "&#8594; direct import into Unity, Unreal, Blender": "&#8594; 直接导入 Unity、Unreal、Blender",
+  "30s - 60s per asset on hosted endpoints": "托管端点上每个资产 30-60 秒",
+  "2022 &#8594; 2026 time per asset": "2022 &#8594; 2026 每个资产的耗时",
+  "DreamFusion 2022: 1 hour; LRM 2023: 5s; TripoSR 2024: 1s; Meshy 4 2025: 30s with PBR": "DreamFusion 2022：1 小时；LRM 2023：5 秒；TripoSR 2024：1 秒；Meshy 4 2025：30 秒且带 PBR",
+  "NeRF &#8594; 3D-GS &#8594; direct generative mesh: quality up, time down 100x": "NeRF &#8594; 3D-GS &#8594; 直接生成式网格：质量上升，耗时下降 100 倍"
+}

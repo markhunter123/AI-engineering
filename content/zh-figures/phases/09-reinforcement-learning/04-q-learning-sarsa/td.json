@@ -1,0 +1,21 @@
+{
+  "Q-learning vs SARSA — one line of code apart": "Q-learning 与 SARSA——只差一行代码",
+  "the transition": "单步转移",
+  "(s, a) --env.step--&gt; (r, s')   (one step, online, no episode boundary needed)": "(s, a) --env.step--&gt; (r, s')   （单步、在线，无需回合边界）",
+  "Q-learning (off-policy)": "Q-learning（off-policy）",
+  "target = r + gamma * max_{a'} Q(s', a')": "target = r + gamma * max_{a'} Q(s', a')",
+  "Q(s, a) += alpha * (target - Q(s, a))": "Q(s, a) += alpha * (target - Q(s, a))",
+  "assumes greedy policy from s' onward": "假设从 s' 起按贪婪策略行事",
+  "learns Q* even while exploring": "即使在探索时也能学到 Q*",
+  "max bias: overestimates noisy Q": "max 偏差：高估含噪声的 Q",
+  "deep version: DQN": "深度版本：DQN",
+  "SARSA (on-policy)": "SARSA（on-policy）",
+  "a' = epsilon_greedy(Q, s')": "a' = epsilon_greedy(Q, s')",
+  "target = r + gamma * Q(s', a')": "target = r + gamma * Q(s', a')",
+  "uses the ACTION actually taken": "使用实际采取的动作",
+  "learns Q^pi for current epsilon-greedy": "学习当前 epsilon-greedy 策略下的 Q^pi",
+  "conservative near cliffs / danger": "在悬崖/危险地带表现保守",
+  "same shape: target - Q(s,a), scaled by alpha": "形式相同：target - Q(s,a)，按 alpha 缩放",
+  "the ONE symbol difference: max vs sampled a' — off-policy vs on-policy": "唯一符号差异：max 与采样的 a'——即 off-policy 与 on-policy",
+  "everything in Phase 9 after this lesson is deep-function-approximated variants of these two updates": "本课后 Phase 9 的所有内容都是这两种更新的深度函数近似变体"
+}

@@ -1,0 +1,23 @@
+{
+  "POS tags (Universal Dependencies)": "POS 标注（Universal Dependencies）",
+  "The": "The",
+  "DET": "DET",
+  "cats": "cats",
+  "NOUN": "NOUN",
+  "were": "were",
+  "AUX": "AUX",
+  "running": "running",
+  "VERB": "VERB",
+  "at": "at",
+  "ADP": "ADP",
+  "3pm": "3pm",
+  "PUNCT": "PUNCT",
+  "Dependency parse": "依存句法分析",
+  "det": "det",
+  "nsubj": "nsubj",
+  "aux": "aux",
+  "prep": "prep",
+  "pobj": "pobj",
+  "ROOT = running": "ROOT = running",
+  "every word has one head. arrows go head → dependent.": "每个词只有一个中心词 head。箭头从 head 指向从属词 dependent。"
+}

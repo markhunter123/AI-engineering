@@ -1,0 +1,18 @@
+{
+  "MC: rollout, compute returns, average": "MC：rollout、计算回报、取平均",
+  "episode i": "回合 i",
+  "s_0 --a_0--&gt; s_1 --a_1--&gt; s_2 --a_2--&gt; ... --a_{T-1}--&gt; s_T  (terminal)": "s_0 --a_0--&gt; s_1 --a_1--&gt; s_2 --a_2--&gt; ... --a_{T-1}--&gt; s_T  （终止）",
+  "rewards:   r_1      r_2       r_3                  r_T": "奖励：  r_1      r_2       r_3                  r_T",
+  "backward pass: compute returns": "反向遍历：计算回报",
+  "G_t = r_{t+1} + gamma * G_{t+1}    (one pass, O(T))": "G_t = r_{t+1} + gamma * G_{t+1}    （一次遍历，O(T)）",
+  "the return G_t is the sampled realization of the expected return V^pi(s_t)": "回报 G_t 是期望回报 V^pi(s_t) 的采样实现",
+  "first-visit MC": "首次访问 MC",
+  "for t where s_t first visited:": "对每个首次访问到 s_t 的时刻 t:",
+  "N(s_t) += 1": "N(s_t) += 1",
+  "V(s_t) += (G_t - V(s_t)) / N(s_t)": "V(s_t) += (G_t - V(s_t)) / N(s_t)",
+  "unbiased, iid samples": "无偏的 iid 样本",
+  "every-visit MC": "每次访问 MC",
+  "for every t in trajectory:": "对轨迹中的每个时刻 t:",
+  "lower variance, slightly biased": "方差更低，略有偏差",
+  "no model, no bootstrap — just sample trajectories and average the returns": "无需模型、无需自举——只需采样轨迹并对回报取平均"
+}

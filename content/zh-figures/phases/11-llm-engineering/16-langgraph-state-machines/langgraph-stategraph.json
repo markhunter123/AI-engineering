@@ -1,0 +1,13 @@
+{
+  "S": "S",
+  "agent": "agent",
+  "tools": "tools",
+  "E": "E",
+  "if tool_calls": "若有 tool_calls",
+  "tool results": "工具结果",
+  "else END": "否则 END",
+  "Checkpointer": "Checkpointer",
+  "State": "State",
+  "StateGraph": "StateGraph",
+  "interrupt_before": "interrupt_before"
+}

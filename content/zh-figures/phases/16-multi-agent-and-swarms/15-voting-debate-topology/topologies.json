@@ -1,0 +1,18 @@
+{
+  "Multi-agent debate topologies — MultiAgentBench (ACL 2025)": "多智能体辩论拓扑——MultiAgentBench（ACL 2025）",
+  "star": "星型",
+  "hub": "中心节点",
+  "fast-factual wins here": "快速事实类任务在此占优",
+  "chain": "链式",
+  "stepwise refinement": "逐步精化",
+  "tree": "树型",
+  "hierarchical, divide-and-conquer": "层级化、分而治之",
+  "graph": "图型",
+  "research wins here": "研究类任务在此占优",
+  "measured results from MultiAgentBench (MARBLE, ACL 2025)": "来自 MultiAgentBench（MARBLE，ACL 2025）的实测结果",
+  "graph best for research; +3% milestone achievement over next-best topology": "图型最适合研究任务；里程碑达成率比次优拓扑高 +3%",
+  "coordination tax: past ~4 agents, wall-clock and token cost grow faster than accuracy": "协调税：超过约 4 个智能体后，墙钟时间与 token 成本的增速快于准确率",
+  "heterogeneity (different base models) consistently beats adding more homogeneous agents": "异质性（使用不同基座模型）始终优于增加更多同质化智能体",
+  "bounded rounds (2-3) matter: unbounded debate rewards conformity, not correctness": "有界轮次（2–3 轮）很关键：无界辩论奖励的是趋同而非正确",
+  "star is the cost sweet spot when the hub is high-capability and workers are cheap": "当中心节点能力强大、worker 便宜时，星型是成本的甜点区"
+}

@@ -1,0 +1,19 @@
+{
+  "vLLM production-stack + LMCache — cross-engine KV reuse": "vLLM 生产栈 + LMCache——跨引擎 KV 复用",
+  "router (cache-aware)": "router（cache 感知）",
+  "consumes KV events, hashes prefixes, routes to engine with local OR shared match": "消费 KV 事件、对前缀做哈希、路由到本地或共享命中所在引擎",
+  "vLLM engine 1": "vLLM engine 1",
+  "H100 80GB": "H100 80GB",
+  "Connector API v0.9+": "Connector API v0.9+",
+  "0.11.0 async offload": "0.11.0 异步 offload",
+  "vLLM engine 2": "vLLM engine 2",
+  "vLLM engine 3": "vLLM engine 3",
+  "vLLM engine 4": "vLLM engine 4",
+  "LMCache — cluster-shared KV cache": "LMCache——集群共享的 KV cache",
+  "CPU DRAM tier (512 GB+ per socket)": "CPU DRAM 层（每路 512 GB 以上）",
+  "asynchronous via Connector API; offload is not user-facing": "通过 Connector API 异步进行；offload 不对用户暴露",
+  "decisive for: multi-tenant shared prompts, RAG chunk reuse, LoRA on shared base, preemption restore": "关键场景：多租户共享 prompt、RAG 分块复用、共享底座上的 LoRA、抢占恢复",
+  "durable tier — Ceph / S3 / local NVMe": "持久层——Ceph / S3 / 本地 NVMe",
+  "for blocks evicted from DRAM; slower but infinite": "容纳从 DRAM 逐出的块；更慢但容量无限",
+  "16x H100 benchmark: LMCache helps when KV footprint exceeds HBM; matches baseline when it does not": "16 卡 H100 基准：KV 占用超过 HBM 时 LMCache 有效；未超过时与基线持平"
+}

@@ -1,0 +1,22 @@
+{
+  "source": "源文",
+  "\"The cats": "\"The cats",
+  "are running.\"": "are running.\"",
+  "eng_Latn": "eng_Latn",
+  "tokenize": "tokenize",
+  "subword ids": "子词 id",
+  "SentencePiece": "SentencePiece",
+  "encoder-decoder": "编码器-解码器",
+  "NLLB, mBART,": "NLLB、mBART、",
+  "M2M, Marian": "M2M、Marian",
+  "forced_bos = fra_Latn": "forced_bos = fra_Latn",
+  "beam search": "beam search（束搜索）",
+  "target ids": "目标 id",
+  "fra_Latn": "fra_Latn",
+  "detok": "detok",
+  "output": "输出",
+  "\"Les chats": "\"Les chats",
+  "courent.\"": "courent.\"",
+  "watch for: hallucinations, off-target language, terminology drift, formality mismatch": "注意：幻觉、偏离目标语言、术语漂移、语体不匹配",
+  "score with sacrebleu (BLEU + chrF); always reference-matched": "用 sacrebleu（BLEU + chrF）评分；始终与参考译文对齐"
+}

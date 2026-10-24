@@ -1,0 +1,20 @@
+{
+  "AI Control: usefulness-safety frontier (Greenblatt et al. 2024)": "AI Control：有用性—安全性前沿（Greenblatt 等人，2024）",
+  "usefulness (useful outputs / total) -&gt;": "有用性（有用输出 / 总数）-&gt;",
+  "safety (1 - backdoor ship rate) -&gt;": "安全性（1 - 后门流出率）-&gt;",
+  "baseline (no protocol)": "基线（无协议）",
+  "upfront audit (H)": "前置审计（H）",
+  "trusted editing": "可信编辑",
+  "untrusted monitoring": "不可信监控",
+  "protocol roles": "协议角色",
+  "U = untrusted strong": "U = 不可信的强模型",
+  "T = trusted weak": "T = 可信的弱模型",
+  "H = trusted human": "H = 可信的人类",
+  "baseline : ship U": "基线：直接发布 U",
+  "upfront  : audit all w/ H": "前置：全部由 H 审计",
+  "t-edit   : T gate, H on low conf": "可信编辑：T 把关，低置信时交给 H",
+  "u-monitor: U on U, H on flag": "不可信监控：U 监控 U，标记时交给 H",
+  "trusted editing Pareto-dominates untrusted monitoring on the Greenblatt 2024 code-backdoor task.": "在 Greenblatt 2024 的代码后门任务上，可信编辑帕累托优于不可信监控。",
+  "collusion risk: two U instances can coordinate via steganography or shared training priors.": "共谋风险：两个 U 实例可通过隐写术或共享的训练先验相互配合。",
+  "limits: H does not scale; T-to-U capability gap caps editing signal; control is not alignment.": "局限：H 无法扩展；T 到 U 的能力差距封顶了编辑信号；控制不等于对齐。"
+}

@@ -1,0 +1,16 @@
+{
+  "Claude Constitution (Jan 2026, 79 pages, CC0): hardcoded floor + four tiers": "Claude 宪法（2026 年 1 月，79 页，CC0）：硬编码下限 + 四层结构",
+  "hardcoded prohibitions (operators and users cannot override)": "硬编码禁令（操作者与用户均无法覆盖）",
+  "bioweapons / CBRN uplift  ·  CSAM  ·  critical-infrastructure attack planning": "生物武器 / CBRN 能力增强  ·  CSAM  ·  关键基础设施攻击规划",
+  "deception about AI identity when asked directly  ·  deployment-specific additions allowed": "被直接询问时不得隐瞒 AI 身份  ·  允许针对部署场景新增内容",
+  "enforced at model weights (CAI training + RLAIF) and at inference layer": "在模型权重（CAI 训练 + RLAIF）与推理层强制执行",
+  "tier 1 — safety and supporting human oversight  (highest)": "第 1 层 —— 安全性与支持人类监督（最高）",
+  "do not act in ways that make it harder for humans to supervise and correct AI": "不得以任何方式让人类更难监督与纠正 AI",
+  "tier 2 — ethics": "第 2 层 —— 伦理",
+  "honesty · avoid harm to persons · no deception · no manipulation": "诚实 · 避免伤害他人 · 不作欺骗 · 不作操纵",
+  "tier 3 — Anthropic guidelines  (operator-adjustable within declared bounds)": "第 3 层 —— Anthropic 准则（操作者可在声明的范围内调整）",
+  "response length · topical scope · style · tool-use patterns": "回答长度 · 主题范围 · 风格 · 工具使用模式",
+  "tier 4 — helpfulness  (lowest)": "第 4 层 —— 有用性（最低）",
+  "be as useful as possible within the three higher tiers": "在更高三层范围内尽可能提供帮助",
+  "when tiers conflict, higher wins; when principles are ambiguous, model reasons (reason-based alignment)": "层间冲突时更高层优先；原则含糊时由模型自行推理（基于推理的对齐）"
+}

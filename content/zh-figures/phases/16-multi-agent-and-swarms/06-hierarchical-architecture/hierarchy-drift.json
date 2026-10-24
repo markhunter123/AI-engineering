@@ -1,0 +1,23 @@
+{
+  "Hierarchical failure mode — decomposition drift cascades": "层级结构的失败模式 —— 分解偏移逐级级联",
+  "happy path": "正常路径",
+  "top manager": "顶层经理",
+  "splits: eng + legal": "拆分：工程 + 法务",
+  "eng-manager": "工程经理",
+  "fe + be": "前端 + 后端",
+  "legal-manager": "法务经理",
+  "lawyer": "律师",
+  "React + API issues": "React + API 问题",
+  "legal non-compliance": "法务合规问题",
+  "top synthesis": "顶层汇总",
+  "covers user question": "覆盖用户的问题",
+  "perturbed path": "扰动路径",
+  "splits: eng + FINANCE (!)": "拆分：工程 + 财务（!）",
+  "finance-manager": "财务经理",
+  "obeys mistaken label": "服从了错误的标签",
+  "$42k/mo over budget": "$42k/月 超支",
+  "LEGAL QUESTION UNANSWERED": "法律问题未获回答",
+  "guardrails": "防护措施",
+  "cap tree depth at 2 · bounded reconciliation rounds · canary worker at each level · decomposition-drift alerts": "树深度上限为 2 · 有界的一致化轮次 · 每层设置金丝雀工人 · 分解偏移告警",
+  "CrewAI Process.hierarchical and nested LangGraph supervisors both inherit this failure surface": "CrewAI 的 Process.hierarchical 以及嵌套式 LangGraph 监督者都继承了这一失败面"
+}

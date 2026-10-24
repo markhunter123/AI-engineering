@@ -1,0 +1,68 @@
+/* lesson-diagrams.css — gallery of a lesson's asset SVGs, appended to the
+ * article by convention (assets/*.svg are unreferenced upstream; build.js
+ * collects them). Visual language mirrors the interactive-figure chrome (.lf
+ * in vendor/figures/lesson-figures.js): same tokens, so dark theme follows. */
+.content .lesson-diagrams {
+  border: 1px solid var(--rule-soft, #ddd);
+  background: var(--bg, #fafafa);
+  margin: 28px 0;
+}
+
+.content .lesson-diagrams-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--rule-soft, #ddd);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--blueprint, #595959);
+}
+
+.content .lesson-diagrams-count {
+  color: var(--ink-mute, #777);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.content .lesson-diagrams-body {
+  padding: 16px;
+}
+
+.content .lesson-diagrams figure {
+  margin: 0;
+}
+
+.content .lesson-diagrams figure + figure {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--rule-soft, #ddd);
+}
+
+/* SVG line art keeps a paper-white card in both themes — the assets are drawn
+ * for light backgrounds, so the theme-aware .content img background (which
+ * goes dark) would make black strokes unreadable. */
+.content .lesson-diagrams img {
+  max-width: 100%;
+  height: auto;
+  background: #fff;
+}
+
+html[data-ds-dark-theme] .content .lesson-diagrams img {
+  background: #fff;
+}
+
+.content .lesson-diagrams figcaption {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--ink-mute, #777);
+  margin-top: 10px;
+}

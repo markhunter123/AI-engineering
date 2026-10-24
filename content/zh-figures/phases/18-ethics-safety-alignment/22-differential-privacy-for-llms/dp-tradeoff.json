@@ -1,0 +1,23 @@
+{
+  "Differential privacy for LLMs: DP-SGD and its alternatives": "LLM 的差分隐私：DP-SGD 及其替代方案",
+  "DP-SGD privacy-utility frontier": "DP-SGD 隐私-效用前沿",
+  "1 / epsilon (log) -&gt; more private -&gt;": "1 / epsilon（对数）-&gt; 更私密 -&gt;",
+  "utility (accuracy)": "效用（准确率）",
+  "no-adapter DP-SGD": "无适配器 DP-SGD",
+  "LoRA + DP-SGD": "LoRA + DP-SGD",
+  "epsilon ~ 10": "epsilon ~ 10",
+  "epsilon ~ 3": "epsilon ~ 3",
+  "alternatives": "替代方案",
+  "PMixED (inference-time)": "PMixED（推理时）",
+  "mixture of experts + DP noise": "专家混合 + DP 噪声",
+  "DP synthetic data": "DP 合成数据",
+  "downstream training on synth": "在合成数据上做下游训练",
+  "2024-2025 evidence tension": "2024-2025 的证据张力",
+  "canary MIA (Duan 2024)": "金丝雀成员推理攻击（Duan 2024）",
+  "limited success": "成效有限",
+  "extraction (Carlini, Nasr 2025)": "提取攻击（Carlini、Nasr 2025）",
+  "substantial memorization": "显著的记忆化",
+  "Kowalczyk et al. 2025: the two measure different things. canaries measure \"insertion\"; extraction measures \"most-extractable\".": "Kowalczyk 等 2025：两者度量的是不同事物。金丝雀度量「插入」；提取度量「最易提取」。",
+  "DP Reversal via LLM Feedback: confidence scores can leak re-identification signal even when outputs do not.": "借助 LLM 反馈的 DP 逆转：即使输出未泄漏，置信度分数也可能泄漏重识别信号。",
+  "deployment rule: epsilon + accountant + MIA protocol + extraction test + confidence exposure check.": "部署规则：epsilon + 隐私会计 + MIA 协议 + 提取测试 + 置信度暴露检查。"
+}

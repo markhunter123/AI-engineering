@@ -1,0 +1,14 @@
+{
+  "six chunking strategies on the same document": "同一文档上的六种切分策略",
+  "fixed (size=N)": "固定（size=N）",
+  "hard split every N chars — breaks mid-sentence": "每 N 个字符硬切分——会在句中截断",
+  "recursive (\\n\\n → \\n → . → ' ')": "递归（\\n\\n → \\n → . → 空格）",
+  "try separators in order; 2026 default": "按顺序尝试分隔符；2026 年的默认做法",
+  "semantic (embedding similarity)": "语义（embedding 相似度）",
+  "split where adjacent-sentence similarity drops": "在相邻句子相似度骤降处切分",
+  "parent-document (child for retrieval, parent for context)": "父文档（子块用于检索，父块用于上下文）",
+  "embed the small boxes, return the large boxes — degrades gracefully": "embed 小块、返回大块——退化时依然优雅",
+  "late chunking (embed full doc first, then pool)": "滞后切分（先 embed 整篇文档，再池化）",
+  "token embeddings across full doc": "跨越整篇文档的 token embedding",
+  "pool token embeddings into chunk vectors — preserves cross-chunk context": "把 token embedding 池化成块向量——保留跨块上下文"
+}

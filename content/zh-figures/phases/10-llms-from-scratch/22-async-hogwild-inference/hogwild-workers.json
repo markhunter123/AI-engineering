@@ -1,0 +1,21 @@
+{
+  "Hogwild! inference — N workers, one shared KV cache": "Hogwild! 推理——N 个 worker，一个共享 KV cache",
+  "worker 1": "worker 1",
+  "reads full shared cache": "读取完整共享缓存",
+  "decides what to write next": "决定下一步写什么",
+  "writes one token": "写入一个 token",
+  "repeat": "重复",
+  "worker 2": "worker 2",
+  "sees worker 1's tokens": "能看到 worker 1 的 token",
+  "pivots to unexplored work": "跳去探索未完成的工作",
+  "shared KV cache": "共享 KV cache",
+  "A": "A",
+  "B": "B",
+  "C": "C",
+  "tokens arrive asynchronously from all workers": "token 异步地从所有 worker 抵达",
+  "RoPE positions let the cache stay stable under concurrent writes": "RoPE 位置让缓存并发写入时保持稳定",
+  "each worker's next read sees everything": "每个 worker 的下一次读取都能看到全部内容",
+  "(including the other workers' just-written tokens)": "（包括其他 worker 刚写入的 token）",
+  "speedup(N, p, c) = 1 / [(1 - p) + p/N + c * N / T_serial]": "speedup(N, p, c) = 1 / [(1 - p) + p/N + c * N / T_serial]",
+  "p = parallelizable fraction · c = per-worker coord cost · T_serial = single-worker task length": "p = 可并行比例 · c = 每个 worker 的协调开销 · T_serial = 单个 worker 任务时长"
+}

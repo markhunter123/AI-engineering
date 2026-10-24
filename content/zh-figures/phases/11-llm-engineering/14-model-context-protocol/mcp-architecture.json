@@ -1,0 +1,23 @@
+{
+  "one host, stateless JSON-RPC requests, three primitives": "一个 host，无状态 JSON-RPC 请求，三大原语",
+  "Host (LLM app)": "Host（LLM 应用）",
+  "Claude Desktop / Claude Code / ChatGPT": "Claude Desktop / Claude Code / ChatGPT",
+  "LLM runtime": "LLM 运行时",
+  "model + prompt + context": "模型 + prompt + 上下文",
+  "MCP client": "MCP 客户端",
+  "one per server mounted": "每挂载一个 server 就有一个",
+  "user UI / approval": "用户界面 / 授权确认",
+  "slash commands, confirms": "斜杠命令、确认",
+  "JSON-RPC 2.0 (stdio / HTTP)": "JSON-RPC 2.0（stdio / HTTP）",
+  "_meta each request &#x2022; discover optional": "每个请求都带 _meta &#x2022; discover 可选",
+  "Server": "Server",
+  "your code: FastMCP / SDK / custom": "你的代码：FastMCP / SDK / 自研",
+  "Tools": "Tools",
+  "functions the model calls; JSON Schema input": "模型可调用的函数；输入为 JSON Schema",
+  "Resources": "Resources",
+  "URI-addressed read-only content": "以 URI 寻址的只读内容",
+  "Prompts": "Prompts",
+  "user-invoked templates (slash commands)": "用户触发的模板（斜杠命令）",
+  "protocol version and client capabilities travel in params._meta on every request.": "协议版本与客户端能力随每个请求放在 params._meta 中传递。",
+  "destructive tools set destructiveHint: true so the host can gate on human approval.": "破坏性工具会设置 destructiveHint: true，以便 host 交由人工审批把关。"
+}

@@ -1,0 +1,18 @@
+{
+  "Skip-gram window (size 2)": "Skip-gram 窗口（大小 2）",
+  "\"The cat sat on the mat\"": "\"The cat sat on the mat\"",
+  "center = cat": "中心词 = cat",
+  "context = {The, sat, on}": "上下文 = {The, sat, on}",
+  "network learns: dot(v_cat, u_sat) high, dot(v_cat, u_random) low": "网络要学到：dot(v_cat, u_sat) 高，dot(v_cat, u_random) 低",
+  "Embedding space (2D projection of learned vectors)": "Embedding 空间（学习向量的二维投影）",
+  "cat": "cat",
+  "dog": "dog",
+  "puppy": "puppy",
+  "kitten": "kitten",
+  "king": "king",
+  "man": "man",
+  "queen": "queen",
+  "woman": "woman",
+  "king - man ≈ queen - woman": "king - man ≈ queen - woman",
+  "co-occurring words cluster. analogy vectors are directions.": "共现词聚集成簇，类比向量即方向。"
+}

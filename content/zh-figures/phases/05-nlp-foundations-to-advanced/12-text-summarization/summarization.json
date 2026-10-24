@@ -1,0 +1,22 @@
+{
+  "extractive (TextRank)": "抽取式（TextRank）",
+  "s1": "s1",
+  "s2": "s2",
+  "s3": "s3",
+  "s4": "s4",
+  "s5": "s5",
+  "s6": "s6",
+  "PageRank picks most connected sentences": "PageRank 挑选连接度最高的句子",
+  "verbatim. never hallucinates.": "逐字抽取，绝不幻觉。",
+  "risk: misses distributed content.": "风险：会漏掉分散在各处的信息。",
+  "abstractive (BART / T5 / Pegasus)": "生成式（BART / T5 / Pegasus）",
+  "article (500-2000 tokens)": "文章（500-2000 token）",
+  "tokens in": "输入的 token",
+  "transformer enc-dec": "transformer 编码器-解码器",
+  "cross-attention": "交叉注意力 cross-attention",
+  "new text (60-200 tok)": "新文本（60-200 tok）",
+  "generates new tokens, not selects": "生成新 token，而非选取原文",
+  "fluent, compressive.": "流畅、凝练。",
+  "risk: hallucinated entities,": "风险：幻觉出来的实体、",
+  "flipped polarity, wrong numbers.": "情感极性颠倒、数字错误。"
+}

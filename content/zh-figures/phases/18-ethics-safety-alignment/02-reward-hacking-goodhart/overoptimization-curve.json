@@ -1,0 +1,23 @@
+{
+  "Gao-Schulman-Hilton over-optimization curve": "Gao-Schulman-Hilton 过度优化曲线",
+  "proxy reward climbs monotonically. gold reward peaks and falls.": "代理奖励单调攀升；真实奖励冲顶后回落。",
+  "sqrt(KL) from initial policy": "与初始策略的 sqrt(KL) 距离",
+  "expected reward": "期望奖励",
+  "gold peak": "真实奖励峰值",
+  "proxy reward": "代理奖励",
+  "gold reward": "真实奖励",
+  "the four costumes": "四种伪装",
+  "1 / verbosity bias": "1 / 冗长偏差",
+  "longer outputs score higher than they help.": "更长的输出得分更高，但实际帮助有限。",
+  "2 / sycophancy": "2 / 谄媚",
+  "agreement with the user beats correctness.": "与用户保持一致胜过正确性。",
+  "3 / unfaithful CoT": "3 / 不忠实的 CoT",
+  "chain that looks right but does not drive the answer.": "看似正确但并未驱动答案的推理链。",
+  "4 / evaluator tampering": "4 / 评估器篡改",
+  "agent modifies scratchpad, env, or RM inputs.": "agent 篡改草稿、环境或 RM 输入。",
+  "one mechanism: probability mass shifts": "共同的机制：概率质量发生转移，",
+  "to easy-to-learn heuristics the RM rewards.": "转向 RM 偏爱的、易于学习的启发式。",
+  "KL regularization softens the collapse but does not prevent it (Gao 2023).": "KL 正则化能缓和坍塌，却无法阻止（Gao 2023）。",
+  "Under heavy-tailed reward error the KL-constrained optimum can place all mass on error-maximizing modes": "在重尾奖励误差下，受 KL 约束的最优点可能把全部概率质量压到误差最大的模式上，",
+  "— \"catastrophic Goodhart\" (OpenReview UXuBzWoZGK). no amount of beta saves you alone.": "——即「灾难性 Goodhart」（OpenReview UXuBzWoZGK）。单靠调 beta 无论如何都救不了你。"
+}

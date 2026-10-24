@@ -1,0 +1,19 @@
+{
+  "MCP resources, prompts, and subscriptions": "MCP 资源、提示词与订阅",
+  "A stateless client reads resources and prompts, then opens a filtered subscription response stream.": "无状态客户端读取资源与提示词，然后打开一个经过筛选的订阅响应流。",
+  "Addressable context in MCP 2026-07-28": "MCP 2026-07-28 中的可寻址上下文",
+  "Resources": "资源",
+  "URI-addressed content": "以 URI 寻址的内容",
+  "resources/list, resources/read": "resources/list, resources/read",
+  "Prompts": "提示词",
+  "User-selected templates": "用户选择的模板",
+  "prompts/list, prompts/get": "prompts/list, prompts/get",
+  "Tools": "工具",
+  "Model-selected operations": "由模型选择的操作",
+  "tools/list, tools/call": "tools/list, tools/call",
+  "subscriptions/listen POST-response stream": "subscriptions/listen 的 POST 响应流",
+  "1. Client sends explicit notification filter": "1. 客户端发送显式的通知筛选条件",
+  "2. Server acknowledges before the first event": "2. 服务器在首个事件前予以确认",
+  "3. Every event carries io.modelcontextprotocol/subscriptionId": "3. 每个事件都携带 io.modelcontextprotocol/subscriptionId",
+  "server/discover advertises resources + prompts; every request carries version + capabilities": "server/discover 公布资源与提示词；每个请求都携带版本 + 能力"
+}

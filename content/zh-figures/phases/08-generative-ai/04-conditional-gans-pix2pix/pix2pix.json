@@ -1,0 +1,23 @@
+{
+  "Pix2Pix — U-Net generator, PatchGAN discriminator": "Pix2Pix——U-Net 生成器、PatchGAN 判别器",
+  "input x": "输入 x",
+  "edge map": "边缘图",
+  "U-Net generator  G(x)": "U-Net 生成器 G(x)",
+  "skip connections preserve high-freq detail": "跳跃连接保留高频细节",
+  "output y&#770;": "输出 y&#770;",
+  "photo": "照片",
+  "target y": "目标 y",
+  "L1": "L1",
+  "PatchGAN D(x, y&#770;)": "PatchGAN D(x, y&#770;)",
+  "output is an N &#215; N grid": "输出是一个 N &#215; N 的网格",
+  "each cell judges ~70&#215;70 patch": "每个格子评判约 70&#215;70 的 patch",
+  "averaged &#8594; real / fake score": "取平均 &#8594; 得到真实/伪造得分",
+  "objective": "目标函数",
+  "L_G = -log D(x, G(x)) + 100 &#183; ||y - G(x)||_1": "L_G = -log D(x, G(x)) + 100 &#183; ||y - G(x)||_1",
+  "L_D = -log D(x, y) - log (1 - D(x, G(x)))": "L_D = -log D(x, y) - log (1 - D(x, G(x)))",
+  "L1 stabilizes + sharp edges; adv term fights blur": "L1 让训练稳定并保留锐利边缘；对抗项对抗模糊",
+  "CycleGAN (unpaired): add a second G and a cycle-consistency loss": "CycleGAN（无配对）：加入第二个 G 和一个循环一致性损失",
+  "G: X -&gt; Y,  F: Y -&gt; X,  loss += ||F(G(x)) - x||_1 + ||G(F(y)) - y||_1": "G: X -&gt; Y,  F: Y -&gt; X,  loss += ||F(G(x)) - x||_1 + ||G(F(y)) - y||_1",
+  "no paired data needed; horses &lt;-&gt; zebras, summer &lt;-&gt; winter": "无需配对数据；马 &lt;-&gt; 斑马、夏天 &lt;-&gt; 冬天",
+  "2026: mostly superseded by ControlNet + IP-Adapter over diffusion": "2026 年：大多已被基于扩散的 ControlNet + IP-Adapter 取代"
+}

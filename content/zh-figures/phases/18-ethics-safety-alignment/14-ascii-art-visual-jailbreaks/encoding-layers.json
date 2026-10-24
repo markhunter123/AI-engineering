@@ -1,0 +1,19 @@
+{
+  "Encoding attacks and the defense layers that miss them": "编码攻击与被它们绕过的防御层",
+  "attack family:": "攻击家族：",
+  "ArtPrompt (ASCII)": "ArtPrompt（ASCII）",
+  "base64 / leet": "base64 / leet",
+  "UTF-8 homoglyph": "UTF-8 同形字符",
+  "UTES (tree/JSON)": "UTES（树/JSON）",
+  "image modality": "图像模态",
+  "keyword filter:": "关键词过滤器：",
+  "misses": "漏掉",
+  "perplexity filter:": "困惑度过滤器：",
+  "partial": "部分有效",
+  "paraphrase defense:": "改述防御：",
+  "output classifier:": "输出分类器：",
+  "catches": "能拦截",
+  "multimodal moderator:": "多模态审核器：",
+  "input-side defenses (keyword, PPL, paraphrase, retokenization) fail because recognition is visual / structural.": "输入端防御（关键词、PPL、改述、重新分词）会失效，因为识别是视觉 / 结构性的。",
+  "output-side and multimodal moderators are the reliable layer; every deployment should include at least one.": "输出端与多模态审核器才是可靠的一层；每个部署都应至少包含其中一种。"
+}

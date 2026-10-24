@@ -1,0 +1,21 @@
+{
+  "Multi-agent debate — full mesh vs sparse star": "多 agent 辩论——全连接网格 vs 稀疏星形",
+  "full mesh  everyone reads everyone": "全连接网格——人人互读",
+  "alpha": "alpha",
+  "beta": "beta",
+  "gamma": "gamma",
+  "N=3, R=2  12 critique ops": "N=3, R=2  12 次点评操作",
+  "sparse star  hub-and-spoke": "稀疏星形——枢纽-辐条结构",
+  "hub": "hub",
+  "spoke1": "spoke1",
+  "spoke2": "spoke2",
+  "spoke3": "spoke3",
+  "spoke4": "spoke4",
+  "N=5, R=2  16 critique ops (vs 40 full mesh)": "N=5, R=2  16 次点评操作（全连接网格需 40 次）",
+  "when debate helps vs when it hurts": "辩论何时有益、何时有害",
+  "HELPS: factuality (cross-check), rule-following (chess), open-ended reasoning": "有益于：事实核查（交叉校验）、规则遵循（国际象棋）、开放式推理",
+  "HURTS: latency-sensitive UX, cost-bound flows, simple factual lookup": "有害于：对延迟敏感的 UX、受成本约束的流程、简单事实查询",
+  "Society of Minds: cross-model (ChatGPT + Bard) beats either alone": "Society of Minds：跨模型（ChatGPT + Bard）胜过任一单模型",
+  "sparse topology: matches accuracy at fraction of token cost": "稀疏拓扑：以极小部分 token 成本达到相同准确率",
+  "reach for debate when single-shot is wrong &gt; 5% of the time; otherwise cheaper patterns win.": "当单次生成出错率 &gt; 5% 时才用辩论；否则更便宜的方案胜出。"
+}

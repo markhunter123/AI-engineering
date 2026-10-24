@@ -1,0 +1,17 @@
+{
+  "causal mask — one triangle, half a decade of progress": "因果掩码——一个三角形，半个十年的进展",
+  "unmasked (BERT-style)": "无掩码（BERT 风格）",
+  "every position sees every position": "每个位置都能看到所有位置",
+  "fits encoders (classification, embeddings)": "适用于 encoder（分类、embedding）",
+  "causal (GPT-style)": "因果（GPT 风格）",
+  "position i attends to positions ≤ i only": "位置 i 只关注位置 ≤ i",
+  "fits decoders (GPT, Llama, Claude)": "适用于 decoder（GPT、Llama、Claude）",
+  "what the mask enables": "掩码带来的能力",
+  "training": "训练",
+  "full N-token forward pass, N parallel next-token losses in one batch": "完整地前向传播 N 个 token，一个 batch 内并行计算 N 个 next-token 损失",
+  "inference": "推理",
+  "autoregressive: feed tokens 1..t, generate t+1, repeat. KV cache (lesson 12) avoids re-computation": "自回归：喂入 token 1..t，生成 t+1，然后重复。KV cache（第 12 课）避免重复计算",
+  "loss": "损失",
+  "cross-entropy shift-by-one: predict t_{i+1} from t_{0..i}": "交叉熵错位一位：由 t_{0..i} 预测 t_{i+1}",
+  "the mask is added before softmax; exp(-inf) = 0; masked positions get zero weight.": "掩码在 softmax 之前加入；exp(-inf) = 0；被掩码的位置权重为零。"
+}

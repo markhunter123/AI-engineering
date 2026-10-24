@@ -1,0 +1,22 @@
+{
+  "two loops replace the human preference budget": "两条环路取代人工偏好预算",
+  "Constitutional AI — subjective behavior": "Constitutional AI——主观行为",
+  "prompt + initial response": "prompt + 初始回答",
+  "model critiques against": "模型对照",
+  "principle sampled from constitution": "从宪法采样出的原则进行批评",
+  "model rewrites response": "模型重写回答",
+  "SFT on (prompt, revised)": "对 (prompt, revised) 做 SFT",
+  "DPO on pairwise AI judgments": "在成对的 AI 评判上做 DPO",
+  "lever is the constitution — editing text,": "杠杆在于宪法——编辑文本，",
+  "not re-labeling thousands of pairs": "而不是重新标注成千上万的样本对",
+  "GRPO — verifiable behavior": "GRPO——可验证的行为",
+  "prompt (math / code / format)": "prompt（数学 / 代码 / 格式）",
+  "sample G responses": "采样 G 个回答",
+  "(G = 16, 32, 64)": "(G = 16, 32, 64)",
+  "deterministic rule grades each one": "用确定性规则逐一评分",
+  "A_i = (r_i - mean) / std  (group-relative)": "A_i = (r_i - mean) / std  （分组相对）",
+  "clipped surrogate + KL to reference": "裁剪替代目标 + 相对参考模型的 KL",
+  "no value function, no reward model —": "无需价值函数，也无需奖励模型——",
+  "DeepSeek-R1 recipe, ORM only": "DeepSeek-R1 配方，仅 ORM",
+  "CAI for \"tone\". GRPO for \"answer\". Most 2026 pipelines run both.": "CAI 负责「语气」，GRPO 负责「答案」。2026 年多数 pipeline 两者都用。"
+}

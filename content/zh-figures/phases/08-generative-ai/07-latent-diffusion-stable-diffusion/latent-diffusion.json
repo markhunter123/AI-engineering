@@ -1,0 +1,23 @@
+{
+  "latent diffusion = VAE + diffusion, separately trained": "latent diffusion = VAE + 扩散，两者分开训练",
+  "stage 1: train VAE (encoder + decoder), freeze": "阶段 1：训练 VAE（encoder + decoder），然后冻结",
+  "image x": "图像 x",
+  "encoder E": "encoder E",
+  "latent z": "latent z",
+  "64 &#215; 64 &#215; 4  (1/16 of pixels)": "64 &#215; 64 &#215; 4（像素数量的 1/16）",
+  "decoder D": "decoder D",
+  "x&#770;  (reconstruction)": "x&#770;（重构）",
+  "L1 + LPIPS + GAN": "L1 + LPIPS + GAN",
+  "stage 2: train diffusion on z-space": "阶段 2：在 z 空间上训练扩散模型",
+  "z_T ~ N(0, I)": "z_T ~ N(0, I)",
+  "U-Net / DiT": "U-Net / DiT",
+  "&#949;_&#952;(z_t, t, text_embed)": "&#949;_&#952;(z_t, t, text_embed)",
+  "iterate T-&gt;0": "迭代 T-&gt;0",
+  "z_0": "z_0",
+  "D(z_0)": "D(z_0)",
+  "decoded image": "解码后的图像",
+  "text encoder (CLIP / T5) -&gt; cross-attention in each U-Net block": "文本 encoder（CLIP / T5）-&gt; 每个 U-Net block 中的交叉注意力",
+  "same loss as pixel-space DDPM:  L = E || &#949; - &#949;_&#952;(z_t, t, c) ||&#178;": "与像素空间 DDPM 相同的损失：  L = E || &#949; - &#949;_&#952;(z_t, t, c) ||&#178;",
+  "~64x fewer FLOPs than pixel diffusion for the same quality": "同等质量下，FLOPs 比像素扩散少约 64 倍",
+  "CFG:  &#949;_cfg = (1+w) &#183; &#949;_cond - w &#183; &#949;_uncond  (w &#8776; 3-7)": "CFG：  &#949;_cfg = (1+w) &#183; &#949;_cond - w &#183; &#949;_uncond  （w &#8776; 3-7）"
+}

@@ -1,0 +1,22 @@
+{
+  "ChatHTN and AlphaEvolve — two 2025 hybrid planners": "ChatHTN 与 AlphaEvolve——两个 2025 年混合规划器",
+  "ChatHTN  symbolic + LLM decomposer": "ChatHTN  符号化 + LLM 分解器",
+  "compound task  decompose via method library": "复合任务  通过方法库分解",
+  "1. method applies?  expand subtasks (provably sound)": "1. 方法适用吗？  展开子任务（可证明正确）",
+  "2. no method?  ask LLM for decomposition": "2. 没有方法？  请 LLM 给出分解",
+  "3. validate against operator schema; cache on success": "3. 对照操作符 schema 校验；成功后缓存",
+  "AlphaEvolve  evolutionary code search": "AlphaEvolve  进化式代码搜索",
+  "seed program + deterministic evaluator": "种子程序 + 确定性评估器",
+  "1. ensemble of LLMs proposes mutations": "1. LLM 集成提出变异",
+  "2. evaluator scores each child program": "2. 评估器为每个子程序打分",
+  "3. keep top-k; mutate; repeat": "3. 保留 top-k；变异；重复",
+  "when to use which": "何时用哪种",
+  "scheduling, compliance, policy-bound automation  HTN (ChatHTN)": "调度、合规、受策略约束的自动化  HTN（ChatHTN）",
+  "provable soundness; LLM only expands the method library": "可证明的正确性；LLM 只负责扩充方法库",
+  "matrix-mult kernels, compiler passes, scheduling heuristics  AlphaEvolve": "矩阵乘内核、编译器 pass、调度启发式  AlphaEvolve",
+  "fitness must be deterministic; works when tests / benchmarks are the evaluator": "适应度必须确定；当测试 / benchmark 充当评估器时适用",
+  "open-ended agent tasks  ReAct / ReWOO (not these)": "开放式的智能体任务  ReAct / ReWOO（而非这两种）",
+  "no operator schema, no machine-checkable fitness; reach for Lessons 01-02": "没有操作符 schema、没有可机器校验的适应度；请用第 01-02 课",
+  "hybrid: HTN at the top level, AlphaEvolve on each primitive operator  case-by-case": "混合方案：顶层用 HTN，每个原子操作符用 AlphaEvolve——逐例决定",
+  "LLMs amplify; they do not own correctness. symbolic layer and evaluator own the hard guarantees.": "LLM 负责放大能力，不负责正确性。符号层和评估器才握有硬保证。"
+}

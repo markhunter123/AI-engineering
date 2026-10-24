@@ -1,0 +1,16 @@
+{
+  "PPO clipped surrogate: flat roof, flat floor": "PPO 裁剪替代目标：平顶、平底",
+  "L^{CLIP}(theta) = E[ min( r A,  clip(r, 1-eps, 1+eps) * A ) ]": "L^{CLIP}(theta) = E[ min( r A,  clip(r, 1-eps, 1+eps) * A ) ]",
+  "r = pi_theta(a|s) / pi_old(a|s)       typical eps = 0.2": "r = pi_theta(a|s) / pi_old(a|s)       典型 eps = 0.2",
+  "advantage A &gt; 0 (good action)": "优势 A &gt; 0（好动作）",
+  "r": "r",
+  "L": "L",
+  "r = 1+eps": "r = 1+eps",
+  "r = 1": "r = 1",
+  "clip: flat roof": "裁剪：平顶",
+  "gradient flows": "梯度流动",
+  "advantage A &lt; 0 (bad action)": "优势 A &lt; 0（坏动作）",
+  "r = 1-eps": "r = 1-eps",
+  "clip: flat floor": "裁剪：平底",
+  "if the ratio drifts past the clip in the \"useful\" direction, gradient goes to zero — no unbounded updates": "若比值向「有利」方向飘出裁剪区间，梯度将归零——不会出现无界更新"
+}

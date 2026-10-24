@@ -1,0 +1,20 @@
+{
+  "whisper — encoder-decoder for speech recognition": "Whisper——语音识别的 encoder-decoder",
+  "audio @ 16 kHz, 30 s window": "音频 @ 16 kHz，30 秒窗口",
+  "log-mel: 80 bins × 3000 frames": "log-mel：80 个频带 × 3000 帧",
+  "conv1d × 2": "conv1d × 2",
+  "stride 2 → 1500": "stride 2 → 1500",
+  "encoder transformer (24 layers for large)": "encoder transformer（large 为 24 层）",
+  "self-attention + GELU FFN + sinusoidal positional encoding": "自注意力 + GELU FFN + 正弦位置编码",
+  "output: 1500 × 1280 hidden states": "输出：1500 × 1280 个隐藏状态",
+  "&lt;|startoftranscript|&gt; &lt;|en|&gt; &lt;|transcribe|&gt;": "&lt;|startoftranscript|&gt; &lt;|en|&gt; &lt;|transcribe|&gt;",
+  "task tokens — 4-token prefix controls behavior": "任务 token——4 个 token 的前缀控制行为",
+  "decoder transformer": "decoder transformer",
+  "masked self-attn + cross-attn to encoder + FFN": "掩码自注意力 + 到 encoder 的交叉注意力 + FFN",
+  "32 layers (large) or 4 layers (turbo)": "large 为 32 层，turbo 为 4 层",
+  "BPE vocabulary: GPT-2 + audio specials": "BPE 词表：GPT-2 + 音频特殊 token",
+  "beam search width 5 at inference": "推理时 beam search 宽度为 5",
+  "cross-attn": "交叉注意力",
+  "\"attention is all you need\"": "「attention is all you need」",
+  "encoder runs once. decoder runs autoregressively. task token decides transcribe vs translate.": "encoder 只运行一次；decoder 自回归运行；任务 token 决定是转写还是翻译。"
+}

@@ -1,0 +1,23 @@
+{
+  "Prompt injection defense — treat retrieved content as untrusted": "Prompt 注入防御——把检索到的内容视为不可信",
+  "Greshake et al. 2023 — indirect prompt injection": "Greshake 等人 2023——间接 prompt 注入",
+  "1. attacker controls retrievable content (web page, PDF, email, memory note)": "1. 攻击者控制可被检索的内容（网页、PDF、邮件、记忆条目）",
+  "2. agent ingests  attacker instructions override developer prompt": "2. agent 摄入内容——攻击者指令覆盖开发者 prompt",
+  "3. demonstrated exploits: data theft, worming, memory poisoning, ecosystem contamination": "3. 已演示的攻击：数据窃取、蠕虫传播、记忆投毒、生态污染",
+  "claim: processing retrieved prompts = arbitrary code execution on the tool-use surface": "论断：处理检索到的 prompt ≈ 在工具使用面上执行任意代码",
+  "PVE pattern  Prompt, Validator, Executor": "PVE 模式——Prompt、Validator、Executor",
+  "1. main model proposes tool call": "1. 主模型提出工具调用",
+  "2. cheap fast validator inspects arguments": "2. 便宜快速的校验器检查参数",
+  "3. validator inspects retrieved content sources": "3. 校验器检查检索内容的来源",
+  "4. reject on injection marker or unsafe destination": "4. 发现注入标记或不安全目标即拒绝",
+  "5. pass  executor runs; tell main model on reject": "5. 通过则执行器运行；拒绝时告知主模型",
+  "cost: one extra inference per tool call": "成本：每次工具调用多一次推理",
+  "six-control defense doctrine (2026)": "六道防护体系（2026）",
+  "1. all retrieved content untrusted": "1. 一切检索内容都不可信",
+  "2. allowlist / blocklist navigation": "2. 允许列表 / 黑名单导航",
+  "3. per-step safety evaluation (Gemini 2.5)": "3. 逐步安全评估（Gemini 2.5）",
+  "4. guardrails on tool inputs + outputs": "4. 对工具输入 + 输出加 guardrails",
+  "5. human-in-the-loop on sensitive actions": "5. 敏感操作加入人工监督（HITL）",
+  "6. external content capture + span references": "6. 外部内容捕获 + span 引用",
+  "\"only direct instructions from the user count as permission\" — OpenAI CUA docs": "「只有来自用户的直接指令才算授权」——OpenAI CUA 文档"
+}

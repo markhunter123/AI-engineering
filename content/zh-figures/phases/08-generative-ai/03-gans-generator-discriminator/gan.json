@@ -1,0 +1,21 @@
+{
+  "adversarial training: two networks, one loss": "对抗训练：两个网络、一个损失",
+  "z ~ N(0, I)": "z ~ N(0, I)",
+  "G(z)": "G(z)",
+  "generator": "generator",
+  "x&#770; (fake)": "x&#770;（伪造）",
+  "x (real)": "x（真实）",
+  "D(x)": "D(x)",
+  "discriminator": "discriminator",
+  "real? 0-1": "真实？0-1",
+  "BCE loss": "BCE 损失",
+  "real -&gt; 1, fake -&gt; 0": "真实 -&gt; 1，伪造 -&gt; 0",
+  "minimax:  min_G  max_D  E_real[log D(x)]  +  E_fake[log(1 - D(G(z)))]": "minimax：  min_G  max_D  E_real[log D(x)]  +  E_fake[log(1 - D(G(z)))]",
+  "use non-saturating G loss  -log D(G(z))  to avoid vanishing gradients": "使用非饱和的 G 损失 -log D(G(z))，以避免梯度消失",
+  "failure: D wins": "失败情形：D 获胜",
+  "D(fake) &#8594; 0,  gradient to G vanishes": "D(fake) &#8594; 0，对 G 的梯度消失",
+  "fix: cut D lr, add input noise, WGAN": "对策：降低 D 的学习率、加入输入噪声、改用 WGAN",
+  "failure: G collapses": "失败情形：G 崩溃",
+  "G outputs one mode, D can't penalize": "G 只输出一种模式，D 无法施加惩罚",
+  "fix: minibatch disc, spectral norm, PacGAN": "对策：mini-batch 判别、谱归一化、PacGAN"
+}

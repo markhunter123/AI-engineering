@@ -1,0 +1,21 @@
+{
+  "actor-critic: policy + value, trained together": "actor-critic：策略 + 价值，联合训练",
+  "shared state features x = phi(s)": "共享状态特征 x = phi(s)",
+  "MLP trunk, CNN on pixels, transformer on tokens — same input, two heads": "MLP 主干、像素用 CNN、token 用 transformer——同一输入，两个输出头",
+  "actor  pi_theta(a | s)": "actor  pi_theta(a | s)",
+  "logits = f_theta(x)": "logits = f_theta(x)",
+  "p = softmax(logits)": "p = softmax(logits)",
+  "loss: -A * log pi(a|s)": "loss: -A * log pi(a|s)",
+  "+ c_e * H(pi(.|s))": "+ c_e * H(pi(.|s))",
+  "policy gradient, on-policy": "策略梯度，on-policy",
+  "critic  V_phi(s)": "critic  V_phi(s)",
+  "v_hat = w . x": "v_hat = w . x",
+  "target = G_t  (MC)": "target = G_t  （MC）",
+  "or  r + g V(s')  (TD)": "或  r + g V(s')  （TD）",
+  "loss: c_v * (v_hat - target)^2": "loss: c_v * (v_hat - target)^2",
+  "MSE regression to return": "对回报的 MSE 回归",
+  "advantage estimator A_t": "优势估计器 A_t",
+  "A_t = delta_t + (g * lam) * A_{t+1}     delta_t = r_{t+1} + g V(s_{t+1}) - V(s_t)": "A_t = delta_t + (g * lam) * A_{t+1}     delta_t = r_{t+1} + g V(s_{t+1}) - V(s_t)",
+  "GAE(lam): lam=0 pure TD, lam=1 pure MC, lam=0.95 the 2026 default": "GAE(lam)：lam=0 为纯 TD，lam=1 为纯 MC，lam=0.95 是 2026 年的默认值",
+  "subtract V from return, normalize, multiply by grad log pi — lower variance, same gradient": "从回报中减去 V、归一化，再乘 grad log pi——方差更低，梯度不变"
+}

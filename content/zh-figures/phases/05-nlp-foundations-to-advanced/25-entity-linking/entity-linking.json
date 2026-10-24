@@ -1,0 +1,23 @@
+{
+  "entity linking — mention → candidates → disambiguated KB id": "实体链接——指称 mention → 候选 → 消歧后的 KB id",
+  "input": "输入",
+  "Jordan": "Jordan",
+  "scored 45 points against the Lakers last night.\"": "scored 45 points against the Lakers last night.\"",
+  "candidate generation (alias-index lookup for \"Jordan\")": "候选生成（针对 「Jordan」 查别名索引）",
+  "Q41421": "Q41421",
+  "Michael Jordan": "Michael Jordan",
+  "Q810": "Q810",
+  "Jordan (country)": "Jordan（国家）",
+  "Q254110": "Q254110",
+  "Michael B. Jordan": "Michael B. Jordan",
+  "Q3308285": "Q3308285",
+  "Michael I. Jordan (ML)": "Michael I. Jordan（ML）",
+  "disambiguation — score each candidate against context": "消歧——依据上下文为每个候选打分",
+  "score = Jaccard(context, description) + 0.1 × P(entity | \"Jordan\")": "score = Jaccard(context, description) + 0.1 × P(entity | \"Jordan\")",
+  "score 0.109": "得分 0.109",
+  "basketball match": "篮球吻合",
+  "Lakers not in country desc": "Lakers 不在国家描述中",
+  "no film keywords in context": "上下文中没有电影关键词",
+  "no ML keywords in context": "上下文中没有 ML 关键词",
+  "top score wins → Q41421 (Michael Jordan, basketball) — output linked to Wikidata": "得分最高者胜出 → Q41421（Michael Jordan，篮球）——输出已链接到 Wikidata"
+}

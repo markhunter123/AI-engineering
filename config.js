@@ -24,6 +24,13 @@ const ZH_CONTENT = path.join(__dirname, 'content', 'zh');
  *  re-export wipes that directory. */
 const ZH_QUIZ = path.join(__dirname, 'content', 'zh-quiz');
 
+/** Chinese text overlays for lesson asset SVGs, at
+ *  zh-figures/phases/<phase>/<lesson>/<stem>.json — a flat
+ *  { "exact text in the svg": "中文" } map. The build rewrites <text>
+ *  content and emits <stem>.zh.svg next to the English copy. Kept outside
+ *  content/zh because a re-export wipes that directory. */
+const ZH_FIGURES = path.join(__dirname, 'content', 'zh-figures');
+
 const SITE = {
   name: 'AI Engineering from Scratch',
   nameZh: 'AI 工程从零开始',
@@ -86,4 +93,4 @@ const PHASE_ZH = {
   '19-capstone-projects': '实战项目',
 };
 
-module.exports = { SRC_REPO, BASE, DIST, ZH_CONTENT, ZH_QUIZ, SITE, CDN, PHASE_ZH };
+module.exports = { SRC_REPO, BASE, DIST, ZH_CONTENT, ZH_QUIZ, ZH_FIGURES, SITE, CDN, PHASE_ZH };

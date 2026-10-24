@@ -1,0 +1,19 @@
+{
+  "the three-layer agent context stack": "三层智能体上下文栈",
+  "AGENTS.md (project level, session start)": "AGENTS.md（项目级，会话启动时加载）",
+  "adopted by 60k+ repos as of April 2026": "截至 2026 年 4 月已被 6 万+ 仓库采用",
+  "/repo-root/AGENTS.md": "/repo-root/AGENTS.md",
+  "# Project: my-service": "# 项目：my-service",
+  "## Conventions: TypeScript, pnpm, Pydantic models, RFC 2119 MUST": "## 约定：TypeScript、pnpm、Pydantic 模型、RFC 2119 的 MUST",
+  "## Commands: pnpm dev, pnpm build, pnpm test": "## 命令：pnpm dev、pnpm build、pnpm test",
+  "SKILL.md (reusable know-how, loaded on invoke)": "SKILL.md（可复用的专有知识，调用时加载）",
+  "Anthropic Agent Skills, open standard, December 2025": "Anthropic Agent Skills，开放标准，2025 年 12 月",
+  "/skills/release-notes-writer/SKILL.md": "/skills/release-notes-writer/SKILL.md",
+  "name: release-notes-writer": "name: release-notes-writer",
+  "description: Write a changelog entry for the latest PRs.": "description：为最新 PR 撰写一条更新日志条目。",
+  "MCP server (tools the skill invokes)": "MCP 服务器（该 skill 调用的工具）",
+  "Phase 13 / 06-14 covers the protocol": "第 13 阶段 / 06-14 讲解该协议",
+  "notes-server  +  github-server  +  gateway": "notes-server  +  github-server  +  gateway",
+  "MCP = \"what tools exist\"; Skill = \"how to use them\"; AGENTS.md = \"project rules\"": "MCP = 「有哪些工具」；Skill = 「如何使用它们」；AGENTS.md = 「项目规则」",
+  "Apps SDK (OpenAI) is MCP + widget metadata for ChatGPT UI.": "Apps SDK（OpenAI）就是面向 ChatGPT 界面的 MCP + widget 元数据。"
+}

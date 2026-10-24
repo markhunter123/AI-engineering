@@ -1,0 +1,21 @@
+{
+  "the MDP loop: five objects, one recursion": "MDP 循环：五个对象，一个递归",
+  "state s_t": "状态 s_t",
+  "what agent sees": "agent 看到的内容",
+  "Markov sufficient": "马尔可夫充分性",
+  "policy pi(a | s)": "策略 pi(a | s)",
+  "chooses action": "选择动作",
+  "a_t ~ pi(. | s_t)": "a_t ~ pi(. | s_t)",
+  "transition P": "转移 P",
+  "s_{t+1} ~ P(. | s_t, a_t)": "s_{t+1} ~ P(. | s_t, a_t)",
+  "env dynamics": "环境动力学",
+  "reward r_t": "奖励 r_t",
+  "scalar signal": "标量信号",
+  "R(s_t, a_t, s_{t+1})": "R(s_t, a_t, s_{t+1})",
+  "next step: s_{t+1} becomes the new s_t": "下一步：s_{t+1} 成为新的 s_t",
+  "the Bellman recursion": "Bellman 递归",
+  "V^pi(s) = sum_a pi(a|s) · sum_{s',r} P(s',r | s,a) · [ r + gamma · V^pi(s') ]": "V^pi(s) = sum_a pi(a|s) · sum_{s',r} P(s',r | s,a) · [ r + gamma · V^pi(s') ]",
+  "Q^pi(s,a) = sum_{s',r} P(s',r | s,a) · [ r + gamma · sum_{a'} pi(a'|s') · Q^pi(s',a') ]": "Q^pi(s,a) = sum_{s',r} P(s',r | s,a) · [ r + gamma · sum_{a'} pi(a'|s') · Q^pi(s',a') ]",
+  "iterate to fixed point (DP) · sample (MC) · bootstrap one step (TD)": "迭代至不动点（DP）· 采样（MC）· 一步自举（TD）",
+  "state + action + transition + reward + discount — every RL algorithm in this phase": "状态 + 动作 + 转移 + 奖励 + 折扣——本阶段每个 RL 算法的全部要素"
+}

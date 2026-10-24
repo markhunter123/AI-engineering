@@ -1,0 +1,20 @@
+{
+  "Scalable oversight: PGR and the three mechanisms": "可扩展监督：PGR 与三种机制",
+  "Performance Gap Recovered (PGR)": "性能差距恢复（PGR）",
+  "weak accuracy -&gt;": "弱模型准确率 -&gt;",
+  "PGR": "PGR",
+  "three scalable-oversight mechanisms": "三种可扩展监督机制",
+  "debate (Irving 2018)": "辩论（Irving 2018）",
+  "two U's argue; weak judge picks. mixed 2024 evidence.": "两个 U 辩论，弱裁判做选择。2024 年的证据褒贬不一。",
+  "recursive reward modeling (Leike 2018)": "递归奖励建模（Leike 2018）",
+  "U helps train RM for U+1. overseer tracks U.": "U 帮助为 U+1 训练 RM，监督者追踪 U。",
+  "task decomposition (Christiano 2018)": "任务分解（Christiano 2018）",
+  "break hard task into checkable sub-tasks.": "把难题拆成可核查的子任务。",
+  "complementarity with W2SG": "与 W2SG 的互补性",
+  "scalable oversight: improves label quality.": "可扩展监督：提升标注质量。",
+  "W2SG: closes gap from whatever labels.": "W2SG：无论采用什么标注都能缩小差距。",
+  "combined (Lang 2025): better PGR on NLP tasks.": "两者结合（Lang 2025）：在 NLP 任务上取得更好的 PGR。",
+  "PGR is a measurable, not a solution. Burns et al. 2023 are explicit: the weak-strong gap they study is capability-shaped.": "PGR 是一种度量，不是解决方案。Burns 等人 2023 明确指出：他们研究的强弱差距是能力形态的。",
+  "superalignment question -- can humans oversee superhuman models? -- depends on whether the gap transfers to alignment-shaped settings.": "超级对齐之问——人类能否监督超人类模型？——取决于这种差距是否迁移到对齐形态的场景。",
+  "organizational: OpenAI Superalignment dissolved 05/2024; agenda continues at Anthropic, MATS, Redwood, Apollo, METR.": "组织层面的动向：OpenAI Superalignment 于 2024 年 5 月解散；相关工作在 Anthropic、MATS、Redwood、Apollo、METR 继续推进。"
+}

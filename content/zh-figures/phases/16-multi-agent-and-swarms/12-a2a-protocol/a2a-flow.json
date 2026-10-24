@@ -1,0 +1,20 @@
+{
+  "A2A protocol — agent-to-agent discovery, task, artifact": "A2A 协议——agent 到 agent 的发现、任务、工件",
+  "Client Agent": "客户端 Agent",
+  "LangGraph? CrewAI? custom?": "LangGraph？CrewAI？自研？",
+  "doesn't matter to A2A": "对 A2A 无关紧要",
+  "sends A2A-Version: 1.0": "发送 A2A-Version: 1.0",
+  "Remote Agent": "远程 Agent",
+  "code-review-agent": "code-review-agent",
+  "opaque implementation": "不透明的实现",
+  "GET /.well-known/agent-card.json": "GET /.well-known/agent-card.json",
+  "Agent Card: skills, supportedInterfaces, securityRequirements": "Agent Card：skills、supportedInterfaces、securityRequirements",
+  "POST /message:send {message: {role: ROLE_USER, parts: [...]}}": "POST /message:send {message: {role: ROLE_USER, parts: [...]}}",
+  "200 {task: {id: baf1fc13, status: {state: TASK_STATE_SUBMITTED}}}": "200 {task: {id: baf1fc13, status: {state: TASK_STATE_SUBMITTED}}}",
+  "GET /tasks/baf1fc13 (poll)": "GET /tasks/baf1fc13（轮询）",
+  "TASK_STATE_COMPLETED, artifacts=[{parts: [{data: {...}}]}]": "TASK_STATE_COMPLETED, artifacts=[{parts: [{data: {...}}]}]",
+  "TASK_STATE_SUBMITTED → TASK_STATE_WORKING → TASK_STATE_COMPLETED": "TASK_STATE_SUBMITTED → TASK_STATE_WORKING → TASK_STATE_COMPLETED",
+  "(or TASK_STATE_FAILED / TASK_STATE_CANCELED)": "（或 TASK_STATE_FAILED / TASK_STATE_CANCELED）",
+  "A2A (horizontal, agent↔agent) vs MCP (vertical, agent↔tool) — production uses both": "A2A（横向，agent↔agent）vs MCP（纵向，agent↔tool）——生产环境两者都用",
+  "150+ orgs by April 2026 · Google Vertex AI Agent Builder · Microsoft Agent Framework · LangGraph / CrewAI / AutoGen adapters": "到 2026 年 4 月已有 150+ 组织 · Google Vertex AI Agent Builder · Microsoft Agent Framework · LangGraph / CrewAI / AutoGen 适配器"
+}

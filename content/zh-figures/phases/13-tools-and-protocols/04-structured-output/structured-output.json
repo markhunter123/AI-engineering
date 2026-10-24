@@ -1,0 +1,23 @@
+{
+  "three failure modes, two enforcement points": "三种失败模式，两处强制执行点",
+  "prompt-for-JSON (no strict mode)": "靠提示生成 JSON（无严格模式）",
+  "generate freely": "自由生成",
+  "parse JSON": "解析 JSON",
+  "validate against schema": "对照 schema 校验",
+  "FAIL 1: parse error": "失败 1：解析错误",
+  "FAIL 2: schema violation": "失败 2：违反 schema",
+  "SUCCESS: typed payload": "成功：类型化的载荷",
+  "retry on failure (max 3x)": "失败时重试（最多 3 次）",
+  "expensive but necessary without strict mode": "没有严格模式时昂贵但必要",
+  "strict mode / constrained decoding": "严格模式 / 约束解码",
+  "decode with schema-aware logit mask": "用感知 schema 的 logit 掩码解码",
+  "grammar FSM rejects invalid next-tokens": "语法 FSM 拒绝无效的后续 token",
+  "output parses (always)": "输出总能解析",
+  "output validates (always)": "输出总能通过校验",
+  "REFUSAL: typed reason": "拒绝：给出类型化的原因",
+  "OpenAI     : response_format strict:true": "OpenAI：response_format 且 strict:true",
+  "Anthropic  : input_schema on tool_use": "Anthropic：tool_use 上的 input_schema",
+  "Gemini     : responseSchema + grammar": "Gemini：responseSchema + grammar",
+  "Open       : outlines / guidance / lm-format-enforcer": "开源：outlines / guidance / lm-format-enforcer",
+  "under strict, only the refusal branch stays; the retry loop collapses.": "严格模式下只剩拒绝分支；重试循环随之消失。"
+}

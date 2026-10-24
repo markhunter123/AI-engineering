@@ -1,0 +1,16 @@
+{
+  "encoder block vs decoder block — the 2026 skeleton": "encoder block 对比 decoder block——2026 年的骨架",
+  "encoder block (bidirectional)": "encoder block（双向）",
+  "input x  (N, d)": "输入 x (N, d)",
+  "RMSNorm": "RMSNorm",
+  "multi-head self-attention": "多头自注意力",
+  "residual": "残差",
+  "SwiGLU FFN": "SwiGLU FFN",
+  "out (N, d)": "输出 (N, d)",
+  "decoder block (causal + cross-attn)": "decoder block（因果 + 交叉注意力）",
+  "input x  (M, d)": "输入 x (M, d)",
+  "masked self-attention": "掩码自注意力",
+  "cross-attention (Q:dec, KV:enc)": "交叉注意力（Q：dec，KV：enc）",
+  "enc_out": "enc_out",
+  "encoder: 2 sublayers per block. decoder: 3 sublayers per block. residuals are dashed, additions are circles.": "encoder：每个 block 含 2 个子层；decoder：每个 block 含 3 个子层。残差用虚线表示，加法用圆圈表示。"
+}

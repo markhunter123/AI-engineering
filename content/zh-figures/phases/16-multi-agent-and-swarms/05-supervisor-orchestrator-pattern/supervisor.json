@@ -1,0 +1,19 @@
+{
+  "Supervisor / Orchestrator-Worker — Anthropic Research pattern": "监督者 / 编排者-工人（Orchestrator-Worker）—— Anthropic 研究模式",
+  "Lead (Opus 4)": "主管（Lead，Opus 4）",
+  "plan · delegate · synthesize": "规划 · 委派 · 综合",
+  "never reads raw sources": "从不阅读原始资料",
+  "Worker 1 (Sonnet 4)": "Worker 1（Sonnet 4）",
+  "fresh 200k context": "全新的 200k 上下文",
+  "sub-question: \"origins\"": "子问题：「起源」",
+  "returns: narrow summary": "返回：范围收窄的摘要",
+  "Worker 2 (Sonnet 4)": "Worker 2（Sonnet 4）",
+  "sub-question: \"state of art\"": "子问题：「研究现状」",
+  "Worker 3 (Sonnet 4)": "Worker 3（Sonnet 4）",
+  "sub-question: \"open problems\"": "子问题：「开放问题」",
+  "synthesis": "综合",
+  "lead reads worker summaries only": "主管只阅读工人的摘要",
+  "why it wins": "为什么它表现更好",
+  "fresh context per worker · parallel wall-clock · narrow worker prompts": "每个工人独立获取全新上下文 · 并行墙钟时间 · 范围狭窄的工人 prompt",
+  "+90.2% over single-agent Opus 4 (Anthropic internal research evals) · 80% of BrowseComp variance explained by tokens alone": "+90.2%（相对单智能体 Opus 4，Anthropic 内部研究评估）· BrowseComp 的 80% 方差仅由 token 数量即可解释"
+}

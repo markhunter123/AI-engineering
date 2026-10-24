@@ -1,0 +1,22 @@
+{
+  "dialogue state tracking — slots fill, update, correct across turns": "对话状态跟踪——槽位跨轮次填充、更新、纠正",
+  "turn 1": "第 1 轮",
+  "\"I want a cheap restaurant in the north.\"": "「我想找一家北边的便宜餐厅。」",
+  "cuisine: —": "菜系：—",
+  "area: north": "区域：北",
+  "price: cheap": "价格：便宜",
+  "people: —": "人数：—",
+  "turn 2": "第 2 轮",
+  "\"Italian food please.\"": "「请给我意大利菜。」",
+  "cuisine: italian": "菜系：意式",
+  "turn 3": "第 3 轮",
+  "\"Actually make it moderate pricing.\"": "「改成中等价位吧。」",
+  "price: moderate": "价格：中等",
+  "turn 4": "第 4 轮",
+  "\"For four people.\"": "「四个人。」",
+  "people: 4": "人数：4",
+  "final state (JGA counts if and only if all slots match gold)": "最终状态（仅当所有槽位与标准答案一致时，JGA 才算对）",
+  "{cuisine: italian, area: north, price: moderate, people: 4}": "{cuisine: italian, area: north, price: moderate, people: 4}",
+  "→ pass to backend: book_restaurant(cuisine=italian, area=north, price=moderate, people=4)": "→ 传给后端：book_restaurant(cuisine=italian, area=north, price=moderate, people=4)",
+  "invariants — correction overwrites (turn 3); explicit negation clears; untouched slots persist": "不变量——纠正会覆盖（第 3 轮）；明确否定会清空；未触及的槽位保持不变"
+}

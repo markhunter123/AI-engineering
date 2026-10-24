@@ -1,0 +1,20 @@
+{
+  "3 documents": "3 篇文档",
+  "d0: \"the cat sat\"": "d0: \"the cat sat\"",
+  "d1: \"the dog sat\"": "d1: \"the dog sat\"",
+  "d2: \"the cat ran\"": "d2: \"the cat ran\"",
+  "vocab:": "词表：",
+  "the, cat, sat,": "the, cat, sat,",
+  "dog, ran": "dog, ran",
+  "count": "计数",
+  "BoW · d0": "BoW · d0",
+  "BoW · d1": "BoW · d1",
+  "BoW · d2": "BoW · d2",
+  "* IDF": "* IDF",
+  "down-weight": "降权",
+  "\"the\"": "\"the\"",
+  "TF-IDF · d0": "TF-IDF · d0",
+  "TF-IDF · d1": "TF-IDF · d1",
+  "TF-IDF · d2": "TF-IDF · d2",
+  "order discarded. rarity rewarded. sparse, interpretable, fast.": "丢弃词序、奖励稀有；稀疏、可解释、快速。"
+}

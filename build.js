@@ -21,7 +21,7 @@ const phaseTpl = require('./src/templates/phase');
 const homeTpl = require('./src/templates/home');
 const pathsTpl = require('./src/templates/paths');
 
-const { SRC_REPO, DIST, ZH_CONTENT, ZH_QUIZ, SITE, CDN, PHASE_ZH } = config;
+const { SRC_REPO, DIST, ZH_CONTENT, ZH_QUIZ, ZH_FIGURES, SITE, CDN, PHASE_ZH } = config;
 
 /** Cache-busting version stamped on every static asset URL (layout vurl +
  *  the CDN config below) so browsers re-fetch JS/CSS/JSON after a deploy
@@ -65,7 +65,7 @@ const T_KEYS = [
   'Pick a phase below — lessons build on each other within a phase.',
   'Every lesson explains the concept, builds it from raw math or code, then runs the same operation through the production library.',
   'Take the quiz at the end of each lesson to check your understanding.',
-  'Learning Paths',
+  'Learning Paths', 'Diagrams',
 ];
 
 function loadStrings() {
@@ -450,6 +450,86 @@ function zhQuizQuestions(phaseSlug, lessonSlug) {
   }
 }
 
+/** Asset SVGs per lesson ('<phase>/<lesson>' -> ['name.svg', ...]); populated
+ *  during the asset-copy step, consumed by diagramsHtmlFor. */
+const lessonDiagrams = new Map();
+
+/** Lessons whose SVGs have a Chinese variant generated from the
+ *  content/zh-figures overlay ('<phase>/<lesson>/<file>'). */
+const zhDiagrams = new Set();
+
+/** Site typography as literal stacks for SVGs. SVGs shown via <img> are
+ *  isolated documents — they cannot inherit page CSS — so the tokens.css
+ *  stacks are inlined here (keep in sync with tokens.css). */
+const SVG_FONT_BODY = "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',"
+  + " 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif";
+const SVG_FONT_CODE = "'SF Mono', 'JetBrains Mono', 'Fira Code', Consolas,"
+  + " 'Liberation Mono', Menlo, Courier, 'PingFang SC', 'Microsoft YaHei'";
+
+/** Rewrite every font-family in an SVG to the site's stacks — monospace
+ *  families map to the code stack, everything else to the body stack. Keeps
+ *  diagrams on the same typography as the page they embed in. */
+function normalizeSvgFonts(svg) {
+  const pick = (decl) => (/menlo|consolas|courier|mono/i.test(decl) ? SVG_FONT_CODE : SVG_FONT_BODY);
+  return svg
+    .replace(/font-family="([^"]*)"/g, (m, decl) => 'font-family="' + pick(decl) + '"')
+    .replace(/font-family\s*:\s*([^;}]+)/g, (m, decl) => 'font-family: ' + pick(decl));
+}
+
+/** Translated SVG text for <stem>.svg, or null. Reads
+ *  ZH_FIGURES/phases/<phase>/<lesson>/<stem>.json — a flat
+ *  { "exact text in the svg": "中文" } map applied to text between tags. */
+function zhFigureSvg(phaseSlug, lessonSlug, file) {
+  const stem = file.replace(/\.svg$/i, '');
+  const overlay = path.join(ZH_FIGURES, 'phases', phaseSlug, lessonSlug, stem + '.json');
+  if (!fs.existsSync(overlay)) return null;
+  let dict;
+  try {
+    dict = JSON.parse(fs.readFileSync(overlay, 'utf8'));
+  } catch (e) {
+    return null;
+  }
+  const svgPath = path.join(SRC_REPO, 'phases', phaseSlug, lessonSlug, 'assets', file);
+  let svg;
+  try {
+    svg = fs.readFileSync(svgPath, 'utf8');
+  } catch (e) {
+    return null;
+  }
+  return svg.replace(/>([^<>]+)</g, (m, raw) => {
+    const key = raw.trim();
+    if (Object.prototype.hasOwnProperty.call(dict, key)) {
+      return '>' + raw.replace(key, dict[key]) + '<';
+    }
+    return m;
+  });
+}
+
+/** Gallery of the lesson's asset SVGs, appended to the article by convention
+ *  (no lesson markdown references them; collected in the asset-copy step).
+ *  Empty string when the lesson has none. */
+function diagramsHtmlFor(lang, record) {
+  const files = lessonDiagrams.get(record.phaseSlug + '/' + record.lessonSlug);
+  if (!files) return '';
+  const L = makeLookup(lang);
+  const dir = BASE + 'static/phases/' + record.phaseSlug + '/' + record.lessonSlug + '/assets/';
+  const count = lang === 'zh'
+    ? '共 ' + files.length + ' 张'
+    : files.length + (files.length === 1 ? ' figure' : ' figures');
+  let html = '<section class="lesson-diagrams">'
+    + '<h2 class="lesson-diagrams-head"><span>' + L('Diagrams') + '</span>'
+    + '<span class="lesson-diagrams-count">' + count + '</span></h2>'
+    + '<div class="lesson-diagrams-body">';
+  for (const f of files) {
+    const stem = f.replace(/\.svg$/i, '');
+    const zh = lang === 'zh' && zhDiagrams.has(record.phaseSlug + '/' + record.lessonSlug + '/' + f);
+    html += '<figure><img src="' + dir + stem + (zh ? '.zh.svg' : '.svg')
+      + '" alt="' + stem + ' diagram" loading="lazy">'
+      + '<figcaption>' + stem + '</figcaption></figure>';
+  }
+  return html + '</div></section>\n';
+}
+
 function sidebarHtmlFor(lang, currentPhaseSlug, currentLessons, currentLessonSlug, currentSpecial) {
   const L = makeLookup(lang);
   const phases = phasesScan.phases.map((phase) => ({
@@ -630,7 +710,7 @@ function main() {
 
   // 2. static assets: css concat, js, favicon
   const cssDir = path.join(__dirname, 'src', 'css');
-  const css = ['tokens.css', 'base.css', 'layout.css', 'content.css', 'components.css']
+  const css = ['tokens.css', 'base.css', 'layout.css', 'content.css', 'components.css', 'lesson-diagrams.css']
     .map((f) => fs.readFileSync(path.join(cssDir, f), 'utf8'))
     .join('\n');
   write('assets/site/site.css', css);
@@ -651,15 +731,31 @@ function main() {
     copyDir(path.join(__dirname, 'vendor', 'mermaid'), path.join(DIST, 'assets', 'mermaid'));
   }
 
-  // 3. lesson images (shared across languages)
+  // 3. lesson images (shared across languages). Upstream keeps assets/*.svg
+  // unreferenced by any lesson markdown (its own lesson.html never embeds them
+  // either), so SVGs are additionally surfaced by convention: collect them
+  // here, and the lesson renderer appends a gallery to the article.
   const phasesRoot = path.join(SRC_REPO, 'phases');
   let assetDirs = 0;
   for (const phase of phases) {
     for (const lesson of phase.lessons) {
       const assetsDir = path.join(phasesRoot, phase.slug, lesson.lessonSlug, 'assets');
-      if (fs.existsSync(assetsDir)) {
-        copyDir(assetsDir, path.join(DIST, 'static', 'phases', phase.slug, lesson.lessonSlug, 'assets'));
-        assetDirs++;
+      if (!fs.existsSync(assetsDir)) continue;
+      copyDir(assetsDir, path.join(DIST, 'static', 'phases', phase.slug, lesson.lessonSlug, 'assets'));
+      assetDirs++;
+      const svgs = fs.readdirSync(assetsDir).filter((f) => f.toLowerCase().endsWith('.svg')).sort();
+      if (svgs.length) lessonDiagrams.set(phase.slug + '/' + lesson.lessonSlug, svgs);
+      // SVGs are rewritten onto the site typography; Chinese variants from the
+      // zh-figures overlay are written next to the English copy.
+      for (const f of svgs) {
+        const svgPath = path.join(assetsDir, f);
+        const rel = 'static/phases/' + phase.slug + '/' + lesson.lessonSlug + '/assets/';
+        const zhSvg = zhFigureSvg(phase.slug, lesson.lessonSlug, f);
+        if (zhSvg) {
+          write(rel + f.replace(/\.svg$/i, '.zh.svg'), normalizeSvgFonts(zhSvg));
+          zhDiagrams.add(phase.slug + '/' + lesson.lessonSlug + '/' + f);
+        }
+        write(rel + f, normalizeSvgFonts(fs.readFileSync(svgPath, 'utf8')));
       }
     }
   }
@@ -826,7 +922,7 @@ function main() {
           title: phasesScan.phases.find((p) => p.slug === record.phaseSlug).title[lang],
           url: phaseUrl(lang, record.phaseSlug),
         },
-        mdHtml: rendered.body,
+        mdHtml: rendered.body + diagramsHtmlFor(lang, record),
         toc: rendered.toc,
         prev: record.prev
           ? { title: titleFor(record.prev, lang), url: lessonUrl(lang, record.prev.phaseSlug, record.prev.lessonSlug) }

@@ -1,0 +1,13 @@
+{
+  "Framework fit by problem shape": "框架按问题形态的适配",
+  "Branching style: explicit ---- LLM-selected": "分支方式：显式 ---- LLM 选择",
+  "State: ephemeral ---- durable": "状态：易失 ---- 持久",
+  "LangGraph": "LangGraph",
+  "StateGraph": "StateGraph",
+  "CrewAI": "CrewAI",
+  "Roles + tasks": "角色 + 任务",
+  "AutoGen": "AutoGen",
+  "Chat / GroupChat": "Chat / GroupChat",
+  "Agno": "Agno",
+  "Agent + storage": "Agent + 存储"
+}

@@ -1,0 +1,23 @@
+{
+  "inpainting vs outpainting vs SDEdit": "inpainting 对比 outpainting 对比 SDEdit",
+  "inpainting": "inpainting",
+  "mask inside, pin outside": "掩码内部重画，外部固定",
+  "9-channel U-Net:": "9 通道 U-Net：",
+  "noisy | encoded_src | mask": "noisy | encoded_src | mask",
+  "outpainting": "outpainting",
+  "invert the mask": "反转掩码",
+  "extend beyond the canvas": "扩展到画布之外",
+  "same model, same loss": "同一个模型、同一个损失",
+  "SDEdit (no retraining)": "SDEdit（无需重新训练）",
+  "x_0 -&gt; add noise to t -&gt; denoise": "x_0 -&gt; 加噪到 t -&gt; 去噪",
+  "t/T = 0.3 &#8594; minor edits": "t/T = 0.3 &#8594; 轻微编辑",
+  "t/T = 0.6 &#8594; moderate edits": "t/T = 0.6 &#8594; 中等编辑",
+  "t/T = 0.9 &#8594; near-random": "t/T = 0.9 &#8594; 近乎随机",
+  "no mask, just noise-level slider": "没有掩码，只有噪声水平滑杆",
+  "inpainting inference loop": "inpainting 推理循环",
+  "for t = T .. 1:  x_t[masked] = denoise;  x_t[unmasked] = noise(clean_source, t)": "for t = T .. 1：  x_t[masked] = denoise；  x_t[unmasked] = noise(clean_source, t)",
+  "replace unmasked region with a fresh forward-diffused clean image each step": "每一步都用新的前向扩散后的干净图像替换未掩码区域",
+  "final step: pin unmasked pixels to the clean source exactly": "最后一步：把未掩码像素精确固定为干净源图中对应位置",
+  "2026 editing stack": "2026 年编辑技术栈",
+  "SAM 2 mask &#8594; SD-Inpaint / Flux-Fill / GPT-Image Edit &#8594; Flux-Kontext for instruction edits": "SAM 2 掩码 &#8594; SD-Inpaint / Flux-Fill / GPT-Image Edit &#8594; 指令式编辑用 Flux-Kontext"
+}

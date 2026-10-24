@@ -1,0 +1,15 @@
+{
+  "query": "查询 query",
+  "BM25 (sparse)": "BM25（稀疏）",
+  "exact keyword, TF-IDF": "精确关键词、TF-IDF",
+  "inverted index, sub-10ms": "倒排索引，<10ms",
+  "precise, brittle. zero OOV tolerance.": "精确但脆弱，对 OOV 零容忍。",
+  "Dense (bi-encoder)": "Dense（双编码器）",
+  "semantic similarity": "语义相似度",
+  "FAISS / vector DB, 50-200ms": "FAISS / vector DB，50-200ms",
+  "paraphrase-tolerant, keyword-blind": "对同义改写友好，但对关键词不敏感",
+  "RRF fusion": "RRF 融合",
+  "rank-only merge": "仅按排名合并",
+  "cross-encoder rerank": "cross-encoder 重排",
+  "top-30 → top-5. adds 30-100ms.": "top-30 → top-5，增加 30-100ms。"
+}

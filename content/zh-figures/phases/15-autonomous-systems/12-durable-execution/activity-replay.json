@@ -1,0 +1,23 @@
+{
+  "Durable execution: replay re-runs workflow, logged activities skip": "持久化执行：replay 重跑工作流，已记录的 activity 直接跳过",
+  "attempt 1 — crash after call_llm": "第 1 次尝试——call_llm 之后崩溃",
+  "fetch_docs": "fetch_docs",
+  "run, log done": "运行，记录完成",
+  "call_llm": "call_llm",
+  "CRASH": "崩溃",
+  "write_report not yet run": "write_report 尚未运行",
+  "event log (durable)": "事件日志（持久化）",
+  "[fetch_docs started, fetch_docs done (result=X),": "[fetch_docs 已开始，fetch_docs 已完成（result=X），",
+  "call_llm started, call_llm done (result=Y)]": "call_llm 已开始，call_llm 已完成（result=Y）]",
+  "attempt 2 — replay": "第 2 次尝试——replay",
+  "replay from log": "从日志重放",
+  "write_report": "write_report",
+  "return report": "返回报告",
+  "done": "完成",
+  "what makes replay work": "replay 为何能工作",
+  "1. Workflow code is deterministic (no wall clock, no random, no hidden I/O).": "1. Workflow 代码是确定性的（不用墙钟、无随机、无隐藏 I/O）。",
+  "2. Every activity is logged with args + result; replay re-reads the log.": "2. 每个 activity 都记录 args + result；replay 会重读日志。",
+  "3. Backend survives the crash (PostgreSQL / Durable Objects; not SQLite for prod).": "3. 后端在崩溃后存活（PostgreSQL / Durable Objects；生产环境不用 SQLite）。",
+  "4. HITL pauses are a workflow signal, not a polling loop.": "4. HITL 暂停是一种工作流信号，而非轮询循环。",
+  "LLM calls fit the activity shape: non-deterministic, expensive, potentially failing.": "LLM 调用符合 activity 形态：非确定性、昂贵、可能失败。"
+}

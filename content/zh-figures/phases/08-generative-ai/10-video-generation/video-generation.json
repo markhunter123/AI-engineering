@@ -1,0 +1,18 @@
+{
+  "video diffusion: patchify, DiT, decode": "视频扩散：切块（patchify）、DiT、解码",
+  "raw video": "原始视频",
+  "T &#215; H &#215; W &#215; 3  (240 frames @ 1080p)": "T &#215; H &#215; W &#215; 3（1080p 下 240 帧）",
+  "3-D VAE encoder": "3-D VAE encoder",
+  "spatiotemporal latent": "时空 latent",
+  "patchify": "切块（patchify）",
+  "t_p &#215; h_p &#215; w_p blocks": "t_p &#215; h_p &#215; w_p 块",
+  "spatiotemporal DiT": "时空 DiT",
+  "factorized: spatial then temporal attn": "分解式：先做空间注意力，再做时间注意力",
+  "cross-attn to T5-XXL text": "对 T5-XXL 文本的交叉注意力",
+  "same DDPM loss over spatiotemporal latents": "在时空 latent 上使用与 DDPM 相同的损失",
+  "L = E || &#949; - &#949;_&#952;( z_t, t, text, first_frame_opt ) ||&#178;": "L = E || &#949; - &#949;_&#952;( z_t, t, text, first_frame_opt ) ||&#178;",
+  "flicker: independent per-frame sampling": "闪烁：逐帧独立采样",
+  "per-frame noise is independent =&gt; jagged motion": "逐帧噪声相互独立 =&gt; 运动生硬抖动",
+  "coherent: joint sequence diffusion": "连贯：联合序列扩散",
+  "shared noise + temporal attention =&gt; smooth motion": "共享噪声 + 时间注意力 =&gt; 运动平滑"
+}

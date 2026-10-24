@@ -1,0 +1,12 @@
+{
+  "capstone: a decoder-only transformer, end to end": "结业项目：一个端到端的 decoder-only transformer",
+  "token IDs (B, N)": "token ID（B, N）",
+  "token emb + positional emb": "token embedding + 位置 embedding",
+  "repeat L times": "重复 L 次",
+  "RMSNorm": "RMSNorm",
+  "causal multi-head self-attention": "因果多头自注意力",
+  "SwiGLU FFN": "SwiGLU FFN",
+  "lm_head (tied to token emb)": "lm_head（与 token embedding 共享权重）",
+  "shift-by-one cross-entropy": "错位一位的交叉熵",
+  "one config, thirteen lessons compressed into a single training script.": "一个配置，把十三课的内容压缩进一个训练脚本。"
+}

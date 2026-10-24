@@ -1,0 +1,23 @@
+{
+  "multi-server client with an explicit protocol-era boundary": "多服务器客户端，带显式的协议时代边界",
+  "client registry": "客户端注册表",
+  "server/discover probe -&gt; modern result or recognized modern error -&gt; stay modern": "server/discover 探测 -&gt; 现代结果或可识别的现代错误 -&gt; 保持现代",
+  "unrecognized error or timeout -&gt; isolated legacy initialize fallback": "未识别的错误或超时 -&gt; 走独立的遗留 initialize 回退",
+  "cache era per peer; every modern request still repeats version + capabilities + clientInfo": "按对等端缓存时代；每个现代请求仍重复版本 + 能力 + clientInfo",
+  "modern peer: files": "现代对等端：files",
+  "server/discover -&gt; 2026-07-28": "server/discover -&gt; 2026-07-28",
+  "tools: read, search": "工具：read、search",
+  "lists: sorted + cache hints": "列表：排序 + 缓存提示",
+  "calls: fresh params._meta": "调用：全新的 params._meta",
+  "legacy peer: archive": "遗留对等端：archive",
+  "discover -&gt; unrecognized -32601": "discover -&gt; 无法识别 -32601",
+  "then initialize + initialized": "然后 initialize + initialized",
+  "tools: restore, search": "工具：restore、search",
+  "legacy wire stays legacy": "遗留线路保持遗留",
+  "modern peer: notes": "现代对等端：notes",
+  "tools: create, search": "工具：create、search",
+  "deterministic merged namespace and route table": "确定的合并命名空间与路由表",
+  "create | read | restore | search | files/search | notes/search": "create | read | restore | search | files/search | notes/search",
+  "canonical name -&gt; peer + local name; silent overwrite is forbidden": "规范名 -&gt; 对等端 + 本地名；禁止静默覆盖",
+  "A peer record is client bookkeeping, not server-side protocol session state.": "对等端记录是客户端的账簿，而非服务器端的协议会话状态。"
+}

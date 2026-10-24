@@ -1,0 +1,16 @@
+{
+  "prompt caching: one write, many reads": "prompt caching：一次写入，多次读取",
+  "Request 1": "请求 1",
+  "[system + tools + few-shot]  15,000 tok  (CACHE WRITE)": "[system + tools + few-shot]  15,000 tok（写入缓存）",
+  "[user msg] 400 tok": "[user msg] 400 tok",
+  "bill: 15,000 * 1.25x + 400 * 1x": "计费：15,000 * 1.25x + 400 * 1x",
+  "Request 2": "请求 2",
+  "[same prefix]  15,000 tok  (CACHE READ)": "[同一前缀]  15,000 tok（读取缓存）",
+  "bill: 15,000 * 0.1x + 400 * 1x": "计费：15,000 * 0.1x + 400 * 1x",
+  "Request N": "请求 N",
+  "Anti-pattern: timestamp at the top": "反模式：顶部放时间戳",
+  "[rest of prefix]  still 15,000 tok": "[前缀其余部分]  仍是 15,000 tok",
+  "[user msg]": "[user msg]",
+  "every request MISSES: no shared prefix": "每个请求都未命中缓存：没有共享前缀",
+  "break-even: Anthropic pays back after the 2nd read; 1h TTL costs 2x write but reuses 12x longer.": "盈亏平衡：Anthropic 在第二次读取后即回本；1 小时 TTL 写入成本为 2 倍，但复用时长多 12 倍。"
+}

@@ -1,0 +1,21 @@
+{
+  "text → triples → knowledge graph (with provenance)": "文本 → 三元组 → 知识图谱（含来源溯源）",
+  "source text": "源文本",
+  "\"Tim Cook became CEO of Apple in 2011. Steve Jobs founded Apple in 1976.\"": "\"Tim Cook became CEO of Apple in 2011. Steve Jobs founded Apple in 1976.\"",
+  "triples (AEVS-verified, with source spans)": "三元组（AEVS 已验证，带来源区间）",
+  "(Tim Cook, P169 \"CEO of\", Apple)   span=[0, 30]   \"Tim Cook became CEO of Apple\"": "(Tim Cook, P169 \"CEO of\", Apple)   span=[0, 30]   \"Tim Cook became CEO of Apple\"",
+  "(Steve Jobs, P112 \"founded\", Apple) span=[38, 63]  \"Steve Jobs founded Apple\"": "(Steve Jobs, P112 \"founded\", Apple) span=[38, 63]  \"Steve Jobs founded Apple\"",
+  "each triple carries char-span + evidence phrase — audit trail non-negotiable in production": "每个三元组都携带字符区间 + 佐证短语——生产环境中审计轨迹不容妥协",
+  "knowledge graph": "知识图谱",
+  "Tim Cook": "Tim Cook",
+  "Q265852 (PERSON)": "Q265852（PERSON）",
+  "Apple": "Apple",
+  "Q312 (ORG)": "Q312（ORG）",
+  "Steve Jobs": "Steve Jobs",
+  "Q19837 (PERSON)": "Q19837（PERSON）",
+  "P169": "P169",
+  "CEO of": "CEO of",
+  "P112": "P112",
+  "founded": "founded",
+  "query with SPARQL / Cypher / graph traversal — each edge traces back to source span": "用 SPARQL / Cypher / 图遍历查询——每条边都能回溯到源文区间"
+}

@@ -1,0 +1,20 @@
+{
+  "flow matching: train on a straight line": "flow matching：在一条直线上训练",
+  "DDPM: curved path": "DDPM：弯曲的路径",
+  "x_0 (data)": "x_0（数据）",
+  "x_T ~ N(0, I)": "x_T ~ N(0, I)",
+  "1000-step SDE": "1000 步 SDE",
+  "DDIM collapses to ~50 steps": "DDIM 压缩到约 50 步",
+  "flow matching: straight line": "flow matching：直线",
+  "x_0": "x_0",
+  "x_1 ~ N(0, I)": "x_1 ~ N(0, I)",
+  "x_t = t &#183; x_1 + (1-t) &#183; x_0": "x_t = t &#183; x_1 + (1-t) &#183; x_0",
+  "2-8 Euler steps at inference": "推理时仅需 2-8 步 Euler",
+  "loss = || v_&#952;(x_t, t) - (x_1 - x_0) ||&#178;": "loss = || v_&#952;(x_t, t) - (x_1 - x_0) ||&#178;",
+  "simulation-free training; target is a constant vector along the straight line": "免模拟训练；目标是沿直线的常向量",
+  "rectified flow: iteratively straighten": "rectified flow：迭代地拉直",
+  "1. train v_1 with random (x_0, x_1) pairs": "1. 用随机的 (x_0, x_1) 配对训练 v_1",
+  "2. sample paired (x_0, x_1) by integrating v_1 -&gt; pairs are ODE-matched": "2. 通过对 v_1 积分来采样配对 (x_0, x_1) -&gt; 配对与 ODE 相匹配",
+  "3. retrain v_2 on those pairs -&gt; genuinely straighter flow": "3. 在这些配对上级联从零训练 v_2 -&gt; 得到真正更直的流",
+  "2 reflow iterations enable 1-step inference (SDXL-Turbo, SD3-Turbo, Flux-schnell)": "2 次 reflow 迭代即可支持 1 步推理（SDXL-Turbo、SD3-Turbo、Flux-schnell）"
+}
