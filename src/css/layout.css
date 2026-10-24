@@ -594,15 +594,27 @@ html[data-ds-dark-theme] .btn-primary:hover {
 }
 
 /* -- responsive ------------------------------------------------------------------- */
-/* Drop the TOC before the content column can be squeezed: sidebar (288px)
-   + toc (232px) + main padding (96px) + 780px content = 1396px minimum. */
-@media (max-width: 1439px) {
+@media (max-width: 1279px) {
   .toc {
     display: none;
   }
 
   .shell {
     grid-template-columns: var(--ds-sidebar-w) minmax(0, 1fr);
+  }
+}
+
+/* Mid-size viewports: keep the TOC visible and still give .content its full
+   780px by slimming the fixed columns instead — 240 + 184 + 2×32 + 780 = 1268
+   fits a 1280px viewport. */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  :root {
+    --ds-sidebar-w: 240px;
+    --ds-toc-w: 184px;
+  }
+
+  .main {
+    padding-inline: 32px;
   }
 }
 
