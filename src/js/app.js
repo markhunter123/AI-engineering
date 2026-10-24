@@ -112,6 +112,20 @@
     });
   }
 
+  /* -- sidebar: keep the current item in view after navigation -------------- */
+  function setupSidebarScroll() {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    var current = sidebar.querySelector('a[aria-current="page"]')
+      || sidebar.querySelector('.nav-group.current .nav-group-head');
+    if (!current) return;
+    // Full page navigation resets the sidebar's scrollTop to 0, so without
+    // this the current lesson (e.g. a late phase) sits below the fold.
+    var sb = sidebar.getBoundingClientRect();
+    var cb = current.getBoundingClientRect();
+    sidebar.scrollTop += (cb.top + cb.height / 2) - (sb.top + sb.height / 2);
+  }
+
   /* -- code copy buttons ---------------------------------------------------- */
   function setupCopy() {
     document.addEventListener('click', function (e) {
@@ -175,6 +189,7 @@
   function ready() {
     setupDrawer();
     setupSidebar();
+    setupSidebarScroll();
     setupCopy();
     setupSpy();
   }
