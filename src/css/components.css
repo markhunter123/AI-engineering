@@ -454,7 +454,7 @@ html[lang='zh'] .home-hero h1 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  max-width: 780px;
+  max-width: min(var(--ds-content-w), 100%);
   margin: 0 auto 24px;
 }
 

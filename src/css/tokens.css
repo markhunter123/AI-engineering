@@ -141,6 +141,9 @@
   --ds-navbar-h: 56px;
   --ds-sidebar-w: 288px;
   --ds-toc-w: 232px;
+  /* Reading column. Usage sites cap it with min(var(--ds-content-w), 100%)
+   * so narrow viewports shrink it instead of overflowing. */
+  --ds-content-w: 880px;
   --ds-radius-sm: 6px;
   --ds-radius: 8px;
   --ds-radius-lg: 12px;

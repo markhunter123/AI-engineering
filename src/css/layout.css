@@ -182,7 +182,7 @@ html[data-ds-dark-theme] .brand-mark {
 }
 
 .content {
-  max-width: 780px;
+  max-width: min(var(--ds-content-w), 100%);
   margin: 0 auto;
 }
 
@@ -580,7 +580,7 @@ html[data-ds-dark-theme] .btn-primary:hover {
 
 /* -- footer ---------------------------------------------------------------------- */
 .footer {
-  max-width: 780px;
+  max-width: min(var(--ds-content-w), 100%);
   margin: 0 auto;
   padding: 24px 0 8px;
   border-top: 1px solid var(--ds-border-l1);
@@ -596,7 +596,7 @@ html[data-ds-dark-theme] .btn-primary:hover {
 /* -- site motto (big quote above the footer; NOT the lesson hook, which
    uses .content .motto in content.css — don't reuse that class name) ------- */
 .site-motto {
-  max-width: 780px;
+  max-width: min(var(--ds-content-w), 100%);
   margin: 56px auto 0;
   text-align: center;
 }
@@ -633,9 +633,9 @@ html[data-ds-dark-theme] .btn-primary:hover {
   }
 }
 
-/* Mid-size viewports: keep the TOC visible and still give .content its full
-   780px by slimming the fixed columns instead — 240 + 184 + 2×32 + 780 = 1268
-   fits a 1280px viewport. */
+/* Mid-size viewports: keep the TOC visible and still give .content at least
+   its former 780px by slimming the fixed columns instead — 240 + 184 + 2×32
+   + 780 = 1268 fits a 1280px viewport. */
 @media (min-width: 1280px) and (max-width: 1439px) {
   :root {
     --ds-sidebar-w: 240px;
