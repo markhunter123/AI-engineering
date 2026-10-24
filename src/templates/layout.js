@@ -109,11 +109,16 @@ function render(o) {
     + '<div class="sidebar-scrim"></div>\n'
     + '<main class="main" id="main">\n'
     + (o.mainHtml || '')
+    + (o.site.motto
+      ? '<section class="motto"><p class="motto-text">“' + esc(o.site.motto) + '”</p>'
+        + (o.site.mottoBy ? '<p class="motto-by">— ' + esc(o.site.mottoBy) + '</p>' : '')
+        + '</section>\n'
+      : '')
     + '<footer class="footer">' + esc(t.footerText)
     + ' · ' + esc(t.footerLicense)
     + ' · ' + esc(t.authoredBy) + ' '
+    + (o.site.coAuthor ? esc(o.site.coAuthor) + ' · ' : '')
     + '<a href="' + esc(o.site.github) + '" target="_blank" rel="noopener">' + esc(o.site.author) + '</a>'
-    + (o.site.coAuthor ? ' · ' + esc(o.site.coAuthor) : '')
     + '</footer>\n'
     + '</main>\n'
     + (o.tocHtml

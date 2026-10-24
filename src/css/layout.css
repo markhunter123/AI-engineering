@@ -593,6 +593,34 @@ html[data-ds-dark-theme] .btn-primary:hover {
   color: var(--ds-label-secondary);
 }
 
+/* -- motto (big quote above the footer) ------------------------------------------- */
+.motto {
+  max-width: 780px;
+  margin: 56px auto 0;
+  text-align: center;
+}
+
+.motto-text {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  color: var(--ds-accent);
+}
+
+.motto-by {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--ds-label-caption);
+}
+
+@media (max-width: 479px) {
+  .motto-text {
+    font-size: 21px;
+  }
+}
+
 /* -- responsive ------------------------------------------------------------------- */
 @media (max-width: 1279px) {
   .toc {

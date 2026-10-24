@@ -39,6 +39,10 @@ const SITE = {
   coAuthor: 'LiuBin.Zhao',
   github: 'https://github.com/markhunter123/AI-engineering',
   githubLabel: 'Musen.Lin',
+  /** Motto banner above the footer on every page. mottoBy: '' hides the
+   *  attribution line; motto: '' hides the whole banner. */
+  motto: 'Stay hungry, stay foolish.',
+  mottoBy: 'Steve Jobs',
   /** Original curriculum the lesson content comes from (footer attribution). */
   source: {
     url: 'https://github.com/rohitg00/ai-engineering-from-scratch',
