@@ -593,8 +593,9 @@ html[data-ds-dark-theme] .btn-primary:hover {
   color: var(--ds-label-secondary);
 }
 
-/* -- motto (big quote above the footer) ------------------------------------------- */
-.motto {
+/* -- site motto (big quote above the footer; NOT the lesson hook, which
+   uses .content .motto in content.css — don't reuse that class name) ------- */
+.site-motto {
   max-width: 780px;
   margin: 56px auto 0;
   text-align: center;

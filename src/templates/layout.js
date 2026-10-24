@@ -110,7 +110,7 @@ function render(o) {
     + '<main class="main" id="main">\n'
     + (o.mainHtml || '')
     + (o.site.motto
-      ? '<section class="motto"><p class="motto-text">“' + esc(o.site.motto) + '”</p>'
+      ? '<section class="site-motto"><p class="motto-text">“' + esc(o.site.motto) + '”</p>'
         + (o.site.mottoBy ? '<p class="motto-by">— ' + esc(o.site.mottoBy) + '</p>' : '')
         + '</section>\n'
       : '')
