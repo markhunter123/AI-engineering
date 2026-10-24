@@ -1,0 +1,78 @@
+{
+  "lesson": "89-eval-harness-from-scratch",
+  "title": "Eval Harness from Scratch — Building Your Own Evaluation Stack",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在比较两个模型分数时，如果不控制产生这些分数的 harness，主要风险是什么？",
+      "options": [
+        "差异可能来自提示、抽取器或 few-shot 数量，而非模型本身。",
+        "模型在不同硬件上训练，完全无法比较。",
+        "公共基准总是报告低于内部的分数。",
+        "harness 通常比模型本身慢。"
+      ],
+      "correct": 0,
+      "explanation": "分数差异是模型差异与 harness 差异之和。在固定模板、抽取器和 few-shot 选择之前，你无法隔离模型。"
+    },
+    {
+      "stage": "check",
+      "question": "mini-harness 的 Task dataclass 包含哪个字段？",
+      "options": [
+        "API 端点 URL",
+        "提示模板",
+        "GPU 内存预算",
+        "训练损失曲线"
+      ],
+      "correct": 1,
+      "explanation": "Task dataclass 绑定 name、prompt template、few-shot count、extractor、metric、examples 和 train examples。"
+    },
+    {
+      "stage": "check",
+      "question": "当短答案与参考有重叠但不完全相同时，哪个指标会给予部分分数？",
+      "options": [
+        "精确匹配",
+        "多选题字母抽取",
+        "Token-level F1",
+        "宏平均"
+      ],
+      "correct": 2,
+      "explanation": "Token F1 奖励共享 token，惩罚多余或缺失的 token，因此适合短答案 QA。"
+    },
+    {
+      "stage": "check",
+      "question": "8-gram 污染检测器发出什么信号？",
+      "options": [
+        "模型正确回答了问题",
+        "评估文本可能出现在训练语料中",
+        "自举置信区间太窄",
+        "few-shot 示例与测试示例过于相似"
+      ],
+      "correct": 1,
+      "explanation": "评估文本与训练文本之间存在长 n-gram 重叠，警示分数可能衡量的是记忆能力。"
+    },
+    {
+      "stage": "post",
+      "question": "某厂商在同一基准名称上报告的准确率比你内部 harness 高 5 分，首先应检查什么？",
+      "options": [
+        "他们的模型是否比你的参数更多",
+        "提示模板、few-shot 数量和抽取器是否一致",
+        "基准问题是否被翻译成另一种语言",
+        "他们推理时是否使用了更大的批次"
+      ],
+      "correct": 1,
+      "explanation": "harness 差异是基准数字不匹配最常见的原因；在比较模型前先固定测量方式。"
+    },
+    {
+      "stage": "post",
+      "question": "你即将发布一个新的模型检查点。哪种做法最能防御基准过拟合？",
+      "options": [
+        "只报告最高的公共排行榜分数",
+        "用相同的任务和模板重新运行相同的私有 harness",
+        "增加 few-shot 数量直到分数不再上升",
+        "在发布前用更宽松的正则替换抽取器"
+      ],
+      "correct": 1,
+      "explanation": "固定的私有 harness 衡量检查点之间的真实变化；为了追数字而更改 harness 就是过拟合。"
+    }
+  ]
+}

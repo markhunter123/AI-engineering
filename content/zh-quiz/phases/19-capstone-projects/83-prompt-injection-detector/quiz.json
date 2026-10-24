@@ -1,0 +1,78 @@
+{
+  "lesson": "83-prompt-injection-detector",
+  "title": "Capstone 83 — Prompt Injection Detector",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "检测器对提示返回什么？",
+      "options": [
+        "仅布尔值拦截决策",
+        "模型的完整系统提示",
+        "规则库中所有规则列表",
+        "一个类别和 [0, 1] 内的置信度"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "为什么 normalize 要在子串和正则规则之前运行？",
+      "options": [
+        "因为正则比子串慢",
+        "因为标准库禁止对原始文本运行规则",
+        "因为归一化降低磁盘文件大小",
+        "因为归一化会暴露 base64、rot13、零宽字符等隐藏 token，供下游规则检测"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "对于类别 C，若 true positives = 6、false positives = 2，精确率（precision）是多少？",
+      "options": [
+        "0.86",
+        "0.60",
+        "0.75",
+        "0.50"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么良性提示语料是评估的一部分？",
+      "options": [
+        "计算攻击召回",
+        "虚增准确率数字",
+        "预训练规则",
+        "测量安全文本上的误报率并捕获过于宽泛的规则"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "当没有任何规则触发时，analyze 方法会怎么做？",
+      "options": [
+        "返回最近尝试规则的类别",
+        "返回随机类别",
+        "返回 benign 类别，置信度 0.0",
+        "抛出异常"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么本课认为检测器不是安全门？",
+      "options": [
+        "因为检测器用 Python 实现",
+        "因为规则以数据形式存储",
+        "因为检测器太快而无用",
+        "因为检测器只是安全门将组合的多个信号之一，每个信号以不同方式权衡精确率与召回率"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

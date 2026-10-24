@@ -1,0 +1,78 @@
+{
+  "lesson": "84-refusal-evaluation",
+  "title": "Capstone 84 — Refusal Evaluation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "under-refusal 衡量什么？",
+      "options": [
+        "模型拒绝标记为安全提示的频率",
+        "每次提示的 API 调用成本",
+        "模型回答标记为不安全提示的频率",
+        "模型每次响应生成的 token 数"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "为什么本课使用 mock LLM 而非真实模型？",
+      "options": [
+        "因为真实模型不允许出现在顶点课",
+        "因为 mock LLM 比真实模型更准确",
+        "使相同输入在各次运行中产生相同输出，从而将代码变更归因于已知原因",
+        "因为本课需要 GPU 硬件"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "若 safe prompt count = 30、refused safe count = 5，over-refusal 率是多少？",
+      "options": [
+        "0.30",
+        "0.17",
+        "0.50",
+        "0.05"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "此处的 Expected Calibration Error（ECE）衡量什么？",
+      "options": [
+        "不安全提示上的拒绝比例",
+        "模型声明置信度与观测准确率之间的差距，按置信度区间分箱",
+        "所有响应的 token 总数",
+        "触发的正则规则数量"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么框架将不安全提示与第 82 课的分类学关联？",
+      "options": [
+        "重新运行第 82 课的语料加载器",
+        "将每个提示的严重性提高一级",
+        "按攻击类别报告 under-refusal，让团队看到模型在哪个边界上泄漏",
+        "去重"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么框架同时返回 under-refusal 和 over-refusal，而不是单一安全分数？",
+      "options": [
+        "因为 under-refusal 只在 CI 中使用",
+        "因为它们是两种相反的误差，单一数字会掩盖某次构建中更差的一方",
+        "因为 over-refusal 由另一个团队计算",
+        "因为 Python dataclass 偏好多个字段"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

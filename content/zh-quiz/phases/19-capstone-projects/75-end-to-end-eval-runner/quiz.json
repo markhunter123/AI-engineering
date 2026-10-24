@@ -1,0 +1,78 @@
+{
+  "lesson": "75-end-to-end-eval-runner",
+  "title": "End-to-End Eval Runner",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "ModelAdapter 接口的最小可能表面是什么？",
+      "options": [
+        "complete、embed、classify、summarise",
+        "init、login、generate、close",
+        "generate(prompt, task)，返回文本以及可选的置信度和逐 token nll",
+        "load_weights、generate、save_weights"
+      ],
+      "correct": 2,
+      "explanation": "一个方法即可覆盖任意适配器。其余都是可选装饰。运行器不需要更丰富的接口。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么运行器接受 parallel 标志而不是总是并行运行？",
+      "options": [
+        "测试需要确定性执行顺序；该标志可切换到顺序执行",
+        "在 CPython 中并行执行不安全",
+        "并行执行需要 GPU",
+        "ThreadPoolExecutor 不是标准库"
+      ],
+      "correct": 0,
+      "explanation": "测试需要可复现性。生产需要吞吐量。该标志在不引入两套代码路径的情况下拆分这两者。"
+    },
+    {
+      "stage": "check",
+      "question": "运行器如何确定校准缓冲区的正确标志？",
+      "options": [
+        "默认对 exact_match 风格指标使用 1.0 阈值，对分级指标使用 0.5 阈值",
+        "调用适配器两次并比较输出",
+        "使用平均箱置信度",
+        "使用 Brier 分解"
+      ],
+      "correct": 0,
+      "explanation": "阈值与指标相关：exact_match 风格指标使用接近 1.0 的截断，分级指标默认使用 0.5。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么运行器构建 EvalRun 记录并交给聚合器，而不是内联计算排行榜？",
+      "options": [
+        "使运行器与聚合器解耦，让排行榜层独立演进而不触及运行器",
+        "聚合器在 numpy 数组上比 dataclass 更快",
+        "JSON Schema 要求 EvalRun",
+        "EvalRun 更省内存"
+      ],
+      "correct": 0,
+      "explanation": "组合优于内联。运行器生成记录；聚合器拥有排行榜计算。每节课负责一个关注点。"
+    },
+    {
+      "stage": "check",
+      "question": "最终 JSON 信封中困惑度块的作用是什么？",
+      "options": [
+        "从自举置信区间计算",
+        "它携带每个模型的留出语言建模数值，与任务评分无关",
+        "是校准报告的输入",
+        "排行榜排序需要它"
+      ],
+      "correct": 1,
+      "explanation": "困惑度位于排行榜旁边，而非内部。它使用适配器每次调用的 token NLL 和 token 数量。"
+    },
+    {
+      "stage": "post",
+      "question": "自终止演示的干净运行退出条件是什么？",
+      "options": [
+        "每个任务都通过验证、每个任务都完成评分、校准完成聚合，且基于规则的适配器在排行榜上严格高于随机适配器",
+        "每个任务得分高于 0.9",
+        "每个模型的 ECE 低于 0.05",
+        "每对模型的自举置信区间都不包含零"
+      ],
+      "correct": 0,
+      "explanation": "演示端到端强制执行契约：每一层都运行，且最准确的适配器按相应顺序排名。"
+    }
+  ]
+}

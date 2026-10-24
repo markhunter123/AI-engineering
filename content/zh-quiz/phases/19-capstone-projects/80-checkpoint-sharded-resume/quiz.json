@@ -1,0 +1,78 @@
+{
+  "lesson": "80-checkpoint-sharded-resume",
+  "title": "Sharded Checkpoint and Atomic Resume",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么 gather-then-write 是大规模下错误的检查点模式？",
+      "options": [
+        "所有状态都经过 rank 0；写入带宽是最慢的单条链路，而非聚合带宽，因此 TB 级写入耗时数小时",
+        "需要特殊硬件",
+        "占用太多 CPU",
+        "难看"
+      ],
+      "correct": 0,
+      "explanation": "分片写入随集群规模扩展：64 个 rank 并行写入的时间是从一个 rank 写入聚合状态的 1/64。"
+    },
+    {
+      "stage": "pre",
+      "question": "清单（manifest）记录了哪些分片文件无法记录的信息？",
+      "options": [
+        "world_size、schema 版本、每个分片的 sha256 和分片所有权；为加载器提供在接触状态前验证的契约",
+        "主机名",
+        "随机数",
+        "文件系统名"
+      ],
+      "correct": 0,
+      "explanation": "没有清单，加载器必须猜测哪个分片属于哪个 rank，并相信文件数量正确。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么要先写入 <name>.tmp 再重命名，而不是直接写入？",
+      "options": [
+        "torch 要求",
+        "更快",
+        "节省内存",
+        "同一文件系统内的 POSIX rename 是原子的：写入中途崩溃不会触碰原文件。直接写入可能留下半成品检查点，污染下次恢复"
+      ],
+      "correct": 3,
+      "explanation": "没有原子写入，部分保存加上指向它的已更新清单会在下次加载时损坏状态。"
+    },
+    {
+      "stage": "check",
+      "question": "每个分片的 sha256 防御什么？",
+      "options": [
+        "变慢",
+        "网络攻击",
+        "部分或损坏的写入；加载时验证哈希可在影响模型状态前捕获截断分片",
+        "内存泄漏"
+      ],
+      "correct": 2,
+      "explanation": "没有 sha256 验证，截断分片会静默加载并损坏优化器，随后表现为 NaN 损失。"
+    },
+    {
+      "stage": "check",
+      "question": "加载路径为什么大声拒绝 world_size 不匹配？",
+      "options": [
+        "在 8 个 rank 上恢复 4-rank 分片布局会静默错误分配分片；大声拒绝迫使操作员使用跨 world-size 的再平衡路径",
+        "硬件需要",
+        "更容易编码",
+        "装饰性的"
+      ],
+      "correct": 0,
+      "explanation": "跨 world-size 再平衡是独立操作；静默拼接错误大小的分片会损坏状态。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么生产环境要轮换检查点（保留最近 K 个）？",
+      "options": [
+        "压缩",
+        "美观",
+        "不轮换",
+        "不轮换的话，磁盘会在运行中填满，导致下次检查点失败；轮换在写新检查点前删除最旧的，从而限制磁盘使用"
+      ],
+      "correct": 3,
+      "explanation": "真实运行保留 3-5 个最近检查点；每次新保存前丢弃最旧的，使磁盘预算固定。"
+    }
+  ]
+}

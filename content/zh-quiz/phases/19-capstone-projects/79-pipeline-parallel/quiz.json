@@ -1,0 +1,78 @@
+{
+  "lesson": "79-pipeline-parallel",
+  "title": "Pipeline Parallel and Bubble Analysis",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "什么是流水线 bubble？",
+      "options": [
+        "网络包",
+        "NCCL 的 bug",
+        "流水线起点和终点的空闲时间：直到第一个微批次到达前某些阶段无工作，以及最后一个微批次离开后",
+        "内存泄漏"
+      ],
+      "correct": 2,
+      "explanation": "有 M 个微批次和 N 个阶段时，每阶段 bubble 为 (N-1)/(M+N-1)。让 M 远大于 N 可缩小它。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么 GPipe 的激活内存与 M 成正比？",
+      "options": [
+        "硬件限制",
+        "编译器限制",
+        "Bug",
+        "所有 M 个微批次的激活必须保留到对应的反向传播；在流水线排空开始前无法释放"
+      ],
+      "correct": 3,
+      "explanation": "GPipe 在所有反向传播前先填满所有前向。每个在途微批次都携带激活，直到其反向传播开始。"
+    },
+    {
+      "stage": "check",
+      "question": "1F1B 相比 GPipe 如何改进？",
+      "options": [
+        "更高吞吐量",
+        "相同 bubble，但激活内存有界；一旦微批次 0 的前向到达最后阶段，其反向就开始，激活随之释放",
+        "更小的模型",
+        "更低的 bubble"
+      ],
+      "correct": 1,
+      "explanation": "Megatron-LM 和 PipeDream 使用 1F1B 将激活内存限制在流水线深度，而非微批次数量。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么每阶段计算量相等比参数量相等更重要？",
+      "options": [
+        "内存对齐",
+        "美观",
+        "最慢的阶段决定每个周期的节奏；其他阶段空等。嵌入层参数量大但计算量小，因此按参数数量划分会打破流水线平衡",
+        "更容易编码"
+      ],
+      "correct": 2,
+      "explanation": "Megatron-LM 将 --num-layers-per-stage 暴露为列表，以允许每层成本不同时使用不等的层数。"
+    },
+    {
+      "stage": "check",
+      "question": "如果每个阶段都先调用 send 再调用 recv 会怎样？",
+      "options": [
+        "更高 bubble",
+        "变慢",
+        "线路上死锁；标准修复是交错偶数 rank 先发、奇数 rank 先收",
+        "内存泄漏"
+      ],
+      "correct": 2,
+      "explanation": "同步 send/recv 对需要一方发送时另一方在接收。本课显式调度 rank，使该模式清晰可见。"
+    },
+    {
+      "stage": "post",
+      "question": "Pipeline 加 ZeRO-1 结合了哪两项内存收益？",
+      "options": [
+        "仅激活",
+        "无",
+        "每阶段参数分片（每个 rank 只持有一阶段层）加上每 rank 优化器状态分片（每个 rank 只持有其阶段优化器状态的 1/N）",
+        "压缩与量化"
+      ],
+      "correct": 2,
+      "explanation": "流水线将层分片到各 rank；ZeRO 在每个流水线 rank 的数据并行组内分片优化器状态。两种收益叠加。"
+    }
+  ]
+}

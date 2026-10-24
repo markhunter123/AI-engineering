@@ -1,0 +1,78 @@
+{
+  "lesson": "87-end-to-end-safety-gate",
+  "title": "Capstone 87 — End-to-End Safety Gate",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "三个检查点位于请求生命周期的什么位置？",
+      "options": [
+        "三个都在调用模型前运行",
+        "pre-gen 在模型前处理提示，during-gen 过滤流，post-gen 在完整输出后运行",
+        "只有 post-gen 运行；pre-gen 和 during-gen 是别名",
+        "三个都在模型完成后运行"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "during-gen 过滤的目标是什么？",
+      "options": [
+        "提高 token 吞吐量",
+        "缓冲分块，当已知有害续写出现时提前终止流，使用户看不到",
+        "用拒绝替换提示",
+        "将输出翻译成另一种语言"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "聚合器如何决定最终动作？",
+      "options": [
+        "只看规则引擎",
+        "取检测器、token-filter、分类器和规则信号中的最高严重度，并映射为 block、redact、warn 或 allow",
+        "平均所有信号的置信度",
+        "再次调用模型"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么门控为每个请求发出结构化 RequestTrace？",
+      "options": [
+        "让系统变慢",
+        "替代日志",
+        "为审核员提供每个检查点的审计轨迹，以便任何层的回归都能追溯到正确模块",
+        "将轨迹复制到提示中"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "当 pre-gen 置信度超过 block 阈值时会发生什么？",
+      "options": [
+        "为完整性仍然调用模型",
+        "门控抛出异常",
+        "门控返回策略拒绝，并完全跳过 during-gen 和 post-gen",
+        "门控降低阈值并重试"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么演示故意让某些 encoding-trick 提示到达 during-gen？",
+      "options": [
+        "因为编码技巧不是真实攻击",
+        "因为输入流水线并不总能及时归一化它们；during-gen 过滤器是纵深防御，用于捕获泄漏的续写",
+        "因为规则引擎处理编码",
+        "因为模型反正会拒绝它们"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

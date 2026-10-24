@@ -1,0 +1,78 @@
+{
+  "lesson": "81-end-to-end-distributed-train",
+  "title": "End-to-End Distributed Training",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么每节课已有自己的测试，顶点课仍然重要？",
+      "options": [
+        "组合是独立属性：各部分单元测试可以通过，但集成时可能死锁、损失发散或内存增长",
+        "装饰性的",
+        "更慢",
+        "更容易评分"
+      ],
+      "correct": 0,
+      "explanation": "端到端测试捕获单独测试无法发现的接线 bug：会合点、屏障顺序、聚合契约。"
+    },
+    {
+      "stage": "pre",
+      "question": "该演示验证哪四个不变量？",
+      "options": [
+        "速度",
+        "每秒 token 数",
+        "硬件",
+        "(a) 损失运行到第 20 步无 NaN，(b) 每个 rank 的参数范数一致，(c) 每 rank 优化器内存符合 ZeRO-1 公式，(d) 第 10 步检查点重新加载后字节级一致"
+      ],
+      "correct": 3,
+      "explanation": "每个不变量捕获不同的组合 bug：NaN 捕获发散，norm 一致捕获同步漂移，内存捕获分片 bug，检查点捕获写入原子性。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么模型使用 tiny GPT 而不是 MLP？",
+      "options": [
+        "要求",
+        "看起来花哨",
+        "GPT 引入了 LayerNorm 运行统计、嵌入梯度形状以及 softmax+cross-entropy 的边界情况，而 MLP 会隐藏这些",
+        "更快"
+      ],
+      "correct": 2,
+      "explanation": "MLP 梯度同步已在第 77 课验证；顶点课需要具有更多边界情况的模型，以证明真实操作下的组合正确性。"
+    },
+    {
+      "stage": "check",
+      "question": "本上下文中的 self-terminating 是什么意思？",
+      "options": [
+        "进程自杀",
+        "固定步数（20），完成时 exit 0，无需人工干预；若任一部分死锁，演示永不返回，CI 可捕获",
+        "崩溃恢复",
+        "手动"
+      ],
+      "correct": 1,
+      "explanation": "有界运行且 exit 0 让测试装置断言终止；while-True 循环会掩盖死锁。"
+    },
+    {
+      "stage": "check",
+      "question": "演示如何结合 DDP 与 ZeRO？",
+      "options": [
+        "只用 ZeRO",
+        "同时都用",
+        "初始化时使用 DDP 风格的广播同步参数，ZeRO-1 的 reduce_scatter+allgather 替代 optimiser.step；DDP 的梯度 allreduce 被 ZeRO 的 reduce_scatter 吸收",
+        "只用 DDP"
+      ],
+      "correct": 2,
+      "explanation": "ZeRO-1 通过 reduce_scatter 拥有梯度同步，因此不再需要 DDP 单独的 allreduce；初始化时的广播是唯一保留下来的 DDP 专用调用。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么生产环境使用墙上时间检查点间隔而不是步数？",
+      "options": [
+        "看起来更干净",
+        "更快",
+        "NCCL 要求",
+        "每步时间随序列长度和微批次数量变化；10 分钟间隔无论模型大小都能覆盖相同的计算量"
+      ],
+      "correct": 3,
+      "explanation": "本课为清晰起见使用基于步数；生产运行通常每 5-15 分钟墙上时间保存一次。"
+    }
+  ]
+}

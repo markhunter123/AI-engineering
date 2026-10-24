@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 ViT-MLP-LLM 的 VLM 范式中，对齐阶段通常训练哪个组件，而其他组件保持冻结？",
+      "options": [
+        "所有组件总是一起训练",
+        "视觉编码器",
+        "LLM",
+        "projector（ViT 与 LLM 之间的 2-4 层 MLP）——它把视觉 token 映射到 LLM 的嵌入空间，并承担大部分跨模态对齐信号"
+      ],
+      "correct": 3,
+      "explanation": "标准 VLM 训练流程先冻结 ViT 和 LLM 训练 projector（对齐阶段），然后在预训练和指令微调阶段可选地解冻全部。projector 很小（数千万到数亿参数），承担了模态桥接的主要工作。生产微调通常只训练 projector + 注意力上的 LoRA——廉价且有效。"
+    },
+    {
+      "stage": "pre",
+      "question": "DeepStack（Qwen3-VL 使用）做什么？",
+      "options": [
+        "把 LLM 深度翻倍",
+        "只使用最深的 ViT 层特征",
+        "在投影前堆叠多个 ViT 深度的特征，使 LLM 同时看到高层语义（深层）和细粒度空间细节（浅层）",
+        "是一种特定量化方案"
+      ],
+      "correct": 2,
+      "explanation": "普通 VLM 只投影 ViT 最后一层特征。DeepStack 采样多个深度、拼接并投影。深层提供语义（“这是一张图表”），浅层提供位置和纹理（“x=120 处的柱子是红色的”）。这种结合缩小了需要精细定位任务的 grounding 差距，如 GUI 智能体动作或密集描述。"
+    },
+    {
+      "stage": "post",
+      "question": "一个生产 VLM 对生成文本置信度很高，但文本描述了图像中不存在的物体。哪个指标能捕捉这种失败？",
+      "options": [
+        "token 生成延迟",
+        "MMMU 准确率",
+        "Cross-Modal Error Rate（CMER）——文本置信度高但图像-文本余弦相似度（通过 CLIP 家族检查器）低的输出比例；在未筛选网页数据中典型约 12%",
+        "困惑度"
+      ],
+      "correct": 2,
+      "explanation": "CMER 是一个生产对齐 KPI。它捕捉 VLM 幻觉的经典模式：模型对文本很自信，但文本并未 grounded 在图像上。按端点和提示类型监控 CMER；CMER 上升意味着模型正在漂移出分布或遇到了无法处理的提示类别。Skywork.ai 把 CMER 作为一级 KPI，幻觉减少了约 35%。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么现代 VLM 使用 SigLIP 或自定义视觉编码器作为主干，而不是有监督 ImageNet ResNet？",
+      "options": [
+        "SigLIP 参数更多",
+        "ResNet 无法产生 token",
+        "SigLIP 更快",
+        "CLIP/SigLIP 风格编码器与文本联合训练，因此它们的输出空间已经与语言大致对齐；projector 需要做的桥接工作少得多，模型也能更好地对视觉-文本概念进行推理"
+      ],
+      "correct": 3,
+      "explanation": "视觉-语言预训练把编码器塑造到与文本兼容的空间。有监督 ImageNet ResNet 训练时没有任何文本信号，因此桥接到 LLM 需要更大的 projector 和更多数据。CLIP/SigLIP/DINOv3 编码器产生的特征 LLM 只需几层线性层就能消费。几乎每个 SOTA VLM 都因此使用 CLIP 家族或 SigLIP 编码器。"
+    },
+    {
+      "stage": "post",
+      "question": "Qwen3-VL-235B-A22B 在 OSWorld 上取得最高分。OSWorld 是什么，这意味着什么？",
+      "options": [
+        "一个智能体基准，模型操作桌面 GUI——识别按钮、读取 UI 状态、执行动作；Qwen3-VL 的最高分意味着 VLM 现在已成为 GUI 自动化的可行视觉智能体",
+        "姿态估计基准",
+        "合成基准",
+        "视频问答基准"
+      ],
+      "correct": 0,
+      "explanation": "OSWorld 测试模型能否通过截图自主操作桌面环境。Qwen3-VL 的全球最高分表明“视觉智能体”范式——VLM 读取屏幕、决定动作、工具调用鼠标/键盘——已进入实用领域。这就是 2026 年 AI PC 演示运行的内容；也是自动化 QA、RPA 和辅助功能产品的直接路径。"
+    }
+  ]
+}
