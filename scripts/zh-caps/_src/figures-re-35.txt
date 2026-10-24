@@ -1,0 +1,1 @@
+re-evidence-ledger	"Blue solid: pass or an observed record. Blue dashed: derived. Amber dashed: unknown, a partial set of runs. Amber solid: a dangling link. Grey: unsupported or open. The verdict counts the rows above it."

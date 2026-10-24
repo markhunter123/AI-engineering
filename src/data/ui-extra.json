@@ -15,7 +15,6 @@
     "Page not found": "页面不存在",
     "The page you requested does not exist. Pick a language to continue:": "你访问的页面不存在。选择一种语言继续：",
     "Content from": "内容来自",
-    "MIT License": "MIT 许可证",
     "Built as a static bilingual mirror of the open curriculum.": "本站是开源课程的双语静态镜像。",
     "How to use this site": "如何使用本站",
     "Pick a phase below — lessons build on each other within a phase.": "在下方选择一个阶段——阶段内的课程循序渐进。",
@@ -30,8 +29,6 @@
     "Phase": "阶段",
     "Search": "搜索",
     "Close navigation": "关闭导航",
-    "Lesson navigation": "课程导航",
-    "authored by": "作者：",
-    "Coauthored by": "作者："
+    "Lesson navigation": "课程导航"
   }
 }

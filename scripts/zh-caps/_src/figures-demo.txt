@@ -1,0 +1,1 @@
+demo-token-bucket	"Each request takes one token from the bucket of its client. The bucket refills at a fixed rate and never holds more than its capacity. The capacity sets the largest burst that the demo accepts. The refill rate sets the steady request rate. A rejected request gets HTTP 429 with a Retry-After header, and the model does not run."

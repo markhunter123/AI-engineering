@@ -887,6 +887,13 @@ function main() {
     fs.mkdirSync(path.join(DIST, 'assets', 'figures'), { recursive: true });
     const runtimeSrc = fs.readFileSync(path.join(figDir, 'lesson-figures.js'), 'utf8');
     fs.copyFileSync(path.join(figDir, 'lesson-figures.js'), path.join(DIST, 'assets', 'figures', 'lesson-figures.js'));
+    // Chinese caption map (not a provider: deliberately outside the figures-*
+    // glob so it never enters the lazy-load manifest; layout includes it on
+    // zh pages only)
+    const zhCapsSrc = path.join(figDir, 'zh-figure-caps.js');
+    if (fs.existsSync(zhCapsSrc)) {
+      fs.copyFileSync(zhCapsSrc, path.join(DIST, 'assets', 'figures', 'zh-figure-caps.js'));
+    }
     const providerFiles = fs.readdirSync(figDir).filter((f) => /^figures-.*\.js$/.test(f)).sort();
     const providerSources = providerFiles.map((f) => ({
       file: f,

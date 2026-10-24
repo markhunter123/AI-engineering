@@ -1238,6 +1238,24 @@
     'rag-chunking': ragChunking
   };
 
+  // Chinese caption swap: zh pages load zh-figure-caps.js, which defines
+  // window.AIFS_FIG_ZH (figure key → 中文描述). After a figure mounts, swap
+  // the long description (.lf-cap / figcaption) for its Chinese version.
+  // en pages never load the map and are left byte-identical.
+  function applyZhCaption(host) {
+    if (!/^zh/.test(document.documentElement.lang || '')) return;
+    var map = window.AIFS_FIG_ZH;
+    if (!map) return;
+    var key = (host.dataset.figure || '').trim().split(/\s+/)[0];
+    var zh = map[key];
+    if (typeof zh !== 'string' || !zh) return;
+    var nodes = host.querySelectorAll('.lf-cap, figcaption');
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].children.length) continue; // only plain-text captions
+      nodes[i].textContent = zh;
+    }
+  }
+
   function mountLessonFigures(root) {
     ensureStyles();
     (root || document).querySelectorAll('.lesson-figure[data-figure]').forEach(function (host) {
@@ -1262,6 +1280,7 @@
         ensureSvgAccessibility(host);
         if (host.querySelector('svg')) host.classList.add('lf-animated');
         attachSmilController(host);
+        applyZhCaption(host);
         host.dataset.lfMounted = '1';
         host.removeAttribute('aria-busy');
       } catch (e) {

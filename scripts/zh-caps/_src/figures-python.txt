@@ -1,0 +1,1 @@
+s0-list-vs-generator	"Both loops read the same eight rows. The list version reads every row into memory before the first training step starts. The generator version holds one batch of two rows, and the first step starts when that batch is ready. For a real dataset, the list needs memory for the whole file, and the generator needs memory for one batch."

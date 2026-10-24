@@ -1,0 +1,1 @@
+re-36-prove-equal	"Blue cells and bytes agree with the original. Amber marks a cell or a byte that differs. The dashed column is the relocation field, set to zero on both sides before the compare. The constants row holds the five table entries the relocation points at. The verdict counts cells, unmasked bytes, and table entries."

@@ -74,6 +74,9 @@ function render(o) {
     + (o.needsFigures
       ? '<script defer src="' + esc(vurl(base + 'assets/figures/lesson-figures.js')) + '"></scr' + 'ipt>\n'
         + '<script defer src="' + esc(vurl(base + 'assets/figures/figure-manifest.js')) + '"></scr' + 'ipt>\n'
+        + (lang === 'zh'
+          ? '<script defer src="' + esc(vurl(base + 'assets/figures/zh-figure-caps.js')) + '"></scr' + 'ipt>\n'
+          : '')
       : '')
     + '</head>\n<body>\n'
     + '<a class="skip-link" href="#main">' + esc(t.skipToContent) + '</a>\n'

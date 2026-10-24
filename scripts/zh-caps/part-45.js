@@ -1,0 +1,22 @@
+/** zh translations — figures-agent-skills (19 figures) */
+module.exports = {
+  'skill-package-anatomy': '包完整性覆盖 workflow 点名的每一个文件。发布 catalog 条目之前先验证整棵树。',
+  'skill-runtime-lifecycle': '按生命周期阶段诊断失败。discovered、selected、activated、executed、verified 是不同的状态。',
+  'skill-tool-orthogonality': '一个反馈循环：被激活的 skill 引导流程，host 工具返回观察，最终产出 artifact。',
+  'skill-validation-order': '便宜的结构检查应当先失败，否则二级内容错误会把第一个被破坏的不变量藏起来。',
+  'skill-discovery-pipeline': '配置好的 root 依次经过 enumeration、package validation、provenance、冲突消解、预算分配，最后发布 catalog。',
+  'skill-disclosure-levels': '三层堆叠分别展示 catalog 元数据、激活的 SKILL.md 正文、分支专属资源。',
+  'skill-reference-map': '直接的决策地图胜过话题倾倒。每个辅助文件都该写明加载条件。',
+  'skill-resource-containment': '决策树拒绝绝对路径、父目录穿越、symlink 逃逸、错误文件类型和超大资源。',
+  'skill-invocation-stages': '单个 skill_used 标志会藏住失败发生的边界——是路由、policy、能力还是验证出的错。',
+  'skill-routing-abstention': '请求先过 actor 资格检查和描述比对，然后才能在 activate、ask、abstain 之间做出明确决定。',
+  'skill-argument-boundaries': '用户文本依次变成解析后的参数、skill 上下文、带类型的工具调用、经验证的执行输入。',
+  'skill-host-adapter': '可移植的 skill bundle 和 host adapter 各自向同一个运行时激活边界贡献不同输入。',
+  'skill-authority-chain': '被激活的 skill 影响模型的提案；提案必须过能力、权限、批准、隔离、验证五关。',
+  'skill-trust-surface': '包指令、引用、任务内容、脚本、host 工具、文件、网络、凭据、外部效应——合成一张威胁面。',
+  'skill-approval-decision': '决策树把本地可逆动作路由到沙箱执行，越界动作送人工批准，被拒的批准即停止。',
+  'skill-workflow-extraction': '任务依次经过模型分类、分支引用、确定性证据收集、模型解读、artifact 契约和验证。',
+  'skill-eval-layers': '六层评估喂给同一个发布闸门：结构、路由、行为、脚本、安全、可移植性。',
+  'skill-package-install': '源 skill bundle 依次变成 manifest、完整的安装树、经验证的包、被发现的 catalog 条目、eval 冒烟测试。',
+  'skill-authoring-loop': '对 workflow：观察、立契约、打包、评估、按失败层分类、修复，闸门通过才发布。',
+};

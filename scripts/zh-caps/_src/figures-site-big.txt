@@ -1,0 +1,10 @@
+tokenizer-bpe	{"RAW":"num"}
+ngram-machine	{"RAW":"num"}
+attention-matrix	{"RAW":"num"}
+embedding-arithmetic	{"RAW":"num"}
+transformer-block	{"RAW":"num"}
+attention-lookup	{"RAW":"num"}
+token-strip	{"RAW":"num"}
+loss-curve	{"RAW":"num"}
+embedding-projection	{"RAW":"num"}
+kv-cache	{"RAW":"num"}

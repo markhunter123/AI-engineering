@@ -1,0 +1,6 @@
+00-certification-route-map	"Readiness is not how familiar the blueprint feels. It is what you can explain, do under time pressure, and prove with an artifact."
+04-context-cache	"Prefix caching skips repeated prompt computation. Semantic caching reuses a previous answer for a similar query. One is exact and provider-side; the other is approximate and application-side, so its threshold is a safety decision."
+10-tool-loop-budget	"A tool loop needs an explicit call budget, terminal conditions, and a typed failure. More retries can raise completion while also raising latency, cost, and side-effect risk."
+17-session-context-budget	"Session memory should preserve decisions, constraints, and unresolved state, not replay every token. Compaction is an information-design problem."
+24-rag-ranking	"Retrieval quality is not just nearest-neighbor similarity. The selected evidence must also cover the claims the answer intends to make."
+26-latency-cost-slo	"Averages hide the architecture. Model latency, cache behavior, and the allowed service objective must be measured as one system."
