@@ -163,16 +163,20 @@
    * defer on pages that contain figure fences. It injects each figure's
    * provider on demand; mounts that succeed set data-lf-mounted, so the
    * static placeholder card inside can go. Unknown keys keep the card. */
-  function mountFigures() {
+  function mountFigures(attempt) {
     var hosts = document.querySelectorAll('.lesson-figure[data-figure]');
     if (!hosts.length) return;
+    // The figure runtime is a later defer script; on a slow hop (proxy, weak
+    // network) this idle callback can fire before it has executed. Retry
+    // instead of giving up — a silent miss leaves the placeholder up forever.
+    if (typeof window.AIFS_loadFigureProviders !== 'function'
+      || typeof window.mountLessonFigures !== 'function') {
+      if ((attempt || 0) < 50) setTimeout(function () { mountFigures((attempt || 0) + 1); }, 120);
+      return;
+    }
     // Most figures live in provider modules (figures-<topic>.js) that must be
     // loaded per the manifest before mountLessonFigures can find them.
-    var load = typeof window.AIFS_loadFigureProviders === 'function'
-      ? window.AIFS_loadFigureProviders(document)
-      : Promise.resolve();
-    load.then(function () {
-      if (typeof window.mountLessonFigures !== 'function') return;
+    window.AIFS_loadFigureProviders(document).then(function () {
       try { window.mountLessonFigures(document); } catch (e) { /* placeholders stay */ }
       Array.prototype.forEach.call(
         document.querySelectorAll('.lesson-figure[data-lf-mounted] > .figure-placeholder'),
