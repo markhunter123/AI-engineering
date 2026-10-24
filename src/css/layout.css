@@ -594,7 +594,9 @@ html[data-ds-dark-theme] .btn-primary:hover {
 }
 
 /* -- responsive ------------------------------------------------------------------- */
-@media (max-width: 1279px) {
+/* Drop the TOC before the content column can be squeezed: sidebar (288px)
+   + toc (232px) + main padding (96px) + 780px content = 1396px minimum. */
+@media (max-width: 1439px) {
   .toc {
     display: none;
   }
