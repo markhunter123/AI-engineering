@@ -1,0 +1,78 @@
+{
+  "lesson": "45-delegate-with-isolation",
+  "title": "Delegate with Isolation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "何时并行委托是合理的？",
+      "options": [
+        "工作在决策、路径或等待时间上有真正的独立性",
+        "任何超过十分钟的",
+        "只要智能体更多",
+        "只用于文档"
+      ],
+      "correct": 0,
+      "explanation": "只有当单元可以在没有共享可变决策或所有权的情况下推进时，并行才有帮助。"
+    },
+    {
+      "stage": "check",
+      "question": "文件系统隔离不提供哪项保证？",
+      "options": [
+        "独占设计和路径所有权",
+        "独立命令执行",
+        "可恢复分支",
+        "独立目录"
+      ],
+      "correct": 0,
+      "explanation": "两个隔离的工作树仍可能实现冲突的设计。"
+    },
+    {
+      "stage": "check",
+      "question": "为何每个工作单元必须命名证明？",
+      "options": [
+        "为了避免交接",
+        "为了增加并发",
+        "让集成者收到可复现证据",
+        "让工作者声称成功"
+      ],
+      "correct": 2,
+      "explanation": "集成者必须验证结果，而不是相信摘要。"
+    },
+    {
+      "stage": "check",
+      "question": "两个单元拥有重叠路径时应怎么办？",
+      "options": [
+        "让最后一个工作者获胜",
+        "未经评审就合并",
+        "跑得更快",
+        "阻塞并重新设计拆分"
+      ],
+      "correct": 3,
+      "explanation": "重叠的写入所有权会造成可避免冲突和歧义。"
+    },
+    {
+      "stage": "post",
+      "question": "什么是 calibrated autonomy？",
+      "options": [
+        "只手动工作",
+        "在证据和回滚都强的地方自由，在后果高的地方设检查点",
+        "完全自动化",
+        "随机审批"
+      ],
+      "correct": 1,
+      "explanation": "权限应跟随后果和可逆性。"
+    },
+    {
+      "stage": "post",
+      "question": "集成者的最终职责是什么？",
+      "options": [
+        "删除交接",
+        "选择更大模型",
+        "重写每个单元",
+        "运行完整的跨单元验证门禁并强制范围"
+      ],
+      "correct": 3,
+      "explanation": "单元证明不能替代端到端集成证据。"
+    }
+  ]
+}

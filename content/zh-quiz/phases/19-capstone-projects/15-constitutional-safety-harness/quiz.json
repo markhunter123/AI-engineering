@@ -1,0 +1,90 @@
+{
+  "lesson": "15-constitutional-safety-harness",
+  "title": "Capstone 15 — Constitutional Safety Harness + Red-Team Range",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本 capstone 中的分层安全是什么意思？",
+      "options": [
+        "在输入清理、policy rails、分类器 gate、模型、输出过滤器和 HITL 层级之间纵深防御",
+        "仅在输入上运行一个强分类器",
+        "对输出只做单条基于规则的 regex",
+        "手动审查每个响应"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "哪个分类器覆盖约 132 种语言的多语言场景？",
+      "options": [
+        "Llama Guard 4",
+        "Nemotron 3 Content Safety",
+        "X-Guard",
+        "ShieldGemma-2"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么要在 XSTest 等良性套件上测量 over-refusal？",
+      "options": [
+        "跟踪误报阻止，使模型在提升无害性的同时保持有用性",
+        "为护栏框架做认证",
+        "替代 red-team 评分",
+        "对 token 吞吐量做基准测试"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本 capstone 中的宪法自我批评循环是什么？",
+      "options": [
+        "从头训练的 RLHF 奖励模型",
+        "Critic LLM 根据书面宪法对草稿打分，提示模型重写被反对的输出，并对改进后的对做 SFT",
+        "单次前向通过 Llama Guard 4",
+        "对候选越狱提示的 reranker"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "成功越狱在 findings 中如何按严重性打分？",
+      "options": [
+        "按产生响应的模型",
+        "使用 CVSS 4.0，含攻击向量、复杂性和影响，以及披露时间线",
+        "按提示的原始 token 数",
+        "由操作者选择的手调 1-10 分"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "red-team range 运行哪六个攻击家族？",
+      "options": [
+        "PSI、KL、MMD、KS、JS 和 Wasserstein",
+        "PAIR、TAP、GCG、编码（ASCII/base64/rot13）、多轮 persona 和多语言 code-switch",
+        "暴力破解、字典、重放、MITM、钓鱼和 CSRF",
+        "BLEU、ROUGE、METEOR、BERTScore、CometKiwi 和 chrF"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么 range 自动化（cron + 告警）是评分标准的一部分？",
+      "options": [
+        "Cron 是唯一调用 OPA 的方式",
+        "自动化是禁用 Llama Guard 4 所必需的",
+        "明确要求手动运行",
+        "持续定时探针可以长期捕捉攻击成功率和 over-refusal 回归的漂移"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

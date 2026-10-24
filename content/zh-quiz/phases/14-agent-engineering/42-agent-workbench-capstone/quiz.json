@@ -1,0 +1,90 @@
+{
+  "lesson": "42-agent-workbench-capstone",
+  "title": "Capstone: Ship a Reusable Agent Workbench Pack",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "这个 capstone 产出什么？",
+      "options": [
+        "监控仪表板",
+        "一个可版本化的即插即用目录（agent-workbench-pack/），包含七个操作面，以及一个幂等安装的 bin/install.sh",
+        "研究论文",
+        "新 LLM"
+      ],
+      "correct": 1,
+      "explanation": "这个包是配方；每次安装都是一次交付。"
+    },
+    {
+      "stage": "pre",
+      "question": "以下哪项不是包的布局部分？",
+      "options": [
+        "vendor_proprietary_weights/",
+        "schemas/",
+        "AGENTS.md + docs/",
+        "scripts/"
+      ],
+      "correct": 0,
+      "explanation": "包布局是 AGENTS.md、docs/、schemas/、scripts/、bin/、README.md。包与框架和厂商无关。"
+    },
+    {
+      "stage": "check",
+      "question": "包为何带 VERSION 文件？",
+      "options": [
+        "追踪智能体 IQ",
+        "用于 SEO",
+        "在 Hacker News 上宣传",
+        "主版本号用于需要迁移的 schema/脚本变更；次版本号用于新增；补丁号仅文档；目标仓库记录安装时版本"
+      ],
+      "correct": 3,
+      "explanation": "与 npm、Cargo、pyproject.toml 同理；VERSION 是契约，不是营销。"
+    },
+    {
+      "stage": "check",
+      "question": "这个包中的跨工具分发长什么样？",
+      "options": [
+        "一个源文件加符号链接（ln -s AGENTS.md CLAUDE.md、.cursor/rules/、.github/copilot-instructions.md），让同一源分发到每个编码智能体",
+        "每个工具手动复制",
+        "硬编码每个工具路径",
+        "每个工具一个厂商锁定"
+      ],
+      "correct": 0,
+      "explanation": "Nx 的 nx ai-setup 是参考；包的安装器用符号链接做同样的事。"
+    },
+    {
+      "stage": "check",
+      "question": "本课建议卸载器如何表现？",
+      "options": [
+        "只删除 docs",
+        "对非平凡状态拒绝；绝不删除用户 agent_state.json、task_board.json 或 outputs/；只移除 schemas、scripts、docs 和 AGENTS.md（可选择退出）",
+        "删除所有包括状态",
+        "禁用 git"
+      ],
+      "correct": 1,
+      "explanation": "状态属于用户；包不拥有它。"
+    },
+    {
+      "stage": "post",
+      "question": "什么不应放入包中？",
+      "options": [
+        "脚本",
+        "schemas",
+        "项目特定任务、厂商 SDK 调用、团队入职文案——包与框架无关，放在入职文档旁边而非内部",
+        "安装器"
+      ],
+      "correct": 2,
+      "explanation": "任务属于目标仓库的看板，而不是包；厂商 SDK 调用会把包锁定到某个框架。"
+    },
+    {
+      "stage": "post",
+      "question": "包通过什么渠道一次性分发到多个编码智能体？",
+      "options": [
+        "SkillKit 风格分发（skillkit install agent-workbench-pack）从单一源部署到 32 个 AI 智能体",
+        "邮件附件",
+        "手动复制",
+        "只在 GitHub release notes"
+      ],
+      "correct": 0,
+      "explanation": "包仓库是事实来源；SkillKit 是分发渠道；厂商锁定瓦解。"
+    }
+  ]
+}

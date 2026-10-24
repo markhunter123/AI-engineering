@@ -1,0 +1,90 @@
+{
+  "lesson": "31-agent-workbench-why-models-fail",
+  "title": "Agent Workbench Engineering: Why Capable Models Still Fail",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本课认为智能体在真实任务上失败的根本原因是什么？",
+      "options": [
+        "训练数据过时",
+        "工作台失败：模型周围缺少操作面，而非 LLM 能力有限",
+        "网络太慢",
+        "模型参数不足"
+      ],
+      "correct": 1,
+      "explanation": "模型并非在 Python 上出错，而是在工作上出错；它周围缺少必要的操作面。"
+    },
+    {
+      "stage": "pre",
+      "question": "本课提到的七个工作台操作面是什么？",
+      "options": [
+        "读、写、执行、分叉、退出、等待、终止",
+        "计划、行动、反思、优化、辩论、投票、交付",
+        "指令、状态、范围、反馈、验证、评审、交接",
+        "训练、评估、部署、监控、再训练、扩容、下线"
+      ],
+      "correct": 2,
+      "explanation": "七个操作面是指令、状态、范围、反馈、验证、评审、交接。"
+    },
+    {
+      "stage": "check",
+      "question": "以下哪一项不是本课将操作面映射到的八个分布式系统原语之一？",
+      "options": [
+        "Worker",
+        "Backpropagation",
+        "Function",
+        "Trigger"
+      ],
+      "correct": 1,
+      "explanation": "八个原语是 function、worker、trigger、runtime、HTTP/RPC、queue、session persistence、authorization policy。"
+    },
+    {
+      "stage": "check",
+      "question": "Vercel 报告的 harness 改动把成功率从多少提升到多少？",
+      "options": [
+        "从 50% 到 70%，通过添加 RAG",
+        "从 20% 到 60%",
+        "从 0% 到 100%，通过切换模型",
+        "从 80% 到 100%，通过删除 80% 的智能体工具"
+      ],
+      "correct": 3,
+      "explanation": "删除 80% 的工具让 Vercel 的智能体成功率从 80% 提升到 100%。"
+    },
+    {
+      "stage": "check",
+      "question": "Terminal Bench 2.0 说明了模型与 harness 的什么关系？",
+      "options": [
+        "同一模型仅通过更换 harness 就从 30 名外跃升到第 5 名",
+        "仅由模型决定排名",
+        "只有 GPU 重要",
+        "harness 改动无关紧要"
+      ],
+      "correct": 0,
+      "explanation": "LangChain 的 Anatomy of an Agent Harness：同一模型、更换 harness，排名跃升 25+ 位。"
+    },
+    {
+      "stage": "post",
+      "question": "当听到新的 harness 术语时，本课建议怎么做？",
+      "options": [
+        "拒绝采用",
+        "等 OpenAI 标准化",
+        "原样采用",
+        "先还原为原语（function、worker、trigger、runtime、HTTP/RPC、queue、persistence、policy），再决定是否采用"
+      ],
+      "correct": 3,
+      "explanation": "从原语出发推理，而不是跟着厂商分类走；词汇会变，工程本质不会。"
+    },
+    {
+      "stage": "post",
+      "question": "聊天记录相对于工作台处于什么位置？",
+      "options": [
+        "聊天记录是记录系统",
+        "聊天记录是易失的；代码仓库才是记录系统",
+        "两者等价",
+        "两者都不重要"
+      ],
+      "correct": 1,
+      "explanation": "循环应在状态文件上闭环，而不是在聊天记录上。"
+    }
+  ]
+}

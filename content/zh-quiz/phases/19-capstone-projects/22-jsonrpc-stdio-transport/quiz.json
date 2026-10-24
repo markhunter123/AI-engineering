@@ -1,0 +1,90 @@
+{
+  "lesson": "22-jsonrpc-stdio-transport",
+  "title": "JSON-RPC 2.0 over Newline-Delimited Stdio",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "JSON-RPC notification 与 request 在传输层面上的区别是什么？",
+      "options": [
+        "Notification 省略 id 字段；服务器不应回复",
+        "不同的 jsonrpc 版本字段",
+        "Notification 使用不同的方法命名空间",
+        "Notification 被包裹在数组中"
+      ],
+      "correct": 0,
+      "explanation": "缺少 id 是唯一标志。服务器不回复，因为没有 id 可用于关联。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么换行分隔的 JSON 足以作为 stdio 的帧格式？",
+      "options": [
+        "因为 UTF-8 没有换行字节",
+        "因为规范强制要求",
+        "因为管道保证换行原子性",
+        "因为 JSON 不允许字符串内出现未转义的换行，所以每个对象可以占一行"
+      ],
+      "correct": 3,
+      "explanation": "json.dumps 每个对象输出单行；字符串内的字面换行会被转义。这让 \\n 成为安全的记录分隔符。"
+    },
+    {
+      "stage": "check",
+      "question": "当 JSON 解析失败时，传输层返回哪个错误码？",
+      "options": [
+        "-32600",
+        "-32700",
+        "-32603",
+        "-32601"
+      ],
+      "correct": 1,
+      "explanation": "-32700 是 Parse error。响应 id 为 null，因为无法提取 id。"
+    },
+    {
+      "stage": "check",
+      "question": "如果 handler 抛出普通 ValueError，传输层返回什么？",
+      "options": [
+        "不返回；连接断开",
+        "Invalid params (-32602)",
+        "Method not found (-32601)",
+        "Internal error (-32603)，data 中包含异常类名"
+      ],
+      "correct": 3,
+      "explanation": "未映射的异常表现为 -32603。data.exception 保留类名供客户端查看。"
+    },
+    {
+      "stage": "check",
+      "question": "当 batch 只包含 notification 时，服务器返回什么？",
+      "options": [
+        "什么都不返回——不写入任何字节",
+        "每个 notification 返回一个 null",
+        "空数组",
+        "单个 null 响应"
+      ],
+      "correct": 0,
+      "explanation": "规范规则：如果每个条目都是 notification，服务器保持静默。"
+    },
+    {
+      "stage": "post",
+      "question": "会话中间收到一行损坏的 JSON。后续行会怎样？",
+      "options": [
+        "被缓冲，直到损坏行被重试",
+        "传输层写入 -32700 响应，并继续读取下一行作为新记录",
+        "传输层关闭流",
+        "它们都被 -32600 拒绝"
+      ],
+      "correct": 1,
+      "explanation": "帧层不能污染整个流。一个解析错误对应一个错误响应，循环继续。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么传输层不直接查询 tool registry？",
+      "options": [
+        "为了让传输层只保持 JSON-RPC 形态；handler 负责将传输、registry 连接起来",
+        "因为 registry 是异步的",
+        "因为 registry 保存密钥",
+        "因为传输层在另一个进程中运行"
+      ],
+      "correct": 0,
+      "explanation": "传输层只讲协议。dispatcher（下一课）是传输与 registry 和超时交汇的地方。"
+    }
+  ]
+}

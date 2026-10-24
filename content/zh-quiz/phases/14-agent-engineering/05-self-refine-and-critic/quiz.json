@@ -1,0 +1,90 @@
+{
+  "lesson": "05-self-refine-and-critic",
+  "title": "Self-Refine 与 CRITIC：迭代输出改进",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Self-Refine 循环由哪三个提示词组成？",
+      "options": [
+        "Plan、execute、solve",
+        "Generate、feedback、refine",
+        "Actor、evaluator、reflector",
+        "Search、score、synthesize"
+      ],
+      "correct": 1,
+      "explanation": "Self-Refine 让同一个模型承担三个角色：generate、feedback、refine。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么 Self-Refine 的 refine 步骤需要历史记录？",
+      "options": [
+        "历史记录用于计费",
+        "提供方只在有历史时缓存",
+        "它能加速 token 生成",
+        "没有先前输出和批评，refine 步骤会重复之前的错误；消融实验显示质量会显著下降"
+      ],
+      "correct": 3,
+      "explanation": "refine 提示词会基于完整历史进行条件化，使模型不会重复之前的错误。"
+    },
+    {
+      "stage": "check",
+      "question": "CRITIC 相对于 Self-Refine 改变了什么？",
+      "options": [
+        "它使用更大的模型来生成",
+        "它并行运行反馈步骤",
+        "它将自我反馈步骤替换为基于外部工具的验证器",
+        "它去掉了 refine 步骤"
+      ],
+      "correct": 2,
+      "explanation": "CRITIC 将自我批评替换为通过搜索、代码解释器、计算器或领域验证器执行的 verify 步骤。"
+    },
+    {
+      "stage": "check",
+      "question": "哪个 Anthropic 工作流模式对应 Self-Refine 和 CRITIC 的友好表达？",
+      "options": [
+        "Parallel sampling",
+        "Prompt chain",
+        "Evaluator-Optimizer",
+        "Router"
+      ],
+      "correct": 2,
+      "explanation": "Anthropic 将这种模式命名为 Evaluator-Optimizer：评估器打分，优化器修改，循环直到收敛。"
+    },
+    {
+      "stage": "check",
+      "question": "什么是 rubber-stamp loop，本课建议如何避免？",
+      "options": [
+        "超时的护栏；放宽超时",
+        "总是失败的重试；提高预算",
+        "同一个模型用同一个提示词批评自己的输出并通过它；应使用结构不同的提示词或独立的更小批评模型",
+        "总是通过的测试；删除该测试"
+      ],
+      "correct": 2,
+      "explanation": "同风格的自我批评会收敛为“看起来不错”；应让评估器与优化器在结构上有所差异。"
+    },
+    {
+      "stage": "post",
+      "question": "OpenAI Agents SDK 中哪个功能是 CRITIC 风格的？",
+      "options": [
+        "Sessions",
+        "Tracing",
+        "Handoffs",
+        "Output guardrails（可调用工具）"
+      ],
+      "correct": 3,
+      "explanation": "Output guardrails 验证智能体最终输出，并可调用工具，与 CRITIC 的验证器角色匹配。"
+    },
+    {
+      "stage": "post",
+      "question": "本课推荐 2026 年 evaluator-optimizer 循环使用什么停止条件？",
+      "options": [
+        "只在模型说“可以”时停止",
+        "永不停止；让智能体无限自我改进",
+        "只在验证器通过时停止",
+        "组合条件：验证器通过，或（模型说可以且迭代次数 >=2），或迭代次数 >= max_iterations"
+      ],
+      "correct": 3,
+      "explanation": "组合条件可以避免单一条件导致的失败模式。"
+    }
+  ]
+}

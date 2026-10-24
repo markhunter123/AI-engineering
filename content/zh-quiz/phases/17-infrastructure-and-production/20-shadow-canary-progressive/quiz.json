@@ -1,0 +1,78 @@
+{
+  "lesson": "20-shadow-canary-progressive",
+  "title": "Shadow Traffic, Canary Rollout, and Progressive Deployment for LLMs",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "对于 LLM 上线，shadow、canary 和 A/B 测试的正确顺序是什么？",
+      "options": [
+        "完全跳过 shadow",
+        "先做 shadow（零影响对比），再做 canary（带门控的渐进式真实流量），稳定后再对不同的候选方案做 A/B",
+        "先做 canary，再做 shadow，最后做 A/B",
+        "先做 A/B，再做 shadow，最后做 canary"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本课用哪五项指标来门控 canary 的推进？",
+      "options": [
+        "GPU 温度、风扇转速、队列深度、成本、延迟",
+        "仅吞吐量",
+        "延迟分位数、单次请求成本、错误/拒绝率、输出长度分布、用户反馈率",
+        "仅离线评估准确率"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本课提到，在相同输入下 LLM 多次运行的准确率差异大约是多少？",
+      "options": [
+        "低于 0.1%",
+        "最高约 15%，原因是 GPU 浮点运算的非结合性以及批次大小差异",
+        "总是 50%",
+        "每次运行输出完全相同"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在本课的框架中，shadow 模式的作用是什么？",
+      "options": [
+        "替代评估的完整质量测试",
+        "一种冒烟测试，用于发现成本飙升、长度回退、拒绝率变化和硬性错误——不是质量保证",
+        "替代回滚",
+        "最终生产上线步骤"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "根据本课，正确的回滚设计是什么？",
+      "options": [
+        "手动 SSH 到每个 pod",
+        "用新的模型摘要重新部署，耗时数小时",
+        "秒级切换策略开关并恢复固定的模型摘要——无需重新部署",
+        "等待下一个发布窗口"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么成本与延迟、质量一样被列为门控？",
+      "options": [
+        "一个提升 20% 的模型每次调用可能贵 3 倍；在没有成本门控的情况下上线会破坏单位经济模型",
+        "各厂商成本相同",
+        "每家厂商都会自动限制成本",
+        "成本是虚荣指标"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

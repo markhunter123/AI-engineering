@@ -1,0 +1,63 @@
+{
+  "lesson": "training-resource-budgeting",
+  "title": "Training Resource Budgeting: FLOPs, Memory, and Wall-Clock",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "对于一个有 N 个参数、在 D 个词元上训练的稠密 Transformer，总训练 FLOPs 的标准近似是多少？",
+      "options": ["2ND", "4ND", "6ND", "12ND"],
+      "correct": 2,
+      "explanation": "前向传播约需 2ND FLOPs，反向传播约需 4ND FLOPs，因此常见的经验法则是 6ND。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么反向传播大约比前向传播贵一倍？",
+      "options": [
+        "它同时计算输入梯度和权重梯度",
+        "它使用更大的学习率",
+        "它重算所有激活值",
+        "它把每个词元处理两次"
+      ],
+      "correct": 0,
+      "explanation": "反向传播必须计算相对于层输入和层参数的梯度，算术量大约是前向传播的两倍。"
+    },
+    {
+      "stage": "check",
+      "question": "在混合精度 Adam 训练中，常说的每个参数 16 字节包含哪些组成部分？",
+      "options": [
+        "fp16 权重/梯度 + fp32 一阶矩 m、二阶矩 v 和主权重",
+        "fp32 权重、fp32 梯度、fp16 一阶矩 m、fp16 二阶矩 v",
+        "int8 权重、int8 梯度、fp32 一阶矩 m、fp32 二阶矩 v",
+        "fp16 权重加上 fp32 优化器状态"
+      ],
+      "correct": 0,
+      "explanation": "混合精度 Adam 存储 fp16 权重（2B）、fp16 梯度（2B）、fp32 一阶矩 m（4B）、fp32 二阶矩 v（4B）和 fp32 主权重（4B），合计 16 字节。"
+    },
+    {
+      "stage": "check",
+      "question": "根据 Chinchilla 最优性，一个 70 亿参数的模型应该训练多少个词元？",
+      "options": ["70 亿词元", "350 亿词元", "1400 亿词元", "7000 亿词元"],
+      "correct": 2,
+      "explanation": "Chinchilla 的经验法则是 D ≈ 20N，因此 70 亿参数大约对应 1400 亿词元。"
+    },
+    {
+      "stage": "post",
+      "question": "哪个 ZeRO 阶段会把模型权重本身分片到数据并行 rank 上？",
+      "options": ["ZeRO-1", "ZeRO-2", "ZeRO-3", "以上都不是"],
+      "correct": 2,
+      "explanation": "ZeRO-1 对优化器状态分片，ZeRO-2 还对梯度分片，ZeRO-3 则进一步对模型权重分片。"
+    },
+    {
+      "stage": "post",
+      "question": "估算 wall-clock 训练时间的正确公式是什么？",
+      "options": [
+        "FLOPs / (peak × MFU × GPUs)",
+        "peak × MFU × GPUs / FLOPs",
+        "FLOPs × MFU × GPUs / peak",
+        "FLOPs × peak / (MFU × GPUs)"
+      ],
+      "correct": 0,
+      "explanation": "Wall-clock 时间等于总工作量（FLOPs）除以聚合有效吞吐（硬件峰值 × MFU × GPU 数量）。"
+    }
+  ]
+}

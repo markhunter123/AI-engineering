@@ -1,0 +1,78 @@
+{
+  "lesson": "04-vllm-serving-internals",
+  "title": "Serving Engine Internals — PagedAttention, Continuous Batching, Chunked Prefill",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "经典静态批处理在处理混合长度请求时的主要问题是什么？",
+      "options": [
+        "It only works with FP4",
+        "It cannot use GPUs at all",
+        "Padding to the longest prompt and longest output wastes memory and stalls the whole batch on the slowest sequence",
+        "It requires NVLink between every GPU"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "PagedAttention 如何将 KV cache 碎片从 60-80% 降低到 4% 以下？",
+      "options": [
+        "By disabling KV cache entirely",
+        "By holding the full prompt in CPU RAM",
+        "By compressing weights to INT4",
+        "通过将 KV cache 分配为固定大小的块（默认 16 个 token），并用每序列的块表进行引用"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在 vLLM V1 调度器中，持续批处理的不变式是什么？",
+      "options": [
+        "Each request gets its own dedicated GPU stream",
+        "The scheduler waits 10 ms windows to fill a batch before running",
+        "The scheduler runs once per request and the batch never changes",
+        "调度器每个 decode 迭代运行一次，完成的序列出队，等待的序列入队"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "分块 prefill 主要保护混合负载下的哪个延迟指标？",
+      "options": [
+        "Mean throughput",
+        "Cold-start time",
+        "Network RTT",
+        "P99 inter-token latency (ITL)"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "vLLM v0.18.0 的功能兼容性矩阵对投机解码与 --enable-chunked-prefill 的组合是怎么标注的？",
+      "options": [
+        "矩阵将该组合标记为兼容",
+        "They cannot be combined in any configuration",
+        "Only EAGLE-1 draft heads work with chunked prefill",
+        "Only draft-model speculation works with chunked prefill"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么分块 prefill 本身不会提高平均吞吐？",
+      "options": [
+        "It compresses weights more aggressively",
+        "它只减少 decode 时刻的抖动；实际吞吐收益来自在长 prefill 期间保持 decode 序列存活，而不是改变总计算量",
+        "It runs on a different GPU than decode",
+        "It uses speculative decoding under the hood"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "lesson": "14-speculative-decoding-server",
+  "title": "Capstone 14 — Speculative-Decoding Inference Server",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "speculative decoding 背后的双层机制是什么？",
+      "options": [
+        "两个目标模型交替生成每个 token",
+        "一个嵌入模型和一个合成器",
+        "一个检索缓存和一个 reranker",
+        "draft 模型提出 k 个候选 token；目标模型一次通过验证"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "EAGLE-3 做了什么，是 ngram draft 做不到的？",
+      "options": [
+        "完全避免 tokenization",
+        "只在 CPU 上运行",
+        "在目标模型隐藏状态上训练 draft head，获得更高的接受率",
+        "替换目标模型"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么要在 batch size 1、8、32 上报告 p99 尾部延迟？",
+      "options": [
+        "稳态每秒 token 数可能隐藏：拒绝时的验证 pass 比普通解码更昂贵",
+        "vLLM 无法服务低于 8 的 batch size",
+        "p99 只在 batch size 32 时重要",
+        "尾部延迟与 batch size 无关"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么当流量分布偏移时，acceptance rate 会漂移？",
+      "options": [
+        "draft 对齐依赖输入分布：ShareGPT、代码和领域数据会触发不同模式",
+        "OS 调度器重新打乱 GPU 内存",
+        "量化在运行时变化",
+        "vLLM 每小时轮换模型"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "部署在 Kubernetes HPA 上使用哪个信号进行扩展？",
+      "options": [
+        "磁盘 IOPS",
+        "CPU 利用率",
+        "推理请求的队列等待时间",
+        "Cluster autoscaler 节点数"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "P-EAGLE 相比串行 EAGLE-3 增加了什么？",
+      "options": [
+        "量化到 FP4 权重",
+        "移除目标模型",
+        "在一棵 draft 分支树上并行推测，并一次目标 pass 验证",
+        "自动数据集管理"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "评分标准要求相对非推测基线达到什么吞吐目标？",
+      "options": [
+        "在两种模型上保持相同质量，至少 2.5 倍",
+        "只要比基线有提升",
+        "保持相同质量约 1.1 倍",
+        "任何质量下正好 10 倍吞吐"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

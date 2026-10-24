@@ -1,0 +1,78 @@
+{
+  "lesson": "57-end-to-end-research-demo",
+  "title": "End-to-End Research Demo",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本课中演示的任务是什么？",
+      "options": [
+        "将调度器与基线进行基准测试",
+        "在每个分支上调用真实语言模型",
+        "用单个新框架取代前面的课程",
+        "通过普通 Python 导入将前面各课的基元组合起来"
+      ],
+      "correct": 3,
+      "explanation": "演示是一个组合测试。每个阶段都在自己的课中存在。演示导入它们并连接报告。没有新框架，没有新抽象。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么本课通过 importlib 加载前面的课，而不是普通包导入？",
+      "options": [
+        "因为 importlib 更快",
+        "因为前面的每节课都是独立的 code/ 文件夹，不是已安装包；importlib 按文件路径加载它们",
+        "因为 asyncio 需要 importlib",
+        "因为这些课共享模块名会冲突"
+      ],
+      "correct": 1,
+      "explanation": "这些课不是已安装包。每个都在自己的 code/ 文件夹中提供 main.py。importlib.util.spec_from_file_location 按路径加载它们，不会污染全局模块命名空间。"
+    },
+    {
+      "stage": "check",
+      "question": "当多个分支都触发了论文时，最佳结果选择器如何决定？",
+      "options": [
+        "选择平均回报最高的分支，按分支 id 字母顺序打破平局",
+        "选择运行实验最多的分支",
+        "随机选择以保证公平",
+        "选择第一个触发的分支"
+      ],
+      "correct": 0,
+      "explanation": "最高均值获胜。平局按分支 id 打破，使演示可确定。随机会破坏确定性测试。"
+    },
+    {
+      "stage": "check",
+      "question": "当调度器报告零个论文触发时，选择器抛出什么错误？",
+      "options": [
+        "ValueError",
+        "返回 None",
+        "PaperValidationError",
+        "NoTriggerError，在 writer 运行前短路演示"
+      ],
+      "correct": 3,
+      "explanation": "NoTriggerError 是类型化的失败模式。返回 None 会让 writer 在畸形输入上运行，随后以更不可操作的错误崩溃。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么确定性测试中演示用相同种子运行两次？",
+      "options": [
+        "为了捕捉内存泄漏",
+        "断言被选分支、回报和论文章节 ID 在两次运行中相同",
+        "为了两次运行 asyncio",
+        "为了证明调度器公平"
+      ],
+      "correct": 1,
+      "explanation": "确定性是契约的一部分。相同种子的两次运行必须产生相同产物。测试将其固定。"
+    },
+    {
+      "stage": "post",
+      "question": "成功运行后，演示报告包含什么？",
+      "options": [
+        "只有最终 LaTeX 文件",
+        "只有实验计数和状态字符串",
+        "模型提示和补全日志",
+        "scheduler_report、best_branch、best_reward、critic_result、paper_manifest 和 stop_reason"
+      ],
+      "correct": 3,
+      "explanation": "每个阶段的输出都被保留。报告是上游输出的组合，而不是转换后的摘要。下游工具读取 manifest；调试器读取 scheduler_report 内的 trace。"
+    }
+  ]
+}

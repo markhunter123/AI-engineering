@@ -1,0 +1,48 @@
+{
+  "lesson": "07-building-an-mcp-server",
+  "title": "Building an MCP Server: Stateless Python and TypeScript",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "现代 MCP 服务器应从何处读取客户端能力？",
+      "options": ["从 Mcp-Session-Id", "从第一次 initialize 调用", "从每个当前请求", "从进程环境"],
+      "correct": 2,
+      "explanation": "MCP 2026-07-28 在每个请求的 params._meta 中携带客户端能力。"
+    },
+    {
+      "stage": "check",
+      "question": "现代服务器必须实现哪个方法？",
+      "options": ["initialize", "server/discover", "resources/subscribe", "shutdown"],
+      "correct": 1,
+      "explanation": "server/discover 在现代服务器上是强制的，尽管客户端也可以先调用其他方法。"
+    },
+    {
+      "stage": "check",
+      "question": "tools/list 的成功结果中必须包含哪些字段？",
+      "options": ["protocolVersion 和 tools", "resultType、ttlMs、cacheScope、tools", "initialized 和 tools", "sessionId 和 tools"],
+      "correct": 1,
+      "explanation": "现代列表结果具有类型且可缓存。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么服务器应该对工具进行确定性排序？",
+      "options": ["为了稳定缓存和模型上下文", "为了创建会话", "为了协商协议", "为了替代授权"],
+      "correct": 0,
+      "explanation": "稳定的排序能让等价注册表产生等价响应。"
+    },
+    {
+      "stage": "post",
+      "question": "一次有效的工具调用运行了，但领域操作失败。应采用哪种形式？",
+      "options": ["notifications/initialized", "HTTP DELETE", "isError 为 true 的完整工具结果", "新的服务器请求"],
+      "correct": 2,
+      "explanation": "工具级失败通过 content 和 isError 保持对模型可见。"
+    },
+    {
+      "stage": "post",
+      "question": "stdio 服务器的传输生命周期应以什么结束？",
+      "options": ["stdin 上的 EOF", "GET 请求", "强制的 shutdown RPC", "Mcp-Session-Id 过期"],
+      "correct": 0,
+      "explanation": "EOF 是可移植的 stdio 关闭信号。它不会关闭现代协议会话。"
+    }
+  ]
+}

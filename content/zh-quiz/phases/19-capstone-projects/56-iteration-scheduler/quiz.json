@@ -1,0 +1,78 @@
+{
+  "lesson": "56-iteration-scheduler",
+  "title": "Iteration Scheduler",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么调度器使用 UCB 评分，而不是总是选择当前最佳分支？",
+      "options": [
+        "因为否则队列无法排序",
+        "因为 asyncio 要求 UCB",
+        "因为 UCB 计算更快",
+        "因为贪心选择从不探索；UCB 平衡利用与探索"
+      ],
+      "correct": 3,
+      "explanation": "贪心会锁定首个领先者。均匀选择从不利用。UCB 通过 sqrt(ln N / n) 项保留对较少探索分支的容量。"
+    },
+    {
+      "stage": "pre",
+      "question": "在 UCB1 下，完成次数为零的分支获得什么分数？",
+      "options": [
+        "正无穷，因此未尝试分支总是被优先选择",
+        "所有其他分支的平均回报",
+        "零",
+        "探索常数 c"
+      ],
+      "correct": 0,
+      "explanation": "本课将 runs=0 设为 +inf。这保证每个分支在任意分支被重新访问之前至少被尝试一次。"
+    },
+    {
+      "stage": "check",
+      "question": "调度器如何让多个槽位保持忙碌？",
+      "options": [
+        "它为每个分发的假设使用 asyncio.create_task，并在执行中的任务集合上 await FIRST_COMPLETED",
+        "它在线程池中运行运行器",
+        "它在事件循环上阻塞 sleep",
+        "它使用多进程"
+      ],
+      "correct": 0,
+      "explanation": "每个分发的假设成为一个任务。主循环等待 FIRST_COMPLETED，以便一个完成的槽位立即释放并分发另一个假设。"
+    },
+    {
+      "stage": "check",
+      "question": "调度器何时为某个分支触发 paper.trigger？",
+      "options": [
+        "每次该分支有结果落地时",
+        "当剪枝下限时",
+        "只在运行结束时",
+        "在第一个使分支均值达到或超过论文阈值的结果上，且每个分支只触发一次"
+      ],
+      "correct": 3,
+      "explanation": "触发器每个分支只触发一次，即分支均值首次越过阈值时。BranchStats 上的 paper_triggered 标志防止重复。"
+    },
+    {
+      "stage": "post",
+      "question": "当分支的平均回报在达到最小运行次数阈值后仍低于剪枝下限时，会怎样？",
+      "options": [
+        "无事发生；UCB 最终会选择其他分支",
+        "回报下限自动降低",
+        "该分支被标记为已剪枝，其上剩余的假设从队列中移除",
+        "调度器抛出异常"
+      ],
+      "correct": 2,
+      "explanation": "剪枝将分支从未来调度中移除。剪枝与选择器分离：UCB 排序，剪枝淘汰。"
+    },
+    {
+      "stage": "post",
+      "question": "调度器将哪两个预算作为硬上限？",
+      "options": [
+        "内存与 CPU",
+        "paper triggers 与 prune count",
+        "slots 与 queue depth",
+        "max_experiments（总运行数）与 max_seconds（挂钟时间）"
+      ],
+      "correct": 3,
+      "explanation": "两者作为停止原因触发。max_experiments 限制总工作量。max_seconds 限制挂钟时间。trace 记录哪个上限停止了运行。"
+    }
+  ]
+}

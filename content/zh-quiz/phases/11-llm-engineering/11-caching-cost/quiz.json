@@ -1,0 +1,62 @@
+[
+  {
+    "question": "为什么 AI 初创公司常常因为成本问题而非模型质量问题而失败？",
+    "options": [
+      "模型总是足够好",
+      "每次调用的成本会快速累积：1 万名用户每天调用 10 次，在尚未收取一分钱之前，token 费用就达到每天 250 美元",
+      "API 提供方提供无限免费额度",
+      "成本优化很容易"
+    ],
+    "correct": 1,
+    "explanation": "LLM API 成本随使用量线性增长。一项每次调用 0.003 美元的功能看似便宜，但当每天调用 10 万次时（每天 300 美元，每月 9000 美元），成本就不容忽视。如果不进行成本优化，许多 AI 产品在大规模下无法盈利。",
+    "stage": "pre"
+  },
+  {
+    "question": "什么是 LLM 应用的语义缓存？",
+    "options": [
+      "预生成所有可能的回复",
+      "只缓存 embedding",
+      "存储先前查询的回复，当新查询在语义上相似（而不仅仅是完全匹配）时直接返回缓存的回复",
+      "缓存模型权重"
+    ],
+    "correct": 2,
+    "explanation": "完全匹配缓存只对完全相同的查询有效。语义缓存对查询进行 embedding，当余弦相似度超过阈值时返回缓存回复。例如“What's the weather in NYC?”与“NYC weather today?”会匹配。",
+    "stage": "pre"
+  },
+  {
+    "question": "作为成本优化策略，模型路由（model routing）是什么？",
+    "options": [
+      "缓存多个模型的回复",
+      "根据查询分类，将简单查询发送给便宜/快速的模型，将复杂查询发送给昂贵/强大的模型",
+      "在多个服务器之间负载均衡",
+      "在不同 API 提供方之间路由"
+    ],
+    "correct": 1,
+    "explanation": "并非每个查询都需要 GPT-4。分类器将简单问题（FAQ、问候）路由到便宜模型（GPT-3.5、Haiku），将复杂问题（推理、分析）路由到昂贵模型。这样可削减 50%–80% 的成本。",
+    "stage": "post"
+  },
+  {
+    "question": "什么是提示词压缩（prompt compression），它如何降低成本？",
+    "options": [
+      "使用更短的变量名",
+      "移除冗余 token、总结长上下文、消除样板内容，在保留关键信息的同时减少输入 token 数量",
+      "通过删词让提示词更短",
+      "用 gzip 压缩提示词"
+    ],
+    "correct": 1,
+    "explanation": "在 RAG 应用中，输入 token 占成本主导（检索到的大上下文）。提示词压缩去除填充词、总结冗长段落、修剪低相关性块，在不丢失关键信息的前提下减少 token 数量。",
+    "stage": "post"
+  },
+  {
+    "question": "什么是前缀缓存（prefix caching），哪个提供方的功能支持它？",
+    "options": [
+      "复用共享提示词前缀（system prompt + tool 定义）的 KV-cache 计算，减少重复模式的延迟和成本",
+      "浏览器缓存 API 响应",
+      "缓存 DNS 查询",
+      "缓存每个回复的第一个词"
+    ],
+    "correct": 0,
+    "explanation": "如果你的 system prompt + tool 定义共 5000 个 token，并且在不同请求中完全相同，前缀缓存只需计算一次 KV-cache 即可复用。Anthropic 的 prompt caching 和 OpenAI 的 cached tokens 都支持这一功能。",
+    "stage": "post"
+  }
+]

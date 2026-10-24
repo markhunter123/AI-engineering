@@ -1,0 +1,78 @@
+{
+  "lesson": "37-loading-pretrained-weights",
+  "title": "Loading Pretrained Weights",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "加载器为什么需要名称映射？",
+      "options": [
+        "发布的 GPT-2 权重使用 wte、wpe、h.N.attn.c_attn 等名称；本地模型使用 tok_embed、pos_embed、blocks.N.attn.qkv；加载器将一种命名转换为另一种",
+        "Safetensors 文件是加密的",
+        "预训练张量与本地参数同名",
+        "Torch 要求这样做"
+      ],
+      "correct": 0,
+      "explanation": "两种命名约定来自不同历史；该映射是按层展开的字典。"
+    },
+    {
+      "stage": "check",
+      "question": "什么是 conv1d 转置，哪些张量需要它？",
+      "options": [
+        "所有权重张量",
+        "发布的 GPT-2 以 TensorFlow conv1d 布局存储 c_attn、c_proj 与 c_fc 的权重，这与 nn.Linear.weight 期望的布局互为转置；加载器在赋值时对这些张量调用 .t()",
+        "只有嵌入",
+        "只有 LayerNorm 的 scale"
+      ],
+      "correct": 1,
+      "explanation": "三个后缀需要转置；偏置与 LayerNorm 的形状已经正确。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 safetensors 文件中没有 LM head？",
+      "options": [
+        "它太大了",
+        "它从单独文件加载",
+        "它在运行时从 logits 计算得出",
+        "权重共享：LM head 与词元嵌入（wte）共享存储，因此加载 wte 后将 lm_head.weight 设为 tok_embed.weight 的别名即可重建 head"
+      ],
+      "correct": 3,
+      "explanation": "在 wte 加载后设置 lm_head.weight = tok_embed.weight 可恢复别名；复制会使参数量翻倍。"
+    },
+    {
+      "stage": "check",
+      "question": "形状不匹配时加载器如何处理？",
+      "options": [
+        "将较小的张量填充",
+        "崩溃进程",
+        "将不匹配记录到 LoadReport.shape_mismatch 中并拒绝赋值，保持本地参数不变",
+        "截断较大的张量"
+      ],
+      "correct": 2,
+      "explanation": "半加载的模型是静默的失败机器；拒绝赋值可保持报告诚实。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么演示用的 stub fixture 不是真正的 GPT-2 下载？",
+      "options": [
+        "真实文件不是 safetensors 格式",
+        "真实权重是加密的",
+        "演示需要离线快速运行；stub 使用与预训练完全相同的命名约定，因此加载器代码路径一致，替换为真实文件不会改变加载器行为",
+        "Safetensors 无法存储大张量"
+      ],
+      "correct": 2,
+      "explanation": "相同代码路径，更小载荷；加载器对两者都适用。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么要在加载前后各生成一个样本？",
+      "options": [
+        "为了测量推理速度",
+        "为了设置随机种子",
+        "如果加载后的样本与加载前完全相同，说明加载并未改变模型，意味着映射静默地遗漏了每一个张量",
+        "为了预热 GPU 缓存"
+      ],
+      "correct": 2,
+      "explanation": "生成结果检查是最廉价的关卡：一个未变化的样本指纹会暴露出有问题的加载，而仅靠 LoadReport 摘要无法捕捉。"
+    }
+  ]
+}

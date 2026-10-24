@@ -1,0 +1,78 @@
+{
+  "lesson": "12-mcp-roots-and-elicitation",
+  "title": "Explicit Scope and Stateless Elicitation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "MCP Roots 提供了什么安全保证？",
+      "options": [
+        "信息性的工作区引导，而非授权或沙箱隔离",
+        "每个服务器进程的作系统级隔离",
+        "证明调用方拥有根目录下每个文件",
+        "自动防止符号链接逃逸"
+      ],
+      "correct": 0,
+      "explanation": "Roots 只是信息性的，并在 2026-07-28 中已弃用。服务器仍需要授权、隔离和沙箱。"
+    },
+    {
+      "stage": "check",
+      "question": "当工作区范围随每次工具调用变化时，最清晰的现代替代方案是什么？",
+      "options": [
+        "存储在传输会话中的隐藏值",
+        "变更后发送 roots/list 请求",
+        "自报告的 clientInfo 名称",
+        "服务器授权后处理的显式 workspace URI 参数"
+      ],
+      "correct": 3,
+      "explanation": "显式句柄可见且可重放，但服务器仍需为已认证主体授权。"
+    },
+    {
+      "stage": "check",
+      "question": "在 MCP 2026-07-28 下，表单模式elicitation如何传递？",
+      "options": [
+        "通过 server/discover 的 HTTP 重定向",
+        "通过 notifications/roots/list_changed",
+        "通过 Mcp-Session-Id 流的反向请求",
+        "在 input_required 结果的 inputRequests 中"
+      ],
+      "correct": 3,
+      "explanation": "MRTR 将 elicitation/create 嵌入 inputRequests，然后客户端用 inputResponses 重试原始操作。elicitation {} 和 elicitation.form 支持表单模式；仅 URL 支持会返回 -32021 并附带 data.requiredCapabilities.elicitation.form。"
+    },
+    {
+      "stage": "check",
+      "question": "哪个值绝不能通过表单模式elicitation收集？",
+      "options": [
+        "布尔型破坏性操作确认",
+        "从枚举中选择的笔记 ID",
+        "API 访问令牌",
+        "非敏感的显示偏好"
+      ],
+      "correct": 2,
+      "explanation": "机密和凭据不得经过 MCP 客户端。对敏感的外部交互，应使用精心绑定的 URL 模式流程。"
+    },
+    {
+      "stage": "post",
+      "question": "用户拒绝了删除elicitation。安全的结果是什么？",
+      "options": [
+        "因为模型已选择该笔记，所以执行删除",
+        "将缺失的内容视为默示同意",
+        "返回完整的非错误拒绝结果并保留笔记",
+        "重复相同对话框直到用户接受"
+      ],
+      "correct": 2,
+      "explanation": "拒绝是明确的回绝。不得将其转化为同意、错误循环提示或变更。"
+    },
+    {
+      "stage": "post",
+      "question": "哪种设计能安全地将破坏性确认与用户所见内容绑定？",
+      "options": [
+        "对所选笔记 ID 进行 Base64 编码而不签名",
+        "对主体、原始参数摘要、候选 ID、阶段和过期时间签名，然后重新检查实时目标",
+        "使用 clientInfo 作为权威用户身份",
+        "信任任何带 action accept 返回的笔记 ID"
+      ],
+      "correct": 1,
+      "explanation": "完整性保护状态可防止篡改。共享的一次性原子随机数声明可防止重放，而最终实时检查可在变更前处理竞态。"
+    }
+  ]
+}

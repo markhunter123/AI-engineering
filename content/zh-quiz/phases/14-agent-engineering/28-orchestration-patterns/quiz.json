@@ -1,0 +1,90 @@
+{
+  "lesson": "28-orchestration-patterns",
+  "title": "编排模式：Supervisor、Swarm、Hierarchical",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本课列出哪四种编排模式？",
+      "options": [
+        "Push、pull、batch、stream",
+        "Supervisor-worker、swarm/peer-to-peer、hierarchical、debate",
+        "Sequential、parallel、distributed、federated",
+        "Plan、act、reflect、refine"
+      ],
+      "correct": 1,
+      "explanation": "Supervisor-worker、swarm、hierarchical 和 debate 在 2026 框架中反复出现。"
+    },
+    {
+      "stage": "pre",
+      "question": "2026 年 LangChain 关于 supervision 的建议是什么？",
+      "options": [
+        "总是使用 create_supervisor",
+        "完全避免 supervision",
+        "相比 create_supervisor，更偏好直接工具调用以获得更精细的上下文工程控制",
+        "在 GPU 上运行 supervisor"
+      ],
+      "correct": 2,
+      "explanation": "基于工具调用的 supervision 让你精确控制每个专家看到的内容。"
+    },
+    {
+      "stage": "check",
+      "question": "Swarm 与 supervisor-worker 拓扑的区别是什么？",
+      "options": [
+        "Swarm 只按 cron 运行",
+        "Swarm 没有中央路由器；智能体通过共享工具表面直接交接",
+        "Swarm 使用 GPU",
+        "Swarm 是单智能体"
+      ],
+      "correct": 1,
+      "explanation": "Swarm 是点对点；supervisor 通过一个 LLM 集中路由。"
+    },
+    {
+      "stage": "check",
+      "question": "什么时候 hierarchical orchestration 是合理的？",
+      "options": [
+        "绝不；它是反模式",
+        "只有有 GPU 时",
+        "当单个 supervisor 的上下文预算无法容纳所有专家描述时",
+        "总是；它免费扩展"
+      ],
+      "correct": 2,
+      "explanation": "嵌套 supervisor 用于专家数量超过单个 supervisor 预算的情况。"
+    },
+    {
+      "stage": "check",
+      "question": "Anthropic 推荐的决策顺序是什么？",
+      "options": [
+        "从单智能体加工作流模式开始；只在需要时加拓扑；supervisor 在 swarm 之前，hierarchical 更后；debate 用于准确率胜过成本时",
+        "从 debate 开始",
+        "总是从 hierarchical 多智能体开始",
+        "从 swarm 开始，再收缩到单智能体"
+      ],
+      "correct": 0,
+      "explanation": "Anthropic 的指导是为需求构建合适的系统，而非最复杂的。"
+    },
+    {
+      "stage": "post",
+      "question": "本课中的 fake hierarchy 是什么？",
+      "options": [
+        "因为“企业级”就堆三层 supervisor，而实际只有两队；应压缩",
+        "用 TypeScript 写的编排器",
+        "标签错误的 YAML",
+        "测试夹具"
+      ],
+      "correct": 0,
+      "explanation": "与实际团队不对应的层级只会增加运维复杂度而无收益。"
+    },
+    {
+      "stage": "post",
+      "question": "如何缓解 swarm 中的弹跳交接（A -> B -> A -> B）？",
+      "options": [
+        "将 temperature 固定为 0",
+        "降低速率限制",
+        "添加 hop counter，N 次转移后拒绝",
+        "禁用追踪"
+      ],
+      "correct": 2,
+      "explanation": "Hop counter 可在 swarm 循环无限进行前进行限制。"
+    }
+  ]
+}

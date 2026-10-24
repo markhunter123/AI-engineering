@@ -1,0 +1,78 @@
+{
+  "lesson": "35-evidence-confidence-and-unknowns",
+  "title": "Evidence, Confidence, and Unknowns in Binary Analysis",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "rea 为每个 Evidence 记录赋予一个 confidence 值。模式允许哪组值？",
+      "options": [
+        "0.0 到 1.0 的数字",
+        "observed、derived 或 inferred",
+        "pass、fail 或 unknown",
+        "low、medium、high 或 critical"
+      ],
+      "correct": 1,
+      "explanation": "confidence 是 src/domain/evidence.ts 中的三值枚举。严重程度和完成状态是不同字段，各有自己的值。"
+    },
+    {
+      "stage": "check",
+      "question": "两个人在不同机器上的不同文件夹中对同一目标文件运行相同的 rea 查询。evidence_id 会怎样？",
+      "options": [
+        "因本地路径不同而不同",
+        "相同，因为哈希排除了 name 和 local_path",
+        "仅当文件夹名称匹配时才相同",
+        "因机器时钟不同而不同"
+      ],
+      "correct": 1,
+      "explanation": "语义投影保留主题摘要、格式和架构，并丢弃 name 和 local_path。同一字节在任何地方的相同观察都会得到相同 id。"
+    },
+    {
+      "stage": "check",
+      "question": "某断言称 grade(55) == 0。分类账保存了 Ghidra 伪代码记录和派生的表模型。该断言的状态是什么？",
+      "options": [
+        "pass，因为伪代码记录是 observed",
+        "pass，因为两条记录都与断言一致",
+        "fail，因为伪代码显示了不同表达式",
+        "unsupported，因为没有 observed 运行说明结果"
+      ],
+      "correct": 3,
+      "explanation": "伪代码是对 Ghidra 打印内容的观察，而非函数返回值的观察。只有函数的实际运行观察才能提升行为断言。"
+    },
+    {
+      "stage": "check",
+      "question": "快照保存在 profile digest a04af771 下。后续 rea 版本将 jump_table_evidence 改为 v2 契约。缓存如何处理该快照？",
+      "options": [
+        "启动 Ghidra 并覆盖旧条目",
+        "重放条目并将每个标记为 stale",
+        "以 profile_mismatch 拒绝导入",
+        "仅重放没有跳转表的条目"
+      ],
+      "correct": 2,
+      "explanation": "profile digest 覆盖每个契约版本字符串。版本变化会产生新摘要，快照不再匹配活动绑定。"
+    },
+    {
+      "stage": "post",
+      "question": "什么能用 verified 处置关闭残余 unknown？",
+      "options": [
+        "至少一个具备所需信心和权限的证据 id",
+        "从分类账中移除 unknown",
+        "分析师写的一句理由",
+        "状态为 resolved 且证据列表为空的新修订"
+      ],
+      "correct": 0,
+      "explanation": "verified 解决会命名证据 id，分类账检查每个 id 都是 observed 并携带 unknown 要求的权限。"
+    },
+    {
+      "stage": "post",
+      "question": "主机构建运行显示 grade(95) == 4 和 grade(100) == 4。断言覆盖从 90 到 100 的每个分数。哪个状态正确？",
+      "options": [
+        "unknown，因为 11 个输入中只有 2 个有观察运行",
+        "pass，因为每次观察运行都与断言一致",
+        "unsupported，因为 x86-64 目标本身从未运行",
+        "fail，因为九个输入从未运行"
+      ],
+      "correct": 0,
+      "explanation": "部分覆盖是 unknown，不是 pass 也不是 fail。在其余九个输入有观察运行之前，unknown 记录保持打开。"
+    }
+  ]
+}

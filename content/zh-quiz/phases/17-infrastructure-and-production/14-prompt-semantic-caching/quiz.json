@@ -1,0 +1,78 @@
+{
+  "lesson": "14-prompt-semantic-caching",
+  "title": "Prompt Caching and Semantic Caching Economics",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "L1 语义缓存与 L2 提示词/前缀缓存的区别是什么？",
+      "options": [
+        "L2 存储 embeddings；L1 存储 attention KV",
+        "L1 在 provider 侧，L2 在客户端侧",
+        "L1 和 L2 相同",
+        "L1 在 embedding 相似命中时完全跳过 LLM；L2 在 provider 端复用重复前缀的 attention KV"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Anthropic 的哪种机制将请求块标记为 L2 提示词缓存可用？",
+      "options": [
+        "请求块上的显式 cache_control 属性",
+        "Filename suffixes in tool definitions",
+        "隐式提示词长度阈值",
+        "单独的 /caches endpoint"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "并行化反模式是如何让账单膨胀的？",
+      "options": [
+        "并行请求绕过批处理",
+        "并行化会触发每次请求的护栏费用",
+        "所有并行请求自动共享一个缓存条目",
+        "N 个相同前缀的并行请求在首次缓存写入完成前到达，因此每个都支付写入溢价且未获折扣"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "可缓存前缀中的动态内容反模式是什么？",
+      "options": [
+        "在可缓存前缀中加入每次请求都变化的内容（精确到分钟当前时间、request ID、随机示例顺序），从而扼杀命中率",
+        "Using too short a system prompt",
+        "Always streaming responses",
+        "Putting tool schemas in the prefix"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "批处理与缓存输入叠加，如何在夜间大幅削减成本？",
+      "options": [
+        "Batch is incompatible with caching",
+        "Caching disables batch eligibility",
+        "Batch only saves output cost",
+        "Batch API 提供 5 折优惠；缓存输入再降约 10 倍；两者叠加，夜间管道成本降至同步未缓存的约 10%"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "课程如何看待语义缓存“95% 准确率”的宣传？",
+      "options": [
+        "95% means you should expect 95% cache hits",
+        "95% is the OpenAI default cache hit rate",
+        "95% is a vendor-documented hit-rate baseline",
+        "95% 指的是匹配正确率，而非命中率；生产环境报告命中率约 10%（开放聊天）到 ~70%（结构化 FAQ）"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

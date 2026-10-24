@@ -1,0 +1,90 @@
+{
+  "lesson": "30-eval-driven-agent-development",
+  "title": "Eval-Driven Agent Development",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本课提到的三个评估层级是什么？",
+      "options": [
+        "单元、集成、端到端",
+        "冒烟、回归、验收",
+        "Pre、Check、Post",
+        "静态基准测试、自定义离线评估、在线生产评估"
+      ],
+      "correct": 3,
+      "explanation": "静态基准测试（如 SWE-bench、GAIA）、自定义离线评估（如 LLM-judge、exec、trajectory）以及在线生产评估（如 replay、alert、cost/latency）。"
+    },
+    {
+      "stage": "pre",
+      "question": "Anthropic 推荐从何入手？",
+      "options": [
+        "从多智能体辩论开始",
+        "从简单提示开始，用全面的评估进行优化，只在必要时添加多步骤智能体系统",
+        "从只用前沿模型开始",
+        "从层级编排开始"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic 明确指出，评估是驱动其他所有选择的外层循环。"
+    },
+    {
+      "stage": "check",
+      "question": "什么是 evaluator-optimizer 紧密循环？",
+      "options": [
+        "提出者生成输出，评估者打分，反复优化直到通过（Self-Refine 的泛化）",
+        "采样、排序、去重",
+        "缓存、重试、失败",
+        "训练、评估、部署"
+      ],
+      "correct": 0,
+      "explanation": "它是 Self-Refine 的泛化：任何流程都可以包裹在提出—评估—优化之中。"
+    },
+    {
+      "stage": "check",
+      "question": "2026 年的最佳实践中，评估应放在哪里？",
+      "options": [
+        "仅由 QA 团队独占",
+        "每季度运行一次",
+        "与代码放在一起，每次 PR 都在 CI 中运行，并按评估分数合并门禁",
+        "只放在单独的厂商面板中"
+      ],
+      "correct": 2,
+      "explanation": "与代码同仓、CI 门禁、回归追踪已成为标准。"
+    },
+    {
+      "stage": "check",
+      "question": "本课为何警告不要在没有依据的情况下使用 LLM-judge？",
+      "options": [
+        "违反 Apache 2.0",
+        "评估者也会幻觉；应搭配 CRITIC 模式，让判断基于外部工具",
+        "太慢",
+        "只能在 GPU 上运行"
+      ],
+      "correct": 1,
+      "explanation": "应运用 CRITIC（第 5 课）：基于工具的验证能让评估者保持诚实。"
+    },
+    {
+      "stage": "post",
+      "question": "过度拟合评估有什么危险？",
+      "options": [
+        "向量索引碎片化",
+        "计算成本上升",
+        "延迟降得太低",
+        "针对评估集优化会偏离生产实际用途；应轮换案例"
+      ],
+      "correct": 3,
+      "explanation": "轮换评估集能让优化始终对齐生产现实。"
+    },
+    {
+      "stage": "post",
+      "question": "不稳定的评估为何会造成问题？",
+      "options": [
+        "超出上下文窗口",
+        "无法连接数据库",
+        "推理成本翻倍",
+        "非确定性案例会产生误报；应固定随机种子并快照状态"
+      ],
+      "correct": 3,
+      "explanation": "抖动会让回归不可读；确定性（随机种子、状态快照）是必需的。"
+    }
+  ]
+}

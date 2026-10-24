@@ -1,0 +1,78 @@
+{
+  "lesson": "30-gpu-architecture-execution-model",
+  "title": "GPU Architecture and the Execution Model",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "CPU 利用大缓存和乱序执行隐藏内存延迟。GPU 主要的延迟隐藏策略是什么？",
+      "options": [
+        "大共享缓存和深度推测",
+        "乱序执行和大缓存",
+        "大量驻留线程和快速的 warp 切换",
+        "每个单线程更高的时钟频率"
+      ],
+      "correct": 2,
+      "explanation": "GPU 通过保持数千个轻量级线程驻留，并在某个 warp 因等待内存而停滞时快速切换 warp 来隐藏延迟。"
+    },
+    {
+      "stage": "check",
+      "question": "一个 CUDA warp 有多少线程？当同 warp 内线程走不同分支时会发生什么？",
+      "options": [
+        "16 个线程；分支并行执行",
+        "32 个线程；两条路径按掩码串行执行",
+        "64 个线程；少数线程永远停滞",
+        "128 个线程；硬件对路径投票"
+      ],
+      "correct": 1,
+      "explanation": "一个 warp 是 32 个线程。分支发散会使执行路径串行化，同时屏蔽未激活的线程。"
+    },
+    {
+      "stage": "check",
+      "question": "当线程块在 H100 上请求 120 KB 共享内存时，哪项资源最可能限制占用率？",
+      "options": [
+        "每线程寄存器",
+        "每个 SM 的最大 warp 数",
+        "每个 SM 的共享内存",
+        "L2 缓存容量"
+      ],
+      "correct": 2,
+      "explanation": "H100 的每个 SM 只有约 228 KB 共享内存，因此一个 120 KB 的线程块每个 SM 最多只能放下一个，从而限制了占用率。"
+    },
+    {
+      "stage": "check",
+      "question": "H100 的 FP16 峰值约为 989 TFLOPS，HBM 带宽约为 3.35 TB/s。脊点是多少，意味着什么？",
+      "options": [
+        "~0.3 FLOPs/Byte；所有 kernel 都是计算受限",
+        "~3 FLOPs/Byte；只有极小 kernel 是内存受限",
+        "~295 FLOPs/Byte；低于此值的 kernel 为内存受限",
+        "~989 FLOPs/Byte；带宽等于峰值算力"
+      ],
+      "correct": 2,
+      "explanation": "脊点是峰值算力除以带宽，约为 989/3.35 ≈ 295 FLOPs/Byte。强度更低的 kernel 是内存受限。"
+    },
+    {
+      "stage": "post",
+      "question": "一个 FP16 的 70B 模型每次生成一个 token，算术强度约为 1 FLOP/Byte。将解码推向计算受限的最有效方法是什么？",
+      "options": [
+        "增大模型规模以提高每个 token 的 FLOPs",
+        "使用更大的 batch 来摊销权重读取",
+        "禁用共享内存分块以降低占用率",
+        "降低 GPU 频率以省电"
+      ],
+      "correct": 1,
+      "explanation": "批处理让每个权重读取服务于多个 token，提高算术强度，使工作负载向计算受限转移。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么共享内存分块能加速 GPU 上的矩阵乘法？",
+      "options": [
+        "增加总 FLOPs",
+        "减少每个 block 启动的线程数",
+        "每个元素只加载一次并复用",
+        "完全绕过 L2 缓存"
+      ],
+      "correct": 2,
+      "explanation": "分块将一块数据加载到高速共享内存中一次，并在多次输出计算中复用每个元素，从而减少 HBM 流量。"
+    }
+  ]
+}

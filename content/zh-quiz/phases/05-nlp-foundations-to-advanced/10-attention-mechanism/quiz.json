@@ -1,0 +1,102 @@
+{
+  "lesson": "10-attention-mechanism",
+  "title": "Attention 机制 —— 突破性进展",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Bahdanau attention 解决了 seq2seq 中的什么问题？",
+      "options": [
+        "分词不匹配",
+        "束搜索延迟",
+        "固定大小上下文向量的瓶颈，解码器只能看到编码器的最终状态",
+        "编码器中的梯度消失"
+      ],
+      "correct": 2,
+      "explanation": "Attention 让解码器可以查阅每个编码器状态，而不仅是最后一个。"
+    },
+    {
+      "stage": "pre",
+      "question": "在解码器第 t 步，attention 上下文向量是什么？",
+      "options": [
+        "编码器的最终隐藏状态",
+        "解码器的输入嵌入",
+        "随机投影",
+        "编码器隐藏状态的加权平均，权重来自 query-key 分数"
+      ],
+      "correct": 3,
+      "explanation": "上下文 = alpha_i * h_i 的求和，是编码器状态的步相关加权平均。"
+    },
+    {
+      "stage": "check",
+      "question": "在 Bahdanau（加性）attention 中，向量 v_a 起什么作用？",
+      "options": [
+        "编码位置",
+        "给 softmax 加偏置",
+        "控制 dropout",
+        "将 attention 维度的隐藏组合投影为每个编码器位置的标量分数"
+      ],
+      "correct": 3,
+      "explanation": "v_a 与 tanh(W_a s + U_a h) 做点积，将 d_attn 维向量压缩为标量分数。"
+    },
+    {
+      "stage": "check",
+      "question": "在 Luong 的 'dot' attention 变体中，必须满足什么约束？",
+      "options": [
+        "必须使用 beam search",
+        "解码器状态与编码器状态必须具有相同维度（d_s == d_h）",
+        "softmax 必须在 log 空间",
+        "编码器必须是双向的"
+      ],
+      "correct": 1,
+      "explanation": "dot 使用 s^T h 且不做投影，因此维度必须完全匹配。"
+    },
+    {
+      "stage": "check",
+      "question": "哪种 Q/K/V 映射描述了经典（Bahdanau/Luong）attention？",
+      "options": [
+        "Q 来自编码器，K 和 V 来自解码器",
+        "Q、K、V 是源序列的三个独立可学习投影",
+        "Q = 解码器状态；K 和 V = 编码器状态（同一张量）",
+        "Q 随机，K 和 V 可学习"
+      ],
+      "correct": 2,
+      "explanation": "在经典 attention 中，keys 和 values 都是编码器状态；transformer 通过可学习投影将 K 和 V 分开。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么将原始 attention 权重作为“解释”被认为是脆弱的？",
+      "options": [
+        "研究（例如 Jain 和 Wallace，2019）表明，在某些任务上 attention 分布可以被置换而不改变预测",
+        "Attention 权重不可微",
+        "Attention 权重泄露标签",
+        "它们太小而无法绘图"
+      ],
+      "correct": 0,
+      "explanation": "Attention 权重与预测相关，但如果没有消融/反事实检验，就不是忠实的解释。"
+    },
+    {
+      "stage": "post",
+      "question": "哪一步桥接了 Bahdanau attention 与 transformer 自注意力？",
+      "options": [
+        "用独立学习的 Q、K、V 投影对同一序列进行查询，并在多个头中并行运行",
+        "丢弃 beam search",
+        "用 sigmoid 替换 softmax",
+        "添加更多 RNN 层"
+      ],
+      "correct": 0,
+      "explanation": "自注意力查询同一序列，分开 K 和 V 投影，并在多个头中并行。"
+    },
+    {
+      "stage": "post",
+      "question": "Attention 中的 masking 的一个实际用例是什么？",
+      "options": [
+        "替代 dropout",
+        "编码位置",
+        "将 padding token 的 attention 权重设为零，使其不对上下文向量产生贡献",
+        "减小模型大小"
+      ],
+      "correct": 2,
+      "explanation": "Masking padding（或解码器中的未来 token）可防止 softmax 将权重分散到无效位置。"
+    }
+  ]
+}

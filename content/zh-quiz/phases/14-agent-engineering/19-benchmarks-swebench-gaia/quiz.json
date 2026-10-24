@@ -1,0 +1,90 @@
+{
+  "lesson": "19-benchmarks-swebench-gaia",
+  "title": "基准测试：SWE-bench、GAIA、AgentBench",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "SWE-bench 的评估器会检查候选补丁的什么？",
+      "options": [
+        "补丁长度不超过 200 行",
+        "之前失败的测试现在通过（FAIL_TO_PASS），之前通过的测试仍然通过（PASS_TO_PASS）",
+        "与参考修复的 BLEU 分数",
+        "补丁通过单独的 LLM 评判"
+      ],
+      "correct": 1,
+      "explanation": "Harness 以测试转换为门槛：揭示 bug 的测试必须翻转，回归测试必须保持绿色。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么存在 SWE-bench Verified？",
+      "options": [
+        "包含更多语言",
+        "运行更快",
+        "OpenAI 的 500 任务人工精选子集去除了模糊问题和不可靠测试",
+        "使用不同补丁格式"
+      ],
+      "correct": 2,
+      "explanation": "Verified 是更干净的子集，用于可信报告。"
+    },
+    {
+      "stage": "check",
+      "question": "SWE-bench+ 对成功补丁发现了什么？",
+      "options": [
+        "32.67% 在 issue 中泄漏了解决方案文本，31.08% 的可疑测试覆盖过弱",
+        "补丁总是超过 1000 行",
+        "没有污染",
+        "所有补丁都是记忆化的"
+      ],
+      "correct": 0,
+      "explanation": "SWE-bench+ 标记出大量成功补丁存在解决方案泄漏和覆盖薄弱问题。"
+    },
+    {
+      "stage": "check",
+      "question": "GAIA 的设计理念是什么？",
+      "options": [
+        "对人类难，对 AI 容易",
+        "纯向量检索基准",
+        "仅单轮问题",
+        "对人类概念上简单（约 92%），但对 AI 难（早期带插件的 GPT-4 约 15%）"
+      ],
+      "correct": 3,
+      "explanation": "GAIA 刻意设计为对人类简单、对 AI 困难，测试推理 + 工具 + 模态。"
+    },
+    {
+      "stage": "check",
+      "question": "下列哪一项不是 AgentBench 的环境类别？",
+      "options": [
+        "Games（Alfworld、LTP）",
+        "Web（WebShop、Mind2Web）",
+        "Gradient（RL、IRL）",
+        "Code（Bash、DB、KG）"
+      ],
+      "correct": 2,
+      "explanation": "AgentBench 覆盖 code、games、web 和开放式生成。没有 gradient 类别。"
+    },
+    {
+      "stage": "post",
+      "question": "本课认为报告 SWE-bench 数字的错误方式是什么？",
+      "options": [
+        "按仓库细分报告",
+        "只报告一个总体数字而不提 Verified 或 SWE-bench+ 背景",
+        "报告步数",
+        "报告 wall-clock"
+      ],
+      "correct": 1,
+      "explanation": "只关注单一数字会隐藏污染和成本；应始终报告 Verified 和按分布的上下文。"
+    },
+    {
+      "stage": "post",
+      "question": "这些基准测试不衡量哪个维度？",
+      "options": [
+        "测试转换",
+        "步数",
+        "每任务成功率",
+        "真实世界运营成本（token、wall-clock）、对抗安全性以及你自己的领域"
+      ],
+      "correct": 3,
+      "explanation": "基准测试是聚合数据；它们不捕获成本、对抗鲁棒性或你的领域。"
+    }
+  ]
+}

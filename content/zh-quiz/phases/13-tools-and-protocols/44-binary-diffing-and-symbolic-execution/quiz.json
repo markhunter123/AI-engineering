@@ -1,0 +1,90 @@
+{
+  "lesson": "44-binary-diffing-and-symbolic-execution",
+  "title": "Binary Diffing and Symbolic Execution: Matching Functions and Solving for Inputs",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "同一源码的两个构建按函数比较。在 BinDiff 策略中，签名何时允许创建匹配？",
+      "options": [
+        "两个函数共享至少一半指令时",
+        "两个函数地址相同时",
+        "签名值在两侧二进制文件中都只出现一次时",
+        "两个函数大小相同时"
+      ],
+      "correct": 2,
+      "explanation": "BinDiff 概念页描述一次一个属性：两侧都唯一的值构成匹配，有歧义的值用下一个属性深入钻取，没有对应方的值保持不匹配。"
+    },
+    {
+      "stage": "check",
+      "question": "grade 在 ledger-x86_64-O1.o 和 ledger-x86_64-O2.o 中逐字节相同，但 Ghidra 的 Exact Function Bytes Match 相关器未匹配它。为什么？",
+      "options": [
+        "Ghidra 比较助记符而非字节",
+        "函数在两个程序中大小不同",
+        "两个目标由不同编译器编译",
+        "Ghidra 在导入时应用重定位，.rodata 在 O2 程序中远了 0x70 字节，因此 leaq 中的 RIP 相对位移在两个加载镜像中不同"
+      ],
+      "correct": 3,
+      "explanation": "加载镜像在 leaq 位移的四个字节上不同（122 对 234）。指令相关器屏蔽操作数并匹配，本课的 masked-bytes 阶段也是如此。"
+    },
+    {
+      "stage": "check",
+      "question": "radiff2 -AC 报告 grade 在 -O0 与 -O1 之间为 UNMATCH，ratio 0.426829，本课仅比较 82 字节而非函数 118 字节时才复现该数字。82 如何解释？",
+      "options": [
+        "radare2 在指纹提取前去掉前奏和尾声",
+        "grade 在 -O0 的列表有 82 条指令",
+        "radare2 测量指令数而非字节",
+        "未应用重定位时，radare2 无法解析跳转表，因此其指纹只包含间接跳转前可达的块加默认 case"
+      ],
+      "correct": 3,
+      "explanation": "指纹是分析找到的基本块的拼接。启用 -e bin.relocs.apply=true 后 radare2 找到全部 118 字节，ratio 变为 0.288136，本课也复现了这一点。"
+    },
+    {
+      "stage": "check",
+      "question": "匹配器在名称阶段前运行流图形状阶段，并将 -O0 的 percent_change 与 -O1 的 grade_label 配对。出了什么问题？",
+      "options": [
+        "符号表已损坏",
+        "四块菱形，度序列 0/2、1/1、1/1、2/0 是每个在返回前汇合的 if-else 的形状，因此形状在两侧都唯一但不够具体",
+        "两个函数计算相同值",
+        "匹配器比较了错误目标"
+      ],
+      "correct": 1,
+      "explanation": "该阶段因此质量为中等。BinDiff 在名称存在时尽早运行名称匹配，按该顺序所有四个函数都按名称匹配。"
+    },
+    {
+      "stage": "post",
+      "question": "符号执行器在 count 约束为 0 <= count <= N 时运行 total，报告 N = 2、4、8 时路径数分别为 3、5、9。无约束的 count 会怎样？",
+      "options": [
+        "合并所有路径为一条",
+        "只产生一条额外路径",
+        "使求解器返回 unsat",
+        "为每个可能的迭代计数产生一条路径，因此没有边界或上限时执行器永远不会结束"
+      ],
+      "correct": 3,
+      "explanation": "每次迭代分叉一条退出路径和一条继续路径。Baldoni 等人的综述将符号输入上的循环命名为路径爆炸的主要来源，本课每条路径 24 块的上限展示了截断。"
+    },
+    {
+      "stage": "post",
+      "question": "对于 percent_change，有界搜索返回 before = -10、after = -15，angr 返回 before = 21055744、after = 332315210，z3 返回 before = -25092599、after = 305712160 对应查询 result == 50。哪个说法正确？",
+      "options": [
+        "三个答案中只有一个是正确的",
+        "angr 和 z3 不一致，因此约束不可满足",
+        "有界搜索错了，因为它的数值小",
+        "三个答案都是同一约束的模型，求解器只返回某个 witness，而非特定一个"
+      ],
+      "correct": 3,
+      "explanation": "本课用 IR 求值器评估每个模型，结果都给出 50。模型证明可满足；特定输入需要额外约束。"
+    },
+    {
+      "stage": "post",
+      "question": "Ghidra Version Tracking 仅通过 Exact Symbol Name 匹配了 -O1 和 -O2 的 grade。匹配的 grade_case10_wrong.o 与 grade 有相同 46 字节代码。什么检查能区分这两种情况？",
+      "options": [
+        "读取 lea 重定位指向的字节：原表是 1、2、3、4、4，候选是 1、2、3、4、3",
+        "助记符哈希",
+        "比较函数大小",
+        "流图形状签名"
+      ],
+      "correct": 0,
+      "explanation": "字节、助记符和形状签名都通过。只有 referenced-data 检查（通过重定位和边界检查读取表）报告了改变的常量。"
+    }
+  ]
+}

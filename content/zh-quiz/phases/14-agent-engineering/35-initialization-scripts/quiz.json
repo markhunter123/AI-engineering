@@ -1,0 +1,90 @@
+{
+  "lesson": "35-initialization-scripts",
+  "title": "Initialization Scripts for Agents",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "init 脚本消除了什么？",
+      "options": [
+        "Authn tokens",
+        "Provider rate limits",
+        "推理延迟",
+        "每次新会话的设置开销：探测运行时、列出仓库、重复相同检查"
+      ],
+      "correct": 3,
+      "explanation": "脚本一次性支付开销，并把结果写入 init_report.json 供智能体读取。"
+    },
+    {
+      "stage": "pre",
+      "question": "init 脚本的失败模式契约是什么？",
+      "options": [
+        "大声失败、快速失败、在一个地方失败；工作台损坏时拒绝启动",
+        "总是成功",
+        "永远重试",
+        "失败软化并继续"
+      ],
+      "correct": 0,
+      "explanation": "关键是在工作台损坏时拒绝启动；静默回退会违背目的。"
+    },
+    {
+      "stage": "check",
+      "question": "以下哪项不是本课列出的探测项？",
+      "options": [
+        "逐 token 采样温度",
+        "测试命令可解析性",
+        "依赖可用性",
+        "运行时版本"
+      ],
+      "correct": 0,
+      "explanation": "探测项包括运行时版本、依赖、测试命令、路径、环境变量、状态新鲜度、last-known-good commit。"
+    },
+    {
+      "stage": "check",
+      "question": "为何 init 必须是幂等的？",
+      "options": [
+        "满足 SOC 2",
+        "JSON Schema 要求",
+        "幂等省钱",
+        "运行两次应是空操作，只有时间戳刷新，因此可接入 CI、hook 或任务前斜杠命令"
+      ],
+      "correct": 3,
+      "explanation": "幂等让 init 可以从多个入口点（hook、CI、斜杠命令）安全调用。"
+    },
+    {
+      "stage": "check",
+      "question": "什么是 last-known-good commit 锚定？",
+      "options": [
+        "仓库中最早的提交",
+        "将当前提交与 LKG 文件对比；如果 diff 超出预算且未经人工批准，则拒绝启动",
+        "团队负责人最近的提交",
+        "HEAD 与 main 的合并基点"
+      ],
+      "correct": 1,
+      "explanation": "Cloudflare 的 AI Code Review 将评审范围限定在 LKG 之内，防止跨会话漂移累积。"
+    },
+    {
+      "stage": "post",
+      "question": "带 TTL 的 lock file 模式做什么？",
+      "options": [
+        "探测通过后写入 prereqs.lock；后续运行若清单哈希匹配，则在 24h 内信任 lock 并跳过昂贵探测",
+        "锁定仓库禁止编辑",
+        "禁用 CI",
+        "24 小时内禁止所有写入"
+      ],
+      "correct": 0,
+      "explanation": "与 Docker 层缓存同理：幂等探测 + 内容哈希 = 跳过。"
+    },
+    {
+      "stage": "post",
+      "question": "init 热路径中绝不能出现什么？",
+      "options": [
+        "网络调用、LLM 调用、外部许可证检查；探测是确定性管道，应在三秒内完成",
+        "读取 lockfile",
+        "本地文件系统读取",
+        "读取环境变量"
+      ],
+      "correct": 0,
+      "explanation": "调用 LLM 的探测是工作流，不是探测；保持 init 确定性。"
+    }
+  ]
+}

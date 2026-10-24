@@ -1,0 +1,90 @@
+{
+  "lesson": "42-dynamic-analysis-of-your-own-program",
+  "title": "Dynamic Analysis of Your Own Program: Debuggers, Traces, and Confirming Static Claims",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "你在自己程序的构建中为 bump、classify 和 sum_balances 设置断点，运行到完成，每个断点的命中次数都是 0。这次运行证明了什么？",
+      "options": [
+        "程序没有函数",
+        "对于本次输入、本次构建，这三个函数没有 out-of-line 副本运行，对其他输入或构建则一无所知",
+        "断点设错了地址",
+        "这三个函数是死代码，可以删除"
+      ],
+      "correct": 1,
+      "explanation": "命中次数是对一次构建的一次执行的观察。在 -O2 下编译器将这三个函数内联并把结果折叠为常量，因此导出的副本从未运行。这些函数仍在符号表中。"
+    },
+    {
+      "stage": "check",
+      "question": "在 bump 断点处，lldb 打印 x0 = 0x16fdfe008，x1 = 0x5，且 memory read -s4 -fx -c8 $x0 打印 0x00000073 0x000000fa 0x00000009 0x00000000 0x00000000 0x3ff40000 0x00000719 0x00000001。第二个字确认了哪个静态断言？",
+      "options": [
+        "balance 在偏移 4 处且保存 250，即 DWARF 放在 DW_AT_data_member_location 0x04 的值",
+        "rate 是 float",
+        "x1 保存结构指针",
+        "结构长 16 字节"
+      ],
+      "correct": 0,
+      "explanation": "这些字是从 a 开始的结构字节。字 1 在偏移 4 处，保存 0xfa = 250，与 frame variable a->balance 一致。字 4 和 5 是偏移 16 处的 IEEE-754 double 1.25，字 6 和 7 是偏移 24 处的 label 指针。"
+    },
+    {
+      "stage": "check",
+      "question": "在 classify 的 -O0 版本中，第一个条件分支是 tbz w8, #0x1f, 0x100000504，fall-through 在 0x1000004f4。对于 balance -40 的账户，运行停在 0x1000004f4。第 33 课的边断言是被确认还是被反驳？",
+      "options": [
+        "被反驳，因为到 0x100000504 的分支未被采用",
+        "被确认，因为 tbz 在 bit 31 为零时分支，所以负余额 fall-through 到返回 -1 的块，与提升后的条件预测一致",
+        "未被观察，因为 tbz 不是条件分支",
+        "被反驳，因为 -40 小于 200"
+      ],
+      "correct": 1,
+      "explanation": "tbz 是测试位并在为零时分支。 -40 的 bit 31 为 1，因此不采用分支，执行 fall-through。静态断言称被采用边对应 balance >= 0，fall-through 边对应 balance < 0，这与停止点一致。"
+    },
+    {
+      "stage": "check",
+      "question": "watchpoint set variable a->balance 报告 size = 4、type = m，且 watchpoint list 打印 Number of supported hardware watchpoints: 4。为什么 lldb 会报告数量？",
+      "options": [
+        "因为 macOS 一次只允许四个调试器",
+        "因为数据 watchpoint 使用每个核心的调试寄存器：x86-64 上 DR0 到 DR3，arm64 上 DBGWVR/DBGWCR 对，因此存在固定数量，宽区域可能占用多个",
+        "因为 watchpoint 由软件实现，lldb 限制数量以保持进程速度",
+        "因为数量是监视的字节数"
+      ],
+      "correct": 1,
+      "explanation": "硬件 watchpoint 将每次内存访问与一小部分地址寄存器比较。x86-64 有四个，arm64 实现有 2 到 64 个，本机报告 4。槽用尽后 lldb 会拒绝下一个 watchpoint。"
+    },
+    {
+      "stage": "post",
+      "question": "你在 bump 断点处用 process save-core --style stack 保存了 core。用 lldb -c 加载后显示 balance = 250 但 label = “”，指针 0x100000719 仍完整。发生了什么？",
+      "options": [
+        "lldb 无法从 core 文件打印字符串",
+        "core 已损坏",
+        "程序从未设置 label",
+        "字符串位于可执行文件的 __TEXT 段，stack-style core 不包含该段，因此指针存在，但指针背后的字节不存在"
+      ],
+      "correct": 3,
+      "explanation": "stack-style core 保存栈和已修改内存，此处 49152 字节。字面量 \"savings\" 是二进制文件中的只读数据。lldb 警告此类 core 可能不显示二进制文件，--style full 包含所有进程内存。"
+    },
+    {
+      "stage": "post",
+      "question": "在 Apple 芯片上，为什么 clang -g -o account account.c 生成的二进制文件无需额外签名步骤即可用 lldb 调试？",
+      "options": [
+        "因为命令行工具禁用系统完整性保护",
+        "因为链接器默认对 arm64 输出进行临时签名（flags adhoc,linker-signed），二进制文件未加固，也没有 entitlement，因此 Apple 规定目标必须选择退出调试并不适用",
+        "因为 lldb 忽略代码签名",
+        "因为二进制文件携带 com.apple.security.cs.debugger entitlement"
+      ],
+      "correct": 1,
+      "explanation": "codesign -dvvv 显示 Signature=adhoc、flags=0x20002(adhoc,linker-signed) 且无 entitlement。调试器端由 debugserver 覆盖，Apple 用自己的私有 entitlement 对其签名。只有没有 get-task-allow 的加固二进制文件才会拒绝任务端口。"
+    },
+    {
+      "stage": "post",
+      "question": "对于 Apple 芯片 Mac 上的学习者，关于使用 rr 进行记录与回放的正确说法是什么？",
+      "options": [
+        "rr 在 macOS 的 Docker 中运行，因为 Docker 运行 Linux",
+        "rr 自 5.9.0 起在 macOS 上替代 lldb",
+        "rr 在 macOS 上运行并使用 dtrace 记录",
+        "rr 仅限 Linux，需要硬件性能计数器，macOS 上没有虚拟化暴露它们，因此唯一途径是 Linux 机器或别处启用计数器虚拟化的 VM"
+      ],
+      "correct": 3,
+      "explanation": "rr 在 Linux 上通过性能计数器记录，支持 Intel、AMD Zen 或包括 Apple M 系列在 Linux 下的特定 AArch64 核心。其 wiki 称 macOS 上没有虚拟化支持性能计数器虚拟化，因此排除 macOS 上的 Docker 和 Colima VM。"
+    }
+  ]
+}

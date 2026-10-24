@@ -1,0 +1,78 @@
+{
+  "lesson": "30-mcp-registry-supply-chain-and-drift",
+  "title": "MCP Registry Supply Chain: Admission, Drift, and Rollback",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 MCP Registry 中成功发布为生产网关建立了什么？",
+      "options": [
+        "记录通过了 Registry 发布控制，而本地运行时准入仍需进行",
+        "实时端点与已发布包完全匹配",
+        "最新版本应立即替换每条旧路由",
+        "该服务器对每个主体都安全"
+      ],
+      "correct": 0,
+      "explanation": "Registry 发布建立发布事实。产物、运行时、授权和本地审批检查仍然独立。"
+    },
+    {
+      "stage": "check",
+      "question": "哪个命名空间比较会拒绝 com.exampleevil/tool，当已验证命名空间为 com.example 时？",
+      "options": [
+        "检查整个名称是否以 com.example 开头",
+        "搜索子串 example",
+        "按斜杠分割并精确比较命名空间段",
+        "信任 server.json 内部写入的命名空间"
+      ],
+      "correct": 2,
+      "explanation": "精确的段比较保留命名空间边界，并使用受信任验证器提供的权限。"
+    },
+    {
+      "stage": "check",
+      "question": "实时服务器新增了一个工具，而其 Registry 记录和包坐标未变。哪种证据能检测到这一点？",
+      "options": [
+        "将新的规范化描述摘要与准入时固定的工具集摘要比较",
+        "Registry 发布时间戳",
+        "命名空间认证方法",
+        "仅语义版本字符串"
+      ],
+      "correct": 0,
+      "explanation": "实时描述固定能检测发布元数据和包坐标无法显示的行为漂移。"
+    },
+    {
+      "stage": "check",
+      "question": "当已准入的 Registry 版本从 active 变为 deprecated 时应发生什么？",
+      "options": [
+        "将其隔离出新路由，并保留历史准入证据",
+        "将已发布记录重写回 active",
+        "删除所有证据使客户端无法发现它",
+        "忽略状态，因为包所有权已被验证"
+      ],
+      "correct": 0,
+      "explanation": "状态是运维输入。隔离阻止新使用，同时保留的证据支持审计和回滚分析。"
+    },
+    {
+      "stage": "post",
+      "question": "哪个目标符合自动回滚条件？",
+      "options": [
+        "任何名称排在候选之前的版本",
+        "在政策下处于 active、健康且未被隔离的先前已准入固定",
+        "标记为 latest 的版本，即使从未审查过",
+        "已删除但包名熟悉的 Registry 版本"
+      ],
+      "correct": 1,
+      "explanation": "回滚恢复已知可准入路由。它不会绕过当前状态、健康或隔离检查。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么准入分类账头应锚定在独立的信任域中？",
+      "options": [
+        "这样产物摘要就不再必要",
+        "它让发布者设置 Registry 管理的状态",
+        "它将可变版本范围转换为精确固定",
+        "本地哈希链检测编辑，而独立锚点使完整的本地重写可被检测"
+      ],
+      "correct": 3,
+      "explanation": "能够重写整个本地分类账的攻击者可以重新计算其链。外部签名或一次性写入锚点会暴露这种重写。"
+    }
+  ]
+}

@@ -19,6 +19,11 @@ const DIST = path.join(__dirname, 'dist');
 /** Exported Chinese snapshot directory (created by scripts/export-zh.mjs). */
 const ZH_CONTENT = path.join(__dirname, 'content', 'zh');
 
+/** Chinese quiz translations, mirroring the upstream quiz.json schema at
+ *  phases/<phase>/<lesson>/quiz.json. Kept outside content/zh because a
+ *  re-export wipes that directory. */
+const ZH_QUIZ = path.join(__dirname, 'content', 'zh-quiz');
+
 const SITE = {
   name: 'AI Engineering from Scratch',
   nameZh: 'AI 工程从零开始',
@@ -77,4 +82,4 @@ const PHASE_ZH = {
   '19-capstone-projects': '实战项目',
 };
 
-module.exports = { SRC_REPO, BASE, DIST, ZH_CONTENT, SITE, CDN, PHASE_ZH };
+module.exports = { SRC_REPO, BASE, DIST, ZH_CONTENT, ZH_QUIZ, SITE, CDN, PHASE_ZH };

@@ -1,0 +1,78 @@
+{
+  "lesson": "54-build-the-feedback-ratchet",
+  "title": "Build the Feedback Ratchet",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "反馈何时成为基础设施？",
+      "options": [
+        "当被总结时",
+        "当出现在仪表板上",
+        "当被收集时",
+        "当它有通往被拥有的持久变更和验证的路径时"
+      ],
+      "correct": 3,
+      "explanation": "升级和所有权把观察转化为系统学习。"
+    },
+    {
+      "stage": "check",
+      "question": "生产写入尝试应路由到哪里？",
+      "options": [
+        "仅文档",
+        "策略或权限边界",
+        "通用 backlog",
+        "视觉设计"
+      ],
+      "correct": 1,
+      "explanation": "不安全的权限由可执行策略层拥有。"
+    },
+    {
+      "stage": "check",
+      "question": "假阳性首先应改变什么？",
+      "options": [
+        "团队头衔",
+        "部署区域",
+        "定价",
+        "评估或测试覆盖"
+      ],
+      "correct": 3,
+      "explanation": "评估层应把失败保存为可复现案例。"
+    },
+    {
+      "stage": "check",
+      "question": "为何所有者是控制的一部分？",
+      "options": [
+        "无主的改进不会可靠地变更或保持最新",
+        "为了增加会议",
+        "为了隐藏信号",
+        "为了移除证明"
+      ],
+      "correct": 0,
+      "explanation": "必须有人实施、验证、评审和退役该行动。"
+    },
+    {
+      "stage": "post",
+      "question": "何时应退役一项控制？",
+      "options": [
+        "从不",
+        "当证据表明它已被取代、过时或产生的摩擦大于所保护的风险时",
+        "当它感觉老旧",
+        "添加后立即"
+      ],
+      "correct": 1,
+      "explanation": "退役应像升级一样有证据支持。"
+    },
+    {
+      "stage": "post",
+      "question": "shaping 和 coding-agent 反馈如何连接？",
+      "options": [
+        "只有提示重要",
+        "只有指标重要",
+        "产品证据改变结果和范围，而智能体纠正改变工作台；事件可能同时改变两者",
+        "它们不连接"
+      ],
+      "correct": 2,
+      "explanation": "两条轨道使用相同的从证据到持久系统变更的棘轮。"
+    }
+  ]
+}

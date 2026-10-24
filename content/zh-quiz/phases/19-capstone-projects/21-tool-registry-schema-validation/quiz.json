@@ -1,0 +1,78 @@
+{
+  "lesson": "21-tool-registry-schema-validation",
+  "title": "Tool Registry with Schema Validation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么要把工具的 schema 与它的 handler 分开注册？",
+      "options": [
+        "因为 handler 不能返回 JSON",
+        "让 validator 保持纯数据，handler 保持不透明代码",
+        "因为 schema 必须被编译",
+        "因为 schema 必须放在 YAML 里"
+      ],
+      "correct": 1,
+      "explanation": "将 schema 作为数据、handler 作为代码，可以让 validator 成为 schema 树上的纯函数。"
+    },
+    {
+      "stage": "check",
+      "question": "本课实现的子集故意不包含哪些关键字？",
+      "options": [
+        "items、enum",
+        "oneOf、anyOf、$ref、allOf",
+        "minLength、maxLength、pattern",
+        "type、properties、required"
+      ],
+      "correct": 1,
+      "explanation": "被省略的关键字会引入循环和引用解析。我们保持子集线性，使 validator 仍是单次递归遍历。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 register() 默认拒绝重复注册？",
+      "options": [
+        "因为 schema 不能被重新验证",
+        "静默覆盖是生产工具目录漂移的根源",
+        "因为 registry 无法为同一名称存储多条记录",
+        "因为 handler 无法被替换"
+      ],
+      "correct": 1,
+      "explanation": "强制 override=True 能让两处代码都想拥有同一工具名的情况浮出水面。"
+    },
+    {
+      "stage": "check",
+      "question": "当 schema 指定 type 为 integer 但收到值 True 时，validator 会怎么做？",
+      "options": [
+        "静默强制转为 integer",
+        "当作 1 并通过",
+        "抛出未处理异常",
+        "返回类型错误，因为本 validator 中 bool 不是 integer"
+      ],
+      "correct": 3,
+      "explanation": "Python bool 是 int 的子类，但本 validator 在 integer 检查中过滤掉 bool。JSON 布尔值和整数是两种不同的类型。"
+    },
+    {
+      "stage": "post",
+      "question": "当输入对象为 {'user': {'email': 0}} 且 schema 要求 user.email 为字符串时，错误路径是什么？",
+      "options": [
+        "/user",
+        "/user/email",
+        "/",
+        "user.email"
+      ],
+      "correct": 1,
+      "explanation": "JSON pointer 将对 user 和 email 的下降编码为 /user/email。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么 registry 不是安全边界？",
+      "options": [
+        "因为 handler 是异步的",
+        "因为 handler 在验证通过后仍可能行为失当",
+        "因为 registry 在进程内",
+        "因为 schema 是 JSON"
+      ],
+      "correct": 1,
+      "explanation": "registry 检查形状。行为、超时和隔离属于 dispatcher 和 sandbox。"
+    }
+  ]
+}

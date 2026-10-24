@@ -1,0 +1,78 @@
+{
+  "lesson": "20-bias-representational-harm",
+  "title": "Bias and Representational Harm in LLMs",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本节课如何区分表征伤害（representational harm）与分配伤害（allocational harm）？",
+      "options": [
+        "表征伤害是计算性的，分配伤害是统计性的",
+        "分配伤害只发生在线下",
+        "表征伤害只对视觉模型重要",
+        "表征伤害指刻板印象、抹除或贬低性描绘；分配伤害指某个群体在物质结果上的不平等"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "以下哪项是 Gallegos et al. 2024 提出的三类评估指标？",
+      "options": [
+        "视觉、音频、文本",
+        "WEAT、BLEU、ROUGE",
+        "基于嵌入、基于概率、基于生成文本",
+        "RLHF 前、RLHF 中、RLHF 后"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么除了单维度公平性评估外，还需要交叉性公平性评估？",
+      "options": [
+        "单维度指标计算成本更低",
+        "交叉性与交叉验证是同一回事",
+        "单维度评估是唯一合法允许的方法",
+        "只在交叉处出现的偏见（例如性别 × 种族）会被一次只看一个维度的评估遗漏"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "WinoIdentity（COLM 2025）引入了什么？",
+      "options": [
+        "基于不确定性的交叉性公平性评估：比较模型在交叉身份元组上的结果不确定性，而不仅仅是点预测",
+        "针对人口统计分类器的对抗攻击",
+        "嵌入空间中 WEAT 的替代方案",
+        "面向身份术语的新分词器"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "以下哪项属于针对偏见的机制可解释性方法？",
+      "options": [
+        "重新标注训练集",
+        "识别 MLP 层中的性别神经元、使用 SAE 揭示与种族相关的特征，或操控特定的注意力头（UniBias）",
+        "从 PPO 切换到 DPO",
+        "增加更多 KL 正则化"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "这篇为期十年的元批评（arXiv:2508.11067）对偏见文献提出了什么观点？",
+      "options": [
+        "它过度关注二元性别偏见，忽视了残疾、宗教、移民身份、多语言身份等其他维度，从而可能因忽视而伤害边缘化群体",
+        "它在所有身份维度上都很均衡",
+        "它回避定量方法",
+        "它过度强调交叉性"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

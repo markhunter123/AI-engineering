@@ -1,0 +1,78 @@
+{
+  "lesson": "48-distributed-fsdp-ddp",
+  "title": "Distributed Data Parallel and FSDP from Scratch",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "从零开始的 DDP 包装器的两个核心集合操作是什么？",
+      "options": [
+        "只有 reduce_scatter",
+        "barrier 和 barrier",
+        "send 和 recv",
+        "构建时广播，使每个 rank 从相同参数开始；反向传播后 all_reduce，使每个 rank 得到平均梯度"
+      ],
+      "correct": 3,
+      "explanation": "初始化时广播保持各 rank 在零步同步。反向传播后 all-reduce 保持之后每一步同步。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么本课可以在没有 CUDA 的 CPU 上运行？",
+      "options": [
+        "它使用模拟张量",
+        "它完全不使用 torch.distributed",
+        "torch.distributed 自带 gloo 后端，可通过普通 socket 执行集合通信，因此 CPU 上的 torch.multiprocessing 工作进程形成真实进程组；在 GPU 机器上只有设备标签改变",
+        "它是一个 stub"
+      ],
+      "correct": 2,
+      "explanation": "Gloo 是 CPU 集合通信后端。同样的调用点在 GPU 上使用 nccl；API 表面相同。"
+    },
+    {
+      "stage": "check",
+      "question": "manual_all_reduce_matches_single_process 测试证明了什么？",
+      "options": [
+        "CUDA 不是必需的",
+        "优化器收敛",
+        "无意义",
+        "将各 rank 梯度求和再除以 world_size，可以在浮点噪声内恢复单个进程在拼接输入上计算出的梯度"
+      ],
+      "correct": 3,
+      "explanation": "交叉熵在全批次的平均缩减等于各 rank 平均的平均。求和再除法是正确的操作；测试使其可见。"
+    },
+    {
+      "stage": "check",
+      "question": "本课中的 FSDP 草图在每个前向传播中对每个参数做什么？",
+      "options": [
+        "计算哈希",
+        "重新初始化参数",
+        "什么都不做",
+        "将扁平参数填充到 world_size 的倍数，切片，在每个 rank 上 all_gather 这些切片，去掉填充，并验证重构与原始张量匹配"
+      ],
+      "correct": 3,
+      "explanation": "每个 rank 拥有每个参数的 1/world_size。gather 为计算重建完整张量；生产 FSDP 会将 gather 与前一层工作重叠。"
+    },
+    {
+      "stage": "check",
+      "question": "当参数长度不能被 world_size 整除时，为什么 gloo all_gather 仍按等大小分片？",
+      "options": [
+        "它加速网络",
+        "随机选择",
+        "这是个 bug",
+        "Gloo（以及 nccl）的 all_gather 要求每个 rank 的输出张量大小相同，因此扁平参数在切片前向右填充到 world_size 的倍数，gather 后再去掉填充"
+      ],
+      "correct": 3,
+      "explanation": "Gloo all_gather 期望相同大小输出。填充是最便宜的修复；草图将结果裁剪回原始长度。"
+    },
+    {
+      "stage": "post",
+      "question": "阅读演示输出，各 rank 间 param_sum_spread 接近零说明什么？",
+      "options": [
+        "无意义",
+        "每个 rank 在运行结束时参数值相同，意味着构建时的广播和每次反向传播后的 all-reduce 都正常工作；任一环节出问题，该差距都会随步骤增长",
+        "损失很低",
+        "网络很快"
+      ],
+      "correct": 1,
+      "explanation": "DDP 的不变式是各 rank 参数一致。spread 是审计；演示断言它保持在 1e-3 以下。"
+    }
+  ]
+}

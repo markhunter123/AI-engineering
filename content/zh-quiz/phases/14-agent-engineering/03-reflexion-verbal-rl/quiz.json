@@ -1,0 +1,90 @@
+{
+  "lesson": "03-reflexion-verbal-rl",
+  "title": "Reflexion：语言强化学习",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Reflexion 替代了标准强化学习中的什么？",
+      "options": [
+        "用参数化记忆替代情节记忆",
+        "用跨轮次保存的自然语言反思替代梯度更新",
+        "用策略网络替代随机搜索",
+        "用恒定奖励替代奖励塑形"
+      ],
+      "correct": 1,
+      "explanation": "Reflexion 使用情节记忆中的自然语言反思，而不是权重更新。"
+    },
+    {
+      "stage": "pre",
+      "question": "Reflexion 系统的三个组成部分是什么？",
+      "options": [
+        "Planner、Worker、Solver",
+        "Selector、Expander、Backpropagator",
+        "Generator、Critic、Optimizer",
+        "Actor、Evaluator、Self-Reflector"
+      ],
+      "correct": 3,
+      "explanation": "Reflexion 将智能体分解为执行轨迹的 Actor、评分的 Evaluator 和撰写教训的 Self-Reflector。"
+    },
+    {
+      "stage": "check",
+      "question": "哪种评估器类型使用单元测试或通过/失败这样的外部二进制信号？",
+      "options": [
+        "Heuristic",
+        "Scalar",
+        "Self-evaluated",
+        "Vote-based"
+      ],
+      "correct": 1,
+      "explanation": "Scalar 评估器从真实答案中读取通过/失败信号（如 ALFWorld 成功、HumanEval 测试）。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么自评估比标量反馈更弱？",
+      "options": [
+        "模型评判自己时没有外部依据，可能会盖章通过自己的答案",
+        "计算更慢",
+        "总是需要更大的模型",
+        "无法在工具上运行"
+      ],
+      "correct": 0,
+      "explanation": "自评估缺乏外部检查，自信的幻觉也会得高分；应配合基于工具的验证。"
+    },
+    {
+      "stage": "check",
+      "question": "本课列出的 Reflexion 不起作用的场景是哪一个？",
+      "options": [
+        "网络中断等外部瞬时故障",
+        "HotpotQA 多跳问题",
+        "可用测试评分的代码生成",
+        "ALFWorld 导航任务"
+      ],
+      "correct": 0,
+      "explanation": "对一次外部网络中断进行反思，产生的教训对未来运行没有帮助。"
+    },
+    {
+      "stage": "post",
+      "question": "Reflexion 模式中的记忆衰减（memory rot）是什么？",
+      "options": [
+        "进程重启时丢失反思",
+        "反思提示词超出上下文窗口",
+        "反思被提供方加密",
+        "情节缓冲区中充满过时或错误的反思，拖慢或偏见化后续尝试"
+      ],
+      "correct": 3,
+      "explanation": "积累的陈旧或错误反思会降低表现；可通过压缩或 TTL 来缓解。"
+    },
+    {
+      "stage": "post",
+      "question": "本课认为 Reflexion 最匹配哪种生产模式？",
+      "options": [
+        "Claude Code 的 CLAUDE.md 学习记录会在未来会话前被前置",
+        "Anthropic 的 prompt caching",
+        "Cursor 的 apply-edits 流程",
+        "OpenAI 的 batch API"
+      ],
+      "correct": 0,
+      "explanation": "CLAUDE.md 学习记录、pro-workflow 的 learn-rule 以及 Letta 的 sleep-time compute 都将情节反思缓冲区外化。"
+    }
+  ]
+}

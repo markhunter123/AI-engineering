@@ -1,0 +1,78 @@
+{
+  "lesson": "62-vision-language-pretraining",
+  "title": "Vision-Language Pretraining",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "将 InfoNCE 和 LM 损失结合训练，能同时赋予模型哪两种不同能力？",
+      "options": [
+        "排序（为标题找到对应图像）和生成（为图像写出标题）",
+        "压缩与解压缩",
+        "速度与准确率",
+        "分词与反分词"
+      ],
+      "correct": 0,
+      "explanation": "InfoNCE 负责排序；LM loss 负责生成。CoCa、BLIP 等模型在同一个训练过程中同时结合二者。"
+    },
+    {
+      "stage": "pre",
+      "question": "在包含 N 个样本的 InfoNCE 批次中，会形成多少正例对和负例对？",
+      "options": [
+        "相似度矩阵对角线上有 N 个正例，对角线之外有 N*(N-1) 个负例",
+        "N 个正例和 N 个负例",
+        "1 个正例和 N 个负例",
+        "N^2 个正例"
+      ],
+      "correct": 0,
+      "explanation": "N 个匹配对位于对角线上；其余所有非对角线元素都是负例。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么对比温度通常是一个可学习参数？",
+      "options": [
+        "避免使用 Adam",
+        "PyTorch 要求这样",
+        "可学习的 tau 在 GPU 上更快",
+        "手动调参很脆弱；让 tau 自主学习可以使模型在嵌入尺度演化的过程中找到合适的 softmax 尖锐度"
+      ],
+      "correct": 3,
+      "explanation": "CLIP 引入了可学习的 log-tau，使得对比 softmax 在嵌入范数增长时仍保持有效区间。"
+    },
+    {
+      "stage": "check",
+      "question": "哪些子模块只从 LM 损失获得梯度，而不从对比损失获得梯度？",
+      "options": [
+        "MLP 投影层",
+        "视觉编码器",
+        "文本侧编码器",
+        "交叉注意力解码器"
+      ],
+      "correct": 3,
+      "explanation": "对比损失不作用于解码器；LM 损失不作用于文本侧的 mean-pool 编码器。"
+    },
+    {
+      "stage": "check",
+      "question": "在 LM 交叉熵中，ignore_index=PAD_ID 起什么作用？",
+      "options": [
+        "加速损失计算",
+        "加密 pad token",
+        "将填充位置从损失中屏蔽，使模型不会因预测标题结束之后的 token 而受到惩罚",
+        "重排 token"
+      ],
+      "correct": 2,
+      "explanation": "填充位置不携带有效信号；忽略它们可以防止损失学习到预测 pad。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么说在合成数据上运行 50 步的演示就足以结束本课？",
+      "options": [
+        "模型在 50 步就达到了最先进水平",
+        "50 步是支持的最大步数",
+        "演示证明了梯度管线端到端可用；生产训练的形状完全相同，只是要在真实数据上运行数百万步",
+        "真实数据会改变架构"
+      ],
+      "correct": 2,
+      "explanation": "演示展示的动力学（两个损失都下降、无 NaN、tau 稳定）与十亿级图像训练相同，只是规模被放大。"
+    }
+  ]
+}

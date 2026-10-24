@@ -1,0 +1,78 @@
+{
+  "lesson": "36-rebuild-and-prove-equal",
+  "title": "Rebuild and Prove Equal: Differential Tests, Byte Comparison, and the Evidence Loop",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "重建的 percent_change 通过了四个手写测试。这证明了什么？",
+      "options": [
+        "重建仅在四个输入上与原始一致，仅此而已",
+        "重建编译为相同字节",
+        "反编译输出是正确的",
+        "重建对每个输入都等于原始"
+      ],
+      "correct": 0,
+      "explanation": "测试集证明其包含输入上的一致。零、负数、舍入和溢出单元正是重建可能分歧的地方。"
+    },
+    {
+      "stage": "check",
+      "question": "原始在 32 位 int 中计算 (after - before) * 100 / before。重建使用 64 位中间值。它们在哪里不同？",
+      "options": [
+        "从不，因为转回 int 消除了差异",
+        "在 32 位乘积溢出且 before 不是 1 或 -1 的输入上",
+        "在每个 before 为负的输入上",
+        "仅在 before 为零时"
+      ],
+      "correct": 1,
+      "explanation": "原始对溢出的 32 位乘积做除法。重建对精确的 64 位乘积做除法，然后截断。当 before 为 1 或 -1 时，截断后两者一致。"
+    },
+    {
+      "stage": "check",
+      "question": "两个 x86-64 ELF 目标为 grade 保存相同的 46 字节代码（包括重定位字段中的零字节）。为什么字节比较仍然不够？",
+      "options": [
+        "加数在 .rela.text 记录中，而这些记录指向的表可能不同",
+        "机器码中不会出现零字节",
+        "函数大小存储在 .rodata 中",
+        "RELA 目标无法比较"
+      ],
+      "correct": 0,
+      "explanation": "在 RELA 目标中，字段字节为零，加数在重定位记录中。屏蔽字段，比较记录形状，然后读取并比较目标处的常量。"
+    },
+    {
+      "stage": "check",
+      "question": "网格包含 before = -1 和 after = 536870911。编译后的 x86-64 原始代码执行 idiv 且 INT_MIN / -1。会发生什么？",
+      "options": [
+        "返回 INT_MIN",
+        "引发除法错误，进程收到 SIGFPE",
+        "因 guard 处理而返回 0",
+        "返回 INT_MAX"
+      ],
+      "correct": 1,
+      "explanation": "x86-64 idiv 在商无法容纳时引发 #DE。AArch64 sdiv 对相同操作数返回 INT_MIN，因此 oracle 取决于架构。"
+    },
+    {
+      "stage": "post",
+      "question": "2026 年关于 LLM 反编译器细化的研究在构建率从 75% 上升到 90% 时测量了什么？",
+      "options": [
+        "行为匹配也上升了相同幅度",
+        "研究没有测量行为",
+        "可读性下降且行为未变",
+        "行为匹配从 74% 下降到 62%"
+      ],
+      "correct": 3,
+      "explanation": "Liu、Raff 和 Micinski（arXiv 2609.05370）发现，虚构的类型、被调用函数和守卫使更多候选能够编译，而在模糊输入上与原始匹配的却更少。"
+    },
+    {
+      "stage": "post",
+      "question": "第一阶段无法运行，因为主机没有 C 编译器。第二阶段两个函数都通过了。证明状态是什么？",
+      "options": [
+        "unknown，因为未经证实的断言永远不会聚合为 pass",
+        "pass，因为每个运行的断言都通过了",
+        "pass，因为字节相等意味着行为相等",
+        "fail，因为有一条腿没有运行"
+      ],
+      "correct": 0,
+      "explanation": "fail 优先，然后是 unknown。未检查的断言保持 unknown，unknown 不会变成 pass。"
+    }
+  ]
+}

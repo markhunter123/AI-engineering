@@ -1,0 +1,78 @@
+{
+  "lesson": "42-large-corpus-downloader",
+  "title": "Large Corpus Downloader",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "下载器为什么为每个分片保留单独的 .partial.json 检查点？",
+      "options": [
+        "让缓存目录看起来更整齐",
+        "以便恢复下载时能在追加前对已验证字节验证 sha256 前缀，避免静默损坏",
+        "在分片文件移动时保存 URL",
+        "因为 urllib 要求如此"
+      ],
+      "correct": 1,
+      "explanation": "检查点记录 verified_bytes 与这些字节的 sha256；只有当磁盘上的哈希匹配时才继续恢复。"
+    },
+    {
+      "stage": "check",
+      "question": "LSH band 方案相比精确哈希去重有什么好处？",
+      "options": [
+        "常数内存占用",
+        "无损压缩",
+        "亚线性查找，即使文档只相差几个 token，也能标记出高 Jaccard 相似度的近似重复",
+        "更快的 sha256 计算"
+      ],
+      "correct": 2,
+      "explanation": "MinHash 加 LSH 能捕捉到改写和模板变体等精确哈希去重会漏掉的情况。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么检查点在字节追加之前写入，而不是之后？",
+      "options": [
+        "如果进程在写入与检查点更新之间崩溃，下次恢复会读到落后于字节的检查点并静默重新追加，从而损坏文件",
+        "节省磁盘空间",
+        "方便",
+        "更快"
+      ],
+      "correct": 0,
+      "explanation": "检查点优先符合预写日志语义：崩溃后已验证偏移总是落后或等于文件长度，永远不会超前。"
+    },
+    {
+      "stage": "check",
+      "question": "manifest sha256 锁文件的作用是什么？",
+      "options": [
+        "加速读取",
+        "它是 manifest 的备份",
+        "除非 manifest 内容匹配固定哈希，否则下游阶段拒绝启动，从而封堵攻击者静默编辑单个文件的攻击面",
+        "它记录日期"
+      ],
+      "correct": 2,
+      "explanation": "固定 manifest 哈希使代码与数据之间的链接成为内容寻址的契约。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么去重要放在分词之前而不是之后？",
+      "options": [
+        "分词器拒绝重复",
+        "分词开销大；对同一文档分词两次会使成本翻倍，却无损曲线收益，因此先丢弃重复严格更便宜",
+        "分词器需要先有一个词表",
+        "分词器无法读取 JSONL"
+      ],
+      "correct": 1,
+      "explanation": "去重是第一个每个被丢弃重复都能为分词器节省一次处理的阶段。"
+    },
+    {
+      "stage": "post",
+      "question": "对被丢弃的近似重复做 tombstone 标记，相比静默删除保留了什么？",
+      "options": [
+        "压缩比",
+        "磁盘空间",
+        "manifest sha256 稳定性",
+        "重复项与其碰撞到的保留项之间的链接，以及即使后续阈值改变也能保留的审计线索"
+      ],
+      "correct": 3,
+      "explanation": "Tombstone 允许未来重新评估去重阈值；删除会丢失证据。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "25-echoleak-cves-for-ai",
+  "title": "EchoLeak and the Emergence of CVEs for AI",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "以下哪项最准确地描述了 EchoLeak（CVE-2025-32711）？",
+      "options": [
+        "Microsoft 365 Copilot 中的零点击 AI 命令注入漏洞（CVE-2025-32711，CVSS 9.3），导致未经授权的网络信息泄露，并通过 CSP 允许列表中的可信 Microsoft 域名外泄数据",
+        "NPU 硬件漏洞",
+        "针对 PyPI 的供应链攻击",
+        "通过长上下文 shot stuffing 实现的越狱"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "是什么让 EchoLeak 成为“零点击”漏洞？",
+      "options": [
+        "它运行在操作系统内核中",
+        "它需要三次点击但无需输入文字",
+        "受害者无需打开邮件；Copilot 在日常查询中将其作为 RAG 上下文检索，注入的指令随之执行",
+        "它需要用户点击 Teams 聊天中的链接"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Aim Labs 将 EchoLeak 定性为“LLM 范围违规”。哪三个边界必须分别独立控制？",
+      "options": [
+        "检索、范围、输出",
+        "网络、磁盘、内存",
+        "提示、响应、日志",
+        "输入、模型、GPU"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Microsoft/GitHub 如何修复 CamoLeak（CVSS 9.6，GitHub Copilot Chat）？",
+      "options": [
+        "增加上下文长度",
+        "添加 XPIA 提示注入过滤器",
+        "将模型切换为 Llama Guard",
+        "完全禁用 Copilot Chat 中的图像渲染（代价是可用性），因为无法限定替代攻击面"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "EchoLeak 的披露揭示了严重等级校准中的什么模式？",
+      "options": [
+        "厂商高估了初始 CVSS 分数",
+        "所有 AI CVE 自动评为 10.0",
+        "厂商最初将 EchoLeak 评为低级（信息泄露）；Aim Labs 的 MFA 验证码外泄概念验证将等级提升至 9.3——防御者必须为 AI 特定漏洞争取全面的 PoC",
+        "严重等级仅由 OWASP 决定"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "截至 2024/2025 年，NIST 和 OWASP 将提示注入排在什么位置？",
+      "options": [
+        "NIST：超出范围；OWASP：未列入",
+        "双方均只将其列为二级风险",
+        "NIST：轻微；OWASP：列表底部",
+        "NIST AI SPD 2024 将提示注入框定为生成式 AI 的重大信息安全风险；OWASP 2025 将其列为 LLM01（应用层首要威胁）"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

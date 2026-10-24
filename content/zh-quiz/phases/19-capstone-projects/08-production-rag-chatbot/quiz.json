@@ -1,0 +1,90 @@
+{
+  "lesson": "08-production-rag-chatbot",
+  "title": "Capstone 08 — Production RAG Chatbot for a Regulated Vertical",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么 prompt caching 在受监管领域的 RAG 聊天机器人中如此重要？",
+      "options": [
+        "它能消除幻觉",
+        "60-80% 命中率时，通过对稳定前缀 token 打折，每次查询成本降低 3-5 倍",
+        "它消除了对向量数据库的需求",
+        "它提升了 rerank 阶段的召回"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "每个请求的哪些部分进入缓存头，哪些部分进入未缓存后缀？",
+      "options": [
+        "随机文本填充以命中缓存大小",
+        "仅检索到的文档",
+        "用户问题在前，系统提示在后",
+        "系统提示和静态策略放在缓存头，reranked 上下文作为缓存扩展，用户问题作为未缓存后缀"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "检索层如何遵守 GDPR 或 HIPAA 等司法管辖区标签？",
+      "options": [
+        "按地区重写用户问题",
+        "仅在生成后阻止响应",
+        "每个国家运行独立索引",
+        "在混合搜索合并前应用角色和司法管辖区过滤器，使用户范围外的片段永远不会被 rerank"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "合成阶段将输出通过哪组分层护栏？",
+      "options": [
+        "仅输出 PII 正则",
+        "仅在输入上运行 Llama Guard 4",
+        "Llama Guard 4、NeMo Guardrails policy rails、Presidio PII 脱敏，以及引用强制",
+        "单次 LLM-judge 忠实性检查"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "drift dashboard 在什么情况下发出告警？",
+      "options": [
+        "底层 LLM 提供商发生变化",
+        "延迟超过 200ms",
+        "检索质量下降，例如 nDCG 或引用分数周环比下降 5%",
+        "索引中新增任何文档"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "用于 gate 交付物正确性评分标准的 golden set 有多大？",
+      "options": [
+        "200 个带引用的专家标注问答对",
+        "5 个演示查询",
+        "2000 个合成问题",
+        "20 个问题"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪些 RAGAS 分数在线上按轮次跟踪？",
+      "options": [
+        "BLEU、ROUGE 和 METEOR",
+        "Token 数量和美元成本",
+        "Faithfulness、answer relevance 和 context precision",
+        "吞吐、GPU 利用率和队列深度"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

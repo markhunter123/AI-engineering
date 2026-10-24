@@ -1,0 +1,90 @@
+{
+  "lesson": "23-otel-genai-conventions",
+  "title": "OpenTelemetry GenAI 语义约定",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 GenAI 约定中，哪个 span 名称代表一次智能体运行？",
+      "options": [
+        "invoke_agent（可选以 gen_ai.agent.name 为后缀）",
+        "agent.start",
+        "agent_loop",
+        "run_chain"
+      ],
+      "correct": 0,
+      "explanation": "invoke_agent 是规范名称；设置 agent 名称时，它会出现在 span 名称中。"
+    },
+    {
+      "stage": "pre",
+      "question": "GenAI SIG 定义了哪三类 span？",
+      "options": [
+        "Frontend、backend、db",
+        "Read、write、exec",
+        "Latency、error、throughput",
+        "Model/client、agent、tool"
+      ],
+      "correct": 3,
+      "explanation": "类别是 model/client（LLM 调用）、agent（create/invoke）和 tool（每次调用）。"
+    },
+    {
+      "stage": "check",
+      "question": "invoke_agent span 什么时候使用 kind CLIENT，什么时候使用 INTERNAL？",
+      "options": [
+        "总是 INTERNAL",
+        "仅 HTTPS 使用 CLIENT",
+        "总是 CLIENT",
+        "远程智能体服务（OpenAI Assistants、Bedrock Agents）使用 CLIENT；进程内框架（LangChain、CrewAI、本地 ReAct）使用 INTERNAL"
+      ],
+      "correct": 3,
+      "explanation": "远程智能体调用是 CLIENT；进程内智能体运行是 INTERNAL。"
+    },
+    {
+      "stage": "check",
+      "question": "内容捕获（输入和输出）的默认规则是什么？",
+      "options": [
+        "默认捕获所有内容",
+        "Instrumentations 默认不应捕获；捕获通过 gen_ai.* 属性显式选择加入",
+        "只在错误时捕获",
+        "只捕获输出，从不捕获输入"
+      ],
+      "correct": 1,
+      "explanation": "默认关闭内容捕获以保护 PII 和 secret；显式选择加入。"
+    },
+    {
+      "stage": "check",
+      "question": "哪个属性标识检索所查阅的语料库或存储？",
+      "options": [
+        "gen_ai.data_source.id",
+        "gen_ai.provider.name",
+        "gen_ai.agent.name",
+        "gen_ai.request.model"
+      ],
+      "correct": 0,
+      "explanation": "gen_ai.data_source.id 标记 RAG 语料库或被命中的存储。"
+    },
+    {
+      "stage": "post",
+      "question": "本课建议在生产中如何存储提示词内容？",
+      "options": [
+        "外部存储（S3、日志存储）并在 span 上记录引用 ID",
+        "以纯文本在每次 span 上捕获完整提示词",
+        "在 span 属性中加密提示词",
+        "从不存储任何内容"
+      ],
+      "correct": 0,
+      "explanation": "外部存储加指针 ID 可避免 PII 泄漏到运维可读的 trace 中。"
+    },
+    {
+      "stage": "post",
+      "question": "如何 opt-in 到 GenAI 约定的实验性稳定预览版？",
+      "options": [
+        "购买 license",
+        "编辑 OTel collector 配置",
+        "设置 OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental",
+        "从源码重建 SDK"
+      ],
+      "correct": 2,
+      "explanation": "该环境变量固定实验性约定，防止属性被静默重命名。"
+    }
+  ]
+}

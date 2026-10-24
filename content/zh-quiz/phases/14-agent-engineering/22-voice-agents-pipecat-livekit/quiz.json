@@ -1,0 +1,90 @@
+{
+  "lesson": "22-voice-agents-pipecat-livekit",
+  "title": "语音智能体：Pipecat 与 LiveKit",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Pipecat 管道使用哪两个流向？",
+      "options": [
+        "Read 和 write",
+        "Hot 和 cold",
+        "Inbound 和 outbound",
+        "DOWNSTREAM（source 到 sink）和 UPSTREAM（反馈、取消、插话）"
+      ],
+      "correct": 3,
+      "explanation": "帧沿 source-to-sink 的 downstream 流动，以及用于控制和取消的 upstream 流动。"
+    },
+    {
+      "stage": "pre",
+      "question": "Pipecat 的经典语音管道是什么？",
+      "options": [
+        "VAD -> STT -> LLM -> TTS -> transport",
+        "Audio -> JSON -> SQL -> response",
+        "LLM -> embed -> retrieve -> answer",
+        "TTS -> STT -> LLM -> VAD"
+      ],
+      "correct": 0,
+      "explanation": "VAD 检测语音活动，STT 转录，LLM 响应，TTS 发声，transport 传输。"
+    },
+    {
+      "stage": "check",
+      "question": "LiveKit Agents 提供哪两类语音智能体？",
+      "options": [
+        "BatchAgent 和 StreamAgent",
+        "TextAgent 和 SpeechAgent",
+        "MultimodalAgent（直接音频）和 VoicePipelineAgent（STT/LLM/TTS 级联）",
+        "LocalAgent 和 CloudAgent"
+      ],
+      "correct": 2,
+      "explanation": "MultimodalAgent 使用直接音频（Realtime 风格）；VoicePipelineAgent 使用 STT->LLM->TTS 以获得文本级控制。"
+    },
+    {
+      "stage": "check",
+      "question": "什么是 barge-in，如何处理？",
+      "options": [
+        "LLM 成本飙升；减少 token",
+        "用户在智能体说话时插话；UPSTREAM cancel 帧会中途停止 TTS",
+        "Captcha 失败；重试",
+        "提供方故障；切换区域"
+      ],
+      "correct": 1,
+      "explanation": "Barge-in 是用户打断；Pipecat 通过 UPSTREAM cancellation 干净处理。"
+    },
+    {
+      "stage": "check",
+      "question": "本课描述的 premium 端到端延迟是多少？",
+      "options": [
+        "约 450–600 ms",
+        "约 1500 ms",
+        "约 50 ms",
+        "约 5000 ms"
+      ],
+      "correct": 0,
+      "explanation": "Premium 堆栈约 450–600 ms；800–1200 ms 常见；超过 1500 ms 会感觉不可用。"
+    },
+    {
+      "stage": "post",
+      "question": "忽略 STT 置信度会出什么问题？",
+      "options": [
+        "通话更便宜",
+        "延迟改善",
+        "TTS 更快",
+        "低置信度转录像真理一样喂给 LLM，导致错误答案；应按置信度门控或请求确认"
+      ],
+      "correct": 3,
+      "explanation": "将低置信度 STT 当作事实是语音智能体的主要失败模式之一。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么本课建议在上线前对各组件延迟求和？",
+      "options": [
+        "WebRTC 要求延迟",
+        "每个组件增加 50–200 ms；总和决定体验是否感觉不可用",
+        "提供方按延迟计费",
+        "满足合规要求"
+      ],
+      "correct": 1,
+      "explanation": "上线前对整条链（VAD + STT + LLM + TTS + transport）求和；目标很紧。"
+    }
+  ]
+}

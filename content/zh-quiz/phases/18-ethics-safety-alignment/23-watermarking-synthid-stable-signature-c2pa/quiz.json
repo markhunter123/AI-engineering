@@ -1,0 +1,78 @@
+{
+  "lesson": "23-watermarking-synthid-stable-signature-c2pa",
+  "title": "Watermarking - SynthID, Stable Signature, C2PA",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Kirchenbauer 风格（SynthID-text）的词元水印如何嵌入信号？",
+      "options": [
+        "使用公钥加密输出",
+        "在每个解码步骤，对前 K 个词元做哈希，将词表划分为 green/red 集合，并偏向 green 采样；检测时通过 z-score 统计 green 词元数量",
+        "插入隐藏的 HTML 注释",
+        "修改提示模板"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "文本水印在面对改写（paraphrase）时的主要局限是什么？",
+      "options": [
+        "改写只影响图像水印",
+        "它们其实能经受改写",
+        "改写会增强水印",
+        "改写或释义会破坏 green-token 的统计信号"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Stable Signature（Fernandez et al., ICCV 2023）做了什么？",
+      "options": [
+        "在图像角落添加可见水印",
+        "使用私钥对元数据签名",
+        "使用 C2PA 在上传时对图像签名",
+        "微调潜在扩散解码器，使每张生成图像都携带一个可从潜在空间检测的固定嵌入信息"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "2024 年 5 月“Stable Signature is Unstable”的结果证明了什么？",
+      "options": [
+        "该水印在可证明意义上不可伪造",
+        "该水印需要 C2PA 才能工作",
+        "该水印只在 JPEG 压缩下失效",
+        "生成后对解码器进行微调可以在保持图像质量的同时去除水印，从而削弱对抗鲁棒性"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "C2PA 元数据与水印如何互补？",
+      "options": [
+        "C2PA 完全取代水印",
+        "元数据可能被剥离，但携带丰富的来源链；水印可经受转码但只携带少量比特；两者叠加可构成可用的来源叙事",
+        "水印使用与 C2PA 相同的密钥签名",
+        "二者可以互相替代"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么“没有 SynthID 信号”不能证明内容真实（人类原创）？",
+      "options": [
+        "因为 SynthID 是闭源的",
+        "因为 SynthID 对人类文本总是产生误报",
+        "因为 SynthID 只给启用了 SynthID 的模型生成的内容加水印；任何未启用 SynthID 的模型产生的内容默认不带水印",
+        "因为 SynthID 只对 Gemini 输出有效"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

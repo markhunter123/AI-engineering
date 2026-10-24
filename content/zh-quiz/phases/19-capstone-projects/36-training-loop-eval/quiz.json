@@ -1,0 +1,78 @@
+{
+  "lesson": "36-training-loop-eval",
+  "title": "Training Loop and Evaluation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么目标张量必须是输入张量错位一位？",
+      "options": [
+        "交叉熵需要完全相同的张量",
+        "它能加速优化器",
+        "AdamW 要求如此",
+        "下一个词元预测是训练目标：在每个位置模型都预测紧随其后的词元；忘记错位会让模型学习预测自身，这学不到有用的东西"
+      ],
+      "correct": 3,
+      "explanation": "输入是词元 0..T-1；目标是词元 1..T；损失在展平后的 (batch*seq, vocab) 与 (batch*seq,) 形状上计算。"
+    },
+    {
+      "stage": "pre",
+      "question": "evaluate_model 做了什么而训练步骤没有？",
+      "options": [
+        "它在 no_grad 且禁用 dropout 的环境下运行固定数量的验证批次，返回可复现的平均损失",
+        "它改变模型权重",
+        "它计算两次梯度",
+        "它运行优化器"
+      ],
+      "correct": 0,
+      "explanation": "留出验证不需要梯度、不需要 dropout，并且需要固定验证数据切片，以保证各次运行可复现。"
+    },
+    {
+      "stage": "check",
+      "question": "哪些 AdamW 参数会获得权重衰减？",
+      "options": [
+        "矩阵形状的张量（线性权重、嵌入表）获得权重衰减；scale、shift 与 bias 张量的衰减为零",
+        "只有 LayerNorm 的 scale",
+        "每个参数同等",
+        "只有 LM head"
+      ],
+      "correct": 0,
+      "explanation": "对 LayerNorm 的 scale 施加衰减会将其推向零并破坏归一化；这种划分是标准的生产实践。"
+    },
+    {
+      "stage": "check",
+      "question": "warmup 加 cosine 调度从第 0 步到最终步呈现什么形状？",
+      "options": [
+        "阶跃函数",
+        "常数",
+        "在 warmup_steps 内从 0 线性增长到最大值，然后在剩余步数内按余弦曲线从最大值衰减到 min_lr",
+        "指数增长"
+      ],
+      "correct": 2,
+      "explanation": "Warmup 填充优化器状态；余弦衰减逐步减小步长，使最后阶段对权重进行微调。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么要在 optimizer.step() 前裁剪梯度范数？",
+      "options": [
+        "它去除了 warmup 的需要",
+        "一个糟糕的批次可能产生巨大梯度，毁掉数小时的训练；将 max_norm 裁剪到 1.0 可在不扭曲正常更新的前提下让优化器保持在安全范围",
+        "它加速了矩阵乘法",
+        "它减少了内存使用"
+      ],
+      "correct": 1,
+      "explanation": "梯度裁剪是防止发散的最廉价保险；1 是多数设置下都能生存的默认值。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么用 JSONL 而不是 pickle 状态来记录每步日志？",
+      "options": [
+        "优化器要求使用 JSONL",
+        "JSONL 训练更快",
+        "JSONL 记录在重构后仍然可读、可 grep、可用三十行代码绘图，并且能在崩溃后保留；pickle 状态则与产生它的模块结构绑定",
+        "JSONL 使用更少 GPU 内存"
+      ],
+      "correct": 2,
+      "explanation": "任何崩溃都会留下可读产物；恢复时读取最后一步；上层工具微不足道。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "73-perplexity-calibration",
+  "title": "Perplexity and Calibration",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "困惑度为 1.0 对语言模型在测试语料上意味着什么？",
+      "options": [
+        "模型坏了",
+        "模型为每个真实 token 分配概率 1；是完美模型",
+        "模型在词表上均匀分布",
+        "语料为空"
+      ],
+      "correct": 1,
+      "explanation": "困惑度等于 exp（平均负对数似然）。当每个 token 的概率都是 1 时，NLL 为零，exp(0) = 1。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么 harness 要求适配器返回非负的对数概率？",
+      "options": [
+        "Numpy 遇到负数会崩溃",
+        "ECE 的区间边界假设为正",
+        "困惑度对负值未定义",
+        "负对数概率按定义是非负的；收到负值说明适配器发送的是 log p，而不是 -log p"
+      ],
+      "correct": 3,
+      "explanation": "概率的 -log p 是非负的。负值是契约违反，会悄然导致困惑度 < 1，而这不可能。"
+    },
+    {
+      "stage": "check",
+      "question": "期望校准误差（ECE）衡量什么？",
+      "options": [
+        "分箱级别置信度与准确率之间的平均差距，按箱大小加权",
+        "预测的交叉熵",
+        "预测标签与真实标签的平均绝对距离",
+        "softmax 输出的方差"
+      ],
+      "correct": 0,
+      "explanation": "ECE 按置信度对预测分箱，测量每箱平均置信度与平均准确率之间的差距，并按箱大小加权。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么实现除了返回 ECE 值外还要返回 populated_bins？",
+      "options": [
+        "它是 Brier 分数的分母",
+        "numpy 需要它",
+        "它提示被填充的箱数过少，此时单一数字不可信",
+        "可靠性图需要它"
+      ],
+      "correct": 2,
+      "explanation": "被填充箱数过少时，ECE 会被噪声主导。报告填充数量可让运行器拒绝发布误导性的单一数值。"
+    },
+    {
+      "stage": "check",
+      "question": "Brier 分数能捕捉 ECE 捕捉不到的什么？",
+      "options": [
+        "不需要真实标签",
+        "计算更快",
+        "仅适用于二元结果",
+        "它直接惩罚局部校准误差，因为它是每个预测的平方误差"
+      ],
+      "correct": 3,
+      "explanation": "ECE 只看每箱平均。Brier 对每个预测平方误差，因此能捕获箱与箱平均抵消但各自失准的情况。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么校准是按模型的报告，而不是按任务的指标？",
+      "options": [
+        "按任务计算校准太慢",
+        "任务没有概率",
+        "ECE 要求运行器知道模型架构",
+        "单个任务的预测太少，无法估计箱统计；报告在整个评估上聚合"
+      ],
+      "correct": 3,
+      "explanation": "按任务校准会被噪声主导。运行器在所有任务上聚合置信度/正确性对后，再计算 ECE、Brier 和可靠性图。"
+    }
+  ]
+}

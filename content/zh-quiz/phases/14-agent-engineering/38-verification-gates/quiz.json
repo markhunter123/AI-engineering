@@ -1,0 +1,90 @@
+{
+  "lesson": "38-verification-gates",
+  "title": "Verification Gates",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "验证门禁回答的唯一问题是什么？",
+      "options": [
+        "任务真的完成了吗？（读取范围、规则、反馈和 diff 工件）",
+        "提示是否最优？",
+        "模型是否够快？",
+        "token 预算是否健康？"
+      ],
+      "correct": 0,
+      "explanation": "门禁是基于工作台工件产生通过/失败裁决的确定性函数。"
+    },
+    {
+      "stage": "pre",
+      "question": "为何门禁必须是确定性的？",
+      "options": [
+        "同一组工件每次必须产生相同裁决；LLM 判断属于评审者（定性），不属于门禁（状态）",
+        "厂商要求",
+        "确定性免费",
+        "省钱"
+      ],
+      "correct": 0,
+      "explanation": "把模型判断混入门禁会破坏确定性与定性的划分。"
+    },
+    {
+      "stage": "check",
+      "question": "门禁的覆盖纪律是什么？",
+      "options": [
+        "block 级发现只能由人工覆盖，并记录 override_reason 和 overridden_by 用户 ID 到签名审计日志",
+        "禁止覆盖",
+        "任何人可静默覆盖",
+        "覆盖需要经理邮件"
+      ],
+      "correct": 0,
+      "explanation": "签名覆盖进入 outputs/verification/overrides.jsonl；智能体不能自我覆盖。"
+    },
+    {
+      "stage": "check",
+      "question": "本课引用的 Hybrid Norm 配对是什么？",
+      "options": [
+        "GPU 与 CPU 拆分",
+        "热/冷提示",
+        "可验证奖励（测试、schema、exit code）回答“它解决了问题吗？”；LLM 评分标准回答“它是否可读、安全、符合风格？”",
+        "缓存 vs 无缓存"
+      ],
+      "correct": 2,
+      "explanation": "Anthropic 2026 指南：门禁运行第一类；评审者（第 39 课）运行第二类。"
+    },
+    {
+      "stage": "check",
+      "question": "纵深防御如何分层门禁？",
+      "options": [
+        "pre-commit hook -> CI 状态检查 -> 工具前授权 hook -> 合并前门禁；每一层都是确定性的，因此一层失败会被下一层捕获",
+        "仅在合并时设单一门禁",
+        "只在聊天中提醒",
+        "只有 IDE 警告"
+      ],
+      "correct": 0,
+      "explanation": "多个不可绕过的层级能捕获单层会遗漏的问题。"
+    },
+    {
+      "stage": "post",
+      "question": "coverage_floor 检查防止什么？",
+      "options": [
+        "热路径延迟",
+        "智能体悄悄删除失败的测试；如果实测覆盖率低于 floor 或比上次合并下降超过 1 个百分点，门禁失败",
+        "冷启动",
+        "过时的 lockfile"
+      ],
+      "correct": 1,
+      "explanation": "没有 floor，智能体可能为了维持绿灯而悄悄降低覆盖率。"
+    },
+    {
+      "stage": "post",
+      "question": "何时应让 --strict 模式把每个 warn 提升为 block？",
+      "options": [
+        "总是",
+        "从不",
+        "只在周日",
+        "发布分支、阻塞发布的 PR、事后复盘；不是日常默认，因为全面严格会侵蚀流程"
+      ],
+      "correct": 3,
+      "explanation": "--strict 按分支选择加入；留给高风险时刻。"
+    }
+  ]
+}

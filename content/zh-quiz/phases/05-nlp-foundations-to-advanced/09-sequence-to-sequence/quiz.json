@@ -1,0 +1,102 @@
+{
+  "lesson": "09-sequence-to-sequence",
+  "title": "序列到序列模型",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "2014 年风格的 seq2seq 模型中编码器的作用是什么？",
+      "options": [
+        "生成目标 token",
+        "执行束搜索",
+        "计算 attention 权重",
+        "读取源序列并生成一个总结它的固定大小上下文向量"
+      ],
+      "correct": 3,
+      "explanation": "编码器 RNN 将源序列压缩为最终隐藏状态，供解码器使用。"
+    },
+    {
+      "stage": "pre",
+      "question": "seq2seq 训练中的 teacher forcing 是什么？",
+      "options": [
+        "手动标注每个解码步骤",
+        "在推理时添加教师网络",
+        "将 batch size 加倍",
+        "将真实的前一个 token（而非模型预测）作为解码器输入"
+      ],
+      "correct": 3,
+      "explanation": "Teacher forcing 使用真实的前一个 token 来稳定训练；没有它，早期错误会级联。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么固定上下文向量的 seq2seq 准确率会随着输入长度增长而下降？",
+      "options": [
+        "交叉熵发散",
+        "padding token 累积",
+        "词汇表变得太大",
+        "所有源信息都必须塞进单个固定大小的编码器隐藏状态，长输入会丢失细节"
+      ],
+      "correct": 3,
+      "explanation": "固定上下文向量的瓶颈意味着长输入无法被无损概括。"
+    },
+    {
+      "stage": "check",
+      "question": "什么是 exposure bias？",
+      "options": [
+        "类别不平衡带来的偏差",
+        "编码器嵌入中的偏差",
+        "标注者不一致",
+        "训练时使用真实 token，但推理时从模型自身预测生成，由此产生的训练/推理差距"
+      ],
+      "correct": 3,
+      "explanation": "模型在训练中从未练习过从自己的错误中恢复，因此推理时错误会级联。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 beam search 在生成任务中通常优于贪婪解码？",
+      "options": [
+        "Beam search 更快",
+        "Beam search 每步保留 top-k 部分序列，而不是不可撤销地只提交一个 token",
+        "Beam search 避免 exposure bias",
+        "Beam search 降低损失"
+      ],
+      "correct": 1,
+      "explanation": "贪婪每步提交一个 token；beam search 探索多条假设，然后选择最佳完整序列。"
+    },
+    {
+      "stage": "post",
+      "question": "哪个架构家族替代了 RNN seq2seq 成为通用生成任务的主流？",
+      "options": [
+        "朴素贝叶斯",
+        "图神经网络",
+        "一维 CNN",
+        "Transformer 编码器-解码器模型（BART、T5、mBART、NLLB）"
+      ],
+      "correct": 3,
+      "explanation": "Transformer 编码器-解码器去掉了循环，如今主导生成任务。"
+    },
+    {
+      "stage": "post",
+      "question": "scheduled sampling 做什么？",
+      "options": [
+        "给嵌入添加随机噪声",
+        "在训练过程中逐渐降低 teacher forcing 比例，使模型学会从自己的预测中恢复",
+        "重新排序训练集",
+        "调度学习率衰减"
+      ],
+      "correct": 1,
+      "explanation": "Scheduled sampling 逐渐混入模型预测，以缩小训练/推理差距。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么单独的贪婪解码在面向用户的生成任务中经常失败？",
+      "options": [
+        "它总是先选 <EOS>",
+        "它无法使用嵌入",
+        "贪婪可能重复或循环，无法从一个局部好但全局差的 token 选择中回溯",
+        "它需要更多内存"
+      ],
+      "correct": 2,
+      "explanation": "贪婪解码不可撤销的每步选择会导致循环和重复，而 beam search 或采样可以缓解。"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "lesson": "25-entity-linking",
+  "title": "实体链接与消歧",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "实体链接在 NER 之上增加了什么？",
+      "options": [
+        "情感极性",
+        "POS 标签",
+        "将每个检测到的 mention 映射到知识库（Wikidata、Wikipedia 或领域 KB）中的唯一条目",
+        "翻译"
+      ],
+      "correct": 2,
+      "explanation": "EL 将 mention 转为规范 KB id，消歧同名实体。"
+    },
+    {
+      "stage": "pre",
+      "question": "实体链接中的两个主要子任务是什么？",
+      "options": [
+        "候选生成（KB 条目的合理短名单）和消歧（在给定上下文中选择正确的一项）",
+        "嵌入和聚类",
+        "POS 标注和词形还原",
+        "分词和句法分析"
+      ],
+      "correct": 0,
+      "explanation": "EL 分解为提出候选，然后按上下文拟合排序。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么必须同时报告 mention recall 和 disambiguation accuracy？",
+      "options": [
+        "消歧无法从缺失的候选中恢复；流水线受候选生成召回率的约束",
+        "GDPR 强制要求 mention recall",
+        "spaCy 要求召回率",
+        "召回率替代精确率"
+      ],
+      "correct": 0,
+      "explanation": "如果候选遗漏了黄金实体，任何消歧器都无法修复；召回率决定了流水线质量上限。"
+    },
+    {
+      "stage": "check",
+      "question": "GENRE 如何执行实体链接？",
+      "options": [
+        "在有效 KB id 的 trie 约束下逐 token 解码实体的规范名称",
+        "通过计算 TF-IDF",
+        "通过 BM25",
+        "通过 PageRank"
+      ],
+      "correct": 0,
+      "explanation": "GENRE 通过约束解码生成规范 KB 名称，以保证有效 id。"
+    },
+    {
+      "stage": "check",
+      "question": "实体链接中的 NIL handling 是什么？",
+      "options": [
+        "跳过每个 mention",
+        "返回整个候选列表",
+        "将输入小写",
+        "当没有候选是真实匹配时预测 'not in KB' 标签（新兴实体、冷门人物）"
+      ],
+      "correct": 3,
+      "explanation": "NIL 预测防止为 KB 未覆盖的实体猜测错误的 KB id。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么 popularity bias 会损害 specialized domains 的实体链接？",
+      "options": [
+        "在网页数据上训练的模型过度预测 frequent 实体（例如篮球 Jordan 超过 ML 研究者 Michael I. Jordan）",
+        "流行度有助于召回",
+        "它只偏向更老的实体",
+        "流行度移除 NIL"
+      ],
+      "correct": 0,
+      "explanation": "流行度先验使预测偏离不太常见、领域特定的名称冲突。"
+    },
+    {
+      "stage": "post",
+      "question": "2026 年安全的 LLM-EL 模式是什么？",
+      "options": [
+        "仅提示 'find the entity'",
+        "跳过候选生成",
+        "自由形式生成",
+        "提供候选列表并使用约束 JSON 输出，使 LLM 只能从有效 KB id 中选择"
+      ],
+      "correct": 3,
+      "explanation": "将 LLM 约束到有效候选列表可防止编造 KB id，并保持输出可查询。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么 NER mention 边界必须精确，实体链接才能工作？",
+      "options": [
+        "边界错误会传播：'Bank of America' 被截断为 'Bank' 会触发错误候选并严重拉低 EL 召回率",
+        "边界破坏 Wikipedia 查找",
+        "边界精度只影响 NER 指标，不影响实体链接候选质量",
+        "边界改变分词"
+      ],
+      "correct": 0,
+      "explanation": "边界错误的 mention 会检索到错误的别名集，将错误传播到消歧阶段。"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "lesson": "27-prompt-injection-defense",
+  "title": "提示注入与 PVE 防御",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "什么是 indirect prompt injection（间接提示注入）？",
+      "options": [
+        "模型误点",
+        "用户直接输入“忽略所有规则”",
+        "智能体检索的数据中嵌入的指令（页面、PDF、邮件、记忆笔记），在摄取时覆盖开发者提示词",
+        "系统提示词中的拼写错误"
+      ],
+      "correct": 2,
+      "explanation": "Greshake 等人提出间接提示注入：攻击者控制的检索内容携带指令。"
+    },
+    {
+      "stage": "pre",
+      "question": "本课说处理检索到的提示词等价于什么？",
+      "options": [
+        "静态分析过程",
+        "在智能体工具使用表面上执行任意代码",
+        "言论自由",
+        "纯函数调用"
+      ],
+      "correct": 1,
+      "explanation": "Greshake 的框架：检索到的指令可以命中智能体有权访问的任何工具。"
+    },
+    {
+      "stage": "check",
+      "question": "下列哪一项不是已展示的五种利用类别之一？",
+      "options": [
+        "Persistent memory poisoning",
+        "Cache invalidation",
+        "Data theft",
+        "Worming"
+      ],
+      "correct": 1,
+      "explanation": "五种是 data theft、worming、persistent memory poisoning、ecosystem contamination、arbitrary tool use。"
+    },
+    {
+      "stage": "check",
+      "question": "PVE 代表什么？",
+      "options": [
+        "Pre-Vectorize-Embed",
+        "Prompt-Validator-Executor：每次工具调用前，便宜快速的验证器先运行，再由昂贵的主模型提交",
+        "Provider-Verifier-Encoder",
+        "Plan-Verify-Execute，一种 HTN 方言"
+      ],
+      "correct": 1,
+      "explanation": "PVE 在每个工具调用前包裹一个廉价验证器，再让主模型提交。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么“系统提示词说忽略不可信指令”不够？",
+      "options": [
+        "它太短",
+        "它是指令遵循，不是强制执行；模型仍可能被足够有说服力的注入内容覆盖",
+        "提供方剥离它",
+        "它被加密"
+      ],
+      "correct": 1,
+      "explanation": "真正防御需要来源标记、允许名单、每步安全和 PVE 式验证，而不仅是提示词。"
+    },
+    {
+      "stage": "post",
+      "question": "什么是 overtrust of retrieved memory？",
+      "options": [
+        "加载错误模型",
+        "昨天的智能体写入了一条中毒记忆笔记；今天的智能体读取它并重新执行注入",
+        "忘记清理索引",
+        "缓存过于激进"
+      ],
+      "correct": 1,
+      "explanation": "Persistent memory poisoning 意味着如果记忆被视为可信，注入会跨会话存活。"
+    },
+    {
+      "stage": "post",
+      "question": "本课建议为每条内容附加什么元数据？",
+      "options": [
+        "Token 数",
+        "仅时间戳",
+        "加密密钥",
+        "来源标签：user_message vs tool_output vs retrieved；验证器拒绝 retrieved 内容中的指令"
+      ],
+      "correct": 3,
+      "explanation": "来源标记让验证器按信任等级处理内容。"
+    }
+  ]
+}

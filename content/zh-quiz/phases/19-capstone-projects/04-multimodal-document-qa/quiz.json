@@ -1,0 +1,90 @@
+{
+  "lesson": "04-multimodal-document-qa",
+  "title": "Capstone 04 — Multimodal Document QA (Vision-First PDF, Tables, Charts)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么 2026 年的前沿方案在金融 PDF 和科学论文上更倾向于 vision-first late interaction，而不是 OCR-then-text？",
+      "options": [
+        "OCR 流水线会损坏旋转表格、密集公式和图表图像，丢失一半信号",
+        "OCR 无法在 GPU 上运行",
+        "视觉模型每页更便宜",
+        "OCR 比渲染更慢"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "在 ColPali 风格的检索中，late interaction 是什么意思？",
+      "options": [
+        "每个查询 token 与每个 patch token 打分，并通过 MaxSim 按 token 取最大值后求和",
+        "嵌入在用户点击结果后才计算",
+        "reranker 只在最终候选上运行",
+        "嵌入被推迟到评估时才计算"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "ColQwen 嵌入每页大约产生多少个 patch 向量，这带来了什么存储问题？",
+      "options": [
+        "正好 128 个向量，可轻松放入任何向量数据库",
+        "每页约 2048 个 patch 向量，相比单向量索引会急剧膨胀原始存储",
+        "每页 1 个向量，没有存储问题",
+        "16 个向量，存储开销可忽略"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "DocPruner 在该流水线中起什么作用？",
+      "options": [
+        "在摄取前删除重复 PDF 页面",
+        "通过保留高信号 patch 将多向量索引压缩约 50%，准确率损失可忽略",
+        "围绕证据区域裁剪边界框",
+        "为更短向量重写查询嵌入"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么某些页面仍会拼接一条 OCR 文本通道？",
+      "options": [
+        "VLM 无法在 180 DPI 下阅读图像",
+        "OCR 是主要检索模态",
+        "它能提升 PDF 渲染质量",
+        "公式密集和表格密集的页面除了图像外还能从文本回退中受益"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本 capstone 针对视觉优先检索评估使用哪个基准？",
+      "options": [
+        "ViDoRe v3",
+        "RewardBench-2",
+        "MMLU-Pro",
+        "SWE-bench Pro"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "评分标准中 evidence-region grounding 是什么意思？",
+      "options": [
+        "p99 尾部的 reranker 延迟",
+        "每次查询检索的总页数",
+        "被引用的边界框中实际包含答案跨度的比例",
+        "DocPruner 达到的压缩率"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

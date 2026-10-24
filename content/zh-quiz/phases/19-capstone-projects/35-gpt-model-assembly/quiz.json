@@ -1,0 +1,78 @@
+{
+  "lesson": "35-gpt-model-assembly",
+  "title": "GPT Model Assembly",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本课复现的 GPT-2 small 参考配置是什么？",
+      "options": [
+        "vocab 30000, context 512, d_model 512, 6 heads, 6 layers",
+        "vocab 50257, context 1024, d_model 768, 12 heads, 12 layers, parameters near 124 million",
+        "vocab 50000, context 4096, d_model 4096, 32 heads, 32 layers",
+        "vocab 100000, context 2048, d_model 1024, 16 heads, 24 layers"
+      ],
+      "correct": 1,
+      "explanation": "GPT-2 small 是约 1.24 亿参数的配置；匹配它说明接线正确。"
+    },
+    {
+      "stage": "check",
+      "question": "模型组装中的 weight tying 是什么意思？",
+      "options": [
+        "词元嵌入与 LM 头共享完全相同的参数张量；优化器只更新一个矩阵，它同时服务于嵌入查找与输出投影",
+        "两个形状相同但在每步被复制的张量",
+        "跨层共享的偏置项",
+        "对注意力头的约束"
+      ],
+      "correct": 0,
+      "explanation": "设置 lm_head.weight = tok_embed.weight 会共享存储；复制则不会。可节省 vocab * d_model 的参数。"
+    },
+    {
+      "stage": "check",
+      "question": "生成时如何滑动上下文窗口？",
+      "options": [
+        "每一步取运行序列（提示加已生成内容）的最后 context_length 个词元输入模型",
+        "每步截断到上下文的一半",
+        "用零填充到最大上下文长度",
+        "每步从提示重新开始"
+      ],
+      "correct": 0,
+      "explanation": "滑动窗口会在运行序列超出上下文长度时丢弃最老的词元。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么注意力输出投影与第二个 MLP 线性层要用更小的标准差初始化？",
+      "options": [
+        "数据集要求如此",
+        "Top-k 采样需要更小的权重",
+        "两者都直接馈入残差相加。将其标准差按 1 / sqrt(2 * num_layers) 缩放，可使残差流在十二层中保持尺度稳定",
+        "它可以节省内存"
+      ],
+      "correct": 2,
+      "explanation": "没有这种缩放，残差流会随深度增长，并将最终的 LayerNorm 推向极端区间。"
+    },
+    {
+      "stage": "post",
+      "question": "采样时 temperature 起什么作用？",
+      "options": [
+        "选择优化器学习率",
+        "在 softmax 前除以 logits。T<1 使分布尖锐、偏向贪心；T=1 保持模型自然分布；T>1 使分布平坦",
+        "缩放嵌入",
+        "在输出头添加 dropout"
+      ],
+      "correct": 1,
+      "explanation": "Temperature 是最简单的调节旋钮；与 top-k 结合可控制生成的探索性。"
+    },
+    {
+      "stage": "post",
+      "question": "采样前 top-k 过滤做什么？",
+      "options": [
+        "挑选值最低的 k 个 logits",
+        "保留值最高的 k 个 logits，其余掩码为负无穷，然后在幸存者上计算 softmax，使多项式采样只看到前 k 个词元",
+        "移除所有低于零的 logits",
+        "将 logits 上限设为 k"
+      ],
+      "correct": 1,
+      "explanation": "Top-k 在 softmax 前截断长尾；top_k=1 即贪心，更大的 k 保留更多多样性。"
+    }
+  ]
+}

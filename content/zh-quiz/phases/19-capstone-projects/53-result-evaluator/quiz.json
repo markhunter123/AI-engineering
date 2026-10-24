@@ -1,0 +1,78 @@
+{
+  "lesson": "53-result-evaluator",
+  "title": "Result Evaluator",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么评估器使用配对 t 检验，而不是比较两个单独数字？",
+      "options": [
+        "因为 numpy 需要配对数组",
+        "因为运行器无法输出单个数字",
+        "因为用相同种子配对候选与基线，可将配置变更与随机初始化噪声隔离开",
+        "因为 IRB 总是要求 t 检验"
+      ],
+      "correct": 2,
+      "explanation": "按种子配对可抵消随机初始化效应。剩余差异可归因于配置变更，这正是检验所衡量的。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么评估器为每个指标携带 direction 字段？",
+      "options": [
+        "因为 numpy 需要方向来计算方差",
+        "因为准确率与损失指向相反；改进的符号取决于所比较指标的方向哪个更好",
+        "因为运行器要求如此",
+        "因为解析器期望如此"
+      ],
+      "correct": 1,
+      "explanation": "越高越好指标向上改进；越低越好指标向下改进。direction 字段告诉改进函数应用哪种符号约定。"
+    },
+    {
+      "stage": "check",
+      "question": "当 |improvement| 低于阈值时，即使 p 值显著，判决路径返回什么？",
+      "options": [
+        "noise",
+        "regressed",
+        "failed",
+        "improved"
+      ],
+      "correct": 0,
+      "explanation": "从循环角度看，统计显著但太小而无法采取行动的变化仍是噪声。阈值门在显著性门之前运行。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么评估器在计算改进前对 log 缩放指标做转换？",
+      "options": [
+        "因为 p 值依赖于此",
+        "因为 numpy 的对数更快",
+        "因为运行器只输出 log 缩放指标",
+        "因为困惑度等指标随损失指数增长；转换到 log 空间使 2% 这样的阈值在线性与 log 指标间都有意义"
+      ],
+      "correct": 3,
+      "explanation": "困惑度是 exp(loss)。损失的小变化会导致困惑度大变化。取 log 使相对改进与线性指标在统一阈值下可比。"
+    },
+    {
+      "stage": "check",
+      "question": "配对 t 检验辅助函数何时返回 p_value = None？",
+      "options": [
+        "当方差为零时",
+        "当均值相等时",
+        "当指标尺度为 log 时",
+        "当可用的配对样本少于两个时"
+      ],
+      "correct": 3,
+      "explanation": "t 分布至少需要一度自由度。n 小于 2 时无法估计方差，辅助函数返回 None，以便判决路径将运行标记为 noise。"
+    },
+    {
+      "stage": "check",
+      "question": "如果任一候选结果的终端标签不是 ok，会怎样？",
+      "options": [
+        "评估器返回 failed 判决，并将不良终端记录在理由中",
+        "评估器丢弃该种子并继续",
+        "评估器重试该运行",
+        "评估器退化为单侧检验"
+      ],
+      "correct": 0,
+      "explanation": "失败运行使候选集无效。评估器在判决路径上短路并返回 failed，列出违规终端，因此编排器不会从崩溃运行得出结论。"
+    }
+  ]
+}

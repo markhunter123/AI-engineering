@@ -1,0 +1,78 @@
+{
+  "lesson": "43-hdf5-tokenized-corpus",
+  "title": "HDF5 Tokenized Corpus",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么将分词语料库存储为可调整大小、分块的 HDF5 数据集，而不是 JSONL？",
+      "options": [
+        "HDF5 的 logo 更小",
+        "JSONL 已弃用",
+        "随机原因",
+        "HDF5 提供分块、纯整数、可内存映射的读取，并支持 O(1) 随机访问；JSONL 则迫使解析器参与每次热路径读取"
+      ],
+      "correct": 3,
+      "explanation": "数据加载器想要可寻址切片的扁平词元流；HDF5 原生提供这种能力。"
+    },
+    {
+      "stage": "check",
+      "question": "如何确定 HDF5 分块大小与训练器 window_size 的关系？",
+      "options": [
+        "选能放进内存的最大块",
+        "始终选 chunk=1",
+        "将 chunk 设为 window_size 的倍数，使每个样本落在一个或两个块内，读取保持页缓存对齐",
+        "让 chunk 等于文档长度"
+      ],
+      "correct": 2,
+      "explanation": "不匹配的块会使吞吐减半，因为每个样本会跨越两个块而不是一个。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 token_count 作为 HDF5 属性存储，而不是从数据集形状推断？",
+      "options": [
+        "末尾分块可能只部分填充；没有显式属性，读取器会越过真实末尾进入零填充词元，模型将学会预测零",
+        "读取形状很慢",
+        "属性是强制的",
+        "属性好看"
+      ],
+      "correct": 0,
+      "explanation": "分块布局有时会留下尾部空槽；属性携带真实长度。"
+    },
+    {
+      "stage": "check",
+      "question": "写程序在每次调整大小前将词元缓冲到 chunk_size，这实现了什么？",
+      "options": [
+        "写入连续且按块对齐，避免了逐 token 调整大小导致的碎片",
+        "减小词表大小",
+        "加速 sha256",
+        "节省少量 CPU 周期"
+      ],
+      "correct": 0,
+      "explanation": "以 chunk 大小缓冲后再扩展，是保持 HDF5 块在磁盘上连续的唯一方式。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么 swmr=True 在读取端打开，而不是写入端？",
+      "options": [
+        "安全",
+        "随机偏好",
+        "性能",
+        "单写多读模式让数据加载器工作进程安全共享文件；写入器不需要特殊模式，因为每个进程写一个分片"
+      ],
+      "correct": 3,
+      "explanation": "混淆两种模式是导致“文件被锁定”失败的最常见原因。"
+    },
+    {
+      "stage": "post",
+      "question": "边界词元 ID 的存在是为了显式表示什么？",
+      "options": [
+        "压缩",
+        "词表大小限制",
+        "随机数据",
+        "打包窗口内的文档边界，避免模型在跨文档拼接上被静默训练"
+      ],
+      "correct": 3,
+      "explanation": "没有显式边界时，训练器会把边界当作噪声学习；有了它，边界就成为可用的分隔符。"
+    }
+  ]
+}

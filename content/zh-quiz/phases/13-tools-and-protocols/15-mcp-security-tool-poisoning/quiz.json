@@ -1,0 +1,78 @@
+{
+  "lesson": "15-mcp-security-tool-poisoning",
+  "title": "MCP Security: Poisoned Metadata, Routing, and MRTR State",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "哪个 MCP 字段可以安全地用作已认证客户端身份？",
+      "options": [
+        "任何自报告的 clientInfo 字段都不行",
+        "clientInfo.name",
+        "clientInfo.version",
+        "clientCapabilities"
+      ],
+      "correct": 0,
+      "explanation": "客户端信息和能力是协议元数据，不是认证证据。"
+    },
+    {
+      "stage": "check",
+      "question": "网关在批准工具后应对什么进行哈希？",
+      "options": [
+        "规范完整描述符，包括描述、schema 和相关注解",
+        "仅工具名称",
+        "仅服务器显示名称",
+        "当前会话标识符"
+      ],
+      "correct": 0,
+      "explanation": "完整描述符固定能检测到仅哈希描述会遗漏的 schema 和注解变化。"
+    },
+    {
+      "stage": "check",
+      "question": "网关应如何暴露两个都名为 search 的后端工具？",
+      "options": [
+        "让模型推断服务器",
+        "随机选择后端",
+        "使用稳定的限定名，如 notes.search 和 issues.search",
+        "保留最后发现的工具"
+      ],
+      "correct": 2,
+      "explanation": "限定名让路由、批准、审计和头部验证都能引用一个稳定工具。"
+    },
+    {
+      "stage": "check",
+      "question": "哪些客户端能力声明支持 MCP 表单elicitation？",
+      "options": [
+        "elicitation: {} 隐式地，或 elicitation: {form: {}} 显式地",
+        "任何非空 extensions 对象",
+        "只有启用 form 的协议会话",
+        "只有 elicitation.url"
+      ],
+      "correct": 0,
+      "explanation": "空的 elicitation 对象隐含表单支持，form: {} 则显式声明。仅 URL 支持不足以发起表单请求。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么 requestState 必须受完整性保护并绑定到精确参数？",
+      "options": [
+        "为了选择缓存范围",
+        "为了替代 OAuth",
+        "为了防止客户端复用或修改确认用于其他操作",
+        "为了让 JSON 更小"
+      ],
+      "correct": 2,
+      "explanation": "requestState 会经过不受信任的对端往返，因此服务器必须检测篡改和上下文变化。共享的原子随机数声明可防止跨处理实例复用。"
+    },
+    {
+      "stage": "post",
+      "question": "现代网关的正确顺序是什么？",
+      "options": [
+        "信任 clientInfo，执行，然后审计",
+        "将声明的能力视为权限",
+        "认证、验证传输与头部、检查能力兼容性、授权，然后执行",
+        "创建会话、按发现顺序路由，然后授权"
+      ],
+      "correct": 2,
+      "explanation": "必须在授权和执行前解决传输歧义和身份问题。"
+    }
+  ]
+}

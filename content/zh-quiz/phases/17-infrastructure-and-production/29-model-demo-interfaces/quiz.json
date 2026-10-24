@@ -1,0 +1,78 @@
+{
+  "lesson": "29-model-demo-interfaces",
+  "title": "Model Demo Interfaces — From a Function to a Shareable App",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "页面已经用 maxlength 限制了文本域，服务器为什么还要再次检查长度？",
+      "options": [
+        "除非关闭 JavaScript，否则浏览器会忽略文本域的 maxlength",
+        "任何客户端都可以不通过页面直接发送请求",
+        "浏览器只在模型调用结束后才应用 maxlength",
+        "maxlength 属性按字节计数，因此允许过多字符"
+      ],
+      "correct": 1,
+      "explanation": "浏览器检查只对诚实用户有效。脚本或 curl 可以发送任意请求体，因此服务器需要重复每项检查。"
+    },
+    {
+      "stage": "check",
+      "question": "本课中 demo 合约由哪三部分组成？",
+      "options": [
+        "提示词、模型权重和 GPU 服务器",
+        "输入、模型调用和输出",
+        "前端、后端和数据库层",
+        "登录页、支付页和结果页"
+      ],
+      "correct": 1,
+      "explanation": "合约包含输入、模型调用和输出。demo 对每一部分都设置了限制，错误也是输出的一部分。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 demo 页面用 POST 请求并通过 fetch() 读取流，而不是 EventSource？",
+      "options": [
+        "EventSource 无法解析服务器返回的 text/event-stream 格式",
+        "fetch() 跳过响应头从而降低首 token 时间",
+        "Python http.server 处理程序只能以 POST 请求回复流",
+        "EventSource 只发送 GET 请求，因此输入会进入 URL"
+      ],
+      "correct": 3,
+      "explanation": "EventSource 只发送 GET 请求。GET 请求将输入放在 URL 中，而服务器和代理会把 URL 写入访问日志。"
+    },
+    {
+      "stage": "check",
+      "question": "demo 的请求日志会写入哪些内容？",
+      "options": [
+        "完整请求行及其查询字符串和原始客户端 IP 地址",
+        "路由、状态、延迟、输入长度和客户端的带密钥哈希",
+        "每个失败请求的堆栈跟踪，包括文件路径和行号",
+        "输入文本和模型回复，以便审核者回放每个请求"
+      ],
+      "correct": 1,
+      "explanation": "日志不保存输入文本和客户端地址。带密钥哈希可以在不存储地址的情况下统计每个客户端的请求数。"
+    },
+    {
+      "stage": "post",
+      "question": "服务器已发送状态 200 和三个 token 事件后模型失败，demo 会怎么做？",
+      "options": [
+        "将状态行改为 500 并重新发送响应头",
+        "在后台重新运行模型并在无提示的情况下发送新 token",
+        "在流中发送错误事件，页面会显示它",
+        "无消息直接关闭连接，让浏览器稍后超时"
+      ],
+      "correct": 2,
+      "explanation": "状态行已经发送，服务器无法再更改。流中携带一个包含 code、message 和 hint 的错误事件。"
+    },
+    {
+      "stage": "post",
+      "question": "一百个客户端各自均未超过每客户端速率限制，哪种控制能阻止它们耗尽模型总预算？",
+      "options": [
+        "页面 HTML 表单中文本域的更小的 maxlength 值",
+        "为每个客户端设置更大容量和更快补充速度的令牌桶",
+        "仅允许一个哈希内联脚本的 Content-Security-Policy 头",
+        "统计所有客户端调用次数的每日使用上限"
+      ],
+      "correct": 3,
+      "explanation": "速率限制控制每个客户端，但不控制总量。使用上限统计一天内所有模型调用次数，并在达到固定数量后拒绝调用。"
+    }
+  ]
+}

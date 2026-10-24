@@ -1,0 +1,102 @@
+{
+  "lesson": "23-chunking-strategies-rag",
+  "title": "RAG 的分块策略",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么分块策略在 RAG 中与嵌入模型同样重要？",
+      "options": [
+        "分块缩小模型",
+        "更小的分块训练更快",
+        "分块是 FAISS 要求的",
+        "分块边界决定了答案是否可被检索；糟糕的分块会击败任何嵌入"
+      ],
+      "correct": 3,
+      "explanation": "Vectara 2025 年的研究表明，分块质量对检索质量的影响与嵌入模型相当甚至更大。"
+    },
+    {
+      "stage": "pre",
+      "question": "LangChain 的 RecursiveCharacterTextSplitter 按什么顺序尝试切分？",
+      "options": [
+        "先按段落换行，再按换行，再按句子边界，最后按空格",
+        "按 token ID 切分",
+        "仅按空白切分",
+        "总是按第 N 个字符切分"
+      ],
+      "correct": 0,
+      "explanation": "递归切分按段落 -> 换行 -> 句子 -> 空格回退，以保留结构。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 parent-document 模式能改善答案质量？",
+      "options": [
+        "它移除嵌入",
+        "子块提供精确检索；返回更大的父块可保留阅读器需要的周围上下文",
+        "它避免分词",
+        "它使用更少的 GPU 周期"
+      ],
+      "correct": 1,
+      "explanation": "通过小子块检索以获得精度，然后扩展到父块以获得上下文。"
+    },
+    {
+      "stage": "check",
+      "question": "Anthropic 的 'contextual retrieval' 在索引前为每个块添加了什么？",
+      "options": [
+        "一个 LLM 生成的 50-100 词摘要，将块置于文档整体上下文中",
+        "随机噪声",
+        "POS 标签",
+        "语言代码"
+      ],
+      "correct": 0,
+      "explanation": "Contextual retrieval 在每个块前添加 LLM 撰写的定位摘要；召回提升约 35-50%。"
+    },
+    {
+      "stage": "check",
+      "question": "哪项 2026 年发现与关于分块重叠的传统观点相矛盾？",
+      "options": [
+        "重叠应为 50%",
+        "重叠是 BM25 必需的",
+        "重叠只对 contextual retrieval 有帮助",
+        "2026 年的实证基准显示，重叠通常没有可测量的收益，同时使索引成本翻倍"
+      ],
+      "correct": 3,
+      "explanation": "新研究（SPLADE+Mistral on NQ）显示分块重叠很少有帮助，并会膨胀索引大小。"
+    },
+    {
+      "stage": "post",
+      "question": "NVIDIA 的 2026 年基准将哪种分块大小与事实型查询关联？",
+      "options": [
+        "大约 256-512 token",
+        "2048-4096 token",
+        "8192 token",
+        "64 token"
+      ],
+      "correct": 0,
+      "explanation": "事实型查询受益于 256-512 token 的较小分块，以集中答案信号。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么使用语义分块时设置最小 token 下限很重要？",
+      "options": [
+        "没有下限，语义分块可能产生 40 token 的微小片段，损害检索",
+        "BERT 要求",
+        "下限防止重叠",
+        "下限加速推理"
+      ],
+      "correct": 0,
+      "explanation": "语义分块器可能过度切分；强制执行最小尺寸可防止低信号片段。"
+    },
+    {
+      "stage": "post",
+      "question": "'Late chunking' 与传统分块有何不同？",
+      "options": [
+        "在检索后分块",
+        "先在 token 级别嵌入整个文档，然后将 token 嵌入池化为块向量，以保留跨块上下文",
+        "完全跳过分块",
+        "改用 BM25"
+      ],
+      "correct": 1,
+      "explanation": "Late chunking 先嵌入再池化，保留跨分块边界的上下文交互。"
+    }
+  ]
+}

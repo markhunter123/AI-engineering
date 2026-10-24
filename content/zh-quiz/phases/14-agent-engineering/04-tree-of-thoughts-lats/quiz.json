@@ -1,0 +1,90 @@
+{
+  "lesson": "04-tree-of-thoughts-lats",
+  "title": "Tree of Thoughts 与 LATS：审慎搜索",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么思维链（chain-of-thought）在 Game of 24 上表现挣扎？",
+      "options": [
+        "线性推理无法在早期步骤出错时回溯，导致后续错误被放大",
+        "CoT 需要 GPT-4 没有的计算器工具",
+        "模型无法做整数乘法",
+        "提示词太短"
+      ],
+      "correct": 0,
+      "explanation": "没有分支，早期错误的子表达式会污染后续推理；论文测得 CoT 只有 4%。"
+    },
+    {
+      "stage": "pre",
+      "question": "Tree of Thoughts 搜索中的节点是什么？",
+      "options": [
+        "在运行时注册的工具",
+        "微调期间的权重更新",
+        "模型生成的一个 token",
+        "一个连贯的中间步骤或思维，可扩展为 K 个可能的子节点"
+      ],
+      "correct": 3,
+      "explanation": "ToT 将推理视为树，每个节点是一个可扩展为 K 个子节点的中间思维。"
+    },
+    {
+      "stage": "check",
+      "question": "下列哪一项不是 LATS 为 LLM 列出的三种角色之一？",
+      "options": [
+        "在失败时撰写反思的 Self-reflector",
+        "在 rollout 之间更新模型权重的 Optimizer",
+        "为部分轨迹打分的 Value function",
+        "提出下一步动作的 Policy"
+      ],
+      "correct": 1,
+      "explanation": "LATS 是无梯度的；LLM 的三个角色是 policy、value 和 self-reflector，没有权重更新。"
+    },
+    {
+      "stage": "check",
+      "question": "本课列出的 MCTS 四个阶段是什么？",
+      "options": [
+        "Sample、Score、Sort、Submit",
+        "Plan、Execute、Reflect、Stop",
+        "Select、Expand、Simulate、Backpropagate",
+        "Search、Synthesize、Synthesize-Again、Stop"
+      ],
+      "correct": 2,
+      "explanation": "MCTS 每次迭代按 Select、Expand、Simulate、Backpropagate 进行。"
+    },
+    {
+      "stage": "check",
+      "question": "在 UCT 中，探索常数 c 的作用是什么？",
+      "options": [
+        "缩放价值估计 Q",
+        "设置最大树深度",
+        "控制 rollout 次数",
+        "将探索项 sqrt(ln N / n) 与利用项 Q 加权平衡"
+      ],
+      "correct": 3,
+      "explanation": "c 平衡利用（Q）与探索项；需按任务调参。"
+    },
+    {
+      "stage": "post",
+      "question": "相比单条轨迹，搜索在什么情况下反而有害？",
+      "options": [
+        "只要 token 便宜",
+        "任务是代码生成时",
+        "任务存在多个正确答案时",
+        "评估器有噪声且只有一个正确答案时，搜索会收敛到一个得分很高但错误的答案"
+      ],
+      "correct": 3,
+      "explanation": "嘈杂的价值函数加上单一正确答案，正是搜索过拟合到噪声的情况。"
+    },
+    {
+      "stage": "post",
+      "question": "对于 Game of 24，ToT 的 token 开销大概是 CoT 的多少倍？",
+      "options": [
+        "100 倍到 1000 倍",
+        "少于 CoT，因为有剪枝",
+        "约 2 倍",
+        "约 10 倍"
+      ],
+      "correct": 0,
+      "explanation": "本课引用 ToT 在 Game of 24 上的 token 成本是 CoT 的 100–1000 倍。"
+    }
+  ]
+}

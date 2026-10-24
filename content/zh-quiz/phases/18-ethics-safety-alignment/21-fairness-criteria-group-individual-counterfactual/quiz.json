@@ -1,0 +1,78 @@
+{
+  "lesson": "21-fairness-criteria-group-individual-counterfactual",
+  "title": "Fairness Criteria - Group, Individual, Counterfactual",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "以下哪项最符合群体 A=a 与 A=a' 的人口统计均等（demographic parity）定义？",
+      "options": [
+        "跨群体预测价值相等",
+        "跨群体真阳性率和假阳性率相等",
+        "接受率相等：P(Y=1 | A=a) = P(Y=1 | A=a')",
+        "跨群体 Lipschitz 常数相等"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Chouldechova / Kleinberg-Mullainathan-Raghavan 2017 的不可能性结果说明了什么？",
+      "options": [
+        "在基础率不平等的情况下，人口统计均等、机会均等和条件使用准确率相等无法同时成立",
+        "个体公平性对任何 DAG 都蕴含反事实公平性",
+        "反事实公平性蕴含人口统计均等",
+        "群体公平性总可以通过重加权实现"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Dwork et al. 2012 如何定义个体公平性？",
+      "options": [
+        "使用带敏感属性干预的因果 DAG",
+        "受保护群体之间准确率相等",
+        "相对于任务特定的相似性度量，决策映射满足 Lipschitz 条件，从而使相似个体获得相似决策",
+        "个体层面的人口统计均等"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "反事实公平性（Kusner et al. 2017）要求什么？",
+      "options": [
+        "所有群体的 Lipschitz 常数相等",
+        "仅需群体层面的统计量",
+        "无需因果假设",
+        "需要因果 DAG；当个体的敏感属性被反事实地改变时，决策结果保持不变"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么回溯反事实（backtracking counterfactuals，arXiv:2401.13935）对法律合规很重要？",
+      "options": [
+        "它们替代基于嵌入的偏见指标",
+        "它们消除了对任何因果模型的需求",
+        "它们证明不可能性定理是错误的",
+        "它们不直接干预受保护属性（这在法律上有争议），而是询问哪些实际特征的组合会产生反事实结果"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "ICLR Blogposts 2024 的哲学调和论点是什么？",
+      "options": [
+        "若存在显式因果图，满足某些群体公平性指标会蕴含反事实公平性，因此这两类方法之间的表面对立，部分源于将因果模型隐式化处理",
+        "群体公平性与反事实公平性互不相关",
+        "只有个体公平性具有正当性",
+        "不可能性定理可通过重加权解决"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

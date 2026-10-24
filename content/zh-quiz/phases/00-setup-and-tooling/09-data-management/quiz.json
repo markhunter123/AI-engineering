@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么在机器学习中划分独立的训练集、验证集和测试集很重要？",
+      "options": ["确保每个划分使用不同的文件格式", "使数据集更小以加快训练", "在多个 GPU 之间分布数据", "在未见过数据上评估模型性能并防止过拟合"],
+      "correct": 3,
+      "explanation": "训练集教模型学习，验证集在训练期间调整超参数，测试集提供对模型从未见过数据的最终无偏评估。"
+    },
+    {
+      "stage": "pre",
+      "question": "Hugging Face Hub 在 AI/ML 工作流中主要用于什么？",
+      "options": ["管理 Python 虚拟环境", "像 GitHub 一样对源代码进行版本控制", "在云端运行 GPU 训练任务", "托管和共享数据集、模型和 ML 制品"],
+      "correct": 3,
+      "explanation": "Hugging Face Hub 是一个用于托管和共享预训练模型、数据集和 ML 演示的平台。'datasets' 库提供了从它加载数据的标准方式。"
+    },
+    {
+      "stage": "post",
+      "question": "对于存储 ML 数据集，Parquet 格式相比 CSV 有什么优势？",
+      "options": ["Parquet 比 CSV 支持更多数据类型", "Parquet 文件可在任何文本编辑器中人类可读", "Parquet 使用列式存储，文件更小且读取更快", "Parquet 文件可在电子表格应用中编辑"],
+      "correct": 2,
+      "explanation": "Parquet 是一种列式二进制格式，比 CSV 压缩得更好，并能实现快速的列级读取。它是 ML 数据集的首选存储格式。"
+    },
+    {
+      "stage": "post",
+      "question": "使用 Hugging Face datasets 库加载数据集时，'streaming=True' 做什么？",
+      "options": ["将数据集转换为流媒体视频格式", "在 Hub 添加新数据时启用实时更新", "逐行加载数据，无需将完整数据集下载到磁盘", "使用并行连接更快下载数据集"],
+      "correct": 2,
+      "explanation": "流式模式创建一个 IterableDataset，按需获取行。无论数据集多大，内存使用量都保持不变，这对无法放入磁盘的数据集至关重要。"
+    },
+    {
+      "stage": "post",
+      "question": "什么时候应该使用 DVC（Data Version Control）而不是仅用 .gitignore 处理大文件？",
+      "options": ["当你需要在不同机器上用版本化数据复现精确实验时", "当你的项目中只有 CSV 文件时", "当你的数据集小于 1 MB 时", "当你独自进行个人项目时"],
+      "correct": 0,
+      "explanation": "DVC 用 git 中的小指针文件跟踪数据版本，同时将实际数据存储在远程存储（S3、GCS）中。它确保任何人都能用相同数据复现你的精确实验。"
+    }
+  ]
+}

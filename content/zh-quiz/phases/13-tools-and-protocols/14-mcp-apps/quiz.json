@@ -1,0 +1,78 @@
+{
+  "lesson": "14-mcp-apps",
+  "title": "MCP Apps on the Stateless Protocol",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "现代 MCP App 应将其 UI 资源绑定到工具的何处？",
+      "options": [
+        "仅在最终文本结果中",
+        "在独立的 HTTP GET 流中",
+        "在 MCP 会话 Cookie 中",
+        "在 tools/list 返回的工具定义中"
+      ],
+      "correct": 3,
+      "explanation": "工具定义上的嵌套 _meta.ui.resourceUri 让主机能在调用前预加载和预览 UI。"
+    },
+    {
+      "stage": "check",
+      "question": "2026-07-28 客户端如何宣告支持 MCP Apps？",
+      "options": [
+        "通过 notifications/initialized",
+        "通过 Mcp-Session-Id",
+        "在每次请求的 io.modelcontextprotocol/clientCapabilities.extensions 中",
+        "通过接受所有 ui:// 资源"
+      ],
+      "correct": 2,
+      "explanation": "扩展通过每请求客户端能力映射选择加入。"
+    },
+    {
+      "stage": "check",
+      "question": "ui/initialize 初始化什么？",
+      "options": [
+        "协议级服务器会话",
+        "OAuth 客户端注册",
+        "iframe 与主机之间的 Apps postMessage 桥",
+        "Streamable HTTP GET 通道"
+      ],
+      "correct": 2,
+      "explanation": "ui/initialize 属于 Apps 桥接方言，与已移除的 MCP 核心握手分离。"
+    },
+    {
+      "stage": "check",
+      "question": "对于与用户无关的打包 App，哪种资源响应最安全？",
+      "options": [
+        "无 resultType 和缓存策略",
+        "resultType complete、有界 ttlMs、public cacheScope 和默认拒绝的 CSP",
+        "在 HTML 中嵌入会话令牌",
+        "无限 ttlMs 和通配符 CSP 域"
+      ],
+      "correct": 1,
+      "explanation": "complete 结果、显式缓存提示和严格的 CSP 让网络策略和浏览器策略都可审查。"
+    },
+    {
+      "stage": "post",
+      "question": "主机收到一个 resources/read 请求体对应某个 URI，但 Mcp-Name 头部不同。应如何处理？",
+      "options": [
+        "同时打开两个资源",
+        "优先使用头部",
+        "优先使用请求体",
+        "返回 HTTP 400 和 JSON-RPC 错误 -32020"
+      ],
+      "correct": 3,
+      "explanation": "路由头部和请求体必须在评估版本支持或功能策略前匹配；传输层返回 HTTP 400 和 JSON-RPC 错误 -32020。"
+    },
+    {
+      "stage": "post",
+      "question": "对于不支持 MCP Apps 的主机，正确的降级方案是什么？",
+      "options": [
+        "将 HTML 作为可信主机壳层返回",
+        "让工具仍可用普通文本或结构化输出，并省略 UI 绑定",
+        "创建隐藏会话并重试",
+        "自动授予扩展"
+      ],
+      "correct": 1,
+      "explanation": "可选扩展不得让未协商它的客户端无法使用底层工具。"
+    }
+  ]
+}

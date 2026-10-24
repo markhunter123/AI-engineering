@@ -1,0 +1,90 @@
+{
+  "lesson": "17-personal-ai-tutor",
+  "title": "Capstone 17 — Personal AI Tutor (Adaptive, Multimodal, with Memory)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "当学习者直接索要答案时，Socratic tutor 策略会怎么做？",
+      "options": [
+        "切换到不同概念节点",
+        "记录请求并保持沉默",
+        "提出一个引导性问题，为学习者搭建通向答案的脚手架",
+        "立即给出答案并继续"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "课程图谱编码了哪种结构？",
+      "options": [
+        "仅最近学习的节点",
+        "主题的随机打乱",
+        "概念的有向图，带先修边，并关联 OER 内容",
+        "互不相关概念的扁平列表"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "学习者模型在每次交互后更新什么？",
+      "options": [
+        "课程图谱 schema",
+        "基础 LLM 的权重",
+        "每个概念的掌握概率，通过 Bayesian knowledge tracing 或类似变体",
+        "COPPA 保留策略"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "记忆如何在 episodic 和 semantic 存储之间划分？",
+      "options": [
+        "Episodic 给家长；semantic 给学习者",
+        "Episodic 保存每次交互；semantic 保存从 episodic 提升的压缩错误和偏好",
+        "Episodic 保存嵌入；semantic 保存原始音频",
+        "它们是同一份数据的副本"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪种约束塑造了 K-12 学习者的记忆保留？",
+      "options": [
+        "COPPA-aware 保留，定义窗口后自动删除，并允许家长访问",
+        "基于模型上下文长度的保留",
+        "永久保留，不可删除",
+        "仅 GDPR"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "用于 gate 交付物的 efficacy study 结构是什么？",
+      "options": [
+        "单个学习者的一次一小时会话",
+        "匿名互联网调查",
+        "30 秒 AB 测试",
+        "两周内的前测和后测，10 名学习者，与非自适应基线队列比较"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "导师向学习者暴露了哪些多模态输入路径？",
+      "options": [
+        "仅通过自定义 OCR 模型拍照",
+        "文本输入、通过 LiveKit + Whisper 的语音，以及通过 dots.ocr 或 PaliGemma 2 的照片数学",
+        "仅文本",
+        "仅语音，无文本或照片"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

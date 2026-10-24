@@ -1,0 +1,102 @@
+{
+  "lesson": "04-glove-fasttext-subword",
+  "title": "GloVe、FastText 与子词嵌入",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "GloVe 相对于 Word2Vec 的贡献是什么？",
+      "options": [
+        "更深的神经网络",
+        "子词 n-gram 嵌入",
+        "直接对词-词共现矩阵进行因式分解，并加入加权损失",
+        "字节级分词"
+      ],
+      "correct": 2,
+      "explanation": "GloVe 通过精心加权的长损失对全局共现矩阵进行因式分解。"
+    },
+    {
+      "stage": "pre",
+      "question": "FastText 解决了 Word2Vec 和 GloVe 没有解决的什么问题？",
+      "options": [
+        "降低训练成本",
+        "多语言迁移",
+        "一词多义消歧",
+        "通过组合字符 n-gram 为未登录词生成向量"
+      ],
+      "correct": 3,
+      "explanation": "FastText 从子词 n-gram 组合出词向量，因此 OOV 词仍能获得合理向量。"
+    },
+    {
+      "stage": "check",
+      "question": "在 GloVe 中，加权函数 f(x) = (x/x_max)^alpha 起什么作用？",
+      "options": [
+        "选择负样本",
+        "将向量归一化为单位长度",
+        "随机初始化权重",
+        "降低极频繁共现词对的权重，避免其主导损失"
+      ],
+      "correct": 3,
+      "explanation": "加权防止 (the, and) 这类 ubiquitous 共现主导训练。"
+    },
+    {
+      "stage": "check",
+      "question": "BPE 的合并步骤如何选择下一个合并对？",
+      "options": [
+        "随机选择一对",
+        "按字典序选择第一对",
+        "在整个语料库中选择最频繁的相邻 token 对",
+        "选择 IDF 最高的一对"
+      ],
+      "correct": 2,
+      "explanation": "BPE 迭代合并最频繁的相邻 token 对。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 GPT-2 使用字节级 BPE？",
+      "options": [
+        "256 字节的基础词汇表可以覆盖任何输入，彻底消除 OOV",
+        "字节比字符训练更快",
+        "字节隐式保留大小写",
+        "字节 BPE 跳过合并训练"
+      ],
+      "correct": 0,
+      "explanation": "从 256 字节开始意味着每个 UTF-8 字符串都能被分词；没有任何 OOV。"
+    },
+    {
+      "stage": "post",
+      "question": "在微调预训练 transformer 时，应该使用哪个分词器？",
+      "options": [
+        "总是字节级 BPE",
+        "总是 SentencePiece",
+        "词汇表最大的那个",
+        "模型自带的那个分词器；不匹配会破坏嵌入"
+      ],
+      "correct": 3,
+      "explanation": "分词器与模型不匹配会悄悄损坏输入；总是将配套分词器与其模型一起使用。"
+    },
+    {
+      "stage": "post",
+      "question": "什么时候你会选择 FastText 而非 GloVe 的预训练词向量？",
+      "options": [
+        "当你需要 50 维模型时",
+        "当延迟最紧张时",
+        "当语料非常小时",
+        "对于形态丰富的语言或经常出现新造词和拼写错误的领域"
+      ],
+      "correct": 3,
+      "explanation": "FastText 的子词组合能够处理 GloVe 无法应对的屈折变化、新造词和拼写错误。"
+    },
+    {
+      "stage": "post",
+      "question": "WordPiece、BPE 和 SentencePiece 的词汇表基本单元是什么？",
+      "options": [
+        "句子",
+        "完整词",
+        "段落",
+        "词级以下的子词片段（字符、n-gram 或学习到的合并）"
+      ],
+      "correct": 3,
+      "explanation": "三者都是子词分词器；它们的区别在于合并或片段的学习方式，而非是否子词。"
+    }
+  ]
+}

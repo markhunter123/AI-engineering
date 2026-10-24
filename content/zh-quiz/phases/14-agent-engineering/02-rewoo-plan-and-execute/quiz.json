@@ -1,0 +1,90 @@
+{
+  "lesson": "02-rewoo-plan-and-execute",
+  "title": "ReWOO 与 Plan-and-Execute：解耦规划",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么 ReAct 的提示词长度会随深度平方增长？",
+      "options": [
+        "每一步都携带完整的前文上下文，包括之前每一次思考和观察",
+        "模型在每一步都重新对自身进行 tokenize",
+        "每个调用都重复工具模式",
+        "提供方按字节而非按 token 计费"
+      ],
+      "correct": 0,
+      "explanation": "ReAct 在每一步都重新包含之前的思考和观察，导致总提示词长度随深度平方增长。"
+    },
+    {
+      "stage": "pre",
+      "question": "定义 ReWOO 的三个角色分工是什么？",
+      "options": [
+        "Planner、Workers、Solver",
+        "Reader、Writer、Reviewer",
+        "Generator、Critic、Optimizer",
+        "Actor、Evaluator、Reflector"
+      ],
+      "correct": 0,
+      "explanation": "ReWOO 将 Planner（生成 DAG）、Workers（获取证据）和 Solver（组合最终答案）分离。"
+    },
+    {
+      "stage": "check",
+      "question": "论文报告的 ReWOO 与 ReAct 在 HotpotQA 上的 headline 数据是什么？",
+      "options": [
+        "10 倍更少 token，准确率 -2",
+        "约 5 倍更少 token，绝对准确率 +4",
+        "相同 token，准确率 +1",
+        "约 2 倍更多 token，准确率 +10"
+      ],
+      "correct": 1,
+      "explanation": "ReWOO 在 HotpotQA 上相比 ReAct 报告了约 5 倍 token 减少和绝对准确率 +4。"
+    },
+    {
+      "stage": "check",
+      "question": "ReWOO 计划节点中的 #E1 这类占位符是什么意思？",
+      "options": [
+        "在调度时用上游 Worker 节点输出替换的引用",
+        "规划器版本标识符",
+        "Worker 1 返回的错误码",
+        "证据获取的重试计数器"
+      ],
+      "correct": 0,
+      "explanation": "计划节点使用 #E1、#E2 等证据引用，执行器会将其替换为上游 Worker 的输出。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 ReWOO 比 ReAct 更能局部化故障？",
+      "options": [
+        "Planner 在每次出错后都会重新生成一个全新的 DAG",
+        "Worker 在任意错误时都会崩溃整个运行",
+        "ReWOO 会对每个失败的调用重试最多十次",
+        "Worker 中的错误会变成 Solver 可见的字符串，同时保留原始计划，因此降级是按节点而非按步骤的"
+      ],
+      "correct": 3,
+      "explanation": "按节点失败并保留原始计划，使 Solver 能够优雅降级，而不是在错误中继续推理。"
+    },
+    {
+      "stage": "post",
+      "question": "哪种任务形态最适合使用 Plan-and-Act，而非普通 ReWOO？",
+      "options": [
+        "纯算术问题",
+        "40 步的网页或移动端导航轨迹",
+        "两步事实查询",
+        "单轮分类"
+      ],
+      "correct": 1,
+      "explanation": "Plan-and-Act 专为长程（超过 30 步）的网页和移动端智能体设计，单条 ReAct 轨迹会丧失连贯性。"
+    },
+    {
+      "stage": "post",
+      "question": "ReWOO 的规划器蒸馏结果对生产智能体意味着什么？",
+      "options": [
+        "每一步都必须使用前沿模型",
+        "小型规划器（约 7B）可以媲美大型教师模型，因为规划器从不观察中间结果",
+        "低于 7B 参数后规划质量会下降",
+        "蒸馏需要基于梯度的强化学习数据"
+      ],
+      "correct": 1,
+      "explanation": "由于规划器不观察中间结果，大型教师模型的规划轨迹可以干净地迁移到经过微调的小型规划器。"
+    }
+  ]
+}

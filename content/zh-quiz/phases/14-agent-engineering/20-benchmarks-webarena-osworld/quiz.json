@@ -1,0 +1,90 @@
+{
+  "lesson": "20-benchmarks-webarena-osworld",
+  "title": "基准测试：WebArena 与 OSWorld",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "WebArena 为什么自己托管四个目标应用？",
+      "options": [
+        "避免 TLS",
+        "固定可复现版本，使评估基于执行而非不稳定",
+        "省钱",
+        "在 GPU 上运行"
+      ],
+      "correct": 1,
+      "explanation": "固定的自托管应用使基于执行的评估可靠且可跨时间比较。"
+    },
+    {
+      "stage": "pre",
+      "question": "OSWorld 为什么使用真实操作系统截图而非无障碍 API？",
+      "options": [
+        "截图成本更低",
+        "无障碍 API 泄漏 PII",
+        "无障碍 API 太快",
+        "截图迫使智能体在 1920×1080 中进行真实 GUI 定位，匹配生产约束"
+      ],
+      "correct": 3,
+      "explanation": "基于截图的评估强制像素到元素的定位，这是实际生产约束。"
+    },
+    {
+      "stage": "check",
+      "question": "OSWorld 揭示的两种主要失败模式是什么？",
+      "options": [
+        "延迟和带宽",
+        "幻觉和拒绝",
+        "嵌入漂移和 token 泄漏",
+        "GUI 定位和操作知识"
+      ],
+      "correct": 3,
+      "explanation": "定位（像素到元素）和操作知识（菜单、快捷键）是 headline 阻塞点。"
+    },
+    {
+      "stage": "check",
+      "question": "OSWorld-Human 在基础基准之上增加了什么？",
+      "options": [
+        "人工整理的黄金动作轨迹，揭示 1.4–2.7 倍的智能体步骤效率差距",
+        "更大的屏幕分辨率",
+        "更多任务",
+        "新操作系统"
+      ],
+      "correct": 0,
+      "explanation": "黄金轨迹使轨迹效率可衡量，而不仅仅是成功率。"
+    },
+    {
+      "stage": "check",
+      "question": "本课引用的 WebArena 发布时数字是什么？",
+      "options": [
+        "最佳智能体 50%，人类 50%",
+        "最佳智能体全面 0%",
+        "最佳智能体 99%，人类 100%",
+        "最佳 GPT-4 智能体 14.41% 成功率 vs 人类 78.24%"
+      ],
+      "correct": 3,
+      "explanation": "14.41% vs 78.24% 的差距是 WebArena 发布时的数字。"
+    },
+    {
+      "stage": "post",
+      "question": "当智能体使用 DOM 或无障碍 API 时，仅基于截图的评估会有什么风险？",
+      "options": [
+        "没有变化",
+        "测试会 trivially 通过",
+        "超出速率限制",
+        "你会错过 OSWorld 旨在衡量的定位挑战"
+      ],
+      "correct": 3,
+      "explanation": "在基于截图的基准上评估使用无障碍 API 的智能体会跳过定位测试。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么忽略轨迹长度是一种基准测试失败？",
+      "options": [
+        "长度是唯一重要指标",
+        "它会隐藏成本和低效，而这些是单独成功率无法发现的（OSWorld-Human 揭示的 1.4–2.7 倍差距）",
+        "轨迹不可衡量",
+        "轨迹长度总是与黄金轨迹一致"
+      ],
+      "correct": 1,
+      "explanation": "两个 60% 成功率的智能体可能在步骤数上相差 2–3 倍；只有测量轨迹长度才能看到成本和效率。"
+    }
+  ]
+}

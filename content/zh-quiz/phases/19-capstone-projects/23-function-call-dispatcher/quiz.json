@@ -1,0 +1,90 @@
+{
+  "lesson": "23-function-call-dispatcher",
+  "title": "Function Call Dispatcher",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么非幂等工具的超时默认不重试？",
+      "options": [
+        "因为 dispatcher 无法衡量非幂等调用",
+        "因为非幂等 handler 运行更快",
+        "因为幂等键很慢",
+        "因为工具可能已经部分提交；重试可能重复效果"
+      ],
+      "correct": 3,
+      "explanation": "在 4.9 秒超时的 db.write 上重试可能产生第二次写入。除非 handler 声明该调用可安全重复，否则 dispatcher 拒绝重试。"
+    },
+    {
+      "stage": "pre",
+      "question": "idempotency-key 去重防范什么？",
+      "options": [
+        "Schema 验证错误",
+        "重试在原始调用仍在进行时触发",
+        "进程重启",
+        "慢网络"
+      ],
+      "correct": 1,
+      "explanation": "没有去重，5 秒时的重试会与仍在进行的慢速原始调用竞争。缓存将两者合并为一次 handler 调用。"
+    },
+    {
+      "stage": "check",
+      "question": "本 dispatcher 中哪些错误类型符合重试条件？",
+      "options": [
+        "schema 和 not_found",
+        "timeout（如果是幂等的）和 transient",
+        "internal 和 budget_exceeded",
+        "全部"
+      ],
+      "correct": 1,
+      "explanation": "Schema 和 not_found 是确定性的。Internal 掩盖了未知的 handler bug。Budget exceeded 是一种让出。只有幂等工具上的 timeout 和显式 TransientError 才会重试。"
+    },
+    {
+      "stage": "check",
+      "question": "_run_with_retries 周围的信号量保护什么？",
+      "options": [
+        "Handler 不被自身伤害",
+        "后端不被 gather() 扇出的过多并发调用压垮",
+        "Validator",
+        "重试计数器"
+      ],
+      "correct": 1,
+      "explanation": "没有限制时，40 个调用的 gather 会打开 40 个并发分派。信号量限制了这波流量。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么幂等键由调用者派生，而不是由 dispatcher 派生？",
+      "options": [
+        "因为缓存不能存储字符串",
+        "因为 registry 不会有该键",
+        "因为仅从 args 派生，两个语义不同的调用在恰好共享 args 时会冲突",
+        "因为 Python hash 不稳定"
+      ],
+      "correct": 2,
+      "explanation": "调用者知道 step id、planner 意图、用户。仅靠 args 不足以安全去重。"
+    },
+    {
+      "stage": "post",
+      "question": "分派时 schema 失败映射到哪个 JSON-RPC 错误码？",
+      "options": [
+        "-32602",
+        "-32603",
+        "-32700",
+        "-32601"
+      ],
+      "correct": 0,
+      "explanation": "-32602 Invalid params。dispatcher 在 handler 运行前返回它。"
+    },
+    {
+      "stage": "post",
+      "question": "在幂等工具上达到 max_attempts 且都是 timeout 时，返回什么？",
+      "options": [
+        "DispatchOk 但无 result",
+        "DispatchError，kind=timeout 且 attempts==max_attempts",
+        "抛出异常",
+        "DispatchError，kind=internal"
+      ],
+      "correct": 1,
+      "explanation": "dispatcher 返回类型化错误信封。kind 反映最后的失败模式，attempts 反映尝试次数。"
+    }
+  ]
+}

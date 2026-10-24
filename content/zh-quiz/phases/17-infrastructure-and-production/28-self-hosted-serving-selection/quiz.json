@@ -1,0 +1,78 @@
+{
+  "lesson": "28-self-hosted-serving-selection",
+  "title": "Self-Hosted Serving Selection — Matching Engine to Hardware and Scale",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本课选择的开发笔记本上一键默认引擎是什么？",
+      "options": [
+        "llama.cpp",
+        "vLLM",
+        "TGI",
+        "Ollama"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "2025 年的什么事件使新项目不再默认选择 TGI？",
+      "options": [
+        "TGI 于 2025 年 12 月 11 日进入维护模式——此后仅修复 bug",
+        "TGI 放弃 CUDA 支持",
+        "TGI 涨价",
+        "TGI 被 Anthropic 收购"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪种硬件约束会强制选择 llama.cpp 并排除 vLLM / TRT-LLM？",
+      "options": [
+        "仅 CPU（无加速器）",
+        "AMD MI300X",
+        "NVIDIA Hopper",
+        "Apple M4"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "借助 RadixAttention，本课将哪个引擎定位为适合 agentic 多轮和重前缀负载？",
+      "options": [
+        "SGLang",
+        "Ollama",
+        "TGI",
+        "llama.cpp"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "在同一 GGUF 或 HF 权重上，本课推荐的开发到生产流水线是什么？",
+      "options": [
+        "全流程使用 TGI",
+        "开发和生产都用 Ollama",
+        "开发用 Ollama，预演用 llama.cpp，生产用 vLLM（重前缀场景用 SGLang）",
+        "全流程仅 TRT-LLM"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么不建议在共享生产环境中使用 Ollama？",
+      "options": [
+        "它无法加载 GGUF",
+        "它只能在 Windows 上运行",
+        "它是闭源的",
+        "Go HTTP 序列化带来开销，并发管理比 vLLM 简单，且 OpenTelemetry 支持落后"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

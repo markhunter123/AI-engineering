@@ -1,0 +1,90 @@
+{
+  "lesson": "25-multi-agent-debate",
+  "title": "多智能体辩论与协作",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Society of Minds 协议让 N 个模型实例做什么？",
+      "options": [
+        "独立提出答案，然后经过 R 轮阅读并批评彼此的提案直到收敛",
+        "在共享数据集上训练",
+        "各自运行不同基准",
+        "协商价格"
+      ],
+      "correct": 0,
+      "explanation": "N 个提出者、R 轮、交叉批评、收敛是 Du 等人辩论的 canonical 形式。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么跨模型辩论（例如 ChatGPT + Bard）优于单模型辩论？",
+      "options": [
+        "更便宜",
+        "不同厂商协商价格",
+        "厂商共享权重",
+        "异质性减少了共同盲点，使交叉批评能捕获更多错误"
+      ],
+      "correct": 3,
+      "explanation": "混合模型带来独立的错误分布，提高辩论上限。"
+    },
+    {
+      "stage": "check",
+      "question": "稀疏拓扑相比全连接网格在 token 成本上的主要优势是什么？",
+      "options": [
+        "每个辩论者只读取部分同伴，批评操作数下降，而准确率通常相当",
+        "它去掉了 LLM",
+        "稀疏拓扑使轮数翻倍",
+        "稀疏拓扑不需要模型"
+      ],
+      "correct": 0,
+      "explanation": "稀疏（星型、环形、hub-and-spoke）减少批评操作，在许多任务上不损失准确率。"
+    },
+    {
+      "stage": "check",
+      "question": "本课列出的辩论有害场景是哪一个？",
+      "options": [
+        "简单事实查询，因为一次查询比五次辩论更便宜",
+        "开放式推理",
+        "棋步合法性",
+        "传记生成"
+      ],
+      "correct": 0,
+      "explanation": "对延迟和成本敏感的简单查询不会从 N × R 辩论中受益。"
+    },
+    {
+      "stage": "check",
+      "question": "什么是 convergence collapse？",
+      "options": [
+        "进程崩溃",
+        "TLS 握手失败",
+        "网络中断",
+        "所有智能体收敛到第一个错误答案；应通过强制不同意见轮次来缓解"
+      ],
+      "correct": 3,
+      "explanation": "通过在首轮强制不同提案来缓解对错误答案的早期一致。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么提示词同质化会削弱辩论？",
+      "options": [
+        "它违反 Apache 2.0",
+        "它绕过 supervisor",
+        "相同提示词产生几乎相同的答案，消除了交叉批评信号",
+        "它使用太多 token"
+      ],
+      "correct": 2,
+      "explanation": "多样化提示词（最好配合多样化模型）保持提案分布宽广。"
+    },
+    {
+      "stage": "post",
+      "question": "本课认为哪种生产模式是辩论的变体？",
+      "options": [
+        "纯单次 RAG",
+        "向量索引",
+        "Anthropic 的 orchestrator-workers 加综合步骤",
+        "仅 cron 调度"
+      ],
+      "correct": 2,
+      "explanation": "Orchestrator-workers 加综合是生产中辩论形状的模式。"
+    }
+  ]
+}

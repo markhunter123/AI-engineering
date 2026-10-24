@@ -1,0 +1,78 @@
+{
+  "lesson": "36-web-corpus-cleaning-pipeline",
+  "title": "Web Corpus Cleaning: Filtering, Deduplication, and Mixing",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么不能直接把原始 Common Crawl 输入到 LLM 预训练中？",
+      "options": [
+        "它主要由正式、高质量的学术文章组成。",
+        "大多数文档是模板、垃圾信息、重复内容或低质量文本。",
+        "它已经被分词，无法再分词。",
+        "它只有英语和少数其他语言。"
+      ],
+      "correct": 1,
+      "explanation": "原始网页爬取数据充斥着导航菜单、Cookie 横幅、SEO 垃圾信息、重复内容和低质量页面。必须进行质量过滤才能提取可用的文本。"
+    },
+    {
+      "stage": "check",
+      "question": "Gopher 风格的规则中，哪一条专门用于捕获关键词列表和标识符堆？",
+      "options": [
+        "最小文档长度规则",
+        "检查冠词、介词和代词的规则",
+        "拒绝以省略号结尾的文档的规则",
+        "计算单词平均长度的规则"
+      ],
+      "correct": 1,
+      "explanation": "停用词比例低意味着文档缺少自然语言的功能词，这是关键词堆砌和标识符堆的典型特征。"
+    },
+    {
+      "stage": "check",
+      "question": "MinHash LSH 使用 b 个 band 和每个 band r 行时，候选对的概率如何随 Jaccard 相似度 s 变化？",
+      "options": [
+        "它保持恒定，因为 LSH 与相似度无关。",
+        "它下降，因为相似度越高意味着碰撞越少。",
+        "它遵循公式 P(candidate) = 1 - (1 - s^r)^b。",
+        "对于任何正的相似度，它都精确等于 1.0。"
+      ],
+      "correct": 2,
+      "explanation": "两个文档共享至少一个 band 的概率是 1 - (1 - s^r)^b，该概率随相似度急剧上升。"
+    },
+    {
+      "stage": "check",
+      "question": "在基于 temperature 的源混合中，p_i ∝ s_i^(1/T)，当 T 低于 1.0 时会发生什么？",
+      "options": [
+        "它使混合趋向各源之间的均等比例。",
+        "它使混合趋向文档数量最多的源。",
+        "它移除 temperature 缩放，对每个源均匀采样。",
+        "它只影响代码源，不影响网页数据。"
+      ],
+      "correct": 1,
+      "explanation": "Temperature 低于 1.0 时，指数 1/T 大于 1，会放大最大源相对于较小源的权重。"
+    },
+    {
+      "stage": "post",
+      "question": "你用 T=0.5 和 T=2.0 运行混合器，却得到了完全相同的源数量。最可能的原因是什么？",
+      "options": [
+        "MinHash 签名在多次运行之间是确定性的。",
+        "请求的总数超过了每个源可用的文档数量。",
+        "规则过滤器拒绝了代码源的所有文档。",
+        "LSH 去重阈值设置得太高。"
+      ],
+      "correct": 1,
+      "explanation": "当请求总数超过每个源的可用池大小时，混合器会将每个源限制在其自身大小以内，因此不同 temperature 会产生相同的数量。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么对于网页规模的预训练，近似近重复检测比精确去重更重要？",
+      "options": [
+        "精确去重比近似方法需要更多内存。",
+        "带有不同广告的近重复内容会浪费计算并导致记忆。",
+        "Common Crawl 条款不允许精确去重。",
+        "近重复检测总是会增加语料规模。"
+      ],
+      "correct": 1,
+      "explanation": "同一篇文章被不同的模板包装后字节级不同，但内容完全相同。精确哈希会漏掉这些；MinHash + LSH 能捕获它们。"
+    }
+  ]
+}

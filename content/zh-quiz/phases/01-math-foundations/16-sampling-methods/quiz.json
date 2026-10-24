@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "温度小于 1.0 对语言模型输出分布有什么影响？",
+      "options": ["除最高概率 token 外移除所有 token", "对输出没有影响", "使分布更均匀（更随机）", "使分布更尖锐，最高概率 token 更可能出现"],
+      "correct": 3,
+      "explanation": "温度小于 1.0 时，logit 除以一个小于 1 的数，放大了 logit 之间的差距。经过 softmax 后，最高概率 token 获得更大份额。温度趋近 0 时变为贪心（argmax）解码。"
+    },
+    {
+      "stage": "pre",
+      "question": "top-k 与 top-p（核）采样的关键区别是什么？",
+      "options": ["Top-k 比 top-p 更快", "Top-k 固定保留 k 个 token；top-p 根据累计概率自适应保留可变数量", "Top-p 只在温度为 1.0 时有效", "Top-k 作用于 logit，top-p 作用于概率"],
+      "correct": 1,
+      "explanation": "Top-k 总是保留恰好 k 个 token，无论概率分布如何。Top-p 自适应地保留累计概率超过 p 的最小 token 集合。模型置信度高时 top-p 保留较少 token，不确定时保留较多。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么不能对标准采样操作 z ~ N(mu, sigma^2) 进行反向传播？",
+      "options": ["采样操作是非确定性的，对 mu 和 sigma 没有定义良好的导数", "PyTorch 不支持正态分布", "正态分布没有梯度", "梯度总是恰好为零"],
+      "correct": 0,
+      "explanation": "采样引入随机不连续性——无法计算随机样本对 mu 和 sigma 的导数。重参数化技巧通过 z = mu + sigma * epsilon（其中 epsilon ~ N(0,1)）解决这一问题，使 z 成为 mu 和 sigma 的确定性可微函数。"
+    },
+    {
+      "stage": "post",
+      "question": "在 Metropolis-Hastings MCMC 中，如果提议分布的标准差设置得过大，会发生什么？",
+      "options": ["链收敛更快，因为步长更大", "大多数提议落入低概率区域并被拒绝，因此链几乎不动", "预烧期变为零", "平稳分布变为均匀分布"],
+      "correct": 1,
+      "explanation": "当提议标准差很大时，提议点远离当前位置，很可能落入低概率区域。这些点被拒绝，导致链卡在当前位置。对于高维高斯提议，最优接受率约为 23%。"
+    },
+    {
+      "stage": "post",
+      "question": "在拒绝采样中，随着目标分布维度的增加，接受率会如何变化？",
+      "options": ["呈指数下降，因为大部分提议体积都会被拒绝", "无论维度如何都保持不变", "因为可接受的维度更多而增加", "在所有情况下都趋近 50%"],
+      "correct": 0,
+      "explanation": "在高维空间中，提议分布与目标分布重叠的体积呈指数级缩小。边界 M 增大，接受率（1/M）呈指数下降。这就是拒绝采样的维度灾难。"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+[
+  {
+    "id": "pipeline-pre-1",
+    "stage": "pre",
+    "question": "在机器学习流程中，什么是数据泄漏（data leakage）？",
+    "options": [
+      "编码期间特征被删除",
+      "模型处理数据太慢",
+      "来自测试集或未来数据的信息污染了训练过程",
+      "预处理期间数据被意外删除"
+    ],
+    "correct": 2,
+    "explanation": "数据泄漏发生在训练时使用了预测时无法获得的信息。例如：在整个数据集（包括测试数据）上计算缩放器的均值/标准差。"
+  },
+  {
+    "id": "pipeline-pre-2",
+    "stage": "pre",
+    "question": "为什么在划分训练集/测试集之前先在整个数据集上拟合缩放器被认为是泄漏？",
+    "options": [
+      "缩放器的统计量（均值、标准差）包含测试数据，因此模型在训练期间间接看到了测试信息",
+      "缩放会改变数据分布",
+      "缩放应该只在测试集上进行",
+      "在大数据集上拟合缩放器耗时太长"
+    ],
+    "correct": 0,
+    "explanation": "当缩放器在所有数据上拟合时，其均值和标准差编码了测试样本的信息。训练特征随后使用测试统计量进行平移，将未来信息泄漏到训练中。"
+  },
+  {
+    "id": "pipeline-post-1",
+    "stage": "post",
+    "question": "在 sklearn 中，对流程步骤调用 fit_transform 和 transform 有什么区别？",
+    "options": [
+      "它们完全相同——都会拟合并转换",
+      "fit_transform 从数据中学习参数并应用转换；transform 只应用已学习好的参数",
+      "transform 用于训练数据；fit_transform 用于测试数据",
+      "fit_transform 更慢但更准确"
+    ],
+    "correct": 1,
+    "explanation": "fit_transform 计算数据的统计量（例如均值、标准差）并同时转换。transform 应用已学习好的统计量而不重新计算。在测试数据上必须使用 transform 以避免泄漏。"
+  },
+  {
+    "id": "pipeline-post-2",
+    "stage": "post",
+    "question": "为什么 ColumnTransformer 对真实世界数据集是必需的？",
+    "options": [
+      "它让流程在多个 CPU 上并行运行",
+      "它把所有列转换为相同的数据类型",
+      "它在同一个流程中对数值列和类别列应用不同的预处理步骤",
+      "它自动删除包含缺失值的列"
+    ],
+    "correct": 2,
+    "explanation": "真实数据集有混合类型。数值列需要缩放，类别列需要编码。ColumnTransformer 在单个流程中将每类列路由到相应的转换器。"
+  },
+  {
+    "id": "pipeline-post-3",
+    "stage": "post",
+    "question": "生产模型遇到一个训练期间从未见过的类别值（'new_category'）。流程应该如何处理？",
+    "options": [
+      "将未知类别转换为数字零",
+      "优雅地处理未知类别，例如使用“unknown”桶，或在目标编码时使用全局均值",
+      "完全忽略该行并不返回预测",
+      "从头开始重新训练整个模型"
+    ],
+    "correct": 1,
+    "explanation": "健壮的流程会预料到生产环境中出现未见过的类别。解决方案包括独热编码使用“unknown”回退，或目标编码默认使用全局均值。"
+  }
+]

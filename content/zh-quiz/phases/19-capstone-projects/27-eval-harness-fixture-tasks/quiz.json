@@ -1,0 +1,78 @@
+{
+  "lesson": "phase-19/27-eval-harness-fixture-tasks",
+  "title": "Eval Harness with Fixture Tasks",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "学前问题：一个好的智能体评估 verifier 最需要什么性质？",
+      "options": [
+        "跨运行确定性。",
+        "毫秒级速度。",
+        "判断的自然语言解释。",
+        "覆盖候选代码的每一行。"
+      ],
+      "correct": 0,
+      "explanation": "确定性让回归可被检测。非确定性 verifier 会让每次变红都变成抛硬币。"
+    },
+    {
+      "stage": "check",
+      "question": "候选在单个任务上 5 个样本中通过 3 个。本课的 pass@5 公式返回什么值（保留两位小数）？",
+      "options": [
+        "0.75",
+        "1.00",
+        "0.99",
+        "0.60"
+      ],
+      "correct": 2,
+      "explanation": "pass@k = 1 - (1 - p)^k = 1 - (1 - 0.6)^5 = 1 - 0.4^5 = 1 - 0.01024 = 0.98976，四舍五入为 0.99。原始每样本率（0.6）是选项 (a) 的值，但公式会在 k 个样本上放大它。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么报告中同时包含 pass@1 和 pass@k？",
+      "options": [
+        "pass@1 是 verifier registry 支持的版本；pass@k 留给未来的 verifier。",
+        "pass@k 可能掩盖一个只能在多次尝试中答对一次的模型，所以 pass@1 将结果锚定到首次尝试质量。",
+        "pass@1 是用户在 dashboard 中看到的值；pass@k 用于内部调试。",
+        "k > 1 时 pass@k 和 pass@1 在数学上相同。"
+      ],
+      "correct": 1,
+      "explanation": "pass@k 会让多次尝试中只有一次答对的模型看起来很强；pass@1 是首次尝试底线。同时报告两者可防止过度宣称。"
+    },
+    {
+      "stage": "check",
+      "question": "harness 在每次采样前调用 _prepare_scratch。为什么这对 pass@k > 1 很重要？",
+      "options": [
+        "确保每个样本从有 bug 的初始设置开始，而不是上一个样本的输出。",
+        "避免共享临时目录上的竞争条件。",
+        "只对 shell verifier  relevant。",
+        "纯粹是性能优化。"
+      ],
+      "correct": 0,
+      "explanation": "没有全新 scratch，第 N+1 个样本会从第 N 个样本的输出开始。harness 会测量“第二次尝试清理”而非首次尝试成功。"
+    },
+    {
+      "stage": "post",
+      "question": "你新增一个 verifier 'pytest_passes'，在 scratch 目录运行 pytest。应该基于哪个现有 verifier？",
+      "options": [
+        "无法将 pytest 表达为 verifier。",
+        "shell_exit_zero，因为 pytest 通过退出码 0 表示通过。",
+        "file_equals，因为 pytest 会写结果文件。",
+        "regex_match，因为 pytest 输出包含 'passed' 一词。"
+      ],
+      "correct": 1,
+      "explanation": "pytest 退出 0 表示通过，非零表示失败。shell_exit_zero 是正确的原语。生产接线会通过第 26 课的 sandbox 路由调用。"
+    },
+    {
+      "stage": "post",
+      "question": "审查者问：“这是模型还是 harness 的回归？”哪个产物能回答？",
+      "options": [
+        "每个任务、每个样本的 SampleResult 加 verifier detail 消息。",
+        "fixture JSON 文件。",
+        "智能体的思维链 transcript。",
+        "verifier registry 源代码。"
+      ],
+      "correct": 0,
+      "explanation": "每个样本的延迟、verifier detail 和通过/失败可用于分类：相同 fixture、不同判决，说明模型变了；相同判决但延迟不同，说明其他因素变了。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "59-vit-transformer",
+  "title": "Vision Transformer Encoder",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么标准 ViT 块使用 Pre-LayerNorm 而非 Post-LayerNorm？",
+      "options": [
+        "Pre-LN 更快",
+        "Post-LN 使用更多内存",
+        "Pre-LN 在深层无需学习率 warmup 即可稳定训练，而 Post-LN 在约 6 层后会发散",
+        "Post-LN 受专利保护"
+      ],
+      "correct": 2,
+      "explanation": "Pre-LN 对每个子层的输入进行归一化，使梯度范数随深度增长保持有界。"
+    },
+    {
+      "stage": "pre",
+      "question": "当 hidden=768、heads=12 时，每个头的维度是多少，为什么重要？",
+      "options": [
+        "12，这样每个头可以在小 GPU 上运行",
+        "96，由 ResNet-50 决定",
+        "768，因为所有头共享投影",
+        "64，它控制每个注意力图的分辨率，并允许十二个头独立并行 attending"
+      ],
+      "correct": 3,
+      "explanation": "head_dim = hidden / heads = 64。每个头将词元投影到自己的 64 维 q/k/v 并计算自己的注意力图。"
+    },
+    {
+      "stage": "check",
+      "question": "ViT 编码器需要因果注意力掩码吗？",
+      "options": [
+        "只在训练时需要",
+        "不需要：编码器是双向的，每个词元都可以 attending 到同一序列中的任何其他词元",
+        "需要，像 GPT 解码器一样",
+        "只对 CLS 行需要"
+      ],
+      "correct": 1,
+      "explanation": "视觉编码器是双向的。因果掩码出现在后面，当文本解码器消费交叉注意力输出时。"
+    },
+    {
+      "stage": "check",
+      "question": "经过全部 12 个块后，CLS token 的最终隐状态代表什么？",
+      "options": [
+        "对整个图像的学习向量摘要，下游头将其投影为分类 logits 或对比嵌入",
+        "只有最后一个 patch",
+        "随机噪声",
+        "输入嵌入的副本"
+      ],
+      "correct": 0,
+      "explanation": "CLS token 起初为空，并通过所有 12 个块中的自注意力从每个 patch 累积信息。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么前馈层扩展到隐藏维度的 4 倍？",
+      "options": [
+        "它减半 FLOPs",
+        "PyTorch 要求 4 倍",
+        "自原始 Transformer 以来的经验最佳点；更小会欠拟合，更大在固定数据预算下过拟合",
+        "它消除对注意力的需要"
+      ],
+      "correct": 2,
+      "explanation": "4 倍因子自 2017 年以来在语言和视觉 transformer 中保持一致。参数利用率在此达到峰值。"
+    },
+    {
+      "stage": "post",
+      "question": "哪种系列扩展保持块数学不变，但添加了前置的可学习词元？",
+      "options": [
+        "因果掩码",
+        "RoPE 旋转",
+        "Register tokens（DINOv2）：在 CLS 后前置几个可学习向量，用于捕获全局统计信息并平滑注意力图",
+        "混合专家"
+      ],
+      "correct": 2,
+      "explanation": "Register token 稳定注意力，而不改变块的数学；它们是序列中的额外槽位。"
+    }
+  ]
+}

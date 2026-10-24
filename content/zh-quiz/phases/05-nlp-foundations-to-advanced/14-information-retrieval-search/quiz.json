@@ -1,0 +1,102 @@
+{
+  "lesson": "14-information-retrieval-search",
+  "title": "信息检索与搜索",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "BM25 根据什么给文档打分？",
+      "options": [
+        "词频、IDF 和文档长度归一化后的查询词存在情况",
+        "到查询的编辑距离",
+        "到查询的嵌入余弦",
+        "语料库上的 PageRank"
+      ],
+      "correct": 0,
+      "explanation": "BM25 加权 TF 饱和、IDF 和长度归一化，以对词汇匹配打分。"
+    },
+    {
+      "stage": "pre",
+      "question": "纯稠密检索的主要弱点是什么，而 BM25 能捕捉到？",
+      "options": [
+        "多语言查询",
+        "延迟",
+        "精确关键词和标识符匹配（产品代码、错误字符串、命名实体）可能被语义嵌入遗漏",
+        "长文档"
+      ],
+      "correct": 2,
+      "explanation": "稠密嵌入可能模糊标识符和精确字符串；BM25 能精准命中它们。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 Reciprocal Rank Fusion（RRF）忽略每个检索器的原始分数？",
+      "options": [
+        "BM25 和稠密分数处于不同尺度；仅使用排名位置使融合对校准具有鲁棒性",
+        "加速排序",
+        "RRF 需要概率",
+        "原始分数不能使用"
+      ],
+      "correct": 0,
+      "explanation": "RRF 使用 1/(k + rank)，因此两个评分系统的尺度无需匹配。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么只在 top-30 融合结果上运行 cross-encoder reranker？",
+      "options": [
+        "Cross-encoders 每对查询-文档都很慢；在少量候选池上分摊可获得高精度且可接受的延迟",
+        "Reranker 降低召回率",
+        "Cross-encoders 每一步都需要",
+        "Top-30 是 FAISS 要求的"
+      ],
+      "correct": 0,
+      "explanation": "Cross-encoders 联合对查询和文档打分；仅在小的融合候选池上运行可保持延迟可控。"
+    },
+    {
+      "stage": "check",
+      "question": "RAG 检索器最应优化哪个指标？",
+      "options": [
+        "吞吐量",
+        "Recall@k，因为如果正确篇章不在 top-k 中，阅读器就无法回答",
+        "BLEU",
+        "延迟"
+      ],
+      "correct": 1,
+      "explanation": "如果正确篇章不在检索出的 top-k 中，阅读器注定失败。"
+    },
+    {
+      "stage": "post",
+      "question": "根据 2026 年的行业经验，大多数生产 RAG 故障源自哪里？",
+      "options": [
+        "摄取和分块，而非模型；糟糕的上下文会击败优秀的阅读器",
+        "提示冗长",
+        "重排序器调优",
+        "LLM 选择"
+      ],
+      "correct": 0,
+      "explanation": "大约 80% 的 RAG 故障可追溯至分块和摄取质量，而非生成模型。"
+    },
+    {
+      "stage": "post",
+      "question": "什么是 'parent-doc' 检索模式？",
+      "options": [
+        "选择最长的文档",
+        "仅使用父文档嵌入",
+        "检索小子块以获得精度，当多个子块来自同一父块时扩展到父块，从而保留上下文",
+        "仅嵌入父文档"
+      ],
+      "correct": 2,
+      "explanation": "子块级检索更精确；扩展到父块可保留阅读器需要的周围上下文。"
+    },
+    {
+      "stage": "post",
+      "question": "什么时候应该上线三路检索（BM25 + 稠密 + SPLADE）？",
+      "options": [
+        "总是",
+        "当基础设施支持 learned-sparse 索引，且查询混合了专有名词与语义意图时",
+        "仅在少于 1000 篇文档时",
+        "仅用于英语语料"
+      ],
+      "correct": 1,
+      "explanation": "在 2026 年的基准测试中，对于混合词汇-语义查询，三路检索在两路基础上表现更好，前提是具备 SPLADE 基础设施。"
+    }
+  ]
+}

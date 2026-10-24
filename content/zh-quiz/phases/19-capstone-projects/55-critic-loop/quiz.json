@@ -1,0 +1,78 @@
+{
+  "lesson": "55-critic-loop",
+  "title": "Critic Loop",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么 critic 跨越五个固定维度打分，而不是返回自由段落？",
+      "options": [
+        "因为模型无法可靠生成段落",
+        "因为 reviser 只接受 JSON",
+        "因为 LaTeX 需要分数字段",
+        "因为固定向量让工具可以检测各轮次在每个维度上的退化"
+      ],
+      "correct": 3,
+      "explanation": "固定维度向量将批评转化为工具可在各轮次比较的结构化数据。自由形式批评无法验证；向量让退化可见。"
+    },
+    {
+      "stage": "pre",
+      "question": "在一轮结束时，循环按什么顺序检查停止条件？",
+      "options": [
+        "平台期，然后目标，然后预算",
+        "预算，然后平台期，然后目标",
+        "随机平局打破，哪个先触发算哪个",
+        "目标，然后平台期，然后预算"
+      ],
+      "correct": 3,
+      "explanation": "达到目标获胜（工作完成）。然后是平台期（无法再取得进展）。最后是预算（硬上限）。当多个条件可能同时触发时，该顺序使结果确定。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么平台期检测需要连续两轮平坦，而不是一轮？",
+      "options": [
+        "因为模型返回非确定性分数",
+        "因为即使确定性打分每轮也有噪声；一轮平坦不足为信",
+        "因为 dataclass 需要列表",
+        "因为仪表板期望两个点"
+      ],
+      "correct": 1,
+      "explanation": "即使确定性 scorer 的输出也会因每轮应用了不同建议而轮次间变化。要求两轮平坦可过滤噪声。"
+    },
+    {
+      "stage": "check",
+      "question": "每轮 reviser 接收什么输入？",
+      "options": [
+        "原始 LaTeX 源码",
+        "模型生成的段落",
+        "包含分数的完整 Critique 对象",
+        "论文和 Suggestion 记录列表"
+      ],
+      "correct": 3,
+      "explanation": "Reviser.__call__ 接收 (paper, suggestions)。每条 Suggestion 携带维度、目标章节和编辑指令。reviser 不看分数。这种分离使任一侧可被替换而不影响另一侧。"
+    },
+    {
+      "stage": "post",
+      "question": "trace 包含每轮的什么内容？",
+      "options": [
+        "只有最终论文草稿",
+        "只有收敛判决",
+        "模型提示和补全",
+        "轮次编号、分数向量、均值、已应用建议、判决"
+      ],
+      "correct": 3,
+      "explanation": "trace 是每轮的事件日志。仪表板将其渲染为分数随时间变化的图表；下一阶段读取它来决定该分支是否值得保留。"
+    },
+    {
+      "stage": "post",
+      "question": "一个持续发出建议但从未改进任何分数的 critic 会产生哪种最终判决？",
+      "options": [
+        "converged，因为建议被应用了",
+        "target，因为预算隐藏了 bug",
+        "plateau 或 budget，因为工具会捕捉到缺乏进展",
+        "异常，因为循环崩溃"
+      ],
+      "correct": 2,
+      "explanation": "平台期（两轮平坦）或预算（硬上限）会触发。两种判决都会暴露 bug。循环不会静默成功。"
+    }
+  ]
+}

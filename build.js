@@ -21,7 +21,7 @@ const phaseTpl = require('./src/templates/phase');
 const homeTpl = require('./src/templates/home');
 const pathsTpl = require('./src/templates/paths');
 
-const { SRC_REPO, DIST, ZH_CONTENT, SITE, CDN, PHASE_ZH } = config;
+const { SRC_REPO, DIST, ZH_CONTENT, ZH_QUIZ, SITE, CDN, PHASE_ZH } = config;
 
 /** Cache-busting version stamped on every static asset URL (layout vurl +
  *  the CDN config below) so browsers re-fetch JS/CSS/JSON after a deploy
@@ -251,6 +251,9 @@ function scan() {
           warnings.push('bad quiz.json: ' + phaseSlug + '/' + lessonSlug);
         }
       }
+      // Chinese quiz translation (content/zh-quiz, same schema); zh pages
+      // fall back to the English quiz + per-lesson note when absent.
+      const quizZh = zhQuizQuestions(phaseSlug, lessonSlug);
 
       const record = {
         phaseSlug,
@@ -258,6 +261,7 @@ function scan() {
         numLabel: lessonSlug.slice(0, 2),
         meta: { en: parseMeta(enMd), zh: hasZh ? parseMeta(zhMd) : null },
         quiz,
+        quizZh,
         enMd,
         zhMd,
         hasZh,
@@ -422,9 +426,28 @@ function renderMarkdown(lang, record) {
 }
 
 /* ------------------------------------------------------------- helpers */
-function quizJsonFor(record) {
-  if (!record.quiz) return null;
-  return JSON.stringify({ questions: record.quiz.questions }).replace(/</g, '\\u003c');
+function quizJsonFor(record, lang) {
+  const questions = lang === 'zh' && record.quizZh ? record.quizZh : record.quiz && record.quiz.questions;
+  if (!questions) return null;
+  return JSON.stringify({ questions }).replace(/</g, '\\u003c');
+}
+
+/** Chinese quiz translation for a lesson, or null. Reads
+ *  content/zh-quiz/phases/<phase>/<lesson>/quiz.json (same validation as the
+ *  upstream file; kept outside content/zh because a re-export wipes it). */
+function zhQuizQuestions(phaseSlug, lessonSlug) {
+  const p = path.join(ZH_QUIZ, 'phases', phaseSlug, lessonSlug, 'quiz.json');
+  if (!fs.existsSync(p)) return null;
+  try {
+    const parsed = JSON.parse(fs.readFileSync(p, 'utf8'));
+    const raw = Array.isArray(parsed) ? parsed : parsed.questions || [];
+    const questions = raw.filter(
+      (q) => q && typeof q.question === 'string' && Array.isArray(q.options) && q.options.length >= 2,
+    );
+    return questions.length ? questions : null;
+  } catch (e) {
+    return null;
+  }
 }
 
 function sidebarHtmlFor(lang, currentPhaseSlug, currentLessons, currentLessonSlug, currentSpecial) {
@@ -811,9 +834,9 @@ function main() {
         next: record.next
           ? { title: titleFor(record.next, lang), url: lessonUrl(lang, record.next.phaseSlug, record.next.lessonSlug) }
           : null,
-        quizJson: quizJsonFor(record),
+        quizJson: quizJsonFor(record, lang),
         githubUrl: record.githubUrl,
-        quizNote: lang === 'zh' ? t2.quizNoteEn : '',
+        quizNote: lang === 'zh' && record.quiz && !record.quizZh ? t2.quizNoteEn : '',
       });
 
       write(

@@ -1,0 +1,62 @@
+[
+  {
+    "question": "基础 top-k 语义搜索在 RAG 中有什么局限？",
+    "options": [
+      "它需要 GPU",
+      "它检索到的块在语义上与查询相似，但可能不包含实际答案，尤其是在查询模糊或需要多跳推理时",
+      "它太慢",
+      "它无法处理大型文档"
+    ],
+    "correct": 1,
+    "explanation": "基础语义搜索匹配表层含义。例如“上个季度营收是多少？”可能检索到关于“营收策略”的块（语义相似），而不是包含“Q3 2025 年营收 4720 万美元”（使用“earnings”）的块。",
+    "stage": "pre"
+  },
+  {
+    "question": "RAG 中的混合搜索（hybrid search）是什么？",
+    "options": [
+      "将 BM25 关键词匹配与语义向量搜索结合，以同时捕获精确术语和基于含义的相关性",
+      "同时使用 CPU 和 GPU 进行搜索",
+      "跨多个数据库搜索",
+      "使用两个不同的 LLM"
+    ],
+    "correct": 0,
+    "explanation": "BM25 捕获精确关键词匹配（例如“$47.2M”或“Q3”）。语义搜索捕获含义匹配。将它们与重排序器结合，可以兼得两者优势：对特定术语的精确性以及对语义变体的召回率。",
+    "stage": "pre"
+  },
+  {
+    "question": "高级 RAG 管道中的 cross-encoder 重排序器做什么？",
+    "options": [
+      "它将文档编码为向量",
+      "它生成最终答案",
+      "它将文档拆分为块",
+      "它接收（query, document）对，以比 embedding 相似度更高的准确率打分相关性，并重新排序初始检索结果"
+    ],
+    "correct": 3,
+    "explanation": "用于初始检索的 bi-encoder 相似度计算速度快但只是近似。cross-encoder 通过 cross-attention 同时处理完整的查询—文档对，为重排序前几个候选结果提供更准确的相关性分数。",
+    "stage": "post"
+  },
+  {
+    "question": "什么是 HyDE（Hypothetical Document Embedding）查询转换技术？",
+    "options": [
+      "为隐私对查询加密",
+      "使用 LLM 生成一个假设答案，然后将该答案进行 embedding 并作为搜索查询，而非使用原始问题",
+      "展开查询中的缩写",
+      "对模型隐藏查询"
+    ],
+    "correct": 1,
+    "explanation": "原始查询“What was Q3 revenue?”可能无法与包含答案的块在 embedding 空间中接近。HyDE 让 LLM 生成一个假设答案（“Q3 revenue was approximately...”），然后将其作为搜索查询进行 embedding，这样更靠近真正包含答案的块。",
+    "stage": "post"
+  },
+  {
+    "question": "为什么 parent-child 分块比扁平分块更能提升 RAG 效果？",
+    "options": [
+      "索引更快",
+      "使用小的子块进行精确检索，但返回更大的父块作为上下文，从而避免“丢失上下文”问题",
+      "它减少了块的数量",
+      "它消除了对 embedding 的需求"
+    ],
+    "correct": 1,
+    "explanation": "小分块（200 token）embedding 精确但缺乏上下文。大分块（2000 token）有上下文但 embedding 不精确。parent-child 使用小分块保证搜索准确性，同时返回父块用于生成上下文。",
+    "stage": "post"
+  }
+]

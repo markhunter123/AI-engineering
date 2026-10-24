@@ -1,0 +1,78 @@
+{
+  "lesson": "25-security-secrets-audit",
+  "title": "Security — Secrets, API Key Rotation, Audit Logs, Guardrails",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "2026 年 LLM 服务凭证的标准模式是什么？",
+      "options": [
+        "为快速而将 API 密钥硬编码在配置文件中",
+        "通过邮件发给每位工程师",
+        "将密钥存入 Slack 频道",
+        "集中式密钥库，AI 网关在运行时通过 IAM 角色拉取；在密钥库中轮换，所有应用在几分钟内生效"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本课建议 API 密钥、密钥库根令牌和 CI/CD 凭证的轮换周期是什么？",
+      "options": [
+        "90 天内，尽可能自动化，手动时记录并跟踪",
+        "仅在泄露时",
+        "从不",
+        "每 5 年"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么 PII 脱敏采用一致性分词（Mesh 方法）？",
+      "options": [
+        "它对模型加密提示词",
+        "ISO 27001 强制要求",
+        "相同源值映射到相同占位符，因此 LLM 能在整个提示词中保留代码和关系语义",
+        "比正则表达式占用更少内存"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本课建议 LLM 服务子网采用什么样的出站策略？",
+      "options": [
+        "白名单仅允许少量域名（api.openai.com、api.anthropic.com、向量数据库、密钥库），其余全部丢弃，并仅使用允许列表的 DNS 解析器",
+        "阻止包括厂商在内的所有出站",
+        "允许 DNS 但阻止 HTTP",
+        "允许所有出站流量"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "2026 年 Vercel 供应链事件对 CI/CD 凭证的教训是什么？",
+      "options": [
+        "CI/CD 凭证风险低，可放在环境文件中",
+        "CI/CD 密钥无法被盗",
+        "Vercel 未受影响",
+        "CI/CD 凭证与生产凭证等价——需存入密钥库、严格限定范围、积极轮换"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本课建议每次 LLM 调用保留哪些审计日志字段？",
+      "options": [
+        "仅成本",
+        "时间戳、用户/租户、提示词哈希（非原始）、模型+版本、token 数量、成本、回复哈希、任何护栏触发",
+        "仅原始提示词",
+        "仅回复"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

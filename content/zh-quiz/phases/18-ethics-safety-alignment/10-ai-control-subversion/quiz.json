@@ -1,0 +1,78 @@
+{
+  "lesson": "10-ai-control-subversion",
+  "title": "AI Control - Safety Despite Subversion",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "以下哪项最能把握对齐与 AI 控制之间的区别？",
+      "options": [
+        "它们是同义词",
+        "控制关乎硬件；对齐关乎软件",
+        "对齐问 U 是否可信；控制问我们是否可以在不信任 U 的情况下安全地使用它",
+        "控制替换损失函数，而对齐改变优化器"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "AI 控制威胁模型假设什么？",
+      "options": [
+        "U 是不可信的强者，T 是可信的弱者，H 是有限的可信人类劳动",
+        "只有 U 存在",
+        "U 和 T 都是对抗性的",
+        "三种资源（U、T、H）都是可信的"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在不可信监控中，可信编辑避免了什么关键风险？",
+      "options": [
+        "T 无法编辑文本",
+        "硬件争用",
+        "U 的两个实例可能串通或共享先验，因此协议必须花费预算来抵抗串通",
+        "人类无法被审计"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在 Greenblatt 等人（ICML 2024）的代码后门任务上，相对于不可信监控，可信编辑实现了什么？",
+      "options": [
+        "它只在零人类预算下获胜",
+        "它们完全等价",
+        "它严格更差",
+        "它严格帕累托占优：在每个安全水平上都具有更高的有用性"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "以下哪一项不是课程中控制的三个根本限制之一？",
+      "options": [
+        "控制会附带产生对齐的模型",
+        "可信弱模型最终会落后于 U",
+        "如果 U 能够操纵 T 或推断 H 的审计分布，控制在更高能力水平下可能失效",
+        "人类无法扩展"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "控制安全案例论证什么？",
+      "options": [
+        "U 是可信的",
+        "T 比 U 更有能力",
+        "在对 U 的最坏情况假设下，部署协议能够将不可接受结果的概率限制在一定范围内",
+        "模型通过了手动越狱测试"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

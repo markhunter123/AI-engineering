@@ -1,0 +1,90 @@
+{
+  "lesson": "29-production-runtimes",
+  "title": "生产运行时：队列、事件、定时",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "本课列出哪六种运行时形态？",
+      "options": [
+        "Map、filter、reduce、fold、scan、group",
+        "Request-response、streaming、durable execution、queue-based、event-driven、scheduled",
+        "REST、gRPC、GraphQL、WebSocket、SSE、MQTT",
+        "Read、write、exec、fork、exit、wait"
+      ],
+      "correct": 1,
+      "explanation": "这六种运行时形态；在选择框架前先选择形态。"
+    },
+    {
+      "stage": "pre",
+      "question": "什么时候 request-response 不合适？",
+      "options": [
+        "内部服务",
+        "任务耗时超过约 30 秒，用户挂断而 worker 堆积时",
+        "REST API",
+        "1 秒分类任务"
+      ],
+      "correct": 1,
+      "explanation": "同步 HTTP 只适用于短任务；长任务需要队列/持久/事件形态。"
+    },
+    {
+      "stage": "check",
+      "question": "Durable execution 的核心特性是什么？",
+      "options": [
+        "更低的 token 成本",
+        "更快的推理",
+        "原生语音支持",
+        "每步之后都会检查点状态，运行时能在失败时从最后成功步骤恢复"
+      ],
+      "correct": 3,
+      "explanation": "检查点—恢复是其区分点；本课以 LangGraph 为参考。"
+    },
+    {
+      "stage": "check",
+      "question": "哪条 Anthropic 观察为长程智能体使用基于队列的运行时提供了依据？",
+      "options": [
+        "任务必须同步运行",
+        "任务总能在 5 秒内完成",
+        "Computer use 公告：每个任务通常几十到几百步是正常的",
+        "Cron 能解决一切"
+      ],
+      "correct": 2,
+      "explanation": "Anthropic 指出每个任务几十到几百步是正常的；这种工作负载需要队列或持久运行时。"
+    },
+    {
+      "stage": "check",
+      "question": "本课中“可观测性是 load-bearing”是什么意思？",
+      "options": [
+        "提供方因计费要求它",
+        "日志好看",
+        "磁盘会满",
+        "没有 OTel GenAI span 和 Langfuse/Phoenix/Opik 后端，你无法调试在第 40 步失败的多步智能体"
+      ],
+      "correct": 3,
+      "explanation": "对多步智能体而言，可观测性不是可选的；它决定是能调试还是只能从头重放。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么队列 worker 必须有死信队列（DLQ）？",
+      "options": [
+        "DLQ 让任务更快",
+        "没有 DLQ，失败任务会静默消失",
+        "DLQ 是加密的",
+        "AWS 要求 DLQ"
+      ],
+      "correct": 1,
+      "explanation": "失败任务没有 DLQ 就会消失；DLQ 是失败任务的停车场。"
+    },
+    {
+      "stage": "post",
+      "question": "本课建议将 cron 形态智能体与什么配对？",
+      "options": [
+        "Durable execution，使失败的夜间运行下次触发时恢复",
+        "WebRTC",
+        "GPU 自动扩缩容",
+        "流式 SSE"
+      ],
+      "correct": 0,
+      "explanation": "Cron + durable execution 能从失败的定时运行中干净恢复。"
+    }
+  ]
+}

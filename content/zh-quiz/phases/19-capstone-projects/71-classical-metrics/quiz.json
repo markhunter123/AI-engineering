@@ -1,0 +1,78 @@
+{
+  "lesson": "71-classical-metrics",
+  "title": "Classical Metrics",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么分词器选在指标层而不是运行器层？",
+      "options": [
+        "分词器是模型相关的，运行器看不到模型",
+        "分词器定义了什么算作 token 匹配；更换它会改变基准测试",
+        "无论分词器如何，指标实现都是 O(n)",
+        "Numpy 在导入时需要一个分词器"
+      ],
+      "correct": 1,
+      "explanation": "BLEU 和 F1 对分词敏感。将分词器绑定到指标可使分数可复现，并明确规则。"
+    },
+    {
+      "stage": "pre",
+      "question": "修正 n-gram 精确度（modified n-gram precision）相比普通 n-gram 精确度多做了什么？",
+      "options": [
+        "将每个候选 n-gram 的计数截断为任意参考中出现次数的最大值",
+        "比普通精确度运行更快",
+        "使用不同的对数底",
+        "返回 0 到 100 而不是 0 到 1"
+      ],
+      "correct": 0,
+      "explanation": "按参考上限截断可防止候选通过反复重复某个高精确度词来虚增分数。"
+    },
+    {
+      "stage": "check",
+      "question": "BLEU 为什么要使用简短惩罚（brevity penalty）？",
+      "options": [
+        "长候选使几何平均数值不稳定",
+        "简短惩罚替代 n-gram 计数上限",
+        "它补偿加一平滑",
+        "没有它，一个只匹配少量词的极短候选会获得高精确度和虚高的 BLEU"
+      ],
+      "correct": 3,
+      "explanation": "仅精确度会奖励短输出。BP 使用 exp(1 - r/c) 降低短于参考长度的候选分数。"
+    },
+    {
+      "stage": "check",
+      "question": "ROUGE-L 比较什么？",
+      "options": [
+        "候选与参考字符串之间的 Levenshtein 距离",
+        "与任意参考 4-gram 的 4-gram 精确度",
+        "候选与参考 token 序列的最长公共子序列",
+        "字符级 Jaccard 索引"
+      ],
+      "correct": 2,
+      "explanation": "ROUGE-L 使用 LCS 长度，然后计算精确度（LCS/候选长度）和召回（LCS/参考长度），并结合 F-beta。"
+    },
+    {
+      "stage": "check",
+      "question": "Token-level F1 在什么情况下返回 1.0？",
+      "options": [
+        "当预测与目标恰好共享一个 token",
+        "当预测是目标的超集并带额外噪声",
+        "当预测为空且目标非空",
+        "当预测与目标都为空"
+      ],
+      "correct": 3,
+      "explanation": "按惯例，空-空是完美匹配。目标非空而预测为空时结果为 0.0。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么 score 函数按 metric_name 而不是 category 分发？",
+      "options": [
+        "运行器无法访问 category 字段",
+        "它允许同一类别在不同任务中使用不同指标，并保持分发器与指标无关",
+        "category 比 metric_name 更难验证",
+        "metric_name 比 category 更短"
+      ],
+      "correct": 1,
+      "explanation": "metric_name 就是契约。一个 summary 任务可以在此记录用 rouge_l，在彼记录用 bleu_4；分发器无需关心。"
+    }
+  ]
+}

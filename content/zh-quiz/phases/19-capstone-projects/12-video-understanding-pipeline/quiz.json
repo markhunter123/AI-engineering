@@ -1,0 +1,90 @@
+{
+  "lesson": "12-video-understanding-pipeline",
+  "title": "Capstone 12 — Video Understanding Pipeline (Scene, QA, Search)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "即使长上下文 VLM 可以原生读取 2 小时视频，为什么仍然需要场景级索引？",
+      "options": [
+        "场景切换是 VLM 唯一能理解的东西",
+        "向量索引不支持视频文件",
+        "长上下文 VLM 无法流式输出",
+        "将 100 小时视频摄入可查询语料库需要场景级检索，即使单个视频可以整体读取"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "在多向量索引中，每个场景获得哪三种向量类型？",
+      "options": [
+        "音频波形、mel-spectrogram 和 MFCC",
+        "姿态、深度和光流",
+        "哈希、gzip 和 CRC",
+        "caption embedding、keyframe embedding 和 transcript embedding"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "查询时如何合并三个检索流的结果？",
+      "options": [
+        "通过 reciprocal rank fusion 跨三个排序列表合并",
+        "通过平均余弦相似度",
+        "只选 caption 命中",
+        "取并集但不打分"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "temporal grounding 步骤在 top scene 内部细化什么？",
+      "options": [
+        "包含答案的 (start, end) 时间戳窗口",
+        "keyframe embedding 维度",
+        "Whisper 的转写词时间戳",
+        "Qdrant 中存储的向量数量"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪类问题因为已知是幻觉热点而被单独报告？",
+      "options": [
+        "翻译问题",
+        "说话人识别问题",
+        "计数和动作类型问题，VLM 容易数错或错序事件",
+        "关于风景的描述性问题"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "评分标准在 held-out set 上衡量哪个 grounding 指标？",
+      "options": [
+        "Perplexity",
+        "Temporal-grounding intersection-over-union (IoU)",
+        "Acceptance rate",
+        "MRR@10"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么流水线要求答案中包含引用时间戳？",
+      "options": [
+        "Whisper 输出需要时间戳",
+        "Qdrant payload 需要时间戳",
+        "它们能降低嵌入维度",
+        "它们让观众可以跳转到精确的 (video_id, start, end)，以便验证声明"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

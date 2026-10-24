@@ -1,0 +1,90 @@
+{
+  "lesson": "05-autonomous-research-agent",
+  "title": "Capstone 05 — Autonomous Research Agent (AI-Scientist Class)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "AI-Scientist 级别的智能体使用什么搜索形态来探索实验？",
+      "options": [
+        "带随机打分的广度优先扩展",
+        "对 token 输出的束搜索",
+        "纯人类反馈强化学习",
+        "在实验节点上做最佳优先树搜索，使用新颖性×质量×预算的得分"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "为什么沙箱要配置 --network=none 和有界资源上限？",
+      "options": [
+        "强制智能体使用 prompt caching",
+        "防止网络出口，并将实验副作用限制在可复现的范围内",
+        "强制确定性浮点运算",
+        "默认允许 GPU 透传"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "writer 循环中视觉 critique 步骤的作用是什么？",
+      "options": [
+        "从截图生成新的实验想法",
+        "在渲染时替代 matplotlib",
+        "将图表转换为柱状图",
+        "将 LaTeX 草稿编译为 PDF，然后让 VLM 批评排版、图表可读性和声明-证据一致性"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "reviewer ensemble 如何 gate 流水线？",
+      "options": [
+        "审稿人匿名投票，多数获胜",
+        "五位评委按 NeurIPS 风格评分标准打分，加权总分必须超过阈值，否则草稿返回 writer 重新修改",
+        "单一评委根据二进制标志接受或拒绝",
+        "审稿只在发表后运行"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本 capstone 对每篇论文强制执行哪种成本纪律？",
+      "options": [
+        "GPU 小时被跟踪但从不设上限",
+        "通过 Langfuse 计数器和运行前估算严格控制在 30 美元预算内",
+        "只优化成本而不检查质量",
+        "计算量无上限，只限制 wall-clock"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪个评分函数用于排序待进一步扩展的树节点？",
+      "options": [
+        "相关论文的引用次数",
+        "随机均匀优先级",
+        "输出长度和 token 数量",
+        "新颖性×质量×剩余预算"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "red-team 报告针对系统演练什么内容？",
+      "options": [
+        "沙箱逃逸尝试，如 fork bomb、网络外泄和文件系统逃逸",
+        "系统 prompt 的缓存命中率",
+        "向量数据库中的多租户数据泄漏",
+        "丢包下的延迟尾部"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

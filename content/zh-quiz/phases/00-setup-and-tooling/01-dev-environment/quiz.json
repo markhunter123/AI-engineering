@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么 AI 项目需要一个独立的虚拟环境？",
+      "options": [
+        "Python 需要虚拟环境才能导入包",
+        "它们隔离依赖，使不同项目互不冲突",
+        "虚拟环境让代码运行更快",
+        "虚拟环境提供 GPU 访问"
+      ],
+      "correct": 1,
+      "explanation": "虚拟环境按项目隔离包版本。如果没有它们，为一个项目升级 PyTorch 可能会破坏依赖旧版本的另一个项目。"
+    },
+    {
+      "stage": "pre",
+      "question": "CUDA 为 AI 工作负载提供什么？",
+      "options": [
+        "在 NVIDIA GPU 上进行矩阵运算的并行计算",
+        "一个用于 ML 库的 Python 包管理器",
+        "一个用于部署模型的 Web 框架",
+        "一个用于模型服务的容器运行时"
+      ],
+      "correct": 0,
+      "explanation": "CUDA 是 NVIDIA 的并行计算平台，可让你在数千个 GPU 核心上同时运行矩阵运算。PyTorch 和 TensorFlow 在底层使用它。"
+    },
+    {
+      "stage": "post",
+      "question": "在四层环境栈中，哪一层必须首先安装？",
+      "options": [
+        "语言运行时（Python、Node.js）",
+        "系统基础（操作系统、shell、GPU 驱动）",
+        "包管理器（pip、npm、cargo）",
+        "AI/ML 库（PyTorch、JAX）"
+      ],
+      "correct": 1,
+      "explanation": "你自下而上安装：先是系统基础（操作系统、驱动），然后是包管理器、语言运行时，最后是 AI 库。每一层都依赖其下一层。"
+    },
+    {
+      "stage": "post",
+      "question": "在 Python AI 项目中，uv 的用途是什么？",
+      "options": [
+        "一个 GPU 监控工具",
+        "一个神经网络可视化库",
+        "一个超快速的 Python 包安装器和解析器",
+        "一个用于自定义内核的 CUDA 编译器"
+      ],
+      "correct": 2,
+      "explanation": "uv 是一个用 Rust 编写的高速 Python 包安装器。它替代 pip，依赖解析和安装速度快得多，通常快 10-100 倍。"
+    },
+    {
+      "stage": "post",
+      "question": "如何验证 PyTorch 可以访问你的 GPU？",
+      "options": [
+        "python -c 'import gpu'",
+        "import torch; print(torch.cuda.is_available())",
+        "import torch; print(torch.__version__)",
+        "nvidia-smi --query"
+      ],
+      "correct": 1,
+      "explanation": "torch.cuda.is_available() 在 PyTorch 可以访问 CUDA GPU 时返回 True。在 Apple Silicon 上，使用 torch.backends.mps.is_available() 检查 Metal Performance Shaders。"
+    }
+  ]
+}

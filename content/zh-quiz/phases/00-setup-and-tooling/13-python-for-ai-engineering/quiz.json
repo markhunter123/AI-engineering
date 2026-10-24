@@ -1,0 +1,78 @@
+{
+  "lesson": "13-python-for-ai-engineering",
+  "title": "Python for AI Engineering",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "你两次运行同一个训练脚本，每次得到不同的测试分数。哪种更改能让每次运行的训练/测试划分都相同？",
+      "options": [
+        "使用更大的测试比例",
+        "使用 random.Random(42) 打乱索引",
+        "调用 random.shuffle 两次而不是一次",
+        "先将数据集列表转换为元组"
+      ],
+      "correct": 1,
+      "explanation": "固定种子的生成器每次运行都给出相同序列。打乱顺序和划分因此保持不变。其他更改要么使打乱仍然随机，要么对顺序没有影响。"
+    },
+    {
+      "stage": "check",
+      "question": "调用生成器函数会返回什么？",
+      "options": [
+        "一个生成器对象，每次 next() 调用时运行函数体",
+        "一个保存函数产生的所有值的列表",
+        "函数产生的第一个值，然后停止",
+        "None，因为函数体没有 return 语句"
+      ],
+      "correct": 0,
+      "explanation": "调用不会运行函数体的任何部分。它返回一个生成器对象。每次 next() 调用都会运行函数体到下一个 yield 并在那里暂停。"
+    },
+    {
+      "stage": "check",
+      "question": "调用 batches(range(10), 4) 使用默认的 drop_last=False。它会得到哪些批量大小？",
+      "options": [
+        "2, 4, 4",
+        "4, 4, 2",
+        "4, 4, 4",
+        "4, 4"
+      ],
+      "correct": 1,
+      "explanation": "islice 每次最多取四项。十项会产生两个完整批量和一个包含两项的最后批量。使用 drop_last=True 时，生成器会丢弃最后一个批量。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么对一百万个浮点数进行纯 Python 点积比 NumPy 点积慢得多？",
+      "options": [
+        "Python 浮点数精度低于 NumPy float64 值",
+        "for 循环在每次遍历时都会完整复制列表",
+        "解释器执行类型检查并为每个元素创建对象",
+        "zip() 函数在配对项目前对两个输入列表排序"
+      ],
+      "correct": 2,
+      "explanation": "两个版本对 64 位浮点数执行相同的算术运算。Python 循环为每个元素执行约十条字节码指令，并为每个结果创建一个浮点对象。NumPy 在原始 8 字节值上运行一个编译循环。"
+    },
+    {
+      "stage": "post",
+      "question": "函数 def add(item, bucket=[]) 将 item 追加到 bucket 并返回 bucket。你调用 add(1) 然后调用 add(2)。第二次调用返回什么？",
+      "options": [
+        "[1]",
+        "[2, 1]",
+        "[2]",
+        "[1, 2]"
+      ],
+      "correct": 3,
+      "explanation": "Python 在运行 def 语句时只计算一次默认列表。两次调用都追加到同一个列表。应使用 None 作为默认值，并在函数内部创建列表。"
+    },
+    {
+      "stage": "post",
+      "question": "你在训练模型前对特征进行标准化。均值和标准差必须来自哪里？",
+      "options": [
+        "仅来自训练划分",
+        "仅来自测试划分",
+        "每个 mini-batch 单独计算",
+        "来自训练划分和测试划分一起"
+      ],
+      "correct": 0,
+      "explanation": "来自测试划分的统计信息会把测试信息带入训练，导致测试分数过高。应在训练划分上计算，并将相同值应用到测试划分。"
+    }
+  ]
+}

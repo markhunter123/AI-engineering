@@ -1,0 +1,78 @@
+{
+  "lesson": "11-multi-region-kv-locality",
+  "title": "Multi-Region LLM Serving and KV Cache Locality",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么轮询负载均衡对缓存型 LLM 推理有害？",
+      "options": [
+        "Round-robin breaks TLS",
+        "Round-robin is only valid for stateful databases",
+        "Round-robin requires sticky sessions",
+        "请求若没有落到持有其前缀的节点，就要支付完整 prefill 成本，而不是缓存命中"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "缓存感知路由器需要哪两类输入？",
+      "options": [
+        "Only user_id and tenant_id",
+        "Round-robin counters and TLS keys",
+        "来自副本的 KV cache 事件以及入站请求的前缀哈希",
+        "Random shuffles and request size"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "对于 2K token 提示词的 Llama 3.3 70B FP8，缓存命中与冷 prefill 的 TTFT 差距大约是多少？",
+      "options": [
+        "约 1000 倍",
+        "约 10 倍（约 80 ms vs 约 800 ms）",
+        "约 1.1 倍",
+        "相同"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么跨区域路由并不总是优于区域内路由以获取缓存命中？",
+      "options": [
+        "跨区域缓存感知路由不可能",
+        "所有超大规模云厂商都禁止跨区域路由",
+        "GORGO 研究发现缓存命中无助于延迟",
+        "省下的 prefill 可能被网络 RTT 淹没，例如 440 ms 的往返延迟会压倒 800 ms 到 80 ms 的 prefill 节省"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "课程引用什么作为 32% 的 LLM 灾备失败原因？",
+      "options": [
+        "备份包含权重但遗漏 tokenizer 文件或量化配置",
+        "Region quota exhaustion",
+        "Misconfigured load balancers",
+        "Unencrypted backups"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "课程如何评价 Bedrock CRI 等商业跨区域推理服务？",
+      "options": [
+        "它们优化的是可用性而非 TTFT，并把推理视为黑盒——你仍然需要应用层缓存感知路由器",
+        "They are forbidden under GDPR",
+        "They are KV-cache-aware and replace app-layer routing",
+        "They only work in us-east-1"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

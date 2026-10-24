@@ -1,0 +1,78 @@
+{
+  "lesson": "18-mcp-auth-production",
+  "title": "MCP Auth in Production: Issuer-Bound Enrollment and Tokens",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "MCP 客户端发现同一资源使用了不同的授权服务器 issuer。它应如何处理现有注册和访问令牌？",
+      "options": [
+        "在本地更改受众后复用访问令牌",
+        "为新 issuer 注册，并按 issuer 隔离凭据",
+        "因为 MCP 资源 URL 没变，所以两者都复用",
+        "将两者都存储在工具名称下，而不是 issuer 下"
+      ],
+      "correct": 1,
+      "explanation": "客户端标识符和注册凭据属于创建它们的授权服务器 issuer。issuer 变更需要独立注册，每个访问令牌按该 issuer 及其资源受众缓存。"
+    },
+    {
+      "stage": "check",
+      "question": "MCP 2026-07-28 授权配置文件偏好哪种注册方式？",
+      "options": [
+        "每次请求都使用 RFC 7591 Dynamic Client Registration",
+        "从客户端 HTTPS URL 提供的 Client ID Metadata Document",
+        "存储一个全局客户端标识符的协议会话",
+        "嵌入每个桌面客户端的共享客户端密钥"
+      ],
+      "correct": 1,
+      "explanation": "CIMD 让授权服务器从 HTTPS 客户端标识符解析客户端元数据。DCR 已弃用，仅保留用于兼容。"
+    },
+    {
+      "stage": "check",
+      "question": "已弃用的 DCR 请求描述了一个 loopback 桌面客户端。哪些元数据对于正确分类至关重要？",
+      "options": [
+        "Mcp-Session-Id",
+        "通配符重定向 URI",
+        "application_type 设置为 native",
+        "可复用的 bearer 令牌"
+      ],
+      "correct": 2,
+      "explanation": "当前兼容指南要求正确的应用类型。loopback 桌面客户端是 native；Web 客户端使用 HTTPS 重定向 URI。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么客户端在兑换授权码前要验证 RFC 9207 的 iss 值？",
+      "options": [
+        "防止将诚实 issuer 的码兑换到错误的令牌端点",
+        "避免刷新 JWKS 缓存",
+        "用 issuer 发现替代 PKCE",
+        "从 server/discover 中选择工具"
+      ],
+      "correct": 0,
+      "explanation": "issuer 检查可防御授权服务器混淆攻击。它通过确认响应来自重定向前记录的 issuer，从而补充 PKCE。"
+    },
+    {
+      "stage": "post",
+      "question": "对于当前无状态传输，MCP 资源服务器应将授权缓存在何处？",
+      "options": [
+        "在 Mcp-Session-Id 下，直到客户端发送 DELETE",
+        "在 server/discover 结果中，供后续所有调用使用",
+        "在 SSE 连接中，直到重新连接",
+        "不作为协议会话决策；在每个请求上验证 bearer 令牌"
+      ],
+      "correct": 3,
+      "explanation": "MCP 2026-07-28 移除了协议会话。每个请求独立跨越授权边界，因此每次都要检查身份、受众、过期和范围。"
+    },
+    {
+      "stage": "post",
+      "question": "在信任授权服务器之前，哪种部署证据最强？",
+      "options": [
+        "根据 PKCE、issuer、注册和资源绑定需求检查目标服务器发现的元数据",
+        "从旧课程复制的供应商分类表",
+        "写明支持 OAuth 的产品页面",
+        "不检查令牌受众的成功登录"
+      ],
+      "correct": 0,
+      "explanation": "能力会随部署和版本变化。实时发现文档是具体契约，随后进行端到端 issuer 和受众验证。"
+    }
+  ]
+}

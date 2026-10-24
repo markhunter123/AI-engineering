@@ -1,0 +1,78 @@
+{
+  "lesson": "14-ascii-art-visual-jailbreaks",
+  "title": "ASCII Art and Visual Jailbreaks",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么 token 级和语义级安全过滤器会漏过 ArtPrompt 式攻击？",
+      "options": [
+        "ArtPrompt 总是使用 base64 编码",
+        "ArtPrompt 需要对模型进行微调",
+        "ArtPrompt 在视觉识别层面运作：过滤器看到的是无害标点，而模型将渲染出的字母读作单词",
+        "ArtPrompt 只在多模态模型上有效"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Jiang 等人（ACL 2024）描述的 ArtPrompt 分哪两步？",
+      "options": [
+        "Tokenizer 不匹配，然后上下文截断",
+        "随机搜索，然后困惑度提升",
+        "翻译成法语，然后回译",
+        "识别安全相关 token 对应的单词，然后进行 ASCII 艺术替换并生成伪装提示"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么困惑度过滤器（PPL）防御在 ArtPrompt 上失效？",
+      "options": [
+        "困惑度过滤器默认关闭",
+        "ASCII 艺术无法测量困惑度",
+        "伪装输入的困惑度总是为零",
+        "ASCII 艺术具有很高的困惑度，但任何合法的结构化输入也是如此；能拦截该攻击的阈值也会拦截合法内容"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "ViTC 基准测量什么？",
+      "options": [
+        "模型训练数据的毒性",
+        "模型的工具调用准确率",
+        "模型读取非语义视觉提示（ASCII 艺术、wingdings、类似编码文本）的能力",
+        "模型压缩视觉数据的能力"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "StructuralSleight 将 ArtPrompt 推广到什么？",
+      "options": [
+        "仅图像输入",
+        "长上下文 shot 填充",
+        "通过梯度搜索生成对抗性 token 后缀",
+        "不常见的文本编码结构（UTES）：树、图、嵌套 JSON、JSON 中的 CSV、diff 风格代码等"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "ViTC 结果隐含的能力-安全权衡是什么？",
+      "options": [
+        "更大的上下文窗口降低 ArtPrompt 成功率",
+        "视觉识别与 ArtPrompt 成功率无关",
+        "模型读取非语义视觉文本的能力越强，ArtPrompt 式攻击对它越有效",
+        "更小的模型总是更安全"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

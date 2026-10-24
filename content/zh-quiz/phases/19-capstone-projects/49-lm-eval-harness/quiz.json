@@ -1,0 +1,78 @@
+{
+  "lesson": "49-lm-eval-harness",
+  "title": "Language Model Evaluation Harness",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在该评估工具的 JSONL 格式中，哪四个字段定义了一个任务样本？",
+      "options": [
+        "id、prompt、targets、metric，以及一个可选的 extras 字典，用于传递指标需要的辅助数据",
+        "name、score、payload、vendor",
+        "weights 和 bias",
+        "input 和 output"
+      ],
+      "correct": 0,
+      "explanation": "JSONL 行就是契约。extras 字段让 code_exec 指标传递 io_pairs 而不污染 prompt。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么指标函数签名为 (prediction, targets, extras) -> float？",
+      "options": [
+        "它返回整数",
+        "它需要模型对象",
+        "它是能处理单目标字符串匹配、多参考 rouge-l 以及带辅助数据的 code_exec 的最小签名，同时将分数保持在可比的 [0.0, 1.0] 范围内",
+        "随机选择"
+      ],
+      "correct": 2,
+      "explanation": "[0,1] 范围内的浮点数意味着每个任务及总体分数都是可解释的平均值。extras 槽是 code_exec 获取 io_pairs 的方式。"
+    },
+    {
+      "stage": "check",
+      "question": "code_exec 指标如何抵御恶意预测？",
+      "options": [
+        "它使用沙箱容器",
+        "它使用被剥离的 __builtins__ 字典运行预测，因此命名空间只暴露少数安全名称；import 语句会失败，因为 importer 不在作用域内",
+        "它不做防御",
+        "它拒绝任何包含 def 的内容"
+      ],
+      "correct": 1,
+      "explanation": "本课的安全命名空间将 builtins 剥离到仅剩少数名称。测试断言 import os 返回 0.0 而不是执行。"
+    },
+    {
+      "stage": "check",
+      "question": "模型适配器抽象带来什么好处？",
+      "options": [
+        "它是工具中唯一与模型相关的代码；替换适配器以指向新供应商后，任务、指标、运行器和排行榜格式都保持不变",
+        "torch 要求如此",
+        "没什么用",
+        "它让模型更快"
+      ],
+      "correct": 0,
+      "explanation": "课中的 ToyAdapter 是确定性模式匹配器。真实供应商的 HttpAdapter 具有相同的 generate(prompts) -> list[str] 接口。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么排行榜 JSON 携带 leaderboard.v1 这样的 schema 字符串？",
+      "options": [
+        "以便未来格式变更时提升版本，下游仪表板可据此分发，而不是静默破坏",
+        "它压缩文件",
+        "为了 SEO",
+        "它是随机的"
+      ],
+      "correct": 0,
+      "explanation": "与第 47 课检查点 payload 的 trick 相同。schema 字段就是迁移钩子。"
+    },
+    {
+      "stage": "post",
+      "question": "阅读排行榜，overall_score 如何计算，比较两次运行时应注意什么？",
+      "options": [
+        "随机采样",
+        "正确计数之和",
+        "各任务分数（每个都在 [0,1] 内）的平均值；比较时，还要对分数变化的任务对比逐样本预测，因为仅凭分数无法看出哪些样本退化",
+        "最佳任务分数"
+      ],
+      "correct": 2,
+      "explanation": "每任务平均的均值对每个任务等权。使用 --include-per-example 将预测级证据保留在分数旁边，使退化可见。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "13-llm-observability",
+  "title": "LLM Observability Stack Selection",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "课程如何划分 2026 年的 LLM 可观测性市场？",
+      "options": [
+        "开发平台（与评估、提示词、会话捆绑）versus 网关/遥测工具",
+        "Python versus TypeScript",
+        "Vendor versus open source",
+        "On-prem versus cloud"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "课程将哪个工具定位为 MIT 协议核心、强自托管能力，并提供每月 5 万事件免费云端额度？",
+      "options": [
+        "Phoenix",
+        "Arize AX",
+        "LangSmith",
+        "Langfuse"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "与 Datadog 等单体可观测性栈相比，Arize AX 的主要规模化卖点是什么？",
+      "options": [
+        "Always more expensive",
+        "通过零拷贝 Iceberg/Parquet 集成，大规模成本约低 100 倍",
+        "Free under 1M events/day",
+        "10% cheaper"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "课程称哪种埋点层是错误的、会牺牲可移植性？",
+      "options": [
+        "Instrumenting at the HTTP/OpenAI-SDK layer",
+        "Sampling at 5% on successes",
+        "Using OpenTelemetry GenAI semantic conventions",
+        "在 Agent 框架内部埋点，因为它会让你耦合到该框架"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "课程指出哪些 OpenTelemetry 规范是 2026 年工具之间的互操作层？",
+      "options": [
+        "GenAI semantic conventions（gen_ai.system, gen_ai.request.model, gen_ai.usage.input_tokens）",
+        "OTel HTTP semantic conventions",
+        "OTel messaging semantic conventions",
+        "OTel database semantic conventions"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么课程认为完整链路保留无法扩展到每天超过 100 万次请求？",
+      "options": [
+        "Vendors block it",
+        "Phoenix only supports 1M traces",
+        "保留存储成本会超过 LLM 调用本身；团队必须采样（例如错误 100%、高成本 100%、成功 5%）",
+        "OpenTelemetry caps trace volume"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "13-mcp-async-tasks",
+  "title": "MCP Tasks Extension: Durable Work on a Stateless Core",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "无状态 MCP 服务器如何支持持续十分钟的工作？",
+      "options": [
+        "将 Mcp-Session-Id 连接保持十分钟",
+        "仅在 initialize 状态中存储进度",
+        "要求每个客户端使用粘性负载均衡",
+        "返回由应用存储支撑的显式持久任务句柄"
+      ],
+      "correct": 3,
+      "explanation": "无状态描述的是协议请求模型。持久应用状态由显式任务 ID 和共享存储表示。"
+    },
+    {
+      "stage": "check",
+      "question": "服务器何时可以从 tools/call 返回 resultType 为 task 的结果？",
+      "options": [
+        "当前请求已宣告扩展且任务可被持久读取后",
+        "只要之前的会话宣告了 Tasks",
+        "在持久化之前，以便客户端乐观轮询",
+        "仅当 params._meta.task.required 为 true 时"
+      ],
+      "correct": 0,
+      "explanation": "任务创建由服务器决定，但当前请求的能力支持和返回前持久化是强制的。缺少支持会返回 -32021 并附带 data.requiredCapabilities。"
+    },
+    {
+      "stage": "check",
+      "question": "tasks/get 响应的 resultType 为 complete 而 status 为 working，这意味着什么？",
+      "options": [
+        "响应违反了扩展",
+        "底层作业已完成",
+        "任务已取消",
+        "轮询 RPC 已完成，但作业仍在运行"
+      ],
+      "correct": 3,
+      "explanation": "resultType 描述的是 tasks/get RPC。任务状态独立描述持久作业。当 status 为 completed 时，嵌套的 CallToolResult 有自己的 resultType complete 和 serverInfo 元数据。"
+    },
+    {
+      "stage": "check",
+      "question": "任务已存在后，客户端如何响应 input_required？",
+      "options": [
+        "调用带 answer 字段的 tasks/result",
+        "打开新的 initialize 会话",
+        "用相同 id 重试原始 tools/call",
+        "发送带未完成任务键 inputResponses 的 tasks/update"
+      ],
+      "correct": 3,
+      "explanation": "创建后的任务输入由 tasks/get 暴露，并通过 tasks/update 满足，而不是重试原始调用。"
+    },
+    {
+      "stage": "post",
+      "question": "成功的 tasks/cancel 响应保证什么？",
+      "options": [
+        "服务器已确认取消意图",
+        "结果已被删除",
+        "最终任务状态将是 cancelled",
+        "工作进程已停止"
+      ],
+      "correct": 0,
+      "explanation": "取消是协作且最终一致的。在确认之后，工作可能完成或忽略取消。"
+    },
+    {
+      "stage": "post",
+      "question": "哪个方法集合与当前官方 Tasks 扩展匹配？",
+      "options": [
+        "tools/task、notifications/task_result 和 roots/list",
+        "tasks/get、tasks/update 和 tasks/cancel",
+        "tasks/create、tasks/subscribe 和 tasks/delete",
+        "tasks/status、tasks/result 和 tasks/list"
+      ],
+      "correct": 1,
+      "explanation": "该扩展使用 tasks/get、tasks/update 和 tasks/cancel。每个 HTTP 请求将 Mcp-Name 设置为 params.taskId。旧的 status、result 和 list 方法仅为迁移保留。"
+    }
+  ]
+}

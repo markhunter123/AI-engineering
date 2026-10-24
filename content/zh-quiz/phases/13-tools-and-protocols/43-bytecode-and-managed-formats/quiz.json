@@ -1,0 +1,90 @@
+{
+  "lesson": "43-bytecode-and-managed-formats",
+  "title": "Beyond Native Code: Python, JVM, .NET, and WebAssembly Bytecode",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "反编译器在 .pyc 文件上打印 \"Unsupported opcode\"，其前四个字节是 2b 0e 0d 0a。文件头说了什么？",
+      "options": [
+        "文件使用优化级别 2 编译",
+        "文件基于哈希且哈希失败",
+        "文件已损坏，因为 pyc 必须以单词 cpython 的字节开头",
+        "magic word 是 3627，即 CPython 3.14 写入的数值，工具没有该版本的 opcode 表"
+      ],
+      "correct": 3,
+      "explanation": "前两个字节是小端 magic word 0x0e2b = 3627，即 CPython 3.14 头文件中的值。随后是 CR LF，因此文本模式读取会破坏 magic。这与损坏或哈希无关。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 main.py 在 3.14 下运行时可以读取 3.11 pyc 的名称、常量和行表，但无法列出其指令？",
+      "options": [
+        "因为 3.14 移除了 dis 模块",
+        "因为 marshal 具有稳定的类型码格式（本课重新实现），而 opcode 编号和缓存布局随版本变化，dis 只知道当前解释器的表",
+        "因为 3.11 文件已加密",
+        "因为名称在单独的 .pyi 文件中"
+      ],
+      "correct": 1,
+      "explanation": "反序列化器读取类型码和 code 对象字段顺序（来自 marshal.c）。指令字节在没有写入版本的 opcode 表时是opaque，这就是 python3.11 -m dis 被捕获到 fixture 中的原因。"
+    },
+    {
+      "stage": "check",
+      "question": "在 Ledger-g.class 中，pc 4 处的字节是 aa 00 00 00 00 00 00 2c 00 00 00 06 00 00 00 0a，然后是五个 4 字节值。aa 后的三个零字节是什么？",
+      "options": [
+        "三个 nop 指令",
+        "默认偏移量的高字节",
+        "填充，使 default、low 和 high 字从 4 的倍数 pc 开始，正如 JVMS 6.5 tableswitch 所要求",
+        "switch 的常量池索引"
+      ],
+      "correct": 2,
+      "explanation": "操作码位于 pc 4，因此下一个 4 对齐的 pc 是 8。默认偏移 0x2c = 44 相对于操作码地址，得到目标 48。然后 low 6 和 high 10 表示五个条目。"
+    },
+    {
+      "stage": "check",
+      "question": "javac -g:none 将 Ledger.class 从 1832 字节（javac -g）缩小到 1404 字节。哪些字节消失了？",
+      "options": [
+        "方法体被重新编译为紧凑形式",
+        "LineNumberTable、LocalVariableTable 和 SourceFile 属性及其常量池字符串消失，而每个 Code 数组逐字节相同",
+        "仅调试器使用的 StackMapTable",
+        "常量池，JVM 在加载时重建"
+      ],
+      "correct": 1,
+      "explanation": "本课测试比较了三种构建的 grade Code 数组，发现相同 50 字节。只有调试属性和它们引用的 Utf8 条目消失。StackMapTable 保留，因为验证器需要它。"
+    },
+    {
+      "stage": "check",
+      "question": "ledger.wasm 没有 name section，但 wasm-objdump 在函数上打印 <grade>。名称从何而来，还缺少什么名称？",
+      "options": [
+        "来自 Code section 头部，每个函数体以名称开头",
+        "来自 Type section，为每个函数类型存储名称",
+        "来自 Export section，将字符串 grade 映射到函数索引 2；在 wat2wasm --debug-names 添加 name custom section 之前，局部名 score 和 bucket 缺失",
+        "来自偏移 1024 的 Data segment"
+      ],
+      "correct": 2,
+      "explanation": "Export 仅为导出函数携带字符串。Locals 在普通模块中没有名称。name 构建使文件从 290 字节增长到 425 字节，并作为自定义节添加函数名和局部名。"
+    },
+    {
+      "stage": "post",
+      "question": "Grade 的 MethodDef 行签名 blob 为 00 01 08 08，方法体头部命名本地签名 token 0x11000001 且 blob 为 07 01 08。关于 Grade 还有什么事实未在汇编中体现？",
+      "options": [
+        "局部变量名，因为 ECMA-335 元数据在 StandAloneSig 中存储局部类型，局部名留给单独的 PDB 文件",
+        "参数名",
+        "返回类型",
+        "参数类型"
+      ],
+      "correct": 0,
+      "explanation": "blob 表示 static int32(int32)，Param 行表示 score，StandAloneSig 表示一个 int32 局部。没有表保存局部名。fixture 使用 DebugType none 构建，因此没有 PDB。"
+    },
+    {
+      "stage": "post",
+      "question": "在五个容器中，反编译器必须在哪种容器中将 switch 从跳转重建，而不是作为一条指令或一个块读取？",
+      "options": [
+        ".NET 程序集，因为 switch 是前缀",
+        "CPython pyc，其中 grade 是四个 COMPARE_OP 和 POP_JUMP_IF_FALSE 对；而原生目标中是通过重定位表的 jmpq",
+        "JVM class，因为 tableswitch 是跳转表",
+        "WebAssembly 模块，因为 br_table 没有结构"
+      ],
+      "correct": 1,
+      "explanation": "tableswitch、br_table 和 CIL switch 都在一条指令中携带 case 目标，Wasm 将 case 嵌套在块中。CPython 和 x86-64 只存储跳转，因此它们的反编译器依赖控制流分析，并在跳转形状变化时失效。"
+    }
+  ]
+}

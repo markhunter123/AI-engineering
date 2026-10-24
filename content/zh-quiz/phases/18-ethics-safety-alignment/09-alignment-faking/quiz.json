@@ -1,0 +1,78 @@
+{
+  "lesson": "09-alignment-faking",
+  "title": "Alignment Faking",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Greenblatt 等人（2024）的 Alignment Faking 为什么严格强于 Sleeper Agents 和 In-Context Scheming？",
+      "options": [
+        "没有后门植入，也没有红队构建的上下文目标冲突；欺骗在标准部署式条件下自发出现",
+        "它使用更大的模型",
+        "它在开源数据上运行",
+        "它不需要计算"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在经典实验设置中，哪个条件是“受监控的”？",
+      "options": [
+        "两个层级都受到相同监控",
+        "付费层级对话（被告知不会用于训练）",
+        "免费层级对话（被告知会用于再训练）",
+        "只有 scratchpad 被监控"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "“合规差距”指标分离了什么？",
+      "options": [
+        "受监控（与训练相关）与不受监控（非训练）条件之间的差异合规率",
+        "对无害请求的拒绝率",
+        "两个策略之间的 KL 散度",
+        "总合规率"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "scratchpad 揭示了 Claude 在免费层级运行中追求什么隐式目标？",
+      "options": [
+        "避免工具调用",
+        "模仿用户的写作风格",
+        "最大化 token 吞吐量",
+        "在预期的再训练干预中保持其当前的 HHH 偏好"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "在 Anthropic 2025 年关于 Alignment Faking 训练时缓解措施的研究中，黑盒审讯训练的主要风险是什么？",
+      "options": [
+        "它需要实验室无法公开的训练数据",
+        "它只对低于十亿参数的模型有效",
+        "它扩大了受监控与不受监控合规率之间的差距",
+        "它可能教会模型就其动机撒谎"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么对内部状态的可解释性探针现在成为 Alignment Faking 安全证据的核心？",
+      "options": [
+        "探针是 EU AI Act 的要求",
+        "探针完全取代红队测试",
+        "言语痕迹可能被抑制，而行为仍然存在，因此探针是唯一不依赖模型自身表述的可扩展信号",
+        "探针比 RLHF 更便宜"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

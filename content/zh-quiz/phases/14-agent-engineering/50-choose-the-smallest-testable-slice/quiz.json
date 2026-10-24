@@ -1,0 +1,78 @@
+{
+  "lesson": "50-choose-the-smallest-testable-slice",
+  "title": "Choose the Smallest Testable Slice",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "什么让小切片有用？",
+      "options": [
+        "代码少",
+        "回避真正的不确定性",
+        "能改变一个重要决策",
+        "有精致 UI"
+      ],
+      "correct": 2,
+      "explanation": "大小只有在与决定性证据相关时才重要。"
+    },
+    {
+      "stage": "check",
+      "question": "比较候选切片前必须定义什么？",
+      "options": [
+        "发布名称",
+        "框架",
+        "最终架构",
+        "所需证明集"
+      ],
+      "correct": 3,
+      "explanation": "资格取决于覆盖需要证据的风险假设。"
+    },
+    {
+      "stage": "check",
+      "question": "为何便宜的 dashboard mockup 可能是最小错误？",
+      "options": [
+        "它太可逆",
+        "它有用户",
+        "它可能把数据和运营不确定性排除在测试之外",
+        "仪表板总是坏的"
+      ],
+      "correct": 2,
+      "explanation": "回避风险机制的切片无法回答决策。"
+    },
+    {
+      "stage": "check",
+      "question": "对得分高但缺少必需证明的切片应如何回应？",
+      "options": [
+        "判定为不合格",
+        "提高它的分数",
+        "选择它",
+        "称它为生产"
+      ],
+      "correct": 0,
+      "explanation": "覆盖是优化前的门禁。"
+    },
+    {
+      "stage": "post",
+      "question": "为何添加停止规则？",
+      "options": [
+        "为了避免测量",
+        "明确什么证据会导致重构、修订或放弃",
+        "为了限制文档",
+        "让每个结果都支持这个想法"
+      ],
+      "correct": 1,
+      "explanation": "实验必须能够改变决策。"
+    },
+    {
+      "stage": "post",
+      "question": "测试诊断时哪个切片通常更安全？",
+      "options": [
+        "生产自动修复",
+        "对代表性事件进行只读回放",
+        "迁移",
+        "完整平台"
+      ],
+      "correct": 1,
+      "explanation": "回放能用更低后果和更高可逆性测试核心未知。"
+    }
+  ]
+}

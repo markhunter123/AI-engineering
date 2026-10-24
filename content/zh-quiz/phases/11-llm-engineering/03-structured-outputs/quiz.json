@@ -1,0 +1,62 @@
+[
+  {
+    "question": "为什么从 LLM 获取结构化 JSON 输出具有挑战性？",
+    "options": [
+      "JSON 对 LLM 来说太复杂",
+      "LLM 只输出纯文本",
+      "LLM 无法生成 JSON",
+      "LLM 逐 token 生成自由文本，可能在任何位置产生无效 JSON（缺少括号、类型错误、多余文本）"
+    ],
+    "correct": 3,
+    "explanation": "LLM 以自回归方式生成 token。它们可能会添加尾随逗号、遗漏闭合括号、在 JSON 外包裹 Markdown 格式，或幻觉出额外字段。每个 token 都是独立的，因此结构正确性无法保证。",
+    "stage": "pre"
+  },
+  {
+    "question": "什么是约束解码（constrained decoding）？",
+    "options": [
+      "限制模型的词表大小",
+      "使用更小的模型",
+      "压缩输出",
+      "在每一步限制模型可以生成的 token，以确保输出符合特定语法或 schema"
+    ],
+    "correct": 3,
+    "explanation": "约束解码在每一步生成时屏蔽无效 token。在开括号之后，只允许合法的 JSON 键；在冒号之后，只允许合法的值 token。这能在 token 级别保证结构有效性。",
+    "stage": "pre"
+  },
+  {
+    "question": "使用 Pydantic 模型验证 LLM 输出有什么好处？",
+    "options": [
+      "它们定义了带类型的 schema，可以自动验证、解析并拒绝格式错误的 LLM 输出，同时给出清晰的错误信息",
+      "它们让 API 调用更快",
+      "它们减少 token 使用",
+      "它们提升模型准确率"
+    ],
+    "correct": 0,
+    "explanation": "Pydantic 强制执行类型、必填字段、值约束和嵌套结构。当 LLM 生成无效输出时，Pydantic 会给出具体错误信息，可将其反馈给模型以自我纠正。",
+    "stage": "post"
+  },
+  {
+    "question": "当 LLM 在已有明确指令的情况下仍返回无效 JSON 时，应该怎么做？",
+    "options": [
+      "切换到其他模型",
+      "手动修复 JSON",
+      "实现重试循环，将验证错误作为上下文反馈给模型，以请求修正",
+      "提高 temperature"
+    ],
+    "correct": 2,
+    "explanation": "带错误反馈的重试循环效果很好：解析输出、捕获验证错误，然后将错误信息作为上下文回传（“你的输出存在以下错误：……请修复”）。大多数模型在第二次尝试时就能自我纠正。",
+    "stage": "post"
+  },
+  {
+    "question": "什么时候应该使用 API 原生 JSON 模式，而不是基于提示词的 JSON 提取？",
+    "options": [
+      "始终使用基于提示词的提取",
+      "始终使用原生 JSON 模式",
+      "需要保证结构时使用原生模式；需要模型推理提取哪些字段的复杂提取任务使用基于提示词的方式",
+      "它们产生的结果完全相同"
+    ],
+    "correct": 2,
+    "explanation": "原生 JSON 模式（OpenAI 的 response_format、Anthropic 的 tool_use）能保证 JSON 结构有效。基于提示词的提取在需要模型推理填充哪些字段时更灵活。当结构最重要时，使用原生模式。",
+    "stage": "post"
+  }
+]

@@ -1,0 +1,102 @@
+{
+  "lesson": "29-dialogue-state-tracking",
+  "title": "对话状态跟踪",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "对话状态跟踪在轮次之间维护什么？",
+      "options": [
+        "仅自由文本历史",
+        "POS 标注的转录",
+        "对话的嵌入",
+        "表示用户当前目标的 slot-value 字典，每轮更新"
+      ],
+      "correct": 3,
+      "explanation": "DST 保持一个结构化的 slot-value 映射，后端可以据此执行动作。"
+    },
+    {
+      "stage": "pre",
+      "question": "Joint Goal Accuracy（JGA）测量什么？",
+      "options": [
+        "每一轮所有 slot 完全正确的比例（全有或全无）",
+        "余弦相似度",
+        "每轮延迟",
+        "平均 slot 准确率"
+      ],
+      "correct": 0,
+      "explanation": "JGA 是每轮所有 slot 的严格匹配；每 slot 准确率更宽松。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么每轮从历史中重新生成整个状态能自然处理用户修正？",
+      "options": [
+        "它使用更少 token",
+        "它在 GPU 上运行",
+        "它避免嵌入",
+        "阅读完整历史让模型可以重新推导最终状态，包括 'actually...' 修正，而无需显式回滚逻辑"
+      ],
+      "correct": 3,
+      "explanation": "完整历史再生通过从整个对话重新计算最终状态来吸收修正。"
+    },
+    {
+      "stage": "check",
+      "question": "哪种 2026 模式能在 5 行代码内保证生成有效的 slot dict？",
+      "options": [
+        "手写正则",
+        "LLM + Instructor + Pydantic schema，配合约束或验证输出",
+        "TF-IDF 分类器",
+        "BM25 检索"
+      ],
+      "correct": 1,
+      "explanation": "Pydantic schema + Instructor 自动根据 slot 本体验证 LLM 的状态输出。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么要对 DST schema 进行版本控制？",
+      "options": [
+        "事后添加新 slot 会使旧训练数据失效并破坏纵向评估",
+        "减少 token 数量",
+        "JSON 要求",
+        "速度提升"
+      ],
+      "correct": 0,
+      "explanation": "无版本控制的 schema 变化会悄悄破坏训练数据对齐和评估可比性。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么合规敏感领域的 DST 必须在 LLM 抽取之外包含基于规则的检查？",
+      "options": [
+        "LLM 更慢",
+        "规则避免嵌入",
+        "仅 LLM 的 DST 可能错误提取破坏性参数（金额、账户、日期）；规则层强制执行确定性约束",
+        "规则是多语言的"
+      ],
+      "correct": 2,
+      "explanation": "合规领域需要确定性执行；规则能捕获 LLM 引入的 slot 错误。"
+    },
+    {
+      "stage": "post",
+      "question": "通过 LLM 每轮重新生成状态的成本担忧是什么？",
+      "options": [
+        "嵌入漂移",
+        "更多嵌入",
+        "每轮都重读完整历史会导致 O(n^2) 的总 token 使用量；需要限制或总结较早轮次",
+        "余弦成本"
+      ],
+      "correct": 2,
+      "explanation": "完整历史再生在轮次上是二次的；限制历史或使用滚动摘要。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么在破坏性后端动作前需要显式确认流程？",
+      "options": [
+        "确认提升 JGA",
+        "即使好的 DST 也存在非零 slot 错误率；确定性确认可防止错误账户或错误金额动作",
+        "分词器要求",
+        "延迟"
+      ],
+      "correct": 1,
+      "explanation": "破坏性动作需要用户确认，因为 DST 永远不会无错误。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "37-the-reverse-engineering-landscape",
+  "title": "The Reverse Engineering Landscape: History, Tool Families, and How a Decompiler Is Built",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "radare2、rizin、angr 和 Ghidra 都打开 ledger-x86_64-O1.o 并报告四个函数，但 grade 在三个工具中分别位于 0x08000050、0x400010 和 0x100010。如何解释这三个地址？",
+      "options": [
+        "目标被编译了三次，每次编译器放置 grade 的位置不同",
+        "每个工具为可重定位目标选择自己的基地址，因此同一函数在三种不同基底下保持 .text 偏移 0x10",
+        "符号表存储了三个替代地址，每个工具选择一个",
+        "两个工具反汇编了错误的节，地址属于 .rodata"
+      ],
+      "correct": 1,
+      "explanation": "可重定位目标没有加载地址。radare2 和 rizin 将文件映射在 0x08000000，angr 在 0x400000，Ghidra 在 0x100000。减去 .text 基址后，每个工具中的偏移都是 0x10。"
+    },
+    {
+      "stage": "check",
+      "question": "在 ledger-x86_64-O0.o 上，装置报告 radare2 中 grade 有 3 个块，rizin 和 angr 有 8 个，Ghidra 有 9 个。哪个说法与捕获的证据一致？",
+      "options": [
+        "angr 发现了更多代码，因为它将对齐填充解码为 case 块",
+        "radare2 解码了 case 块，但因它们共享目标而合并为一个块",
+        "Ghidra 在 jmp rax 处拆分开关块以放置 switchD 标签，rizin 将五个 case 解析为 switch_op，radare2 在间接跳转处停止，36 字节从未到达",
+        "四个计数来自四个不同函数，装置搞混了"
+      ],
+      "correct": 2,
+      "explanation": "计数来自同一字节。差异在于每个工具跟随 jmp rax 的程度：radare2 停止，rizin 和 Ghidra 通过重定位读取表，angr 保留 case 块但将跳转路由到不可解析节点。"
+    },
+    {
+      "stage": "check",
+      "question": "pypcode 将 sub rsp, 0x10 提升为九个操作，写入 CF、OF、SF、ZF、PF；pyvex 将其提升为七个语句，含 PUT(cc_op) = 0x8 且根本没有标志。差异意味着什么？",
+      "options": [
+        "P-code 和 VEX 对 x86-64 减法语义存在分歧",
+        "P-code 急切地写入每个标志；VEX 存储条件码 thunk（操作与操作数），只在后续指令读取标志时才计算",
+        "pyvex 丢失了标志，其对此指令的提升不完整",
+        "两次提升使用了不同操作数大小，P-code 为 64 位，VEX 为 32 位"
+      ],
+      "correct": 1,
+      "explanation": "两次提升都是完整的。SLEIGH 在指令处写入标志。VEX 记录 cc_op、cc_dep1、cc_dep2、cc_ndep，并在使用它的分支处惰性求值标志。"
+    },
+    {
+      "stage": "check",
+      "question": "在 sweep-trap.o 上，llvm-objdump 列出 lookup 内部有 8 个指令起点，radare2、rizin 和 Ghidra 列出 6 个。多出的两个起点从何而来？",
+      "options": [
+        "llvm-objdump 将重定位项打印为指令，其他工具隐藏它们",
+        "线性扫描将四个表字节 31 c0 90 48 解码为 xorl、nop 和吞噬真实 addl 的 REX 前缀，因此在 0x10、0x12、0x13 处获得起点，并在 0x14 处失去起点",
+        "扫描把 plus_one 后的填充 nop 算作 lookup 的一部分",
+        "radare2、rizin 和 Ghidra 因第一个 jmp 而跳过两条合法指令"
+      ],
+      "correct": 1,
+      "explanation": "装置报告扫描多出 0x10、0x12、0x13 的起点，且 0x14 处缺少起点。三个图构建器将 0x10 到 0x14 留空，装置将该范围命名为函数内部的数据。"
+    },
+    {
+      "stage": "post",
+      "question": "Ghidra 将 -O1 的 grade 反编译为 param_1 / 10 - 6，angr 将同一字节反编译为 (a0 * 1717986919) >> 0x22。管道的哪个阶段产生了差异？",
+      "options": [
+        "反汇编器，因为两个工具在 0x13 解码出不同指令",
+        "加载器，因为 angr 应用了重定位而 Ghidra 没有",
+        "数据流阶段的项重写：Ghidra 的规则池将乘移惯用语折叠回除法，angr 的简化器将算术保留为提升形式",
+        "发射器，因为 angr 以十进制打印常量而 Ghidra 以十六进制打印"
+      ],
+      "correct": 2,
+      "explanation": "两个工具都解码了相同的 imul 0x66666667 和 sar 34。Ghidra 的简化循环将该惯用语重写为 INT_SDIV；angr 的 AIL 简化没有这样做，因此提升后的算术到达发射器。"
+    },
+    {
+      "stage": "post",
+      "question": "队友提议信任报告基本块最多的工具，因为更多块意味着找到更多代码。哪个捕获的结果反驳了这一规则？",
+      "options": [
+        "radare2 报告 -O0 的 grade 有 3 个块，且只有它是对的",
+        "Ghidra 报告 -O0 的 grade 有 9 个块，rizin 对同一边报告 8 个，而 angr 在每个填充间隙都添加一个无符号块，因此块数衡量的是块边界和启发式，而非找到的代码",
+        "每个 fixture 上每个工具报告的块数都相同，因此无法测试该规则",
+        "llvm-objdump 报告最多块且是线性扫描"
+      ],
+      "correct": 1,
+      "explanation": "Ghidra 的额外块是在 jmp rax 处拆分的标签，angr 的额外函数是对齐字节。在指令起点、边和字节计数上达成一致才是证据；单个计数不是。"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "lesson": "24-agent-observability-platforms",
+  "title": "智能体可观测性：Langfuse、Phoenix、Opik",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "2025 年 6 月 Langfuse 将之前商业模块开源后，使用什么 license？",
+      "options": [
+        "Apache 2.0",
+        "GPLv3",
+        "Elastic License 2.0",
+        "MIT"
+      ],
+      "correct": 3,
+      "explanation": "Langfuse 使用 MIT，包括 2025 年 6 月后开源的 LLM-as-a-judge、标注队列、提示词实验和 Playground。"
+    },
+    {
+      "stage": "pre",
+      "question": "Arize Phoenix 据本课最强在哪里？",
+      "options": [
+        "深度智能体专属评估：trace 聚类、异常检测、RAG 检索相关性、OpenInference 自动插桩",
+        "自动优化循环",
+        "提示词版本管理",
+        "代码静态分析"
+      ],
+      "correct": 0,
+      "explanation": "Phoenix 专注于行为漂移和 RAG 评估，支持 OpenInference 自动插桩。"
+    },
+    {
+      "stage": "check",
+      "question": "哪个平台将自动提示词优化与护栏（PII 脱敏、主题约束）和 LLM-judge 幻觉检测配对？",
+      "options": [
+        "Langfuse",
+        "Phoenix",
+        "Jaeger",
+        "Opik"
+      ],
+      "correct": 3,
+      "explanation": "Opik 以优化 + 护栏循环为中心。"
+    },
+    {
+      "stage": "check",
+      "question": "本课推荐哪个平台作为一站式提示词管理方案？",
+      "options": [
+        "Opik",
+        "Datadog APM",
+        "Phoenix",
+        "Langfuse"
+      ],
+      "correct": 3,
+      "explanation": "Langfuse 端到端覆盖 trace + 提示词管理 + 评估 + 会话重放。"
+    },
+    {
+      "stage": "check",
+      "question": "本课对厂商发布的平台基准怎么看？",
+      "options": [
+        "它们是权威结论",
+        "仅作方向性参考；应在自己的语料上测量",
+        "只有 Opik 的可靠",
+        "OpenTelemetry 禁止它们"
+      ],
+      "correct": 1,
+      "explanation": "即使是引用的 Opik 与 Langfuse 之间 14 倍差距，也应在自己的数据上测量后再决定。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么仅有追踪而没有评估被视为昂贵的日志？",
+      "options": [
+        "提供方对 span 收费",
+        "你能看到运行，但不对其打分，因此回归不可见，也无法二分定位",
+        "磁盘比 CPU 贵",
+        "Span 无法重放"
+      ],
+      "correct": 1,
+      "explanation": "评估才是将 trace 转化为可操作质量信号的关键。"
+    },
+    {
+      "stage": "post",
+      "question": "本课对自研 LLM-judge 的警告是什么？",
+      "options": [
+        "CRITIC 适用：法官需要外部依据进行事实验证，否则会盖章通过",
+        "它们必须在 GPU 上运行",
+        "Apache 2.0 禁止它们",
+        "它们只在 TypeScript 中工作"
+      ],
+      "correct": 0,
+      "explanation": "没有外部工具支撑的验证，LLM-judge 会趋向于盖章通过（CRITIC，第 5 课）。"
+    }
+  ]
+}

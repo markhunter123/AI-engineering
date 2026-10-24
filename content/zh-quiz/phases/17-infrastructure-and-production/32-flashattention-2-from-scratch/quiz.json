@@ -1,0 +1,78 @@
+{
+  "lesson": "flashattention-2-from-scratch",
+  "title": "FlashAttention-2 from Scratch: Tiled Online Softmax",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "标准 softmax attention 在长序列下为什么会变成内存受限？",
+      "options": [
+        "矩阵乘法需要太多 FLOPs。",
+        "它将 N×N 分数矩阵写入 HBM 并读回以进行 softmax 和 PV。",
+        "V 矩阵随序列长度线性增长。",
+        "GPU 没有足够的 warp 来并行运行 attention。"
+      ],
+      "correct": 1,
+      "explanation": "标准 attention 在 HBM 中物化 S 和 P，使内存流量为 O(N²)；FlashAttention 消除了这些往返。"
+    },
+    {
+      "stage": "check",
+      "question": "在线 softmax 中，当新 tile 的行最大值大于运行最大值时会发生什么？",
+      "options": [
+        "忽略新 tile 并保留旧累加器。",
+        "旧累加器和运行总和按 e^(m_old − m_new) 重新缩放。",
+        "整行从头重新计算。",
+        "指数和重置为新 tile 的和。"
+      ],
+      "correct": 1,
+      "explanation": "按 e^(m_old − m_new) 重新缩放，将所有已累积项平移到新的最大值，保持部分结果一致。"
+    },
+    {
+      "stage": "check",
+      "question": "前向传播中，FlashAttention-2 与 FlashAttention-1 的循环顺序差异是什么？",
+      "options": [
+        "FlashAttention-2 仅使用 batch/head 并行。",
+        "FlashAttention-2 将 Q-tile 循环放在外层，在内层流式读取 K/V tile。",
+        "FlashAttention-2 在 QK^T 矩阵乘法前计算 softmax。",
+        "FlashAttention-2 存储 N×N softmax 矩阵以供复用。"
+      ],
+      "correct": 1,
+      "explanation": "Q 在外层的循环使 Q tile 保持驻留，减少非矩阵乘法 FLOPs，并暴露更多序列并行。"
+    },
+    {
+      "stage": "check",
+      "question": "FlashAttention 如何在训练期间将激活内存保持在 O(N)？",
+      "options": [
+        "用低秩近似压缩 N×N 矩阵。",
+        "反向传播时根据保存的 Q、K、V 重新计算分数 tile。",
+        "只存储 softmax 矩阵的对角线。",
+        "反向传播使用更小的数据类型。"
+      ],
+      "correct": 1,
+      "explanation": "在 SRAM 中重新计算 tile 避免了将完整 N×N softmax 矩阵作为激活值物化。"
+    },
+    {
+      "stage": "post",
+      "question": "FlashAttention-2 相比朴素 attention 的渐近 HBM 流量是什么？",
+      "options": [
+        "O(N) 对 O(N log N)",
+        "O(N) 对 O(N^2)",
+        "O(N^2) 对 O(N^3)",
+        "O(N log N) 对 O(N^2)"
+      ],
+      "correct": 1,
+      "explanation": "FlashAttention 一次性读取 Q、K、V 并写出 O，因此 HBM 流量为 O(N)；朴素 attention 物化 N×N 张量，为 O(N²)。"
+    },
+    {
+      "stage": "post",
+      "question": "即使 logits 被整体加 500，在线 softmax 为什么仍保持数值稳定？",
+      "options": [
+        "指数化前将所有分数裁剪到固定最大值。",
+        "每个指数都相对于运行中的行最大值计算。",
+        "在对数空间而非指数空间计算 softmax。",
+        "每个 tile 后用双精度归一化和。"
+      ],
+      "correct": 1,
+      "explanation": "从每个新分数中减去运行最大值，使指数保持在零或负数附近，防止溢出。"
+    }
+  ]
+}

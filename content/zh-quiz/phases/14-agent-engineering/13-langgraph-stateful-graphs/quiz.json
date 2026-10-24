@@ -1,0 +1,90 @@
+{
+  "lesson": "13-langgraph-stateful-graphs",
+  "title": "有状态图编排 —— 持久化执行与检查点",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "LangGraph 将什么视为智能体的核心单元？",
+      "options": [
+        "向量索引",
+        "带有类型化状态、函数节点和条件边的状态机",
+        "单一工具注册表",
+        "自由形式的 LLM 调用"
+      ],
+      "correct": 1,
+      "explanation": "LangGraph 将智能体建模为状态图：节点是纯函数，边是转移，状态是类型化且不可变的。"
+    },
+    {
+      "stage": "pre",
+      "question": "持久化执行解决了什么问题？",
+      "options": [
+        "降低推理成本",
+        "更快生成嵌入",
+        "当 40 步运行在第 38 步失败时，可以从第 38 步带着精确状态恢复，而不是从头开始",
+        "在不同提供方之间转换"
+      ],
+      "correct": 2,
+      "explanation": "每个节点后都会检查点，使运行时能从最后成功步骤恢复。"
+    },
+    {
+      "stage": "check",
+      "question": "下列哪一项不是 LangGraph 支持的三种拓扑之一？",
+      "options": [
+        "Gradient ring",
+        "Hierarchical（嵌套子图）",
+        "Supervisor",
+        "Swarm（peer-to-peer）"
+      ],
+      "correct": 0,
+      "explanation": "拓扑是 supervisor、swarm 和 hierarchical。Gradient ring 不是 LangGraph 拓扑。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么节点必须是确定性的，恢复才能干净工作？",
+      "options": [
+        "GIL 要求如此",
+        "确定性降低 token 成本",
+        "恢复假设相同输入产生相同状态更新；随机种子、墙钟时间和外部 API 都必须被捕获",
+        "提供方要求确定性"
+      ],
+      "correct": 2,
+      "explanation": "如果节点依赖未被捕获的非确定性，恢复就无法重建步骤后的状态。"
+    },
+    {
+      "stage": "check",
+      "question": "什么是条件边（conditional edge）？",
+      "options": [
+        "带 TTL 的边",
+        "由状态函数选择、用于分支图的边",
+        "只在 GPU 上运行的边",
+        "由训练损失加权的边"
+      ],
+      "correct": 1,
+      "explanation": "条件边基于状态分支；过度使用会使图难以推理。"
+    },
+    {
+      "stage": "post",
+      "question": "检查点太小时会出什么问题？",
+      "options": [
+        "磁盘填满",
+        "图无法到达 END",
+        "工具状态和记忆写入无法恢复；必须序列化完整状态",
+        "模型生成更短的答案"
+      ],
+      "correct": 2,
+      "explanation": "只检查点对话轮次会把工具状态和记忆写入留在恢复范围之外。"
+    },
+    {
+      "stage": "post",
+      "question": "human-in-the-loop 如何融入 LangGraph 的设计？",
+      "options": [
+        "在关键节点前暂停，向人类展示序列化状态，接受修改后恢复；检查点使这很便宜",
+        "只在 START 和 END",
+        "通过单独的提供方 API",
+        "需要运行时分支"
+      ],
+      "correct": 0,
+      "explanation": "因为状态在节点之间已经序列化，人类审查和修正是自然的暂停—恢复模式。"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "你对模型做基准测试并报告“在 4090 上平均每张图像 12ms”。缺少了什么？",
+      "options": [
+        "数据集名称",
+        "模型大小",
+        "没什么，已经很完整",
+        "分位延迟（p50/p95/p99）、warmup 规范和 CUDA 同步；仅报告均值会隐藏尾部延迟，并且可能测的是内核启动而非内核执行"
+      ],
+      "correct": 3,
+      "explanation": "生产延迟用分位数衡量，因为实时系统失败在尾部而不是均值。没有 warmup 时，JIT 编译会抬高前几次测量。没有 torch.cuda.synchronize 时，GPU 内核启动在内核完成前就返回，因此测的是启动而非执行。三者都正确，这个数字才有意义。"
+    },
+    {
+      "stage": "pre",
+      "question": "FLOPs 与设备上的延迟并不完全相关。为什么？",
+      "options": [
+        "不同运算对硬件的友好程度不同；深度可分离卷积 FLOPs 可能更低，但在 GPU 上是内存受限，而稠密卷积能高效使用 Tensor Core。内存带宽、内核启动开销和缓存行为也会在原始 FLOPs 之外影响延迟",
+        "FLOPs 计数器有 bug",
+        "FLOPs 忽略了 batch size",
+        "PyTorch 算错了 FLOPs"
+      ],
+      "correct": 0,
+      "explanation": "FLOPs 是一个廉价的代理指标。实际延迟取决于运算与硬件优势的匹配程度：稠密矩阵乘法能占满 Tensor Core；深度可分离卷积受内存带宽拖累；注意力受序列长度平方的内存读取限制。做架构搜索时 FLOPs 有用；做部署决策时要在目标设备上实测。"
+    },
+    {
+      "stage": "post",
+      "question": "训练后静态 INT8 量化在 ImageNet 级别视觉模型上通常会损失多少准确率？",
+      "options": [
+        "永远为 0；它是无损的",
+        "20 多个百分点；不可用",
+        "5-10 个百分点",
+        "校准得当时约 0.1-1 个百分点；融合了批归一化的卷积模型在 INT8 下表现尤其稳定"
+      ],
+      "correct": 3,
+      "explanation": "在良好校准的视觉模型上，静态 PTQ 通常损失不到 1 个百分点。更大的损失来源是：(a) 校准数据不足，(b) 激活中存在极端异常值（可通过逐通道量化或裁剪修复），(c) 未融合的 BatchNorm 层。处理好这些后，INT8 几乎是免费的。"
+    },
+    {
+      "stage": "post",
+      "question": "你的移动应用需要一个小于 10MB、延迟低于 10ms 的视觉模型。选哪个主干网络？",
+      "options": [
+        "ResNet-50",
+        "ConvNeXt-Large",
+        "ViT-Base",
+        "MobileNetV3-Small 或 EfficientNet-Lite-B0 量化到 INT8；两者都针对这一预算设计，并能干净地编译到 TFLite / Core ML"
+      ],
+      "correct": 3,
+      "explanation": "2026 年的移动端视觉部署仍由 MobileNetV3 和 EfficientNet-Lite 变体主导，因为它们就是按这个预算设计的：深度可分离卷积、h-swish、Squeeze-and-Excite、从第一天就考虑量化。ResNet-50 和 ViT-Base 在 FP32 下超过 100MB，INT8 下也超过 25MB，在测延迟之前就已经超出大小预算。"
+    },
+    {
+      "stage": "post",
+      "question": "你把 PyTorch 模型导出为 ONNX，opset 17，失败并提示“Unsupported operator”。最可能的原因是什么？",
+      "options": [
+        "模型参数太多",
+        "输入形状错误",
+        "ONNX 库过时",
+        "(1) 自定义算子没有 ONNX 映射；(2) 追踪无法捕获的非确定性控制流路径；(3) Python 中隐式的张量-标量交互在 ONNX 中没有等价物。修复：替换算子、对控制流使用 `torch.jit.script`，或升级 opset"
+      ],
+      "correct": 3,
+      "explanation": "ONNX 导出默认使用追踪，因此追踪无法捕获的一切——运行时控制流、Python 层面的分支、自定义 CUDA 算子——都会失败。大多数失败源于单个没有 ONNX 等价物的节点（通常是一个小小的自定义算子或对 torch.special.* 的调用）。修复方法是替换算子、切换到 `torch.jit.script`，或升级到包含该算子的更新 opset。"
+    }
+  ]
+}

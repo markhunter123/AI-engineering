@@ -1,0 +1,78 @@
+{
+  "lesson": "19-ai-gateways",
+  "title": "AI Gateways — LiteLLM, Portkey, Kong AI Gateway, Bifrost",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "课程中 AI 网关的核心角色是什么？",
+      "options": [
+        "A vector database for retrieval",
+        "A model fine-tuning service",
+        "一个位于应用与模型提供商之间的进程，将路由、故障转移、重试、限流、密钥引用、可观测性和护栏统一到一个 API 后面",
+        "A logging-only sidecar"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Kong 的基准测试报告 LiteLLM 的规模化天花板是多少？",
+      "options": [
+        "LiteLLM cannot be benchmarked",
+        "It scales linearly past 10k RPS",
+        "在 8 GB 内存和持续负载下约 2000 RPS 出现故障并级联失败",
+        "It tops out at 50 RPS"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在同等 CPU 上，Kong AI Gateway 比 Portkey 和 LiteLLM 快多少？",
+      "options": [
+        "Identical",
+        "About 10% and 20% faster",
+        "比 Portkey 快 228%，比 LiteLLM 快 859%",
+        "Slower than both"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "课程将哪个网关定位为具有 20-40 毫秒延迟开销，并以护栏、PII 脱敏和越狱检测为重点？",
+      "options": [
+        "Cloudflare AI Gateway",
+        "Portkey",
+        "Kong AI Gateway",
+        "LiteLLM"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "课程认为推动自建与托管网关选择的决定性因素是什么？",
+      "options": [
+        "Number of supported providers",
+        "Cost per request",
+        "Data residency requirements",
+        "Whether the gateway is open source"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "当 SLA 为 TTFT P99 < 100 毫秒时，哪些网关仍能保持在预算内？",
+      "options": [
+        "Only Portkey",
+        "Any gateway",
+        "Only LiteLLM",
+        "Kong（约 3-8 ms）或 Cloudflare/Vercel 边缘网关（约 1-3 ms）；Portkey 的 20-40 ms 太重"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

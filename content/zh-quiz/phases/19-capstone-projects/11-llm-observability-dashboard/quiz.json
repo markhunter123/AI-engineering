@@ -1,0 +1,90 @@
+{
+  "lesson": "11-llm-observability-dashboard",
+  "title": "Capstone 11 — LLM Observability & Eval Dashboard",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Langfuse、Phoenix 和 OpenLLMetry 在摄取 schema 上收敛到什么？",
+      "options": [
+        "Prometheus exposition 格式",
+        "通过 OTLP HTTP 的 OpenTelemetry GenAI semantic conventions",
+        "每个供应商的专有 JSON",
+        "纯 CSV 日志文件"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "为什么存储层要分开 ClickHouse 和 Postgres？",
+      "options": [
+        "它们可互换，随机选择一个",
+        "Postgres 更适合 span 摄取",
+        "ClickHouse 处理 span 的列式分析，Postgres 保存用户、会话和应用元数据",
+        "ClickHouse 不能存储字符串"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "OpenTelemetry Collector 中的 tail-sampling processor 做什么？",
+      "options": [
+        "在 trace 完成后决定是否保留，使用如保留错误并采样成功等规则",
+        "将旧 trace 重放到 Postgres",
+        "无条件流式传输每个字节",
+        "截断低于 100ms 的 span"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "dashboard 如何检测跨周的漂移？",
+      "options": [
+        "统计唯一 trace ID 数量",
+        "对汇集的 prompt 嵌入计算 PSI 或 KL divergence，并监控评估分数趋势",
+        "手动肉眼观察仪表板",
+        "读取最新部署时间戳"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "交付物对注入的 PII 泄漏回归的 MTTR 目标是多少？",
+      "options": [
+        "低于 1 小时",
+        "24 小时内",
+        "从 bug 部署到 Slack 告警低于 5 分钟",
+        "在下一轮值班内"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪些 SDK 家族必须产生规范的 GenAI span 以满足 trace-coverage 评分标准？",
+      "options": [
+        "仅 OpenAI 和 Anthropic",
+        "任意一个 SDK 就够了",
+        "仅 vLLM",
+        "至少六个：OpenAI、Anthropic、Google GenAI、LangChain、LlamaIndex 和 vLLM"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "评估结果如何关联回原始 LLM 调用？",
+      "options": [
+        "作为没有 trace ID 的独立 Postgres 表",
+        "作为夜间邮件发送的 CSV",
+        "仅作为 Slack 消息",
+        "作为 eval span，在 ClickHouse 中写为父 trace 的子 span"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

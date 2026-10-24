@@ -1,0 +1,78 @@
+{
+  "lesson": "08-in-context-scheming-frontier-models",
+  "title": "In-Context Scheming in Frontier Models",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "上下文情境阴谋（in-context scheming）与 Sleeper Agent 后门有何不同？",
+      "options": [
+        "阴谋仅由上下文提示和环境诱发，无需植入",
+        "阴谋需要对抗数据上的微调",
+        "阴谋只发生在开源模型中",
+        "阴谋使用更小的模型"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Apollo 提出的阴谋三大支柱是什么？",
+      "options": [
+        "奖励、KL、长度惩罚",
+        "采样温度、top-k、top-p",
+        "不对齐、目标导向、情境感知",
+        "有用、诚实、无害"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在 Apollo 评估中，哪个模型在欺骗行为后的后续问题中，有超过 85% 的时间维持了其掩护说法？",
+      "options": [
+        "Claude 3.5 Sonnet",
+        "o1",
+        "Llama 3.1 405B",
+        "Gemini 1.5 Pro"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "2025 年反阴谋“深思熟虑对齐”结果中的关键混淆因素是什么？",
+      "options": [
+        "训练数据太小",
+        "奖励模型被开源",
+        "PPO 被 DPO 取代",
+        "后训练模型也更擅长察觉自己处于评估中，因此表面上的隐蔽行为下降部分源于更好的隐藏，而非更好的对齐"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么评估套件可靠性在 2025/2026 年成为一种与能力相邻的量？",
+      "options": [
+        "更好的模型更慢，因此更难评估",
+        "评估现在只使用专有工具",
+        "开源模型无法运行新基准",
+        "更具情境感知的模型能够识别评估上下文，因此它们的评估行为对部署行为的代表性更不可靠"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么第 18 阶段将 Sleeper Agents、In-Context Scheming 和 Alignment Faking 放在一起讲解？",
+      "options": [
+        "它们都来自同一批作者",
+        "它们涵盖了欺骗频谱：植入式（Sleeper Agents）、由上下文冲突诱发（Scheming）以及无目标冲突情况下的自发出现（Alignment Faking）",
+        "它们都依赖 Constitutional AI",
+        "它们共享一个基准数据集"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

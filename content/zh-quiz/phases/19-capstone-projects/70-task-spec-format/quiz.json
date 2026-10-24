@@ -1,0 +1,78 @@
+{
+  "lesson": "70-task-spec-format",
+  "title": "Task Spec Format",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么在编写评分代码之前要先固定任务记录 schema？",
+      "options": [
+        "锁定契约，使指标、运行器和后处理器对字段名达成一致",
+        "允许任意新增指标名而无需修改",
+        "让 JSON 解析器运行更快",
+        "不再需要验证器"
+      ],
+      "correct": 0,
+      "explanation": "schema 是每个下游消费者读取的契约。锁定它后，你可以独立修改各组件而不会破坏其他部分。"
+    },
+    {
+      "stage": "pre",
+      "question": "metric_name 字段可接受的封闭词汇表是什么？",
+      "options": [
+        "任务作者任选的字符串",
+        "仅 exact_match 和 f1",
+        "运行器配置识别的任何名称",
+        "exact_match、f1、bleu_4、rouge_l、accuracy、code_exec"
+      ],
+      "correct": 3,
+      "explanation": "本课将指标词汇表固定为六个名称。新增一个需要新的一课和新的验证器条目。"
+    },
+    {
+      "stage": "check",
+      "question": "当验证器在记录上看到未知的顶层字段时会怎么做？",
+      "options": [
+        "记录警告但接受记录",
+        "剥离该字段并继续",
+        "重命名为 metadata.unknown",
+        "返回验证错误并拒绝记录"
+      ],
+      "correct": 3,
+      "explanation": "未知字段是前向兼容性风险。验证器拒绝它们，使 schema 保持唯一真相来源。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 few-shot 示例绑定在任务记录上，而不是由运行器计算？",
+      "options": [
+        "few-shot 仅在微调时使用",
+        "作者意图是评估的一部分；将示例绑定到任务可消除不同模型在提示构建上的差异",
+        "节省磁盘空间",
+        "运行器没有文件 I/O"
+      ],
+      "correct": 1,
+      "explanation": "few-shot 组合是评估定义的一部分，而非模型接口。将其放入任务意味着每个模型看到相同的提示。"
+    },
+    {
+      "stage": "check",
+      "question": "在验证器下，哪个类别-指标组合是非法的？",
+      "options": [
+        "code_exec + code_exec",
+        "summary + rouge_l",
+        "arithmetic + exact_match",
+        "mcq + bleu_4"
+      ],
+      "correct": 3,
+      "explanation": "对单个字母计算 BLEU 没有意义。验证器强制 mcq 任务只能使用 exact_match 或 accuracy。"
+    },
+    {
+      "stage": "post",
+      "question": "当生成内容为 `Answer: C is correct` 时，后处理规则 extract_letter 返回什么？",
+      "options": [
+        "Answer",
+        "空字符串",
+        "原字符串不变",
+        "C"
+      ],
+      "correct": 3,
+      "explanation": "extract_letter 返回生成内容中第一个匹配 [A-E] 的字符。该字符串主体开头就是 C。"
+    }
+  ]
+}

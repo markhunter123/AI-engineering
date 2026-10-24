@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "对于一个查询是文本、图库项是图像的视觉搜索产品，首先选哪个主干模型？",
+      "options": [
+        "CLIP 或 SigLIP 模型——它们学习共享的文本-图像嵌入空间，因此文本查询与图像图库之间的余弦相似度开箱即用就有意义",
+        "有监督 ResNet-50",
+        "手工 ORB 描述子",
+        "自监督 DINOv2 模型"
+      ],
+      "correct": 0,
+      "explanation": "文本查询的检索需要文本和图像处于同一空间的嵌入。CLIP/SigLIP 正是通过第 18 课的对比损失学习这一点。有监督 ImageNet 特征只有图像。DINOv2 很强但只处理图像。文本查询需要视觉-语言编码器。"
+    },
+    {
+      "stage": "pre",
+      "question": "在 triplet 损失训练中，“semi-hard mining”是什么意思？",
+      "options": [
+        "对每个 anchor，选择一个比正例远但仍在 margin 内的负例；easy negatives 不贡献梯度，hardest negatives 可能破坏训练稳定性，因此 semi-hard 是最佳平衡点",
+        "为训练样本挖加密货币",
+        "只使用最难的负例",
+        "随机选 triplet"
+      ],
+      "correct": 0,
+      "explanation": "Triplet 损失只有在 d(a, n) < d(a, p) + margin 时梯度才非零。Easy negatives（已经很远的负例）梯度为零。Hardest negatives 可能导致训练崩溃。Semi-hard——d(a, p) < d(a, n) < d(a, p) + margin——既提供信息又不会不稳定。FaceNet 在 2015 年提出这一配方，至今仍是 triplet 微调的默认做法。"
+    },
+    {
+      "stage": "post",
+      "question": "你的检索系统报告 recall@10 = 0.95，但 recall@1 = 0.42。应该得出什么结论？",
+      "options": [
+        "模型过拟合",
+        "数据从图库泄漏到查询",
+        "评估坏了",
+        "嵌入空间结构正确——相关项通常在 top 10 内——但 top 10 内的排序很嘈杂；重排模型（cross-encoder、第二阶段打分器）或更充分的度量学习微调能修复 recall@1 而不损害 recall@10"
+      ],
+      "correct": 3,
+      "explanation": "recall@K 与 @1 告诉你信息在哪里。recall@10 高而 recall@1 低说明检索大致正确，但模型对 top 几个的排序不够自信。重排——用一个独立模型对每个 top-K 候选与查询打分——是生产中的解决方案，Pinterest 和 Google Photos 等搜索引擎都在用。"
+    },
+    {
+      "stage": "post",
+      "question": "在未归一化嵌入上计算余弦相似度并不是真正的余弦相似度——会出什么问题？",
+      "options": [
+        "矩阵乘法会溢出",
+        "它把方向与模长混在一起；cos(a, b) 只有在两个向量都经过 L2 归一化时才正确。在未归一化嵌入上，模长大的项无论方向如何都会主导，使排序偏向模长大的向量",
+        "PyTorch 会报错",
+        "没什么，没问题"
+      ],
+      "correct": 1,
+      "explanation": "cos(a, b) = (a . b) / (||a|| * ||b||)。跳过归一化得到的是原始内积，按方向加权模长排序。在典型神经嵌入中，不同样本的模长可相差 2-3 倍，仅此一点就能主导排序。在计算余弦或在 FAISS IndexFlatIP 中建立索引前，始终应做 L2 归一化。"
+    },
+    {
+      "stage": "post",
+      "question": "在实例级检索（找到这辆具体的车）和类别级检索（找到车）之间，哪种需要度量学习微调？",
+      "options": [
+        "实例级。现成的 DINOv2 和 CLIP 嵌入能很好地区分类别，但无法区分同一类别中视觉上相似的实例。对（同一实例、不同实例）对做 triplet 或对比微调能把每个实例的嵌入收紧",
+        "两者需要同等程度的微调",
+        "类别级",
+        "都不需要"
+      ],
+      "correct": 0,
+      "explanation": "类别级检索是预训练模型已经会做的：猫聚在猫附近，狗聚在狗附近。实例级——同一辆车、同一张脸、同一个 SKU——需要度量学习，因为同一产品的两个实例在通用嵌入空间中看起来非常相似。用 triplet 或 InfoNCE 在带实例标签的对上微调可以缩小实例内距离、扩大实例间距离。"
+    }
+  ]
+}

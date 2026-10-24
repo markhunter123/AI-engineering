@@ -1,0 +1,90 @@
+{
+  "lesson": "10-multi-agent-software-team",
+  "title": "Capstone 10 — Multi-Agent Software Engineering Team",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么单智能体 harness 即使拥有 200k token 上下文，在大任务上也会遇到天花板？",
+      "options": [
+        "模型不支持 git",
+        "单智能体无法调用工具",
+        "上下文无法同时容纳架构规划、四个并行代码切片、审查者评论和测试输出",
+        "沙箱拒绝承载超过一个进程"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "在这种工厂形态中，architect 角色负责什么？",
+      "options": [
+        "在干净沙箱中运行测试套件",
+        "阅读 issue 并输出带显式接口的子任务计划",
+        "审查合并后的 diff 是否存在幻觉",
+        "当编码者意见不一致时强制合并分支"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么每个 coder 在自己的 git worktree 和 Daytona 沙箱中工作？",
+      "options": [
+        "架构师需要 worktree ID",
+        "Daytona 是唯一支持 SSH 的沙箱",
+        "隔离的工作树让 N 个 coder 可以并行实现子任务而不会踩到共享文件",
+        "worktree 比分支克隆更快"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "对 reviewer 施加什么约束以保持其客观性？",
+      "options": [
+        "它不能批准自己撰写或提议的 diff",
+        "它只能在 tester 签字后运行",
+        "它必须批准它阅读的每个 diff",
+        "它必须与架构师使用相同模型"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么评分标准将 token 效率与单智能体基线进行权衡？",
+      "options": [
+        "单智能体没有可观测性故事",
+        "角色边界增加了总结和交接上下文，所以真正的问题是工厂是否在每美元上胜出",
+        "多智能体总是更便宜",
+        "token 成本与性能无关"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "每个失败 issue 的事后分析会产出什么产物？",
+      "options": [
+        "新的架构师计划模板",
+        "更新的 A2A 协议规范",
+        "一个交接失败直方图，识别哪个角色边界断裂（规划、合并、审查、测试）",
+        "force-push 日志"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本 capstone 使用哪个评估集来跨角色评分 pass@1？",
+      "options": [
+        "HumanEval-Java",
+        "MigrationBench",
+        "MT-Bench-v2",
+        "SWE-bench Pro 50-issue subset"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

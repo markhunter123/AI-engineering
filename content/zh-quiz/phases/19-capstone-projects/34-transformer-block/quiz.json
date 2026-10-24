@@ -1,0 +1,78 @@
+{
+  "lesson": "34-transformer-block",
+  "title": "Transformer Block from Scratch",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "单个解码器 Transformer 块内部包含哪两个子层？",
+      "options": [
+        "卷积与循环门",
+        "多头因果注意力与逐位置 MLP，每个都包裹在残差连接中",
+        "RNN 编码器与解码器",
+        "嵌入查找与 softmax"
+      ],
+      "correct": 1,
+      "explanation": "每个现代解码器 LLM 块都是注意力加 MLP，各自拥有自己的残差路径与 LayerNorm。"
+    },
+    {
+      "stage": "check",
+      "question": "在深层网络中，Pre-LN 与 Post-LN 的关键区别是什么？",
+      "options": [
+        "Pre-LN 使用不同的注意力计算",
+        "Pre-LN 只适用于编码器",
+        "Pre-LN 保持残差信号未归一化，使梯度干净地传播到嵌入层；Post-LN 将归一化放在残差相加之后，会压缩深层梯度并需要 warmup",
+        "Post-LN 在 GPU 上更快"
+      ],
+      "correct": 2,
+      "explanation": "Pre-LN 在常用学习率下无需 warmup 即可稳定训练；Post-LN 是 2017 年论文的实现方式，需要 warmup。"
+    },
+    {
+      "stage": "check",
+      "question": "多头注意力中的因果掩码起什么作用？",
+      "options": [
+        "随机丢弃词元",
+        "将注意力 logits 的上三角设为负无穷，使词元 i 不能 attending 到位置大于 i 的词元",
+        "归一化注意力分数",
+        "挑选批次中最长的序列"
+      ],
+      "correct": 1,
+      "explanation": "忘记因果掩码会训练出一个能读取未来词元的模型；掩码是强制因果性的唯一机制。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么要使用融合的 QKV 投影，而不是三个独立的线性层？",
+      "options": [
+        "它避免了 softmax",
+        "它改变了模型表达能力",
+        "它去掉了残差连接",
+        "一个宽度为 3 倍 d_model 的线性层将三次核启动与三次矩阵乘法合并为一次，在各种加速器上都更快，且与 GPT-2 参考实现一致"
+      ],
+      "correct": 3,
+      "explanation": "数学相同，但内核更少；GPT-2、LLaMA 与 Mistral 的参考实现都采用了融合投影。"
+    },
+    {
+      "stage": "post",
+      "question": "Transformer 块中不应将 dropout 放在哪里？",
+      "options": [
+        "残差恒等路径本身，因为这会破坏使梯度在深层流动的加法恒等性",
+        "前馈扩展内部",
+        "注意力 softmax 输出上",
+        "第二个 MLP 线性层之后"
+      ],
+      "correct": 0,
+      "explanation": "Dropout 应放在注意力输出与 MLP 残差更新上，绝不能放在残差的恒等分支上。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么将因果掩码注册为 buffer，而不是每次前向传播都重新分配？",
+      "options": [
+        "buffer 只在 GPU 上运行",
+        "buffer 是加密的",
+        "buffer 提高数值精度",
+        "掩码只依赖最大上下文长度，因此在构建时分配一次，并在每次调用时切取活动窗口，可避免长上下文下的分配热点"
+      ],
+      "correct": 3,
+      "explanation": "用 register_buffer 分配一次，每次前向切取；否则掩码会成为每次调用的分配开销。"
+    }
+  ]
+}

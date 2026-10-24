@@ -1,0 +1,78 @@
+{
+  "lesson": "43-frame-the-task-before-code",
+  "title": "Frame the Task Before Code",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "可靠编码智能体工作的第一单位应是什么？",
+      "options": [
+        "由仓库证据支持的任务框架",
+        "模型调用",
+        "一次编辑",
+        "一个 pull request"
+      ],
+      "correct": 0,
+      "explanation": "任务框架在实施前确立事实、边界、未知和证据。"
+    },
+    {
+      "stage": "check",
+      "question": "以下哪项陈述是仓库事实？",
+      "options": [
+        "tests/test_accounts.py:44 处的重复响应测试期望 409",
+        "API 大概用 409",
+        "409 感觉比较常规",
+        "API 应该用 409"
+      ],
+      "correct": 0,
+      "explanation": "事实带有可检查的具体凭据。"
+    },
+    {
+      "stage": "check",
+      "question": "为何要命名禁止路径？",
+      "options": [
+        "为了选择模型",
+        "为了定义变更的负空间",
+        "为了让提示更长",
+        "为了避免运行测试"
+      ],
+      "correct": 1,
+      "explanation": "仅允许路径无法说明哪些诱人的相邻工作必须保持不动。"
+    },
+    {
+      "stage": "check",
+      "question": "何种人类未知应让智能体暂停？",
+      "options": [
+        "只要遇到不熟悉的文件就暂停",
+        "在每个命令前暂停",
+        "只在部署后暂停",
+        "当它改变产品行为、风险、权限或不可逆成本时"
+      ],
+      "correct": 3,
+      "explanation": "高后果选择需要在被埋入代码前设置明确检查点。"
+    },
+    {
+      "stage": "post",
+      "question": "什么让验收证据有力？",
+      "options": [
+        "编码后写",
+        "使用很多工具",
+        "明确命名命令或观察以及它证明的论断",
+        "说测试通过"
+      ],
+      "correct": 2,
+      "explanation": "具体证据让另一次会话能复现任务关闭。"
+    },
+    {
+      "stage": "post",
+      "question": "何时侦察已足够？",
+      "options": [
+        "当上下文窗口已满",
+        "当每个计划决策都有证据、已委托权限或明确的未知",
+        "一次搜索后",
+        "读完每个文件后"
+      ],
+      "correct": 1,
+      "explanation": "当决策已落地或明确未解决时，侦察即可停止。"
+    }
+  ]
+}

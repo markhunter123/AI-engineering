@@ -1,0 +1,90 @@
+{
+  "lesson": "20-agent-harness-loop-contract",
+  "title": "Agent Harness Loop Contract",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么将 harness 循环建模为显式状态机，而不是带标志的 while 循环？",
+      "options": [
+        "这是模型唯一能调用的形态",
+        "它避免了对测试的需求",
+        "它让 harness 能在一个地方拒绝非法转移，并能从事件日志重放会话",
+        "它在 CPython 上更快"
+      ],
+      "correct": 2,
+      "explanation": "状态机将合法性规则集中在一个转移函数中。相同输入序列产生相同状态，这正是会话重放可行的原因。"
+    },
+    {
+      "stage": "pre",
+      "question": "循环中的 pull point 代表什么？",
+      "options": [
+        "每 N 秒触发一次的定时器",
+        "循环让出控制并等待调用者提供输入的位置",
+        "修改 payload 的 hook 订阅者",
+        "返回工具名称的模型调用"
+      ],
+      "correct": 1,
+      "explanation": "Pull point 是返回，不是异常。调用者取回 harness 请求的内容，然后调用 resume()。"
+    },
+    {
+      "stage": "check",
+      "question": "哪种状态是工具调用唯一合法的 pull point？",
+      "options": [
+        "PLANNING",
+        "AWAITING_TOOL",
+        "EXECUTING",
+        "REFLECTING"
+      ],
+      "correct": 1,
+      "explanation": "只有 AWAITING_TOOL 产生工具 pull point。当某一步需要工具时，EXECUTING 会转移到它。"
+    },
+    {
+      "stage": "check",
+      "question": "当 hook 在 before_tool_call 中抛出 HookAbort 时会发生什么？",
+      "options": [
+        "该 hook 被取消注册",
+        "工具调用被跳过，on_error 触发，循环进入 REFLECTING",
+        "会话立即转移到 DONE",
+        "预算被重置"
+      ],
+      "correct": 1,
+      "explanation": "HookAbort 取消正在进行的工具分派，以中止原因触发 on_error，然后继续。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 hook 和 event 要作为独立关注点？",
+      "options": [
+        "因为事件类型是字节，而 hook 是字符串",
+        "Hook 是命令式的，可以修改或中止。Event 是观察性的，只追加。",
+        "因为审计脚本禁止订阅者",
+        "因为事件日志无法存储字典"
+      ],
+      "correct": 1,
+      "explanation": "Hook 改变行为。Event 描述行为。混合它们会把策略和可观测性耦合起来，这正是我们要避免的 bug。"
+    },
+    {
+      "stage": "post",
+      "question": "当 wall-clock 预算超支时，下一个状态是什么？",
+      "options": [
+        "DONE — 会话终止",
+        "IDLE — 返回带有 budget_exceeded 原因的 pull point",
+        "PLANNING — 起草新计划",
+        "EXECUTING — 循环重试"
+      ],
+      "correct": 1,
+      "explanation": "预算耗尽是一种让出。harness 转移到 IDLE，触发 on_budget_exceeded，并返回 PullRequest 让调用者决定是延长还是关闭。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么本课将 planner 做成 stub 而不是调用模型？",
+      "options": [
+        "因为模型在本地调用很慢",
+        "为了在绑定任何模型之前，让循环契约可测试且确定性",
+        "为了节省 token",
+        "因为模型无法返回工具调用"
+      ],
+      "correct": 1,
+      "explanation": "先固定循环契约，后续课程可以替换真实 planner、registry 和 dispatcher，而无需重新协商状态机。"
+    }
+  ]
+}

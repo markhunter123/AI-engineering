@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "虚数单位 i 由什么定义？",
+      "options": ["i = -1", "i² = -1", "i² = 1", "i = sqrt(2)"],
+      "correct": 1,
+      "explanation": "虚数单位 i 由 i² = -1 定义。它将实数轴扩展到二维平面。几何上，乘以 i 相当于旋转 90 度；两次乘法（i²）相当于旋转 180 度，即 -1。"
+    },
+    {
+      "stage": "pre",
+      "question": "欧拉公式 e^(iθ) 等于什么？",
+      "options": ["cos(θ) + i·sin(θ)", "sin(θ) + cos(θ)", "i^θ", "θ + i"],
+      "correct": 0,
+      "explanation": "欧拉公式指出 e^(iθ) = cos(θ) + i·sin(θ)。它将复指数与三角函数联系起来，并说明 e^(iθ) 随 θ 变化描绘出单位圆。"
+    },
+    {
+      "stage": "post",
+      "question": "(3 + 2i)(1 + 4i) 的结果是什么？",
+      "options": ["-5 + 14i", "5 + 14i", "3 + 8i", "4 + 6i"],
+      "correct": 0,
+      "explanation": "使用 FOIL 展开：(3)(1) + (3)(4i) + (2i)(1) + (2i)(4i) = 3 + 12i + 2i + 8i² = 3 + 14i + 8(-1) = 3 + 14i - 8 = -5 + 14i。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么 Transformer 的旋转位置编码（RoPE）使用复数？",
+      "options": ["RoPE 用虚数处理负位置", "复数压缩位置编码以减少内存", "注意力 softmax 函数需要使用复数", "将查询/键向量乘以复数旋转，把相对位置编码为旋转角度"],
+      "correct": 3,
+      "explanation": "RoPE 将查询和键向量乘以复数旋转矩阵 e^(i·m·θ)，其中 m 为位置。两个 token 之间的相对位置变为一个旋转角度，注意力通过复数乘法自然地感受到相对位置而非绝对位置。"
+    },
+    {
+      "stage": "post",
+      "question": "N 次单位根是单位圆上 N 个等距点。它们的和是多少？",
+      "options": ["1", "N", "N/2", "0"],
+      "correct": 3,
+      "explanation": "N 次单位根为 e^(2πi·k/N)，k = 0, ..., N-1。它们在单位圆上对称分布，因此向量和相互抵消为零。这种对称性使得 DFT 可逆。"
+    }
+  ]
+}

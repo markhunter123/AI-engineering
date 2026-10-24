@@ -1,0 +1,78 @@
+{
+  "lesson": "13-mcp-server-with-registry",
+  "title": "Capstone 13: Stateless MCP Server with Registry and Governance",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么本 capstone 同时使用 server.json 和 server/discover？",
+      "options": [
+        "server.json 存储会话，server/discover 删除会话",
+        "Registry 要求两个文件包含相同的版本日期",
+        "它们是同一个工具清单的两个名称",
+        "server.json 发布安装和端点元数据，server/discover 报告实时协议能力"
+      ],
+      "correct": 3,
+      "explanation": "Registry 记录帮助客户端定位和配置服务器。实时 RPC 报告运行中的进程支持什么。它们的 schema 和版本域相互独立，但发布的身份必须使用经过认证的命名空间，并与实时 serverInfo 匹配。"
+    },
+    {
+      "stage": "check",
+      "question": "在 MCP 2026-07-28 修订版中，什么取代了 initialize 握手？",
+      "options": [
+        "Mcp-Session-Id 加 notifications/initialized",
+        "每个请求携带协议版本和客户端能力，客户端可以调用强制性的 server/discover",
+        "一个打开永久服务器流的 GET 请求",
+        "每个 TCP 连接发送一次的会话 cookie"
+      ],
+      "correct": 1,
+      "explanation": "该协议是无状态的。版本和能力是请求元数据，而 server/discover 提供实时版本和能力发现，无需创建会话。"
+    },
+    {
+      "stage": "check",
+      "question": "tools/list 的哪种行为支持安全高效的发现？",
+      "options": [
+        "无作用域的永久缓存响应",
+        "每个副本随机工具顺序",
+        "initialize 期间创建的连接本地列表",
+        "确定性顺序加 ttlMs 和正确的 public 或 private cacheScope"
+      ],
+      "correct": 3,
+      "explanation": "稳定顺序提升可复现性和 prompt caching。ttlMs 表示新鲜度，cacheScope 防止用户特定结果通过共享缓存泄漏。"
+    },
+    {
+      "stage": "check",
+      "question": "哪种 Streamable HTTP 设计符合当前无状态传输？",
+      "options": [
+        "所有客户端都需要粘性负载均衡路由",
+        "POST 创建会话，GET 恢复，DELETE 关闭",
+        "独立 GET 流使用 Last-Event-ID 重放",
+        "每个 JSON-RPC 消息使用自己的 POST，JSON 或请求级 SSE 用于某个请求"
+      ],
+      "correct": 3,
+      "explanation": "当前 Streamable HTTP 对 MCP 消息只使用 POST，没有协议会话、独立 GET 流、会话 DELETE 或 Last-Event-ID 可恢复性。"
+    },
+    {
+      "stage": "post",
+      "question": "生产服务器在政策批准的工具处理程序运行前必须验证什么？",
+      "options": [
+        "仅验证 server.json 是否列出了远程 URL",
+        "仅验证工具的 destructiveHint 注释",
+        "仅验证是否有人发布了审批消息",
+        "协议元数据以及 token 发行者、受众或资源、过期时间、作用域和任何精确操作审批"
+      ],
+      "correct": 3,
+      "explanation": "传输元数据、token 验证和政策是独立的 gate。注释和发布元数据不授予权限。"
+    },
+    {
+      "stage": "post",
+      "question": "哪项证据最能支持服务器在无语义会话的情况下可扩展的说法？",
+      "options": [
+        "一条 server.json remote 记录",
+        "在两个可互换副本之间进行无线程并发运行，且没有亲和性依赖",
+        "一个构造单个响应字典的单元测试",
+        "一张展示负载均衡器的图"
+      ],
+      "correct": 1,
+      "explanation": "必须演练真实的传输和部署边界。在副本之间交替请求证明正确性并不隐藏在一个进程或粘性会话中。"
+    }
+  ]
+}

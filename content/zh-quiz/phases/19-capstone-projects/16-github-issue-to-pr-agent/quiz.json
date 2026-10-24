@@ -1,0 +1,90 @@
+{
+  "lesson": "16-github-issue-to-pr-agent",
+  "title": "Capstone 16 — GitHub Issue-to-PR Autonomous Agent",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "生产环境中，异步云端编码智能体如何被触发？",
+      "options": [
+        "由 issue 标签或 PR 评论触发的 GitHub webhook，分派到沙箱 worker",
+        "手动文件上传",
+        "进入 VM 的长寿 SSH 会话",
+        "定时 cron 作业访问仓库"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "为什么智能体必须使用短寿 GitHub App installation token，而不是 personal access token？",
+      "options": [
+        "Personal access token 不能开 PR",
+        "App token 提供细粒度、有范围、短寿的凭证，适合每个任务的 worker",
+        "App 完全规避 GitHub 速率限制",
+        "App 比 PAT 代码更少"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪两项保护防止智能体覆盖 main 分支？",
+      "options": [
+        "在 worker 上禁用 git",
+        "分支保护强制禁止直接推送或 force-push 到 main，且应用不在 bypass 列表中",
+        "每次推送需要验证码",
+        "在克隆前加密仓库"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么对 .github/workflows 的路径级保护在 worker 而非 GitHub App 权限处强制执行？",
+      "options": [
+        ".github/workflows 是虚拟路径",
+        "GitHub App 权限不是路径级的，所以在 worker 的拟议 diff 允许列表检查处强制执行才是正确位置",
+        "路径级范围划分在任何形式下都不可能",
+        "Workflow 存储在仓库之外"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "智能体循环结束后、开 PR 前发生什么样的 gate？",
+      "options": [
+        "reviewer 模型重写 diff",
+        "PR 立即打开，不做任何检查",
+        "在沙箱中运行完整 CI；计算覆盖率增量；超过阈值的回归被标记为 needs-review",
+        "将仓库 force-push 到 main"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "dispatcher 对每个仓库每天强制执行哪些预算旋钮？",
+      "options": [
+        "仅轮次上限",
+        "每个 PR 的美元上限加上每个仓库每天最多 PR 数量",
+        "PR 和成本无限制",
+        "仅 wall-clock 上限"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "智能体发布的 PR 正文中包含什么？",
+      "options": [
+        "理由、diff 摘要、trace URL、成本和轮次，以便审查者审计和跟进",
+        "只有 diff",
+        "没有内容；PR 正文为空",
+        "仅生成 changelog"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "07-tensorrt-llm-blackwell",
+  "title": "Hardware-Specialized Inference Compilation — FP8 and NVFP4 on Blackwell",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 120B 级别的负载上，课程报告的 Blackwell + TRT-LLM + Dynamo 与 H100 + vLLM 的每百万 token 成本差距大约是多少？",
+      "options": [
+        "About 2x",
+        "About 7x",
+        "About 1.1x",
+        "About 100x"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么课程建议在 Blackwell 上将 KV cache 保持在 FP8 而不是 NVFP4？",
+      "options": [
+        "NVFP4 KV cache 尚未被任何引擎支持",
+        "KV cache 跨越大动态范围；FP4 量化会在注意力分数上造成灾难性精度损失",
+        "FP8 uses less memory than FP4",
+        "FP8 is the only precision NVLink 5 supports"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "TRT-LLM 利用 Blackwell 的哪项特性，使模型可以无需训练后转换步骤直接加载？",
+      "options": [
+        "BF16 KV cache",
+        "FP64 attention",
+        "INT2 weights via bitsandbytes",
+        "模型厂商直接提供的 Day-0 FP4 权重"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "选择 TRT-LLM 技术栈的主要权衡是什么？",
+      "options": [
+        "It requires fully autonomous remediation",
+        "It cannot serve MoE models",
+        "It only works at small scale",
+        "它会锁定在 NVIDIA 硬件上——不支持 AMD、Intel 或 ARM"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "课程描述的 Blackwell 典型精度组合是什么？",
+      "options": [
+        "Everything in BF16",
+        "Weights NVFP4, activations NVFP4, KV cache FP8, attention accumulator FP32",
+        "Weights INT8, activations FP32, KV cache INT4",
+        "Weights FP4, KV cache FP4, attention in INT8"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "对于推理密集型工作负载，若 NVFP4 权重量化导致 MATH 准确率下降几个点，课程建议怎么做？",
+      "options": [
+        "Switch to AMD MI300X",
+        "禁用投机解码",
+        "在自有评估集上按模型验证任务质量；团队通常使用 FP8 权重 + FP4 激活，或全程留在 H200 FP8",
+        "因为成本优势压倒一切，仍然上线 NVFP4"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

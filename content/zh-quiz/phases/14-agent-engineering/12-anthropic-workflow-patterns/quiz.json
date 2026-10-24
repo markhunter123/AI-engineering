@@ -1,0 +1,90 @@
+{
+  "lesson": "12-anthropic-workflow-patterns",
+  "title": "Anthropic 的工作流模式：简优于繁",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Anthropic 如何区分工作流（workflow）与智能体（agent）？",
+      "options": [
+        "工作流是工程师拥有的预定义图；智能体是模型拥有的动态工具导向",
+        "工作流无状态；智能体有状态",
+        "工作流运行在 CPU 上；智能体需要 GPU",
+        "工作流使用嵌入；智能体使用工具"
+      ],
+      "correct": 0,
+      "explanation": "工作流 = 工程师拥有的预定义代码路径；智能体 = 模型拥有图。"
+    },
+    {
+      "stage": "pre",
+      "question": "支撑全部五种模式的增强型 LLM 具备哪三种能力？",
+      "options": [
+        "Search（检索）、tools（行动）、memory（持久化）",
+        "Vector、KV、graph",
+        "Plan、execute、reflect",
+        "Embeddings、fine-tuning、RAG"
+      ],
+      "correct": 0,
+      "explanation": "原子单元是一个配备了检索、工具和记忆的 LLM。"
+    },
+    {
+      "stage": "check",
+      "question": "下列哪一项不是 Anthropic 的五种工作流模式之一？",
+      "options": [
+        "Evaluator-optimizer",
+        "Gradient distillation",
+        "Prompt chaining",
+        "Routing"
+      ],
+      "correct": 1,
+      "explanation": "五种模式是 prompt chaining、routing、parallelization、orchestrator-workers、evaluator-optimizer。Gradient distillation 是训练概念。"
+    },
+    {
+      "stage": "check",
+      "question": "Parallelization 有哪两种形态？",
+      "options": [
+        "Sync 和 async",
+        "Stateful 和 stateless",
+        "Hot 和 cold",
+        "Sectioning（不同分块）和 voting（同一提示词调用 N 次再聚合）"
+      ],
+      "correct": 3,
+      "explanation": "Parallelization 分为 sectioning 或 voting；两者都扇出 N 次调用再聚合。"
+    },
+    {
+      "stage": "check",
+      "question": "哪个工作流模式是 Self-Refine 的泛化？",
+      "options": [
+        "Orchestrator-workers",
+        "Evaluator-optimizer",
+        "Prompt chaining",
+        "Routing"
+      ],
+      "correct": 1,
+      "explanation": "Evaluator-optimizer 是 Anthropic 对 Self-Refine / CRITIC 迭代模式的命名。"
+    },
+    {
+      "stage": "post",
+      "question": "根据本课，什么时候工作流优于智能体？",
+      "options": [
+        "总是",
+        "只在 GPU 上",
+        "在可预测、成本受限或合规受限的任务上，当图可以被枚举和审计时",
+        "只用于聊天"
+      ],
+      "correct": 2,
+      "explanation": "工作流更便宜、更易调试、可审计；当步骤可知时选择它们。"
+    },
+    {
+      "stage": "post",
+      "question": "本课推荐的默认起点是什么？",
+      "options": [
+        "多智能体框架",
+        "微调模型",
+        "自定义 MCTS",
+        "直接 API 调用；只在需要持久状态、Actor 并发或角色模板时才添加框架"
+      ],
+      "correct": 3,
+      "explanation": "Schluntz 和 Zhang：从简单开始；只有收益值得时才增加框架复杂度。"
+    }
+  ]
+}

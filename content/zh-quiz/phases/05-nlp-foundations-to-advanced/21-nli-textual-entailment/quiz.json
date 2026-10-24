@@ -1,0 +1,102 @@
+{
+  "lesson": "21-nli-textual-entailment",
+  "title": "自然语言推理 —— 文本蕴含",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "NLI 给（premise, hypothesis）对分配哪三个标签？",
+      "options": [
+        "True / false / unknown",
+        "Cause / effect / unrelated",
+        "Entailment / contradiction / neutral",
+        "Positive / negative / neutral"
+      ],
+      "correct": 2,
+      "explanation": "NLI 是在 entailment、contradiction 和 neutral 上的三分类任务。"
+    },
+    {
+      "stage": "pre",
+      "question": "NLI 如何被用作 zero-shot 文本分类器？",
+      "options": [
+        "通过提示 LLM",
+        "将每个候选标签表述为 hypothesis（例如 'This text is about sports'），选择蕴含分数最高的标签",
+        "通过计算 TF-IDF",
+        "通过平均嵌入"
+      ],
+      "correct": 1,
+      "explanation": "NLI-as-classifier 将标签转化为 hypothesis；模型选择最大蕴含标签。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 NLI 是 RAG 输出的忠实度检查？",
+      "options": [
+        "它很便宜",
+        "检查检索上下文是否蕴含每个答案主张，这正是 NLI 被训练的设定",
+        "它是多语言的",
+        "它使用分词器"
+      ],
+      "correct": 1,
+      "explanation": "幻觉 = 答案主张未被检索上下文蕴含；NLI 直接测量蕴含关系。"
+    },
+    {
+      "stage": "check",
+      "question": "hypothesis-only 基线暴露了什么？",
+      "options": [
+        "分词器漂移",
+        "推理慢",
+        "多语言差距",
+        "仅假设本身（无前提）就能预测标签的数据集，表明标签泄露"
+      ],
+      "correct": 3,
+      "explanation": "SNLI 上较高的 hypothesis-only 分数揭示了标注伪影；有助于调试数据。"
+    },
+    {
+      "stage": "check",
+      "question": "哪个 NLI 模型家族在 2026 年排行榜上作为标准主力名列前茅？",
+      "options": [
+        "在 MNLI/FEVER/ANLI 上微调的 DeBERTa-v3 变体",
+        "纯 Word2Vec",
+        "GPT-2",
+        "fastText"
+      ],
+      "correct": 0,
+      "explanation": "在 MNLI 及相关语料上微调的 DeBERTa-v3 是 2026 年开放 NLI 的主力。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么句子级 NLI 模型在文档长度前提上的准确率会下降？",
+      "options": [
+        "它们在短前提上训练，无法处理多句和多跳推理；DocNLI 微调的模型能处理更长输入",
+        "大输入运行更慢",
+        "余弦相似度衰减",
+        "文档触发分词器漂移"
+      ],
+      "correct": 0,
+      "explanation": "训练分布不匹配：单句 NLI 模型在文档长度输入上可能损失 20+ F1。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么 zero-shot 准确率会因 hypothesis 模板而波动 10+ 个百分点？",
+      "options": [
+        "模板改变了标签集合",
+        "模型对措辞敏感；例如 'This text is about {label}' 与单独的 '{label}' 会改变蕴含概率",
+        "模板改变分词器行为",
+        "模板影响模型权重"
+      ],
+      "correct": 1,
+      "explanation": "模板措辞会实质性地改变蕴含分数；在小型留出集上对其进行调优。"
+    },
+    {
+      "stage": "post",
+      "question": "关于 NLI 用于幻觉检测，可以安全地给出什么结论？",
+      "options": [
+        "它作为忠实度信号能减少幻觉，但不能消除；应结合检索召回率和人工审查",
+        "它只对英语有效",
+        "它消除幻觉",
+        "它需要 LLM"
+      ],
+      "correct": 0,
+      "explanation": "NLI 是有用信号但不是完整解决方案；应配合检索指标和人工抽检。"
+    }
+  ]
+}

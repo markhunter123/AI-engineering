@@ -1,0 +1,67 @@
+[
+  {
+    "id": "nb-pre-1",
+    "stage": "pre",
+    "question": "朴素贝叶斯（Naive Bayes）中的“朴素”假设是什么？",
+    "options": [
+      "每个类别的先验概率相等",
+      "所有特征在已知类别标签的条件下相互独立",
+      "数据服从正态分布",
+      "模型没有参数需要学习"
+    ],
+    "correct": 1,
+    "explanation": "朴素贝叶斯假设每个特征在已知类别条件下与其他所有特征独立。这在数学上是错误的（例如“machine”和“learning”会共现），但在实践中效果很好。"
+  },
+  {
+    "id": "nb-pre-2",
+    "stage": "pre",
+    "question": "拉普拉斯平滑（Laplace smoothing）在朴素贝叶斯中防止什么？",
+    "options": [
+      "训练期间某个类别从未见过的词出现零概率",
+      "数据集中的类别不平衡",
+      "高维数据上训练缓慢",
+      "在大数据集上过拟合"
+    ],
+    "correct": 0,
+    "explanation": "没有平滑时，一个从未在“垃圾邮件”训练邮件中出现的词会得到 P(word|spam) = 0，无论其他证据多强，整个乘积都会变成零。拉普拉斯平滑给每个计数加 1。"
+  },
+  {
+    "id": "nb-post-1",
+    "stage": "post",
+    "question": "朴素的独立性假设对文本显然是错误的。为什么朴素贝叶斯仍然分类得很好？",
+    "options": [
+      "它只在独立性成立的小词汇表上有效",
+      "它只在特征真正独立时有效",
+      "现代实现 secretly 移除了独立性假设",
+      "分类只需要正确的类别排序，而不需要正确的概率估计，且该假设对所有类别引入稳定的误差"
+    ],
+    "correct": 3,
+    "explanation": "朴素贝叶斯只需要正确排序类别，不需要估计精确概率。独立性假设带来高偏差但低方差，在数据有限时很稳定。相关特征也会为正确类别重复计算证据。"
+  },
+  {
+    "id": "nb-post-2",
+    "stage": "post",
+    "question": "什么时候应该使用多项式朴素贝叶斯（Multinomial NB）而不是高斯朴素贝叶斯（Gaussian NB）？",
+    "options": [
+      "多项式用于词数/词频特征，高斯用于连续实值特征",
+      "它们可以互换——总是用更快的那个",
+      "多项式用于二元数据，高斯用于多分类问题",
+      "多项式用于回归，高斯用于分类"
+    ],
+    "correct": 0,
+    "explanation": "多项式朴素贝叶斯建模特征计数（文本中的词频）。高斯朴素贝叶斯假设特征服从正态分布，适合测量值或传感器读数等连续特征。"
+  },
+  {
+    "id": "nb-post-3",
+    "stage": "post",
+    "question": "一封邮件包含“free”两次和“money”一次。在对数概率的多项式朴素贝叶斯中，垃圾邮件分数如何计算？",
+    "options": [
+      "P(spam) * P(free|spam) * P(money|spam)",
+      "log P(spam) * 2 * log P(free|spam)",
+      "log P(spam) + log P(free|spam) + log P(money|spam)",
+      "log P(spam) + 2 * log P(free|spam) + 1 * log P(money|spam)"
+    ],
+    "correct": 3,
+    "explanation": "多项式朴素贝叶斯将词似然按其计数进行幂乘。在对数空间中：log P(spam) + 2*log P(free|spam) + 1*log P(money|spam)。词计数充当指数。"
+  }
+]

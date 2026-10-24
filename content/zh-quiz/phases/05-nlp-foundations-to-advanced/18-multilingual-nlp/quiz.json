@@ -1,0 +1,102 @@
+{
+  "lesson": "18-multilingual-nlp",
+  "title": "多语言 NLP",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "什么是 zero-shot 跨语言迁移？",
+      "options": [
+        "无需翻译模型进行翻译",
+        "使用零次合并进行分词",
+        "在一种源语言上微调多语言模型，然后在没有任何目标语言标签的目标语言上评估",
+        "用零个样本训练"
+      ],
+      "correct": 2,
+      "explanation": "Zero-shot 迁移：在源语言上训练，在目标语言上运行而无需目标语言监督。"
+    },
+    {
+      "stage": "pre",
+      "question": "哪个模型家族是标准的 100 语言跨语言基线？",
+      "options": [
+        "GPT-2",
+        "GloVe",
+        "DistilBERT",
+        "XLM-R（例如 XLM-RoBERTa-base，270M）"
+      ],
+      "correct": 3,
+      "explanation": "XLM-R 是跨语言分类的经典 100 语言预训练基线。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么以英语为源语言并不总是能给非英语目标带来最佳迁移效果？",
+      "options": [
+        "英语数据太少",
+        "语言相似性（类型学、文字、形态学）预测迁移质量；更亲近的高资源源语言可能优于英语",
+        "英语使用 BPE",
+        "英语太短"
+      ],
+      "correct": 1,
+      "explanation": "类型学上相关的源语言（例如印地语对印度目标语言）作为微调源常常优于英语。"
+    },
+    {
+      "stage": "check",
+      "question": "低资源语言的 'fertility tax' 是什么？",
+      "options": [
+        "小模型训练更慢",
+        "分词器无法处理 Unicode",
+        "BPE 拒绝训练",
+        "低资源文本每个词会被分成更多子词，消耗上下文窗口、延迟和容量"
+      ],
+      "correct": 3,
+      "explanation": "长尾语言的分词 fertility 高得多，吞噬上下文和训练效率。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么需要按语言评估，而不是聚合准确率？",
+      "options": [
+        "聚合运行更快",
+        "聚合只适用于分类",
+        "聚合忽略分词",
+        "聚合数字会掩盖长尾语言，多语言模型在均值上可能远差于其平均水平"
+      ],
+      "correct": 3,
+      "explanation": "聚合准确率掩盖了低资源语言上的糟糕表现；按语言评分才能暴露它。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么用少样本数据适配多语言模型时，微调学习率至关重要？",
+      "options": [
+        "高学习率可能破坏多语言对齐，使模型实际上退化为仅英语",
+        "低学习率浪费 GPU",
+        "它会改变词汇表",
+        "分词器要求如此"
+      ],
+      "correct": 0,
+      "explanation": "过高的学习率会使共享表示漂移；保守学习率（~2e-5）可保持跨语言结构。"
+    },
+    {
+      "stage": "post",
+      "question": "哪种缓解措施直接解决长尾文字的 tokenizer fertility 问题？",
+      "options": [
+        "跳过停用词",
+        "使用 byte-fallback（SentencePiece byte_fallback=True）或覆盖更广文字的分词器（例如 XLM-V）",
+        "更多训练轮次",
+        "更小的 batch size"
+      ],
+      "correct": 1,
+      "explanation": "字节回退和更广词汇表的分词器可降低低资源文字的 fertility 和 OOV。"
+    },
+    {
+      "stage": "post",
+      "question": "什么时候值得尝试从头训练单语模型，而不是使用多语言模型？",
+      "options": [
+        "仅用于翻译",
+        "只要分词器是 BPE",
+        "总是用于英语",
+        "当目标语言有足够数据训练出击败多语言基线的单语模型时；不要想当然，先做测试"
+      ],
+      "correct": 3,
+      "explanation": "有时单语训练会击败多语言训练；经验比较决定。"
+    }
+  ]
+}

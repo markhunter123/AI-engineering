@@ -1,0 +1,78 @@
+{
+  "lesson": "10-cold-start-mitigation",
+  "title": "Cold Start Mitigation for Serverless LLMs",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在没有优化措施的新节点上，70B 模型的冷启动通常需要多长时间？",
+      "options": [
+        "3-8 分钟",
+        "Over 1 hour",
+        "Under 10 seconds",
+        "30-60 seconds"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "课程推荐哪个 AWS 侧功能来预置容器镜像，从而让第 2 步镜像拉取消失？",
+      "options": [
+        "通过 EC2NodeClass 引用的 Bottlerocket 双卷架构",
+        "Spot fleet placement",
+        "EBS volume snapshots only",
+        "ECS task definitions"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Modal 的哪项功能通过将加载后的状态直接反序列化到 HBM，实现接近“秒级暖 GPU 启动”？",
+      "options": [
+        "GPU memory snapshots（checkpoints）",
+        "Tiered NVMe-to-DRAM loading",
+        "Run:ai Model Streamer",
+        "Live migration"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么在线迁移传输输入 token 而不是 KV cache？",
+      "options": [
+        "KV cache 已加密，无法移动",
+        "Live migration is required by GDPR",
+        "Input tokens have larger entropy",
+        "在目标节点重新计算 KV 比通过网络传输 GB 级 KV cache 更便宜"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪种无服务器层通过保持至少一个副本在线，用直接 GPU 成本换取可预测的就绪性？",
+      "options": [
+        "Tiered loading",
+        "Live migration",
+        "Warm pool with min_workers >= 1",
+        "Bottlerocket pre-seeding"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么课程说冷启动缓解必须跨层叠加，而不是选单一工具？",
+      "options": [
+        "Modal owns the entire stack",
+        "All five layers are bundled in vLLM",
+        "It is a regulatory requirement",
+        "没有一个单独工具能消除所有步骤（节点供应、镜像拉取、权重加载、引擎初始化）；叠加工具可压缩每一步"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

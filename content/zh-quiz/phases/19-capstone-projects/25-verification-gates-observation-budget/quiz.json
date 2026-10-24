@@ -1,0 +1,78 @@
+{
+  "lesson": "phase-19/25-verification-gates-observation-budget",
+  "title": "Verification Gates and the Observation Budget",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "学前问题：以下哪项是 harness 需要确定性 gate chain 而不是 model-as-judge 的最强理由？",
+      "options": [
+        "模型作为 judge 在生产中太慢。",
+        "Gate chain 让模型自己编写策略。",
+        "Model-as-judge 总是产生幻觉化的允许决策。",
+        "确定性让拒绝原因可审计、让 chain 可重放。"
+      ],
+      "correct": 3,
+      "explanation": "审计轨迹和可复现性是实际收益。也可以接入 judge 模型，但结构性 gate 必须是确定性的，这样决策才能被复现和审查。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么本课让 WhitelistGate 在 BudgetGate 之前运行？",
+      "options": [
+        "BudgetGate 必须至少在一个工具被调用后才能运行。",
+        "Whitelist 拒绝更便宜，所以短路它们可避免昂贵的 ledger 求和。",
+        "按约定 Whitelist 必须总是最后一个 gate。",
+        "顺序无所谓，因为 GateChain 随机化求值顺序。"
+      ],
+      "correct": 1,
+      "explanation": "便宜的拒绝先运行。WhitelistGate 是 O(1) 哈希查找。BudgetGate 需要求和 ledger。在结构上非法的调用处短路可省去这部分工作。"
+    },
+    {
+      "stage": "check",
+      "question": "ObservationLedger 已记录 read_file 的 60-token observation。随后 harness 拒绝了一次调用。ledger 对该拒绝记录什么？",
+      "options": [
+        "什么都不记录。ledger 只记录成功的 observation。",
+        "拒绝被追加为带有 refuser 名字的合成 Observation。",
+        "一条标记 refused 的零 token Observation 行。",
+        "一条代表拒绝成本的负 token Observation 行。"
+      ],
+      "correct": 0,
+      "explanation": "Ledger 记录模型见过的 observation。拒绝产生 GateDecision，而不是 Observation。拒绝计数与 ledger 并存，而不是在 ledger 内部。"
+    },
+    {
+      "stage": "check",
+      "question": "RecencyGate.window 设为 3。ledger 的 latest_turn 为 5。新 ToolCall 在第 10 轮到达。会发生什么？",
+      "options": [
+        "Gate 拒绝：间隔 5 超过窗口 3。",
+        "Gate 允许：调用在最新轮次上。",
+        "Gate 允许：窗口适用于 ledger 大小，而非轮次间隔。",
+        "Gate 抛出异常，因为 ledger 已过期。"
+      ],
+      "correct": 0,
+      "explanation": "RecencyGate 比较 (call.turn - ledger.latest_turn) 与窗口。10 - 5 = 5，大于 3，因此 gate 拒绝。"
+    },
+    {
+      "stage": "post",
+      "question": "你想增加每次调用的输出上限（单个 observation 不得超过 8000 token）。该 gate 在 chain 中逻辑上应放在哪里？",
+      "options": [
+        "它不能作为 gate，因为大小只有在工具运行后才知道。",
+        "WhitelistGate 之前，因为大小是最便宜的属性。",
+        "BudgetGate 内部，以便限制组合。",
+        "BudgetGate 之后，因为累计预算总是优先。"
+      ],
+      "correct": 0,
+      "explanation": "输出大小在 gate 评估时未知。harness 在工具运行后应用上限，在模型看到 observation 前截断它。Gate 评估输入，不评估输出。"
+    },
+    {
+      "stage": "post",
+      "question": "审查者要求你证明智能体在某次会话中从未触发已拒绝的工具调用。你指向哪个产物？",
+      "options": [
+        "ObservationLedger 快照，只包含成功的 observation。",
+        "pytest 输出，记录测试通过/失败。",
+        "模型自己的聊天 transcript，包含自我报告。",
+        "ChainOutcome 记录列表，包含每次调用的决策和拒绝原因。"
+      ],
+      "correct": 3,
+      "explanation": "ChainOutcome 记录携带每次调用决策和拒绝原因。Ledger 和 transcript 可以支持该主张，但可审计的产物是 chain 决策。"
+    }
+  ]
+}

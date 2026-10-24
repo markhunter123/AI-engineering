@@ -1,0 +1,78 @@
+{
+  "lesson": "46-gradient-accumulation",
+  "title": "Gradient Accumulation",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "梯度累积所表达的有效批次恒等式是什么？",
+      "options": [
+        "effective_batch = micro_batch / accum_steps",
+        "effective_batch = world_size only",
+        "effective_batch = micro_batch + accum_steps",
+        "effective_batch = micro_batch * accum_steps"
+      ],
+      "correct": 3,
+      "explanation": "微批次是内存能放下的规模；accum_steps 是在一次优化器步骤前，将多少次前向+反向传播的梯度累加到同一个缓冲区的次数。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么每个微批次在反向传播前要将损失除以 accum_steps？",
+      "options": [
+        "让损失曲线更好看",
+        "避免 NaN",
+        "仅混合精度需要",
+        "PyTorch 默认将梯度累加到 param.grad 中，因此不除的话累积梯度会过大 N 倍，优化器步骤也会过于激进 N 倍"
+      ],
+      "correct": 3,
+      "explanation": "累积缓冲区是求和。每个微批次按 1/N 缩放，使总和回到单个大批次反向传播应有的尺度。"
+    },
+    {
+      "stage": "check",
+      "question": "优化器步骤在累积循环中何时运行？",
+      "options": [
+        "从不；优化器被替换",
+        "每个窗口运行两次以防万一",
+        "每个微批次后都运行",
+        "仅在累积窗口的最后一个微批次之后"
+      ],
+      "correct": 3,
+      "explanation": "在累积过程中间执行步骤会污染后续运行所依赖的每个参数。优化器步骤每个有效批次触发一次。"
+    },
+    {
+      "stage": "check",
+      "question": "在真实多 GPU 运行中，no_sync 上下文包裹什么？",
+      "options": [
+        "数据加载器",
+        "非最后一个微批次，使梯度 all-reduce 只在最后一次反向传播后触发一次，而不是 N 次",
+        "优化器步骤",
+        "前向传播"
+      ],
+      "correct": 1,
+      "explanation": "DDP 的 no_sync 跳过梯度集合通信。包裹除最后一个外的所有微批次，将每个有效步骤的 N 次集合通信转为一次。"
+    },
+    {
+      "stage": "check",
+      "question": "main.py 中的 equivalence_check 函数断言什么？",
+      "options": [
+        "损失收敛",
+        "梯度为零",
+        "单个大批次反向传播与将损失除以 N 后的 accum_steps 分块反向传播，产生相同的梯度缓冲区和相同的后步骤参数（在很小容差内）",
+        "吞吐量恒定"
+      ],
+      "correct": 2,
+      "explanation": "断言边界是最大绝对差小于 1e-4。没有损失缩放时差异会爆炸；有缩放时差异处于浮点噪声水平。"
+    },
+    {
+      "stage": "post",
+      "question": "阅读有效批次对应的吞吐曲线，什么大致保持不变，什么随其缩放？",
+      "options": [
+        "每秒样本数上升，因为模型变快了",
+        "两个指标都随 accum 线性缩放",
+        "每秒样本数在硬件极限附近饱和，而每个优化器步骤的挂钟时间随 accum_steps 线性增长；每秒优化器步骤数下降",
+        "有效批次越大，每秒样本数越低"
+      ],
+      "correct": 2,
+      "explanation": "每个微批次花费相同的前向+反向。累积为每个优化器步骤买来统计平滑，而不是原始吞吐；该曲线是对 folklore 的有用现实检验。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "domestic-gpu-ecosystems",
+  "title": "Domestic GPU Ecosystems: Ascend, Cambricon, and Hardware Selection",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "选择非 NVIDIA AI 加速器时，哪个因素通常应占主导地位？",
+      "options": [
+        "每卡原始峰值 FP16 TFLOPs",
+        "软件生态系统和你的模型的算子覆盖度",
+        "主机服务器上的 CPU 核心数",
+        "品牌市值"
+      ],
+      "correct": 1,
+      "explanation": "峰值 FLOPs 只有在软件栈能够正确高效地运行模型算子时才有意义。"
+    },
+    {
+      "stage": "check",
+      "question": "评分器在比较计算性能之前检查的第一个硬门槛是什么？",
+      "options": [
+        "每卡每小时成本",
+        "数据中心电力预算",
+        "模型权重和 KV cache 是否能放入 GPU 内存",
+        "生态系统成熟度评分"
+      ],
+      "correct": 2,
+      "explanation": "如果工作负载无法放入内存，再多的 TFLOPs 或生态系统成熟度也无济于事。"
+    },
+    {
+      "stage": "check",
+      "question": "在国内硬件格局中，torch_npu 起什么作用？",
+      "options": [
+        "它替代 Ascend 节点上的 Python 解释器",
+        "它为华为 Ascend CANN 提供 PyTorch 设备抽象",
+        "它自动将 vLLM 模型转换为 ONNX",
+        "它是 Ascend 芯片之间的网络协议"
+      ],
+      "correct": 1,
+      "explanation": "torch_npu 让 PyTorch 代码通过设备后端定位 Ascend NPU，减少机械性重写。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么要求 vLLM 会在评分器中排除大多数国产加速器？",
+      "options": [
+        "vLLM 仅支持 CUDA 内核和 NVIDIA 软件栈",
+        "国产卡推理太贵",
+        "vLLM 需要特定的 Intel CPU 特性",
+        "国产卡内存带宽太高"
+      ],
+      "correct": 0,
+      "explanation": "vLLM 的优化内核和分页注意力目前与 NVIDIA/CUDA 生态系统绑定。"
+    },
+    {
+      "stage": "post",
+      "question": "在评分器中，淘汰原因为 'ecosystem' 意味着该加速器：",
+      "options": [
+        "数据中心功耗过高",
+        "成本超过每卡预算",
+        "不支持该工作负载所需的框架",
+        "VRAM 少于模型所需"
+      ],
+      "correct": 2,
+      "explanation": "生态系统门槛会拒绝无法运行所需软件栈的卡，例如 vLLM 或 torch_npu。"
+    },
+    {
+      "stage": "post",
+      "question": "将 CUDA 代码移植到 MUSA 或 HIP 等 CUDA 兼容层时，主要剩余风险是：",
+      "options": [
+        "将所有变量从 camelCase 重命名为 snake_case",
+        "内核一致性、算子覆盖度和数值精度的差异",
+        "需要用新编程语言重写所有代码",
+        "失去对 Python 虚拟环境的支持"
+      ],
+      "correct": 1,
+      "explanation": "兼容层减少了语法改动，但不能保证完全相同的内核或数值行为。"
+    }
+  ]
+}

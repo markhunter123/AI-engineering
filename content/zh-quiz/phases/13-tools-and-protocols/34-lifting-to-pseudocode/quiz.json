@@ -1,0 +1,78 @@
+{
+  "lesson": "34-lifting-to-pseudocode",
+  "title": "Lifting to Pseudocode: IR, SSA, and Structuring From Scratch",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Ghidra 从正确的目标文件反编译 percent_change，得到返回 16 字节并接收三个参数的函数。而源码有两个 int 参数并返回 int。这说明了什么？",
+      "options": [
+        "伪代码是一种派生断言，其类型和调用约定猜测可能错误，而每条指令都是正确的",
+        "Ghidra 无法读取 ELF 可重定位目标",
+        "目标文件已损坏",
+        "clang 编译错误"
+      ],
+      "correct": 0,
+      "explanation": "指令是正确的，反编译器也正确读取了它们。它对返回值和第三个参数的猜测来自 idiv 同时写入 rax 和 rdx，而调用者无法说明并非如此。"
+    },
+    {
+      "stage": "check",
+      "question": "在 System V AMD64 调用约定中，哪个寄存器承载函数的第二个整数参数？",
+      "options": [
+        "%rcx",
+        "%rdx",
+        "%rsi",
+        "%rax"
+      ],
+      "correct": 2,
+      "explanation": "顺序是 %rdi、%rsi、%rdx、%rcx、%r8、%r9（psABI 3.2.3）。结果通过 %rax 返回。"
+    },
+    {
+      "stage": "check",
+      "question": "lifter 看到 cmpl $0x4, %ecx 后跟 ja。在 C 中分支在什么条件下被采用？",
+      "options": [
+        "ecx >= 4 作为有符号比较",
+        "ecx > 4 作为有符号比较",
+        "(unsigned int)ecx > 4",
+        "ecx != 4"
+      ],
+      "correct": 2,
+      "explanation": "ja 测试 CF = 0 且 ZF = 0，即无符号高于条件。负的 ecx 作为无符号值非常大，因此该跳转也覆盖 grade 中低于 60 的分数。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 SSA 构造在 total 的循环头部为 sum 放置 phi 函数？",
+      "options": [
+        "每个循环头部都为每个寄存器放置 phi",
+        "头部读取内存",
+        "标志寄存器在循环内部改变",
+        "sum 的两个定义到达头部：初始零和循环体内的更新"
+      ],
+      "correct": 3,
+      "explanation": "phi 放置在每个定义的支配边界上。头部是设置块和循环回边交汇的汇合点，因此两个到达的定义需要一个合并名称。"
+    },
+    {
+      "stage": "post",
+      "question": "grade 将符号扩展后的 score 乘以 0x66666667，将乘积右移 34 位，并加上乘积的符号位。这计算了什么？",
+      "options": [
+        "score * 10",
+        "score % 10",
+        "score 的哈希",
+        "C 语言向零截断的 score / 10"
+      ],
+      "correct": 3,
+      "explanation": "0x66666667 是 2^34 / 10 的上取整。乘法和移位给出非负分数的 floor(score / 10)。加上符号位使负商向零移动，这正是 C 除法的行为。"
+    },
+    {
+      "stage": "post",
+      "question": "我们的 lifter 输出 int total(int *param_1, int param_2)，而 Ghidra 输出 int total(long param_1, uint param_2)。关于这两个签名的正确说法是什么？",
+      "options": [
+        "lifter 错了，因为源码说是 const int *",
+        "两者都与指令一致。lifter 从 4 字节缩放 load 推断出指针，Ghidra 保持寄存器宽度",
+        "Ghidra 错了，因为 param_1 被用作指针",
+        "这两个签名证明目标被编译了两次"
+      ],
+      "correct": 1,
+      "explanation": "机器码没有类型。lifter 将从 rdi + rdx * 4 的 load 转换为 int 元素访问，Ghidra 保持 64 位整数。两者都无法恢复 const 限定符。"
+    }
+  ]
+}

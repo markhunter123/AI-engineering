@@ -1,0 +1,78 @@
+{
+  "lesson": "46-turn-feedback-into-system",
+  "title": "Turn Feedback into a System",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "重复的 agent 纠正揭示了什么？",
+      "options": [
+        "工作系统中缺少或薄弱的控制",
+        "跳过测试的理由",
+        "需要更多聊天记录",
+        "只是模型弱"
+      ],
+      "correct": 0,
+      "explanation": "纠正是关于缺少测试、边界、示例、工具或决策的观察。"
+    },
+    {
+      "stage": "check",
+      "question": "回归纠正应在哪里持久化？",
+      "options": [
+        "更长的提示",
+        "测试或评估",
+        "新模型",
+        "会议记录"
+      ],
+      "correct": 1,
+      "explanation": "可执行证明能防止相同错误结果悄然回归。"
+    },
+    {
+      "stage": "check",
+      "question": "为何在写规则前先找根因？",
+      "options": [
+        "它消除了证据需求",
+        "规则需要引用",
+        "它避免所有复杂性",
+        "症状可能来自不同的缺失控制"
+      ],
+      "correct": 3,
+      "explanation": "只针对症状的规则会在同一原因以不同形式出现时失效。"
+    },
+    {
+      "stage": "check",
+      "question": "一次性纠正何时值得永久控制？",
+      "options": [
+        "总是",
+        "从不",
+        "当复发或后果证明持久复杂性值得时",
+        "只在发布后"
+      ],
+      "correct": 2,
+      "explanation": "棘轮应保留有意义的判断，而不是累积所有偏好。"
+    },
+    {
+      "stage": "post",
+      "question": "为何给升级的控制打指纹？",
+      "options": [
+        "隐藏归属",
+        "为了视觉设计",
+        "替代验证",
+        "把重复教训合并，同时不丢失不同根因"
+      ],
+      "correct": 3,
+      "explanation": "稳定身份能防止同一控制被反复添加。"
+    },
+    {
+      "stage": "post",
+      "question": "为何每个控制都需要退休检查？",
+      "options": [
+        "控制可能变得陈旧、矛盾或被取代",
+        "智能体不喜欢指令",
+        "测试无法持久",
+        "所有规则每天过期"
+      ],
+      "correct": 0,
+      "explanation": "工作系统应保持最小和最新，而不是只累积策略。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "15-batch-apis",
+  "title": "Batch APIs — the 50% Discount as Industry Standard",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "2026 年 OpenAI、Anthropic 和 Google 的批量 API 常见优惠是什么？",
+      "options": [
+        "90% discount with 7-day turnaround",
+        "50% discount with 24-hour turnaround",
+        "10% discount with 1-hour turnaround",
+        "Free if under 1k tokens"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在课程的表述中，“24 小时交付”到底保证什么？",
+      "options": [
+        "24h is the cache TTL",
+        "Provider 承诺在 24 小时内返回，典型 P50 约 2-6 小时",
+        "The batch always takes 24 hours",
+        "Only batches under 1k requests qualify"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在共享系统提示词的工作负载上，批量叠加缓存输入相比同步未缓存账单有何变化？",
+      "options": [
+        "It only helps if the model is on Vertex",
+        "可降至同步未缓存基线的约 10%",
+        "It increases cost by 50%",
+        "It has no effect because caching is automatic"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "对于内容管道和离线标注，2026 年默认选择哪条分诊通道是错误的？",
+      "options": [
+        "Hybrid batch-and-cache",
+        "Interactive，因为它听起来很紧急",
+        "Batch，因为用户看不到 24 小时延迟",
+        "Semi-interactive with async queue"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "跨厂商的输出格式陷阱是什么？",
+      "options": [
+        "所有厂商都使用相同的 OpenAI JSONL 格式",
+        "批量文件格式因厂商而异（OpenAI JSONL、Anthropic JSONL、Vertex BigQuery/GCS），因此可移植客户端需要按厂商适配",
+        "Vertex requires Parquet only",
+        "JSONL is unsupported by Anthropic"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "课程给出的将工作负载分诊到批处理的最简单决策规则是什么？",
+      "options": [
+        "If the prompt is under 1k tokens, batch it",
+        "如果用户不会注意到 24 小时交付，就始终使用批处理（并叠加缓存）",
+        "Batch only when the gateway requires it",
+        "If it uses tools, batch it"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

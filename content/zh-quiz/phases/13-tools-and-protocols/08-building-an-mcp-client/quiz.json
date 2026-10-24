@@ -1,0 +1,48 @@
+{
+  "lesson": "08-building-an-mcp-client",
+  "title": "Building an MCP Client: Discovery, Routing, and Dual-Era Fallback",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "双时代 stdio 客户端应首先发送什么？",
+      "options": ["Mcp-Session-Id", "server/discover", "initialize", "HTTP GET"],
+      "correct": 1,
+      "explanation": "发现探测在现代每请求元数据和旧版初始化之间建立了清晰的边界。"
+    },
+    {
+      "stage": "check",
+      "question": "发现探测返回 -32022，并包含一个相互支持的版本。客户端应怎么做？",
+      "options": ["在支持的版本上重试现代发现", "发送 initialize", "发起 HTTP GET", "忽略该服务器"],
+      "correct": 0,
+      "explanation": "-32022 是已识别的现代证据，因此客户端保持现代模式并重试。"
+    },
+    {
+      "stage": "check",
+      "question": "哪个条件足以选择旧时代？",
+      "options": ["任何 -32601 错误", "对端在旧版白名单中", "对端在白名单中，且受限制的 initialize 探测返回有效的受支持旧版结果", "单独的发现超时"],
+      "correct": 2,
+      "explanation": "白名单允许进行探测，但只有为已配置旧版修订版返回结构化有效正向 initialize 结果，才能证明是旧时代。"
+    },
+    {
+      "stage": "check",
+      "question": "客户端应如何处理两个名为 search 的工具？",
+      "options": ["静默覆盖其中一个", "信任启动顺序", "按声明策略加前缀或拒绝", "创建协议会话"],
+      "correct": 2,
+      "explanation": "显式加前缀或拒绝能让路由保持可见且确定性。"
+    },
+    {
+      "stage": "post",
+      "question": "旧版结果在客户端协商了旧时代后省略了 resultType。如何解释？",
+      "options": ["作为 input_required", "作为 complete", "作为传输错误", "作为 server/discover"],
+      "correct": 1,
+      "explanation": "客户端将早期协议版本中缺少 resultType 的结果视为 complete。"
+    },
+    {
+      "stage": "post",
+      "question": "现代传输丢失后，在恢复路由前必须做什么？",
+      "options": ["重新连接、重新发现并重新列出", "使用 Last-Event-ID 恢复", "回显 Mcp-Session-Id", "复用旧连接元数据"],
+      "correct": 0,
+      "explanation": "客户端重建对端簿记，并仅使用新的请求 ID 重试安全操作。"
+    }
+  ]
+}

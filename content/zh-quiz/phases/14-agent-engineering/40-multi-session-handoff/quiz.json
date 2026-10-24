@@ -1,0 +1,90 @@
+{
+  "lesson": "40-multi-session-handoff",
+  "title": "Multi-Session Handoff",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "交接包中哪个字段是承重字段？",
+      "options": [
+        "next_action（没有它，文档只是状态报告，不是交接）",
+        "verdict_pointer",
+        "summary",
+        "commands_run"
+      ],
+      "correct": 0,
+      "explanation": "交接若缺少 next_action，就只是一份状态报告；下一步具体行动让下一次会话高效。"
+    },
+    {
+      "stage": "pre",
+      "question": "交接为何是生成的，而不是手写的？",
+      "options": [
+        "手写交接在忙碌时会被跳过；生成器读取工作台工件并输出包，因此智能体只需把工作台留在可被总结的状态",
+        "Apache 2.0 要求",
+        "生成器更快",
+        "生成器加密更好"
+      ],
+      "correct": 0,
+      "explanation": "自动化弥合了意图与一致性之间的差距。"
+    },
+    {
+      "stage": "check",
+      "question": "包以哪两种形式交付？",
+      "options": [
+        "Email 和 Slack",
+        "PDF 和 PNG",
+        "YAML 和 TOML",
+        "handoff.md（人类可读）和 handoff.json（机器可读，两者来自同一源工件；出现分歧时以 JSON 为准）"
+      ],
+      "correct": 3,
+      "explanation": "Markdown 给人类，JSON 给下一个智能体；两者来自同一个生成器。"
+    },
+    {
+      "stage": "check",
+      "question": "本课如何区分 compaction 与 handoff？",
+      "options": [
+        "它们相同",
+        "compaction 收费，handoff 免费",
+        "handoff 需要 GPU",
+        "compaction 延长会话；handoff 干净地关闭一个会话并在新上下文中启动下一个。交接包让这种切换成本低廉"
+      ],
+      "correct": 3,
+      "explanation": "Hermes Issue 20372 的框架：在原地压缩降低质量之前先写一份紧凑交接，然后在新会话中恢复。"
+    },
+    {
+      "stage": "check",
+      "question": "本课建议何时结束会话？",
+      "options": [
+        "在上下文预算的 50–75% 之前，趁上下文还完整；在压缩伪影污染状态前写包成本更低",
+        "到 100% 上下文时再慌乱处理",
+        "只在合并后",
+        "只在午夜"
+      ],
+      "correct": 0,
+      "explanation": "提前收尾能让生成器的输入保持干净。"
+    },
+    {
+      "stage": "post",
+      "question": "本课建议在包中把反馈日志裁剪成什么？",
+      "options": [
+        "最近 K 条加上每条非零退出记录，让包保持小巧而失败历史得以保留",
+        "随机 N 条",
+        "仅前 K 条",
+        "仅最近一条"
+      ],
+      "correct": 0,
+      "explanation": "非对称裁剪：失败必须保留；尾部琐事保留成本很低。"
+    },
+    {
+      "stage": "post",
+      "question": "什么元数据让多智能体会话协作有效？",
+      "options": [
+        "branch、last_known_good_commit 和 status（active | superseded | archived）；每个分支和主题只有一个 active 交接",
+        "共享 Slack 频道",
+        "中央队列",
+        "绝密加密"
+      ],
+      "correct": 0,
+      "explanation": "过期交接是多智能体失败的主要原因；status + branch + LKG 让 active 集合保持最小。"
+    }
+  ]
+}

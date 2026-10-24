@@ -1,0 +1,78 @@
+{
+  "lesson": "11-scalable-oversight-weak-to-strong",
+  "title": "Scalable Oversight and Weak-to-Strong Generalization",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Superalignment 议程提出的核心问题是什么？",
+      "options": [
+        "人类是否比奖励模型更准确？",
+        "RLHF 能否扩展到 1B 参数以上？",
+        "一个较弱的监督者能否可靠地监督一个更强、更对齐的模型？",
+        "对抗训练能否消除所有后门？"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在 Burns 等人（2023）的弱到强泛化研究中，实验设置是什么？",
+      "options": [
+        "奖励模型仅在合成数据上训练",
+        "两个强模型辩论；人类裁判",
+        "一个强模型（GPT-4 级别）在弱模型（GPT-2 级别）生成的标签上微调，并将其能力与强监督上限进行比较",
+        "GPT-2 在 GPT-4 标签上微调"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Performance Gap Recovered（PGR）是如何定义的？",
+      "options": [
+        "(fine-tuned - weak) / (ceiling - weak)",
+        "(weak - ceiling) / ceiling",
+        "fine-tuned / ceiling",
+        "(ceiling - fine-tuned) / weak"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "以下哪一项不是课程中列出的可扩展监督机制？",
+      "options": [
+        "递归奖励建模",
+        "Tokenizer 蒸馏",
+        "任务分解",
+        "辩论"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "可扩展监督与 W2SG 如何互补？",
+      "options": [
+        "它们都需要白盒访问",
+        "它们都针对同一指标",
+        "可扩展监督提升监督者的有效信号质量；W2SG 弥合监督者提供的不完美信号所带来的差距",
+        "它们互斥"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "通过辩论实现 AI 安全机制的核心假设是什么？",
+      "options": [
+        "找到一个有说服力的真答案比找到有说服力的假答案更容易",
+        "辩论记录总是比直接答案更短",
+        "裁判比辩论者更有能力",
+        "两个辩论者总是说真话"
+      ],
+      "correct": 0,
+      "explanation": ""
+    }
+  ]
+}

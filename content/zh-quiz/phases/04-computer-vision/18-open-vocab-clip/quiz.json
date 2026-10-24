@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "CLIP 的对比损失是对称的（图像到文本 + 文本到图像）。为什么需要两个方向？",
+      "options": [
+        "数值稳定性",
+        "PyTorch 要求对称",
+        "因为损失必须和为零",
+        "你希望推理时两个方向的查询都有效：文本检索图像和图像检索文本。只训练一个方向会让另一个方向的准确率显著下降"
+      ],
+      "correct": 3,
+      "explanation": "嵌入空间需要在模态间对称，因为下游任务会双向查询。零样本分类是文本到图像（给定文本提示对图像分类）。检索可以是任意方向。只训练 i2t 或只训练 t2i 会让另一个方向变弱。"
+    },
+    {
+      "stage": "pre",
+      "question": "CLIP 的零样本分类通过……工作？",
+      "options": [
+        "为每个候选类别编码如 'a photo of a dog' 的提示，编码测试图像，然后取图像嵌入与所有类别文本嵌入之间余弦相似度的 argmax",
+        "搜索带标签示例数据库",
+        "在类别上微调图像编码器",
+        "运行一个在 ImageNet 上训练的分类头"
+      ],
+      "correct": 0,
+      "explanation": "零样本意味着没有任务相关训练：模型的表示已经能让你把图像与任意文本描述比较。为每个类别写一个提示，编码所有提示和测试图像，算余弦相似度，取 argmax。唯一的“技巧”是提示工程——为每个类别使用多个模板并平均其嵌入，可在 ImageNet 上提升 1-3 个 top-1 点。"
+    },
+    {
+      "stage": "post",
+      "question": "SigLIP 用逐对的 sigmoid 损失替代了 CLIP 的 softmax。这带来什么好处？",
+      "options": [
+        "只在 COCO 上更准确",
+        "更快的 GPU 内核",
+        "更低的内存使用",
+        "Sigmoid 损失是逐对的，不依赖 batch 作为归一化分母。SigLIP 在较小 batch size 下也能训练良好，而 CLIP 的 softmax 损失在那里会因负例不足而挨饿"
+      ],
+      "correct": 3,
+      "explanation": "CLIP 的对称交叉熵是对整个 batch 的 softmax，因此有效负例数 = batch_size - 1。小 batch 会让它挨饿。SigLIP 是逐对的：每个（图像、标题）对得到一个二值决策（匹配或不匹配）。没有 batch 级归一化，因此 SigLIP 在 batch 128 下就能工作，而 CLIP 需要 8192。同等规模下 SigLIP 与 CLIP 相当或更优。"
+    },
+    {
+      "stage": "post",
+      "question": "有人报告用 CLIP ViT-B/32 在 CIFAR-10 上零样本 top-1 为 88%，而同一模型每个类别使用 80 个提示模板达到 90%。为什么模板平均有帮助？",
+      "options": [
+        "它减少了 logit_scale 的方差",
+        "它让数据集翻倍",
+        "80 是 CLIP 的魔法数字",
+        "不同模板激活文本编码器所学分布的不同方面；平均能在类别合理自然语言描述流形上平滑类别嵌入，得到更稳健的质心"
+      ],
+      "correct": 3,
+      "explanation": "每个模板都是不同的自然语言线索。'a photo of a dog' 强调一个方面；'a blurry photo of a dog' 强调另一个；'a sketch of a dog' 又强调另一个。平均文本嵌入能得到“狗”这一概念更平滑的表示，对单个模板的怪癖不那么敏感。OpenAI CLIP 论文公布了 80 个模板，可将 ImageNet 零样本提升约 2 个点。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么现代 VLM（LLaVA、Qwen-VL、InternVL）使用 CLIP 家族的视觉编码器，而不是有监督 ImageNet ResNet？",
+      "options": [
+        "ResNet 看不见颜色",
+        "CLIP 特征与自然语言对齐，LLM 可以更低成本地对其推理；有监督 ImageNet 特征从未针对标题训练，需要大量投影层才能桥接到文本",
+        "这是许可要求",
+        "CLIP 编码器更快"
+      ],
+      "correct": 1,
+      "explanation": "VLM 把视觉编码器接到语言模型，并训练一个小投影。CLIP 风格编码器针对文本训练过，因此它们的输出已经处于 LLM 只需几层线性适配就能消费的空间。有监督 ImageNet 编码器没有自然语言结构的概念，需要更大的桥接 MLP 才能与 LLM 协同。这就是为什么每个 SOTA VLM 都使用 CLIP 家族的视觉塔。"
+    }
+  ]
+}

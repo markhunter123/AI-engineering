@@ -1,0 +1,78 @@
+{
+  "lesson": "68-rag-eval-precision-recall",
+  "title": "RAG Evaluation: Precision, Recall, MRR, nDCG, Faithfulness, Answer Relevance",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么 recall@k 通常是生产 RAG 的头号检索指标？",
+      "options": [
+        "Recall 忽略排序",
+        "OpenAPI 规范要求 Recall",
+        "在 RAG 中 Recall 与 Precision 相同",
+        "生成阶段可以丢弃不相关分块，但无法从未见过的分块中发明答案，因此遗漏正确分块是更昂贵的失败"
+      ],
+      "correct": 3,
+      "explanation": "遗漏正确分块的检索器无法被下游修复；多余分块浪费 token，但很少会污染答案。"
+    },
+    {
+      "stage": "pre",
+      "question": "MRR 计算什么？",
+      "options": [
+        "答案的 token 数量",
+        "余弦相似度的几何平均",
+        "第二个相关文档的中位排序",
+        "对每次查询第一个相关文档位置的倒数取平均"
+      ],
+      "correct": 3,
+      "explanation": "MRR 由列表顶部主导：rank 1 贡献 1.0，rank 2 贡献 0.5，rank 10 贡献 0.1。"
+    },
+    {
+      "stage": "check",
+      "question": "什么时候应该用 nDCG 而不是 recall@k？",
+      "options": [
+        "当检索器不返回分数时",
+        "当语料较小时",
+        "永不",
+        "当黄金标签具有分级相关度（例如文档 A 为 3、文档 B 为 2、文档 C 为 1），二元指标会丢失信息时"
+      ],
+      "correct": 3,
+      "explanation": "nDCG 使用分级增益和位置折扣；recall 将所有内容压平为二元。"
+    },
+    {
+      "stage": "check",
+      "question": "faithfulness 与 answer relevance 的区别是什么？",
+      "options": [
+        "忠实度是检索指标，相关性是分块指标",
+        "是同一指标的两个名字",
+        "忠实度衡量精确度；相关性衡量召回",
+        "忠实度问的是“答案是否基于检索到的上下文”；答案相关性问的是“答案是否回答了问题”"
+      ],
+      "correct": 3,
+      "explanation": "忠实但离题的答案忠实度高、相关性低；相关但无依据的答案相关性高、忠实度低。"
+    },
+    {
+      "stage": "check",
+      "question": "某流水线 recall@5 不错但 MRR 很低，应首先调查哪个阶段？",
+      "options": [
+        "生成器",
+        "分块器",
+        "语料摄入器",
+        "重排序器，因为正确分块在 top-k 中但不在最前面"
+      ],
+      "correct": 3,
+      "explanation": "recall@5 意味着黄金答案在前 5；低 MRR 意味着它不在最前面。这正是重排序阶段的职责。"
+    },
+    {
+      "stage": "post",
+      "question": "哪种生产风险会让固定的 qrels 文件随时间推移变得危险？",
+      "options": [
+        "评估套件占用磁盘空间",
+        "嵌入向量会过期",
+        "检索器六个月后停止工作",
+        "qrels 会腐烂：语料会变化，上季度的黄金答案文档可能不再正确；指标会基于过时标签上报"
+      ],
+      "correct": 3,
+      "explanation": "应每季度审查一次 qrels，否则随着语料演化，指标会测错对象。"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "lesson": "24-coreference-resolution",
+  "title": "共指消解",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "共指消解的目标是什么？",
+      "options": [
+        "将所有指代同一现实世界实体的 mention（命名、名词、代词）聚类",
+        "抽取关系",
+        "标注词性",
+        "将代词翻译为名词"
+      ],
+      "correct": 0,
+      "explanation": "共指将指代同一实体的 mention 跨度聚类。"
+    },
+    {
+      "stage": "pre",
+      "question": "哪种类型的表达是 'nominal' mention？",
+      "options": [
+        "动词",
+        "像 'she' 这样的代词",
+        "仅专有名词",
+        "像 'the CEO' 或 'the company' 这样的名词短语"
+      ],
+      "correct": 3,
+      "explanation": "Nominal mention 是像 'the company' 这样的名词短语；pronominal mention 是代词。"
+    },
+    {
+      "stage": "check",
+      "question": "现代（Lee 等，2017）共指架构是什么？",
+      "options": [
+        "仅基于规则的句法分析",
+        "决策树",
+        "端到端基于跨度：枚举跨度、评分 mention，然后评分先行词概率并贪婪聚类",
+        "BM25 检索"
+      ],
+      "correct": 2,
+      "explanation": "端到端神经共指枚举跨度并联合学习 mention + 先行词评分。"
+    },
+    {
+      "stage": "check",
+      "question": "CoNLL F1 平均了什么？",
+      "options": [
+        "MUC、B-cubed 和 CEAF-phi4 的 F1 分数",
+        "精确率和召回率",
+        "跨语言 F1",
+        "Token 和跨度 F1"
+      ],
+      "correct": 0,
+      "explanation": "CoNLL F1 是 MUC、B-cubed 和 CEAF-phi4 指标的平均值。"
+    },
+    {
+      "stage": "check",
+      "question": "什么是 bridging anaphora？",
+      "options": [
+        "像 'the wheels' 这样暗示先前提到的汽车的轮子的隐含指代",
+        "误译",
+        "指代对象之前的代词",
+        "没有先行词的代词"
+      ],
+      "correct": 0,
+      "explanation": "Bridging 将一个 mention 连接到部分相关或隐含相关但未被明确说明的实体。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么纯 LLM 共指在长文档上不可靠？",
+      "options": [
+        "共指需要 CFG",
+        "LLM 无法阅读文本",
+        "分词器失败",
+        "单次调用的 LLM 在 50+ 段落上会过度合并或默默丢弃 mention；需要滑动窗口加合并"
+      ],
+      "correct": 3,
+      "explanation": "长文档 LLM 共指会退化；滑动窗口加跨窗口合并可缓解。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么要在下游任务前将共指聚类合并到 NER 结果中？",
+      "options": [
+        "Wikidata 要求",
+        "这样下游任务看到的每个聚类是一个实体，而不是每个表面 mention 一个实体，大幅提升覆盖率",
+        "降低延迟",
+        "增加 token 数量"
+      ],
+      "correct": 1,
+      "explanation": "不合并的话，NER 会分别计算每个表面形式，遗漏 60-80% 的实体 mention。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么硬编码的性别规则是共指系统中的脆弱点？",
+      "options": [
+        "它们在非二元指代对象、组织和动物上失效；学习到的评分更鲁棒",
+        "它们无法使用 POS 标签",
+        "它们需要 GPU",
+        "它们运行太快"
+      ],
+      "correct": 0,
+      "explanation": "性别启发式在人口统计学多样的文本上失效；优先使用学习模型。"
+    }
+  ]
+}

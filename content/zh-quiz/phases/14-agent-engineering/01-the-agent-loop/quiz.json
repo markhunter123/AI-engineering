@@ -1,0 +1,90 @@
+{
+  "lesson": "01-the-agent-loop",
+  "title": "智能体循环：观察、思考、行动",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么单独一个 LLM 表现得像自动补全，而不是智能体？",
+      "options": [
+        "它无法读取文件、运行查询，或根据外部世界验证说法",
+        "它的上下文窗口太小，放不下问题",
+        "它一次只能生成一个 token",
+        "没有系统提示词它拒绝回答"
+      ],
+      "correct": 0,
+      "explanation": "没有循环和工具的 LLM 只能根据权重生成文本；它无法观察状态，也无法据此行动。"
+    },
+    {
+      "stage": "pre",
+      "question": "Yao 等人 2022 年提出的经典 ReAct 轨迹包含哪三个标签？",
+      "options": [
+        "Prompt、Response、Reward",
+        "Plan、Execute、Reflect",
+        "Thought、Action、Observation",
+        "System、User、Assistant"
+      ],
+      "correct": 2,
+      "explanation": "ReAct 将 Thought、Action 和 Observation 交错在同一输出流中。"
+    },
+    {
+      "stage": "check",
+      "question": "下列哪一项不是本课列出的智能体循环五大要素之一？",
+      "options": [
+        "工具注册表",
+        "消息缓冲区",
+        "观察格式化器",
+        "梯度优化器"
+      ],
+      "correct": 3,
+      "explanation": "五大要素是消息缓冲区、工具注册表、停止条件、轮次预算和观察格式化器。梯度优化器属于训练阶段，而非推理循环。"
+    },
+    {
+      "stage": "check",
+      "question": "循环中的轮次预算（turn budget）起什么作用？",
+      "options": [
+        "控制注册表暴露多少工具",
+        "限制 LLM 提供方的调用速率",
+        "硬性限制循环迭代次数，防止智能体失控",
+        "限制每次响应的 token 数"
+      ],
+      "correct": 2,
+      "explanation": "轮次预算限制循环迭代次数；2026 年的智能体通常运行 40–400 步，需要设置与任务匹配的预算。"
+    },
+    {
+      "stage": "check",
+      "question": "与基于提示词的 Thought token 相比，2025–2026 年的原生推理（native-reasoning）转变改变了什么？",
+      "options": [
+        "Thought token 现在在一个独立的推理通道中发出，并在轮次之间传递",
+        "模型不再使用工具调用，只依赖思维链",
+        "Observation 被完全从提示词中移除",
+        "循环控制流被 DAG 取代"
+      ],
+      "correct": 0,
+      "explanation": "推理内容迁移到专用通道（在不同提供方之间通常加密），但观察—思考—行动的控制流并未改变。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么本课说工具输出是不可信输入？",
+      "options": [
+        "工具运行时缓慢且不可靠",
+        "检索到的内容可能携带类似 delete-the-repo 的隐藏指令，只有直接的用户输入才算授权",
+        "工具结果总是大于模型的上下文窗口",
+        "提供方默认会剥离工具输出字节"
+      ],
+      "correct": 1,
+      "explanation": "OpenAI CUA 文档明确指出，只有直接的用户指令才算授权；工具输出可能携带对抗性指令，必须被视为不可信。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么本课认为每个 2026 年的框架底层仍在运行 ReAct？",
+      "options": [
+        "因为 LangGraph 强制所有其他框架继承它",
+        "因为提供方要求提示词中出现 ReAct 关键字",
+        "因为 Yao 等人拥有该循环的专利",
+        "因为观察—思考—行动的控制流是不变的；框架之间的差异在于检查点、Actor、角色模板和追踪等上层封装"
+      ],
+      "correct": 3,
+      "explanation": "Claude Agent SDK、OpenAI Agents SDK、LangGraph、AutoGen、CrewAI、Agno 和 Mastra 之间的差异在于围绕循环的封装，而非循环本身。"
+    }
+  ]
+}

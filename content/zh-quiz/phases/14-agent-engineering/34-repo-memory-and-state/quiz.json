@@ -1,0 +1,90 @@
+{
+  "lesson": "34-repo-memory-and-state",
+  "title": "Repo Memory and Durable State",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "判断一条信息是否属于仓库记忆的持久性测试是什么？",
+      "options": [
+        "用户是否标记为重要",
+        "三个月后 CI 重跑时是否有用；如果是，则入仓库记忆；否则进遥测",
+        "是否是 JSON",
+        "是否小于 4 kB"
+      ],
+      "correct": 1,
+      "explanation": "仓库记忆用于持久、三个月后仍有用的状态；瞬态数据属于遥测。"
+    },
+    {
+      "stage": "pre",
+      "question": "哪个 schema 字段承载智能体的契约版本？",
+      "options": [
+        "schema_version",
+        "model_id",
+        "session_uuid",
+        "build_hash"
+      ],
+      "correct": 0,
+      "explanation": "schema_version 是整数契约；管理器拒绝加载未知版本。"
+    },
+    {
+      "stage": "check",
+      "question": "原子写入如何工作？",
+      "options": [
+        "在同一目录中用 tempfile.mkstemp 创建临时文件，写入，fsync，再用 os.replace（原子重命名）覆盖目标",
+        "仅追加并带 CRC",
+        "加密后覆盖",
+        "截断目标后写入"
+      ],
+      "correct": 0,
+      "explanation": "POSIX 和 Windows 上的原子重命名可防止部分写入损坏。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么非幂等工具调用需要幂等键？",
+      "options": [
+        "如果智能体在工具调用后、记录结果前崩溃，可以安全重试；在执行前记录调用 ID，重试时跳过该调用",
+        "为了缩短输出",
+        "为了计费",
+        "为了去重日志"
+      ],
+      "correct": 0,
+      "explanation": "pending_calls.jsonl 保存调用 ID；恢复时检查并跳过已执行的工作。"
+    },
+    {
+      "stage": "check",
+      "question": "大工件（CSV、长转录、生成文件）应放在状态哪里？",
+      "options": [
+        "拼接成一个巨大日志",
+        "环境变量",
+        "内联在 agent_state.json",
+        "作为独立文件（或对象存储）保存，只在状态中保留路径，让检查点保持小巧快速"
+      ],
+      "correct": 3,
+      "explanation": "独立工件可独立增长；检查点的读写保持廉价。"
+    },
+    {
+      "stage": "post",
+      "question": "事件溯源用于审计 + 快照用于恢复能带来什么？",
+      "options": [
+        "先读取快照，再重放其后的所有事件，从而逐字重放智能体决策；形状与 Postgres WAL 相同",
+        "推理更快",
+        "磁盘占用更低",
+        "原生语音支持"
+      ],
+      "correct": 0,
+      "explanation": "每次变更都追加到 state.events.jsonl；定期快照到 state.json；重放快照时间戳之后的事件。"
+    },
+    {
+      "stage": "post",
+      "question": "schema_version 不匹配时会发生什么？",
+      "options": [
+        "管理器静默升级",
+        "状态被删除",
+        "智能体重试",
+        "管理器拒绝加载，直到 tools/migrate_state.py 中的迁移脚本运行"
+      ],
+      "correct": 3,
+      "explanation": "应执行模式迁移或拒绝加载；绝不能静默升级。"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "lesson": "38-calling-conventions-and-stack-frames",
+  "title": "Calling Conventions and Stack Frames: System V, Windows x64, and AArch64",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "同一个 C 函数 double mixed(int i, double d, long long l, float f) 分别编译为 Linux x86-64 和 Windows x64。哪些寄存器保存四个参数？",
+      "options": [
+        "两者都使用 edi、xmm0、rsi、xmm1，因为两个 ABI 都按顺序填充整数和 SSE 列表",
+        "System V：edi、xmm0、rsi、xmm1（两个列表）。Microsoft x64：ecx、xmm1、r8、xmm3（每个位置一个槽）",
+        "System V 在栈上传 d 和 f，因为 SSE 寄存器只携带返回值",
+        "两者都使用 ecx、xmm0、rdx、xmm1，因为两个 ABI 的整数列表都从 rcx 开始"
+      ],
+      "correct": 1,
+      "explanation": "psABI 3.2.3 从两个独立寄存器列表分配 INTEGER 和 SSE 类。Microsoft 约定是按位置：第 k 个参数使用 RCX/RDX/R8/R9 或 XMM0 到 XMM3 中对应槽，因此槽 1 的 double 进入 XMM1，槽 3 的 float 进入 XMM3。"
+    },
+    {
+      "stage": "check",
+      "question": "在 -O2 的 Microsoft x64 eight_args 版本中，它在 0x28(%rsp) 读取第五个参数，且没有前奏。0x28 从何而来？",
+      "options": [
+        "帧指针偏移加上前奏在函数体之前压入的已保存 rbp",
+        "从栈指针向上数五个 8 字节参数槽，每个参数一个槽",
+        "编译器选择的对齐填充，使 load 落在 16 字节边界",
+        "8 字节返回地址加 32 字节影子存储，用于四个寄存器参数"
+      ],
+      "correct": 3,
+      "explanation": "进入时 0(%rsp) 是返回地址，8(%rsp) 到 39(%rsp) 是四个 home slot。因此第一个栈参数从 40 开始，即 0x28。"
+    },
+    {
+      "stage": "check",
+      "question": "keeps 在 System V 的 -O2 版本以 pushq %rbp; pushq %r14; pushq %rbx 开始，然后调用 ext 且没有 subq。调用时栈为何已对齐？",
+      "options": [
+        "24 字节压栈加 8 字节返回地址等于 32，是 16 的倍数",
+        "被调用者 ext 在自己的前奏中重新对齐栈",
+        "每次 pushq 都保持 16 字节对齐，因此任意次数压栈都对齐",
+        "红区吸收了对齐偏差，因此调用不需要 subq"
+      ],
+      "correct": 0,
+      "explanation": "psABI 3.2.2 规定进入时 (%rsp + 8) 是 16 的倍数。三次压栈使深度变为 24，24 + 8 = 32，因此调用点无需 subq 即可对齐。"
+    },
+    {
+      "stage": "check",
+      "question": "AArch64 keeps 前奏是 stp x29, x30, [sp, #-0x30]!; str x21, [sp, #0x10]; mov x29, sp; stp x20, x19, [sp, #0x20]。帧记录在哪里？",
+      "options": [
+        "在帧顶部靠近调用者，因为记录必须在保存之上",
+        "在前奏之后位于 sp+0 和 sp+8：低地址处是 x29，上方是 x30，x29 指向它",
+        "nowhere，因为保存 x21 的函数不需要帧记录",
+        "在 x19 和 x20 中，因为 x20 和 x19 的 stp 最后存储记录"
+      ],
+      "correct": 1,
+      "explanation": "预索引 stp 将 x29 存储在新 sp 处，x30 存储在 sp+8 处，mov x29, sp 使 x29 指向该对。同一函数的 Apple arm64 构建将记录放在帧顶部。"
+    },
+    {
+      "stage": "check",
+      "question": "在 -O0 的 System V eight_args 版本中，它在没有 subq 的情况下将六个参数寄存器存储到 -0x8(%rbp) 到 -0x30(%rbp)。这些存储为何合法？",
+      "options": [
+        "它们位于 rsp 下方 128 字节的红区内，且叶函数不会调用会覆盖它们的函数",
+        "前奏后 rbp 指向 rsp 下方 48 字节，因此存储在 rsp 上方",
+        "调用者在调用前分配了 48 字节，作为其传出区域",
+        "存储进入调用者的帧，被调用者拥有它直到返回"
+      ],
+      "correct": 0,
+      "explanation": "红区是 %rsp 之外 128 字节，信号处理程序不会修改它。Microsoft 和 AArch64 Linux 的同一函数构建用 subq 或 sub sp 分配空间，因为这些 ABI 没有红区。"
+    },
+    {
+      "stage": "post",
+      "question": "struct big big_ret(long long seed) 返回一个 32 字节结构。每个 ABI 如何返回它？",
+      "options": [
+        "三个 ABI 都用四个寄存器返回，因为每个 ABI 都有四个结果寄存器",
+        "缓冲区地址在 rdi（seed 到 rsi）、rcx（seed 到 rdx）或 x8（seed 留在 x0）",
+        "System V 和 Microsoft x64 在 rax:rdx 中返回，AArch64 在 x0:x1 中返回",
+        "三个 ABI 都在返回地址上方的栈上、调用者帧中返回"
+      ],
+      "correct": 1,
+      "explanation": "psABI 3.2.3 将 32 字节聚合体分类为 MEMORY，并像第一个参数一样将地址传入 %rdi。Microsoft 在 RCX 中隐藏指针后将真实参数右移。AAPCS64 6.9 使用间接结果寄存器 x8，x0 到 x7 保持不变。"
+    },
+    {
+      "stage": "post",
+      "question": "radare2 6.2.4 列出 System V -O2 的 eight_args 有七个参数：rdi、rsi、rdx、r8、r9 和两个栈槽。哪个参数缺失，为什么？",
+      "options": [
+        "rcx，因为它唯一一次读取是在 leaq (%rdx,%rcx), %rax 的索引中",
+        "r9，因为 r9 是被调用者保存寄存器，工具跳过被调用者保存寄存器",
+        "第二个栈槽，因为 rsp 上方 16 字节在帧外",
+        "没有缺失，因为函数只从输入中读取七个值"
+      ],
+      "correct": 0,
+      "explanation": "源码有八个参数，字节读取 %rcx 一次，在 lea 内部。本课的分析器将基址和索引寄存器计为读取，并找到全部六个寄存器参数。工具输出与源码不一致，因此记录为待验证的发现。"
+    },
+    {
+      "stage": "post",
+      "question": "Windows 目标中 keeps 的 .xdata 项是 01 07 04 00 07 32 03 30 02 70 01 60。它表示什么？",
+      "options": [
+        "版本 1，帧寄存器 rbp 偏移 0x70，三次压入 rbx、rdi、rsi",
+        "版本 1，7 字节前奏，在偏移 7 处分配 8 字节，然后压入 rbx、rdi、rsi",
+        "版本 1，7 字节前奏，三次非易失保存进入影子存储",
+        "版本 1，7 字节前奏，在偏移 7 处分配 32 字节，然后压入 rbx、rdi、rsi"
+      ],
+      "correct": 3,
+      "explanation": "UNWIND_CODE 字节 0x32 是 op 2（UWOP_ALLOC_SMALL）且 info 为 3，所以 3*8+8 = 32 字节。0x30、0x70、0x60 是 op 0（UWOP_PUSH_NONVOL）且寄存器号 3、7、6：rbx、rdi、rsi。这与从前奏字节 56 57 53 48 83 ec 20 读取的一致。"
+    }
+  ]
+}

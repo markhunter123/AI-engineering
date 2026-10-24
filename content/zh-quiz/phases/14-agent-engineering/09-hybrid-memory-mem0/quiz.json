@@ -1,0 +1,90 @@
+{
+  "lesson": "09-hybrid-memory-mem0",
+  "title": "混合记忆：向量 + 图 + KV",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "KV 存储最适合处理哪类查询？",
+      "options": [
+        "跨共享同一计费实体的客户的可达性",
+        "按 (user, type, entity) 键直接查找事实",
+        "有效时间（valid-at-time）时态查询",
+        "长对话上的语义相似性"
+      ],
+      "correct": 1,
+      "explanation": "KV 在精确键上是 O(1)；向量用于相似性，图用于关系。"
+    },
+    {
+      "stage": "pre",
+      "question": "Mem0 每次 add() 会并行写入哪三个存储？",
+      "options": [
+        "Postgres、Redis、ClickHouse",
+        "Cache、queue、log",
+        "Embedding、attention、FFN",
+        "Vector、KV、graph"
+      ],
+      "correct": 3,
+      "explanation": "Mem0 将每次写入扇出到向量、KV 和图三个存储。"
+    },
+    {
+      "stage": "check",
+      "question": "哪三个维度共同决定 Mem0 的 fusion score？",
+      "options": [
+        "Confidence、perplexity、BLEU",
+        "Precision、recall、F1",
+        "Relevance、importance、recency",
+        "Latency、throughput、cost"
+      ],
+      "correct": 2,
+      "explanation": "分数是 relevance、importance 和 recency 的加权和；权重按产品调参。"
+    },
+    {
+      "stage": "check",
+      "question": "当新进入的事实与已有边冲突时，Mem0g 会怎么做？",
+      "options": [
+        "抛出异常",
+        "重写 user_id",
+        "将已有边标记为无效但不删除，以便时态查询仍能遍历",
+        "删除该边"
+      ],
+      "correct": 2,
+      "explanation": "软失效保留历史，以支持时态（valid-at-time）查询。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么本课建议按产品调优 fusion 权重？",
+      "options": [
+        "Apache 2.0 要求如此",
+        "向量库拒绝等权重",
+        "聊天智能体中 recency 占主导，合规智能体中 importance 占主导，检索智能体中 relevance 占主导",
+        "提供方要求如此"
+      ],
+      "correct": 2,
+      "explanation": "不同产品对 relevance/importance/recency 的偏好不同；一套权重不能通吃。"
+    },
+    {
+      "stage": "post",
+      "question": "Mem0 使用的范围分类是什么？",
+      "options": [
+        "User、session、agent",
+        "Local、regional、global",
+        "Public、private、secret",
+        "Read、write、admin"
+      ],
+      "correct": 0,
+      "explanation": "范围分为 user（跨会话）、session（单线程）和 agent（实例级状态）。"
+    },
+    {
+      "stage": "post",
+      "question": "这里的 embedding drift 是什么，本课建议如何缓解？",
+      "options": [
+        "向量被加密；轮换密钥",
+        "嵌入 API 改 URL；固定域名",
+        "嵌入溢出整数；改用 float64",
+        "随着语料增长，向量检索质量下降；应定期重新嵌入最热门的 N 条记录"
+      ],
+      "correct": 3,
+      "explanation": "定期重新嵌入热记录，可在语料增长时保持检索质量稳定。"
+    }
+  ]
+}

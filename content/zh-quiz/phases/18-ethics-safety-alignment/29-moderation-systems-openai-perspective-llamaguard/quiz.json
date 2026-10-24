@@ -1,0 +1,78 @@
+{
+  "lesson": "29-moderation-systems-openai-perspective-llamaguard",
+  "title": "Moderation Systems - OpenAI, Perspective, Llama Guard",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "OpenAI 的 omni-moderation-latest（2024）是什么？",
+      "options": [
+        "C2PA 水印接口",
+        "基于 GPT-4o 的审核分类器，可在一个请求中处理文本和图像，返回 13 类响应模式（骚扰、仇恨、自残、性、暴力、非法及子类别），对大多数开发者免费",
+        "RLHF 奖励模型",
+        "专注于推理的前沿模型"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "以下哪项不是 OpenAI Moderation 的主要顶层类别？",
+      "options": [
+        "election-interference（选举干预）",
+        "violence（暴力）",
+        "self-harm（自残）",
+        "harassment（骚扰）"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "标准 2026 年审核模式包含哪三层？",
+      "options": [
+        "输入审核（生成前）、输出审核（生成后）、自定义审核（领域规则）",
+        "望远镜式/潜望镜式/显微镜式",
+        "探针/检测器/测试框架",
+        "分词器/模型/去分词器"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Perspective API（Google Jigsaw）主要用于给什么打分？",
+      "options": [
+        "用户满意度奖励",
+        "推理质量",
+        "水印强度",
+        "有毒性（包含严重毒性、侮辱、脏话、威胁、身份攻击等子维度），作为 LLM 时代之前的内容审核基线"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "仅输入审核的一种失效模式是什么？",
+      "options": [
+        "它无法捕捉模型输出失败或幻觉；编码攻击（第 12–14 课）可以完全绕过输入分类器",
+        "它无法在 GPU 上运行",
+        "它总是屏蔽合法内容",
+        "它消除了对输出分类器的需求"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Azure Content Moderator 的弃用与迁移目标是什么？",
+      "options": [
+        "并入 Llama Guard 4",
+        "由 Perspective API 替代",
+        "2024 年 2 月弃用，2027 年 3 月 15 日停用；迁移目标是 Azure AI Content Safety（基于 LLM，与 Azure OpenAI 集成）",
+        "立即弃用且无替代方案"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

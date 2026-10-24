@@ -1,0 +1,78 @@
+{
+  "lesson": "54-paper-writer",
+  "title": "Paper Writer",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么作者在写任何正文之前先将章节、图表和引用声明为数据？",
+      "options": [
+        "因为 BibTeX 无法解析前向引用",
+        "因为 LaTeX 需要前向声明",
+        "因为模型需要系统提示",
+        "因为结构就是契约：工具可以在生成正文前验证完整性"
+      ],
+      "correct": 3,
+      "explanation": "结构优先让工具在调用正文生成器前验证唯一性、引用覆盖和图表覆盖。骨架就是契约。"
+    },
+    {
+      "stage": "pre",
+      "question": "图表注入步骤从实验清单产生什么？",
+      "options": [
+        "一个 Figure 记录列表，包含稳定 ID 和规范化到论文目录的路径",
+        "一个参考文献 stub",
+        "从产物编译的 PDF",
+        "带图表描述的模型提示"
+      ],
+      "correct": 0,
+      "explanation": "read_experiment_manifest 返回 Figure 记录。ID 是确定性的，路径被规范化，标题来自清单。"
+    },
+    {
+      "stage": "check",
+      "question": "哪种验证失败会在写入任何文件前引发 PaperValidationError？",
+      "options": [
+        "摘要超过 200 词",
+        "作者数量为奇数",
+        "某个章节引用了一个未在参考文献中声明的键",
+        "磁盘上不存在的图表路径"
+      ],
+      "correct": 2,
+      "explanation": "缺失的参考文献键、重复的图表 ID、空标题、空摘要和未知图表引用都会引发 PaperValidationError。不强制路径存在，因为 LaTeX 编译器稍后会检查。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 prose 生成器是作为可调用对象注入 PaperWriter，而不是其方法？",
+      "options": [
+        "因为测试可以将确定性 MockProseGenerator 替换为模型调用，而无需改动 writer",
+        "因为 LaTeX 需要回调",
+        "因为 dataclass 不能保存状态",
+        "因为 Python 不允许方法接受 Paper 参数"
+      ],
+      "correct": 0,
+      "explanation": "writer 将 prose 生成器作为依赖。测试替换 MockProseGenerator，生产替换模型调用，writer 不变。"
+    },
+    {
+      "stage": "post",
+      "question": "PaperWriter.write 成功时输出哪三个文件？",
+      "options": [
+        "paper.tex, references.bib, manifest.json",
+        "manifest.json, prose.txt, paper.pdf",
+        "paper.tex, paper.pdf, references.bib",
+        "outline.json, paper.tex, figures.tar"
+      ],
+      "correct": 0,
+      "explanation": "paper.tex 是 LaTeX 源文件。references.bib 是参考文献。manifest.json 是 critic 循环接下来读取的结构化产物。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么 manifest 是 writer 契约的一部分，而不仅仅是 LaTeX 文件？",
+      "options": [
+        "因为下游工具（critic、dashboard）读取结构化 manifest，而不是 LaTeX",
+        "因为 manifest.json 是 BibTeX 唯一接受的文件",
+        "因为 LaTeX 太大难以解析",
+        "因为 LaTeX 编译器拒绝无类型章节"
+      ],
+      "correct": 0,
+      "explanation": "manifest 是下游阶段的稳定接口。critic 和 dashboard 检查 manifest.json。LaTeX 是人类可读产物，不是机器接口。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "phase-19/26-sandbox-runner-denylist",
+  "title": "Sandbox Runner with Denylist and Path Jail",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "学前问题：沙箱检查解释器调用的 argv 形状（如 python3 -c）的最强理由是什么？",
+      "options": [
+        "解释器根本无法被安全沙箱化。",
+        "解释器慢，浪费智能体预算。",
+        "带 -c 的解释器本质上是另一种 shell 调用，会绕过可执行文件 denylist。",
+        "没有解释器，模型写的代码更好。"
+      ],
+      "correct": 2,
+      "explanation": "python3 -c、bash -c、node -e 等在功能上等同于给模型一个 shell。仅阻止可执行文件名是不够的。"
+    },
+    {
+      "stage": "check",
+      "question": "沙箱配置 project_root=/work。一个路径参数以 ./src/main.py 到达。jail 检查如何执行？",
+      "options": [
+        "检查拼接后的绝对路径的 os.path.realpath 是否具有 /work 前缀。",
+        "沙箱拒绝所有相对路径。",
+        "对 /work 做字面字符串前缀匹配。",
+        "沙箱先 spawn 子进程，事后检查工作目录。"
+      ],
+      "correct": 0,
+      "explanation": "realpath 解析符号链接。字面前缀检查会被 project_root 内指向外部的符号链接绕过。realpath 加前缀或相等检查才是安全的。"
+    },
+    {
+      "stage": "check",
+      "question": "SandboxResult 返回 denied=True、timed_out=False、exit_code=-100。规范解释是什么？",
+      "options": [
+        "沙箱未 spawn 子进程；调用在 exec 前被拒绝。",
+        "子进程显式返回 -100。",
+        "子进程已启动并被 SIGKILL 终止。",
+        "wall-clock 超时触发。"
+      ],
+      "correct": 0,
+      "explanation": "sentinel exit_code -100 与 denied=True 配对，表示沙箱在调用 subprocess.run 前短路。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么沙箱默认偏好 shell=False 并拒绝 shell 元字符？",
+      "options": [
+        "subprocess 在 macOS 上不接受 shell=True。",
+        "它让测试套件更简单。",
+        "Shell 解析将整个 shell DSL 暴露给模型，而沙箱正试图缩小这个表面。",
+        "shell=True 在 CPython 中更慢。"
+      ],
+      "correct": 2,
+      "explanation": "shell=True 将 argv 变成 shell 解释的字符串。管道、重定向、命令替换和 glob 都变得可用。一旦 shell 解析运行，沙箱就无法有意义地拒绝 payload。"
+    },
+    {
+      "stage": "post",
+      "question": "你想为沙箱增加每个进程的内存限制。本课沙箱未实现此功能。正确的下一步是什么？",
+      "options": [
+        "跳过：denylist 足以防御内存炸弹。",
+        "提高 wall-clock 超时来补偿。",
+        "在传给 subprocess.run 的 preexec_fn 中使用 os.setrlimit(RLIMIT_AS)。",
+        "将限制作为字符串加入 denylist。"
+      ],
+      "correct": 2,
+      "explanation": "subprocess.run 接受 preexec_fn（POSIX）或类似机制。setrlimit(RLIMIT_AS) 限制子进程的地址空间。本课沙箱未内置；第 29 课的端到端 demo 讨论如何在其上叠加容器级限制。"
+    },
+    {
+      "stage": "post",
+      "question": "模型用 argv=['cat', 'src/../src/main.py'] 调用沙箱。文件位于 project_root 下。该调用应通过 path jail 吗？",
+      "options": [
+        "取决于用户是否为 root。",
+        "是的：realpath 将 src/../src 折叠为 src，解析后的路径在 project_root 内。",
+        "不：argv 在沙箱看到前被 regex gate 拒绝。",
+        "不，任何路径中的 .. 都自动拒绝。"
+      ],
+      "correct": 1,
+      "explanation": "realpath 会规范化路径。沙箱不会一概拒绝 .. 标记；它检查解析后的目标。这是有意为之：合法路径有时会正常经过 ..。"
+    }
+  ]
+}

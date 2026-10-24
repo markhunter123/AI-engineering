@@ -1,0 +1,90 @@
+{
+  "lesson": "01-managed-llm-platforms",
+  "title": "Managed LLM Platforms — Bedrock, Vertex AI, Azure OpenAI",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在本课前，如果客户需要在一个 API 后面同时使用 Claude、Llama 和 Cohere，你会首选哪个平台？",
+      "options": [
+        "AWS Bedrock",
+        "Vertex AI",
+        "Direct Anthropic API",
+        "Azure OpenAI Service"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "哪家超大规模云厂商的策略被描述为“独家合作”而非“市场平台”？",
+      "options": [
+        "Vertex AI",
+        "AWS Bedrock",
+        "OCI Generative AI",
+        "Azure OpenAI"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "在 Llama 3.1 405B 等效模型上，Azure OpenAI（使用 PTU）与 Bedrock 按需之间的实测中位数 TTFT 差距大约是多少？",
+      "options": [
+        "~250 ms",
+        "~5 ms",
+        "~100 ms",
+        "~25 ms"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪一项 Bedrock 2025 新功能可以在 CloudWatch 中原生实现最清晰的产品级成本归因？",
+      "options": [
+        "Bedrock Agents",
+        "Bedrock Knowledge Bases",
+        "Application Inference Profiles",
+        "Bedrock Guardrails"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Azure PTU 通常在持续利用率处于哪个区间时与按需付费打平？",
+      "options": [
+        "40-60%",
+        "80-95%",
+        "5-10%",
+        "20-30%"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么课程推荐的 2026 策略是：对关键产品级 LLM 调用至少使用两家提供商？",
+      "options": [
+        "Hyperscalers refuse to sign BAAs unless you also use a competitor",
+        "Single-vendor pricing is always more expensive",
+        "It is required by SOC 2 Type II",
+        "前沿模型领导者每月都在轮换，单供应商锁定会让你错失三分之二的前沿模型"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "以下哪项最能描述三家平台的 FinOps 可见性？",
+      "options": [
+        "All three expose identical per-request attribution",
+        "Bedrock 原生最清晰，Vertex 通过 BigQuery 最灵活，Azure 缺少埋点时最不透明",
+        "Vertex has no attribution surface at all",
+        "Azure is cleanest native, Bedrock is opaque"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

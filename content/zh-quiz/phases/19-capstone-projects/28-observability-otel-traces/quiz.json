@@ -1,0 +1,78 @@
+{
+  "lesson": "phase-19/28-observability-otel-traces",
+  "title": "Observability: OTel GenAI Spans and Prometheus Metrics",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "学前问题：将 harness 的 span 写成 OTel GenAI attribute 形状有什么实际好处？",
+      "options": [
+        "每个 OTel 兼容后端都能无需自定义解析器读取它们。",
+        "OTel 是仅 Python 的标准，所以 harness 会获得类型提示。",
+        "HIPAA 要求如此。",
+        "OTel span 在磁盘上压缩得更好。"
+      ],
+      "correct": 0,
+      "explanation": "这些约定是与更广泛生态系统的契约。Honeycomb、Grafana Tempo、Jaeger 和 Datadog 都能开箱即用地解析 gen_ai.* 属性。"
+    },
+    {
+      "stage": "check",
+      "question": "SpanBuilder.span() 上下文内抛出异常。本课的 builder 会记录什么？",
+      "options": [
+        "status 保持 UNSET，异常被静默吞掉。",
+        "丢弃 span 以避免污染 trace。",
+        "status=ERROR，status_message 包含异常类型和消息，并追加一个 'exception' 事件。",
+        "将 span 重命名为 'error'。"
+      ],
+      "correct": 2,
+      "explanation": "Status ERROR 加 exception 事件符合 OTel 规范。异常会被重新抛出，以便调用者代码可以响应。"
+    },
+    {
+      "stage": "check",
+      "question": "histogram 的 Prometheus exposition 包含 _bucket、_sum 和 _count 行。为什么 bucket count 是累积的（每个 le bucket 包含所有更小的 bucket）？",
+      "options": [
+        "累积计数减少浮点误差。",
+        "累积计数让 scraper 可以通过减法计算每桶计数，而无需存储所有 observation。",
+        "累积计数是 Grafana 唯一支持的格式。",
+        "它们不是累积的；本课的 exposition 是非标准的。"
+      ],
+      "correct": 1,
+      "explanation": "Prometheus 的设计选择：后端读取累积计数并计算每桶差异。这样每条时间序列只是每桶的简单单调计数器。"
+    },
+    {
+      "stage": "check",
+      "question": "harness 将工具执行包装在 span 中。哪些属性键在 GenAI 约定下将其标识为工具调用？",
+      "options": [
+        "operation + tool.name。",
+        "agent.harness.tool + agent.harness.call。",
+        "gen_ai.system + gen_ai.request.model。",
+        "gen_ai.tool.name + gen_ai.tool.call.id。"
+      ],
+      "correct": 3,
+      "explanation": "gen_ai.tool.name 和 gen_ai.tool.call.id 是 GenAI 约定中工具执行的标准键。"
+    },
+    {
+      "stage": "post",
+      "question": "你想查询“read_file 调用的 p95 延迟是多少”。你查询哪个产物？",
+      "options": [
+        "span 的 status_message 字段。",
+        "计数器 tools_called_total，除以时间窗口。",
+        "在一个窗口内抓取的 Prometheus histogram tool_latency_ms{tool=\"read_file\"}。",
+        "traces.jsonl 中每个 span 的 duration_ms，用脚本解析。"
+      ],
+      "correct": 2,
+      "explanation": "Histogram 是百分位数的正确工具。Counter 只计数；trace 包含原始 span，但未预聚合。"
+    },
+    {
+      "stage": "post",
+      "question": "审查者问为什么本课手写而不是引入 opentelemetry-sdk。哪个答案是正确的？",
+      "options": [
+        "手写教会了 wire format；之后可以接入 SDK，使用相同的属性键。",
+        "手写运行时更快。",
+        "SDK 在导入时需要网络连接。",
+        "SDK 不支持 GenAI 约定。"
+      ],
+      "correct": 0,
+      "explanation": "这些约定在不同实现之间是稳定的。手写版本用于清晰；生产接入 SDK 并复用相同的 gen_ai.* 键。"
+    }
+  ]
+}

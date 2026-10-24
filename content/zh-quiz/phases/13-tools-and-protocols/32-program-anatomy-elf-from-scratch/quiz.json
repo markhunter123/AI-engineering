@@ -1,0 +1,78 @@
+{
+  "lesson": "32-program-anatomy-elf-from-scratch",
+  "title": "Program Anatomy: An ELF Reader From Scratch",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "哪条规则适用于第 32 到 36 课的每个分析目标？",
+      "options": [
+        "目标是你自己编写并编译的程序",
+        "目标是带有已发布源码映射的程序",
+        "目标是小于 1 MB 的程序",
+        "目标是机器上安装的任何程序"
+      ],
+      "correct": 0,
+      "explanation": "该系列只分析你自己拥有的代码。这使每节课都保持在 17 U.S.C. 1201(f)、Directive 2009/24/EC、Sega 和 Connectix 的授权规则范围内。"
+    },
+    {
+      "stage": "check",
+      "question": "可重定位目标文件中的符号 st_value 为 0x10，st_shndx 为 2，第 2 节的 sh_offset 为 0x40，sh_addr 为 0。它的字节在文件中什么位置？",
+      "options": [
+        "文件偏移 0x50，即节偏移加值",
+        "文件偏移 0x42，即节索引加值",
+        "文件偏移 0x10，因为 st_value 是文件偏移",
+        "文件偏移 0x40，即其节的开头"
+      ],
+      "correct": 0,
+      "explanation": "在目标文件中，st_value 是符号所在节内的偏移。文件偏移 = sh_offset + st_value - sh_addr，此处为 0x40 + 0x10 - 0 = 0x50。"
+    },
+    {
+      "stage": "check",
+      "question": ".rela.text 中的一条记录读取 offset 0x36、R_X86_64_PC32、.rodata+0x10，持有该字段的 lea 指令结束于 0x3a。链接后 lea 指向哪里？",
+      "options": [
+        ".rodata+0x36，即字段的偏移",
+        ".rodata+0x10，即加数命名的目标",
+        ".text+0x10，重定位总是指向被修补的节",
+        ".rodata+0x14，因为 S + A - P 被加到指令末尾"
+      ],
+      "correct": 3,
+      "explanation": "处理器会将存储值加到 0x3a。存储值为 S + A - P，其中 P = 0x36，因此结果为 .rodata + 0x10 + 4 = .rodata + 0x14。"
+    },
+    {
+      "stage": "check",
+      "question": "ELF 加载器读取哪个结构将可执行文件映射到内存？",
+      "options": [
+        "通过 e_shstrndx 找到的字符串表",
+        "通过 e_phoff 找到的程序头表",
+        "通过 .symtab 找到的符号表",
+        "通过 e_shoff 找到的节头表"
+      ],
+      "correct": 1,
+      "explanation": "程序头是执行视图。剥离后的可执行文件可能没有节头表，仍能运行。"
+    },
+    {
+      "stage": "post",
+      "question": "Mach-O 读取器如何从 nlist_64 项找出函数长度？",
+      "options": [
+        "读取 n_desc 字段，它以字节为单位存储函数大小",
+        "取同一节中下一个符号地址减去本符号地址",
+        "从包含该符号的 section_64 记录读取大小",
+        "从每个符号一个字段的 LC_SYMTAB 命令读取大小"
+      ],
+      "correct": 1,
+      "explanation": "nlist_64 有 n_strx、n_type、n_sect、n_desc 和 n_value，没有大小字段。ELF 的 st_size 在目标文件中没有 Mach-O 对应项。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么本课测试将读取器与捕获的 llvm-objdump 文本比较，而不是运行工具？",
+      "options": [
+        "因为捕获的文本解析速度比每次测试运行工具更快",
+        "因为 llvm-objdump 没有 Linux sysroot 无法读取可重定位目标",
+        "因为这种比较可在任何机器上运行，且 oracle 不会漂移",
+        "因为课程禁止每个外部工具，包括编译器"
+      ],
+      "correct": 2,
+      "explanation": "fixture 保存了已知工具版本的输出。测试无需安装工具，且后续工具发布不会改变读取器比较的对象。"
+    }
+  ]
+}

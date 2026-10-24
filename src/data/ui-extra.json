@@ -29,6 +29,17 @@
     "Phase": "阶段",
     "Search": "搜索",
     "Close navigation": "关闭导航",
-    "Lesson navigation": "课程导航"
+    "Lesson navigation": "课程导航",
+    "MIT License": "MIT 许可证",
+    "authored by": "作者：",
+    "Coauthored by": "作者：",
+    "Quiz": "测验",
+    "Pre-Lesson Check": "课前检测",
+    "Mid-Lesson Check": "课中检测",
+    "Post-Lesson Quiz": "课后测验",
+    "Retry this check": "重新作答",
+    "Perfect score!": "满分！",
+    "Great work!": "很棒！",
+    "Keep studying!": "继续加油！"
   }
 }

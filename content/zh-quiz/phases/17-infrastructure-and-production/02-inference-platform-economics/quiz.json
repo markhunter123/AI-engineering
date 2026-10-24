@@ -1,0 +1,78 @@
+{
+  "lesson": "02-inference-platform-economics",
+  "title": "Inference Platform Economics — Fireworks, Together, Baseten, Modal, Replicate, Anyscale",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "课程用哪三个细分市场来划分 2026 年的推理厂商？",
+      "options": [
+        "Single-tenant, multi-tenant, on-prem",
+        "Free, paid, enterprise",
+        "Open-source, commercial, hybrid",
+        "Custom silicon, GPU platforms, API-first marketplaces"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "当持续 GPU 利用率大约达到多少时，按分钟计费（Baseten、Modal）开始优于按 token 计费（Fireworks、Together）？",
+      "options": [
+        "5%",
+        "90%",
+        "60%",
+        "30%"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪个平台被描述为 Python 原生的无服务器平台，按秒计费，并在预加载后具有 2-4 秒冷启动时间？",
+      "options": [
+        "Anyscale",
+        "Baseten",
+        "Fireworks",
+        "Modal"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Fireworks 在 LoRA 定价上的显著差异是什么？",
+      "options": [
+        "LoRA 请求需要单独的专用 GPU 合同",
+        "LoRA 服务的请求按基础模型的 per-token 费率计费",
+        "LoRA 服务的请求比基础模型更贵",
+        "LoRA 完全不支持"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪个平台适合受监管的医疗客户，需要 SOC 2 Type II、HIPAA 就绪 posture 和专用 GPU？",
+      "options": [
+        "Together",
+        "Anyscale",
+        "Baseten",
+        "Replicate"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么课程认为平台层的“定制推理引擎”宣传大多是营销话术？",
+      "options": [
+        "Custom engines never outperform vLLM",
+        "Per-token pricing is the only real differentiator",
+        "vLLM 和 SGLang 约占生产级开源推理的 80%，因此平台差异化更多来自开发者体验、成本归因和 SLA，而不是引擎本身",
+        "All custom engines are forks of TensorRT-LLM"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

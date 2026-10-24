@@ -1,0 +1,78 @@
+{
+  "lesson": "51-write-specifications-that-preserve-judgment",
+  "title": "Specifications That Preserve Judgment",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "欠规范与过规范之间的有用中间是什么？",
+      "options": [
+        "没有计划",
+        "更长的请求",
+        "完整实现脚本",
+        "可执行契约：固定不变量和证据，同时保留可逆选择"
+      ],
+      "correct": 3,
+      "explanation": "契约约束结果和风险，而不规定每个实现细节。"
+    },
+    {
+      "stage": "check",
+      "question": "哪项决策通常应被锁定？",
+      "options": [
+        "局部变量名",
+        "系统是否可以写入生产",
+        "可逆的文件拆分",
+        "私有辅助函数顺序"
+      ],
+      "correct": 1,
+      "explanation": "权限和高后果行为需要人工拥有的决策。"
+    },
+    {
+      "stage": "check",
+      "question": "什么是 bounded decision？",
+      "options": [
+        "智能体不能行动",
+        "智能体可在明确的安全限制内选择",
+        "选择是随机的",
+        "没有证明"
+      ],
+      "correct": 1,
+      "explanation": "边界保留有用判断，同时控制风险。"
+    },
+    {
+      "stage": "check",
+      "question": "为何将示例与不变量配对？",
+      "options": [
+        "它们消除所有歧义",
+        "示例证明每个普遍规则",
+        "它们替代结果",
+        "示例揭示意图，不变量陈述必须始终成立的条件"
+      ],
+      "correct": 3,
+      "explanation": "具体案例和普遍约束扮演不同角色。"
+    },
+    {
+      "stage": "post",
+      "question": "什么证明匹配用户旅程声明？",
+      "options": [
+        "浏览器或端到端旅程观察",
+        "类型注解",
+        "仅本地单元测试",
+        "计划"
+      ],
+      "correct": 0,
+      "explanation": "证明必须与声明处于同一层面。"
+    },
+    {
+      "stage": "post",
+      "question": "为何记录锁定决策的理由？",
+      "options": [
+        "为了阻止所有变更",
+        "为了让文件更长",
+        "让后续证据能在无需考古的情况下修订选择",
+        "为了隐藏不确定性"
+      ],
+      "correct": 2,
+      "explanation": "可追溯的理由让规范能有意识地演进。"
+    }
+  ]
+}

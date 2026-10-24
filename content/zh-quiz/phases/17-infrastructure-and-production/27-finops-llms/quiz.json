@@ -1,0 +1,78 @@
+{
+  "lesson": "27-finops-llms",
+  "title": "FinOps for LLMs — Unit Economics and Multi-Tenant Attribution",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "传统 FinOps 为什么在 LLM 支出上失效？",
+      "options": [
+        "LLM 不花钱",
+        "云厂商拒绝列明细",
+        "LLM 账单总是免费",
+        "成本是 token 交易而非资源运行时长；标签不会随 API 调用自动传递，必须在调用点标记用户/任务/租户"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本课要求从第一天起就埋点的三个归因维度是什么？",
+      "options": [
+        "厂商、模型、API 版本",
+        "区域、可用区、数据中心",
+        "每用户（user_id）、每任务（task_id + route）、每租户（tenant_id）",
+        "GPU、CPU、内存"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "成本归因应拆分为哪四个 token 层级？",
+      "options": [
+        "GPU、CPU、内存、存储",
+        "缓存、模型、网关、可观测性",
+        "输入、输出、网络、磁盘",
+        "提示词、工具、记忆、回复"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "执行阶梯中的熔断触发条件是什么？",
+      "options": [
+        "一分钟内花费超过 1 美元",
+        "任何 5xx 响应",
+        "租户支出相对基线的 z-score > 4；自动暂停租户并告警值班人员",
+        "延迟 P50 > 2 秒"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本课建议使用什么单位指标替代 $/M tokens？",
+      "options": [
+        "每秒成本",
+        "每 GPU 小时成本",
+        "每次产品成果成本（例如每张已解决工单成本、每篇生成文章成本、每次成功 agent 任务成本）",
+        "每网关成本"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本课称成熟团队使用的最高精度归因模式是什么？",
+      "options": [
+        "仅标签聚合",
+        "基于模型的分摊",
+        "遥测连接器——通过 trace ID 将 traces 与账单关联",
+        "采样与推断"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "lesson": "24-plan-execute-control-flow",
+  "title": "Plan-Execute Control Flow",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在 plan-execute 智能体中，planner 的职责是什么？",
+      "options": [
+        "处理 JSON-RPC 传输",
+        "生成执行器将要运行的有序、类型化步骤列表",
+        "强制执行超时",
+        "在每一步调用 dispatcher"
+      ],
+      "correct": 1,
+      "explanation": "Planner 输出结构化计划。Executor 运行它们。将两者混合是本课要摆脱的思维链陷阱。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么 expected_outcome 是 Step 形状的一部分，即使执行器不检查它？",
+      "options": [
+        "因为它给 replanner 和 tracer 提供了可读取的声明成功条件",
+        "因为模型用它训练",
+        "因为 dispatcher 用它作为缓存键",
+        "因为 registry 要求它"
+      ],
+      "correct": 0,
+      "explanation": "Replanner 在修改计划时读取它。Tracer 在时间线上渲染它。它是步骤上的人类可读契约。"
+    },
+    {
+      "stage": "check",
+      "question": "当某一步失败且 replanner 返回新计划时，执行器在事件流上发出什么？",
+      "options": [
+        "session.complete，status=failed",
+        "tool.error 后接 session.start",
+        "plan.diff，含 removed/added/revised 的步骤 id",
+        "什么都不发——replan 是静默的"
+      ],
+      "correct": 2,
+      "explanation": "plan.diff 让修改变得可见。静默重写正是我们要避免的 bug。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么同时设置 max_steps 和 max_replans 作为独立预算？",
+      "options": [
+        "因为 dispatcher 拒绝无界计划",
+        "因为 registry 计数 replan",
+        "因为 asyncio 需要两者",
+        "因为它们衡量不同单位。Steps 限制总执行量；replans 限制 planner 被调用次数。"
+      ],
+      "correct": 3,
+      "explanation": "max_replans 捕捉反复返回相同损坏计划的 planner。max_steps 捕捉不断增长失控的计划。"
+    },
+    {
+      "stage": "check",
+      "question": "当 planner 首次调用返回空列表时，返回的原因是什么？",
+      "options": [
+        "replan_budget",
+        "step_budget",
+        "no_plan",
+        "goal_met"
+      ],
+      "correct": 2,
+      "explanation": "没有计划就没有执行。会话以 reason=no_plan 和 status=failed 结束。"
+    },
+    {
+      "stage": "post",
+      "question": "PlanDiff.revised 中包含什么？",
+      "options": [
+        "Planner 要求跳过的步骤 id",
+        "tool_name 或 args 在修订之间发生变化的步骤 id",
+        "新计划中有而旧计划中没有的步骤 id",
+        "旧计划中有而新计划中没有的步骤 id"
+      ],
+      "correct": 1,
+      "explanation": "revised 是 (tool_name, args) 签名在修订中发生变化的那组 id。"
+    },
+    {
+      "stage": "post",
+      "question": "当执行器耗尽 max_replans 时，SessionResult.reason 是什么？",
+      "options": [
+        "step_budget",
+        "replan_budget",
+        "no_plan",
+        "goal_met"
+      ],
+      "correct": 1,
+      "explanation": "replan_budget。status 为 failed。history 携带每次运行的步骤，包括触发 replan 的失败。"
+    }
+  ]
+}

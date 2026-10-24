@@ -1,0 +1,78 @@
+{
+  "lesson": "fitting-scaling-laws",
+  "title": "根据你自己的训练拟合扩展定律",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "对于幂律损失 L(N) = (Nc/N)^α，对两边取对数后会发生什么？",
+      "options": [
+        "log L 对 log N 呈一条直线",
+        "log L 对 log N 呈抛物线",
+        "log L 对 log N 呈指数曲线",
+        "log L 等于原始未取对数的表达式"
+      ],
+      "correct": 0,
+      "explanation": "取对数后得到 log L = log Nc - α log N，这在双对数空间中是一条直线。"
+    },
+    {
+      "stage": "check",
+      "question": "在 Chinchilla 定律 L(N,D) = E + A/N^α + B/D^β 中，E 代表什么？",
+      "options": [
+        "来自训练 token 的损失贡献",
+        "任务的不可约损失下限",
+        "总训练计算预算",
+        "最优参数量"
+      ],
+      "correct": 1,
+      "explanation": "E 是不可约损失：即使模型规模和数据无限增大，损失也会趋近于该值。"
+    },
+    {
+      "stage": "check",
+      "question": "为了干净地估计 token 扩展指数 β，哪种实验设计最好？",
+      "options": [
+        "多个模型规模在固定 token 数上训练",
+        "固定模型规模在多个 token 数上训练",
+        "单一 token 数上训练一个模型",
+        "同时改变 N 和 D 而不加控制"
+      ],
+      "correct": 1,
+      "explanation": "保持 N 固定可将 N 项变为常数偏移，从而孤立 D 项，干净地估计 β。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么 Kaplan 等人（2020）报告的参数扩展指数比 Chinchilla 更小？",
+      "options": [
+        "他们为每个模型规模都调了学习率",
+        "他们每次运行都保持 D 固定而改变 N",
+        "N 和 D 存在共变，且学习率调度未按规模调优",
+        "他们将 E 建模为独立的不可约损失项"
+      ],
+      "correct": 2,
+      "explanation": "共变以及共享的学习率调度引入了与规模相关的噪声，使拟合指数被拉平。"
+    },
+    {
+      "stage": "post",
+      "question": "如果在拟合 L(N) = A/N^α 时没有建模不可约损失 E，α 通常会发生什么？",
+      "options": [
+        "它会精确等于 Chinchilla 的指数值",
+        "它会产生偏差，因为损失下限使曲线变平",
+        "它保证得到更紧的置信区间",
+        "它不再需要大规模模型的运行数据"
+      ],
+      "correct": 1,
+      "explanation": "忽略 E 会让曲线在 N 较大时显得变平，拟合出的指数会吸收这个下限，从而产生偏差。"
+    },
+    {
+      "stage": "post",
+      "question": "给定固定计算预算 C ≈ 6ND，如何找到计算最优的模型规模和 token 数？",
+      "options": [
+        "把 N 设为预算允许的最大值",
+        "在保持 C = 6ND 的前提下最小化 L(N,D)",
+        "对每个计算预算都精确使用 D/N = 20",
+        "把 D 设为预算允许的最大值"
+      ],
+      "correct": 1,
+      "explanation": "计算最优性意味着在预算等成本线上找到使拟合损失最低的 (N,D) 分配。"
+    }
+  ]
+}

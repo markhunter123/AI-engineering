@@ -1,0 +1,90 @@
+{
+  "lesson": "36-scope-contracts",
+  "title": "Scope Contracts and Task Boundaries",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为何范围蔓延被称为最不受监控的失败模式？",
+      "options": [
+        "太少见而不值得监控",
+        "测试自动捕获",
+        "智能体大声崩溃",
+        "每次触碰在当时都有合理理由；合在一起却成了与评审不同的变更"
+      ],
+      "correct": 3,
+      "explanation": "智能体每一步都出于好意叙述；沉默的总量就是蔓延。"
+    },
+    {
+      "stage": "pre",
+      "question": "本课把哪个契约字段称为“一半契约”？",
+      "options": [
+        "approvals_required",
+        "forbidden_files（负空间）",
+        "goal",
+        "task_id"
+      ],
+      "correct": 1,
+      "explanation": "没有 forbidden_files 的契约是不完整的；负空间占了一半。"
+    },
+    {
+      "stage": "check",
+      "question": "为何把允许/禁止路径固定为 glob 而不是原始路径？",
+      "options": [
+        "glob 加密更好",
+        "glob 更快",
+        "原始路径不可 JSON 序列化",
+        "真实仓库会移动文件；glob 在会话之间的重构中仍然有效"
+      ],
+      "correct": 3,
+      "explanation": "glob（如 app/**/*.py）让契约在重构后仍然有效。"
+    },
+    {
+      "stage": "check",
+      "question": "“违规预算”模式做什么？",
+      "options": [
+        "每次违规收费",
+        "允许轻微范围滑移作为预算内警告；只有超出才触发合并拒绝——这是能发货的门禁与会被禁用的门禁之间的区别",
+        "限制模型调用",
+        "为智能体设置月度预算"
+      ],
+      "correct": 1,
+      "explanation": "agent-guardrails 使用 violationBudget，让门禁在日常流程中可用。"
+    },
+    {
+      "stage": "check",
+      "question": "specsmaxxing 实践者报告了什么？",
+      "options": [
+        "延迟降低 90%",
+        "成本上升 5 倍",
+        "兔子洞比例在三周内从 52% 降到 21%，且未改动智能体；是契约在起作用，而不是模型",
+        "测试变慢"
+      ],
+      "correct": 2,
+      "explanation": "在调用智能体前用 YAML 写好范围契约，使兔子洞比例减半，而无需改动模型。"
+    },
+    {
+      "stage": "post",
+      "question": "多契约合并语义（最小权限）是什么？",
+      "options": [
+        "最后一份契约获胜",
+        "allowed_files 取交集；forbidden_files 取并集；time_budget 取最小值；approvals 累积；deny-all 保持；None 的合并 defer 到另一方",
+        "随机决胜",
+        "第一份契约获胜"
+      ],
+      "correct": 1,
+      "explanation": "最小权限合并：允许取交集、禁止取并集、时间取最严、审批累积。"
+    },
+    {
+      "stage": "post",
+      "question": "为何时间和网络预算也应纳入契约？",
+      "options": [
+        "厂商要求",
+        "墙钟时间和外部主机访问都是范围维度；仅文件 glob 必要但不充分",
+        "它们让 JSON 更小",
+        "Apache 2.0 要求"
+      ],
+      "correct": 1,
+      "explanation": "time_budget_minutes 和 network_egress 允许列表是文件 glob 之上的范围维度。"
+    }
+  ]
+}

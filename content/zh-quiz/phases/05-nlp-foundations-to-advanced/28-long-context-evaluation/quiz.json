@@ -1,0 +1,102 @@
+{
+  "lesson": "28-long-context-evaluation",
+  "title": "长上下文评估 —— NIAH、RULER、LongBench、MRCR",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "原始 NIAH 基准测量什么？",
+      "options": [
+        "模型能否在受控深度下从长上下文中检索植入的事实",
+        "分词器 fertility",
+        "嵌入余弦漂移",
+        "仅多跳推理"
+      ],
+      "correct": 0,
+      "explanation": "NIAH = needle in a haystack：植入一个事实，让模型检索它，扫描深度和长度。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么宣传的上下文窗口往往与可用上下文大不相同？",
+      "options": [
+        "嵌入溢出",
+        "分词器截断",
+        "注意力随长度和任务退化；规格表最大值 rarely 在多跳或推理负载下成立",
+        "Beam search 变慢"
+      ],
+      "correct": 2,
+      "explanation": "有效推理上下文通常是宣传最大值的 25-50%。"
+    },
+    {
+      "stage": "check",
+      "question": "RULER 相对于 NIAH 增加了什么？",
+      "options": [
+        "逐 token logprobs",
+        "翻译任务",
+        "更快的推理",
+        "在多种上下文长度下覆盖检索、多跳追踪、聚合和 QA 等 13 种任务类型"
+      ],
+      "correct": 3,
+      "explanation": "RULER 将 NIAH 扩展为多任务长上下文基准，捕获在 NIAH 上饱和但在别处失败的模型。"
+    },
+    {
+      "stage": "check",
+      "question": "什么是 'lost in the middle' 效应？",
+      "options": [
+        "模型对长输入中间位置的内容关注不足；深度 0.5 往往比深度 0 或 1 表现更差",
+        "模型丢失标点",
+        "模型忘记第一个 token",
+        "模型重新排序 token"
+      ],
+      "correct": 0,
+      "explanation": "中间上下文内容最不被关注；扫描深度会暴露 U 形准确率曲线。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么必须将 NIAH-only 评估 supplemented 以多跳测试？",
+      "options": [
+        "NIAH 没有 ground truth",
+        "前沿模型可以在单针检索上拿满分，但仍无法完成多跳变量追踪或聚合任务",
+        "多跳更快",
+        "NIAH 无法在长上下文上运行"
+      ],
+      "correct": 1,
+      "explanation": "检索通过不意味着推理通过；多跳基准暴露真正的上限。"
+    },
+    {
+      "stage": "post",
+      "question": "NoLiMa 强调什么？",
+      "options": [
+        "分词",
+        "针与查询之间没有字面 token 重叠，因此检索需要语义推理步骤",
+        "延迟",
+        "流式输出"
+      ],
+      "correct": 1,
+      "explanation": "NoLiMa 移除词汇重叠，使模型必须推理而非匹配关键词。"
+    },
+    {
+      "stage": "post",
+      "question": "长上下文规格表应该报告哪两个数字？",
+      "options": [
+        "仅 GPU 内存和延迟",
+        "仅每秒 token 数",
+        "仅宣传最大值",
+        "有效检索长度（例如 90% NIAH 通过）和有效推理长度（例如 70% 多跳通过）"
+      ],
+      "correct": 3,
+      "explanation": "区分检索有效长度和推理有效长度对真实世界声明至关重要。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么要在长上下文长度下测量 time-to-first-token？",
+      "options": [
+        "RAG 要求",
+        "Beam search 依赖它",
+        "1M token 的 prefill 可能耗时数十秒；仅看准确率会掩盖影响产品的延迟",
+        "分词很慢"
+      ],
+      "correct": 2,
+      "explanation": "长提示有巨大的 prefill 成本；必须同时跟踪延迟和准确率。"
+    }
+  ]
+}

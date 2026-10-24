@@ -1,0 +1,102 @@
+{
+  "lesson": "17-chatbots-rule-to-neural",
+  "title": "聊天机器人 —— 从基于规则到神经网络再到 LLM Agent",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "基于规则的聊天机器人中的 slot-filling 状态机做什么？",
+      "options": [
+        "选择最流畅的回复",
+        "嵌入用户消息",
+        "跟踪哪些必需参数（日期、目的地、金额）仍缺失，并按顺序询问",
+        "检测讽刺"
+      ],
+      "correct": 2,
+      "explanation": "Slot filling 迭代收集任务处理程序所需的结构化参数。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么基于检索的聊天对幻觉有抵抗力？",
+      "options": [
+        "它使用 BM25",
+        "它使用嵌入",
+        "它拒绝所有查询",
+        "它从精选集合中返回固定回复，而不是生成新文本"
+      ],
+      "correct": 3,
+      "explanation": "检索式直接返回预写答案；没有生成就没有编造内容。"
+    },
+    {
+      "stage": "check",
+      "question": "什么定义了 LLM agent 循环，而不是单次 LLM 调用？",
+      "options": [
+        "一个控制器交错执行 LLM 调用与工具调用，直到模型返回最终答案或达到步骤预算",
+        "使用 softmax",
+        "使用贪婪解码",
+        "更大的上下文窗口"
+      ],
+      "correct": 0,
+      "explanation": "Agent 增加了计划-执行-观察循环、工具调用和终止条件。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么混合路由（规则 + 检索 + LLM agent）是 2026 年生产的默认方案？",
+      "options": [
+        "它避免使用嵌入",
+        "没有单一架构能处理好所有请求；规则覆盖破坏性动作，检索覆盖 FAQ，agent 处理模糊开放查询",
+        "它更便宜易维护",
+        "它消除了评估需求"
+      ],
+      "correct": 1,
+      "explanation": "混合系统对高风险动作使用确定性规则，将 LLM agent 留给开放式查询。"
+    },
+    {
+      "stage": "check",
+      "question": "什么是 prompt injection？",
+      "options": [
+        "一种分词器攻击",
+        "用户提供的（直接）或文档提供的（间接）文本试图覆盖系统提示或劫持 agent 行为",
+        "仅是 SQL 注入的变体",
+        "将 token 注入嵌入"
+      ],
+      "correct": 1,
+      "explanation": "Prompt injection 通过用户输入或工具输出中的不可信文本重写 agent 行为。"
+    },
+    {
+      "stage": "post",
+      "question": "OWASP Top 10（LLM Apps 2025）中排名 LLM01 的风险是什么？",
+      "options": [
+        "SQL 注入",
+        "失效访问控制",
+        "不安全反序列化",
+        "Prompt injection（直接和间接）"
+      ],
+      "correct": 3,
+      "explanation": "Prompt injection 是 OWASP LLM Apps Top 10（2025）中的 LLM01。"
+    },
+    {
+      "stage": "post",
+      "question": "哪种缓解模式通过将规划与执行分离来减少间接 prompt injection？",
+      "options": [
+        "Plan-Verify-Execute：agent 先规划，再针对规划验证每个动作，最后执行——防止工具输出注入新的未计划动作",
+        "更短的上下文",
+        "更低的 temperature",
+        "更大的模型"
+      ],
+      "correct": 0,
+      "explanation": "PVE 针对约定规划检查每一步，因此来自工具输出的注入指令会被拒绝。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么在 LLM-agent 系统中，破坏性动作（支付、删除）仍必须通过结构化流程？",
+      "options": [
+        "工具无法被调用",
+        "Beam search 不安全",
+        "自信的幻觉、prompt injection 和范围蔓延意味着 LLM 不能成为不可逆副作用的唯一权威",
+        "LLM 很慢"
+      ],
+      "correct": 2,
+      "explanation": "幻觉和注入使通过纯 LLM agent 执行不可逆动作不安全；需要确定性确认流程。"
+    }
+  ]
+}

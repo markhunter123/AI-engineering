@@ -1,0 +1,90 @@
+{
+  "lesson": "33-instructions-as-executable-constraints",
+  "title": "Agent Instructions as Executable Constraints",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "理想规则与可执行规则的区别是什么？",
+      "options": [
+        "理想规则需要经理",
+        "理想规则没有检查函数（“要小心”）；可执行规则带有工作台可运行的机器可检查函数",
+        "理想规则收费；可执行规则免费",
+        "可执行规则更长"
+      ],
+      "correct": 1,
+      "explanation": "可执行规则可被测试；理想规则只是愿望。"
+    },
+    {
+      "stage": "pre",
+      "question": "本课用哪五个类别覆盖大部分规则？",
+      "options": [
+        "计划、行动、反思、优化、交付",
+        "读、写、执行、分叉、退出",
+        "低、中、高、严重、致命",
+        "启动、禁止、完成定义、不确定性、审批"
+      ],
+      "correct": 3,
+      "explanation": "启动、禁止、完成定义、不确定性处理、审批边界这五个类别。"
+    },
+    {
+      "stage": "check",
+      "question": "哪个严重等级会停止执行并要求操作员覆盖？",
+      "options": [
+        "soft",
+        "warn",
+        "block",
+        "info"
+      ],
+      "correct": 2,
+      "explanation": "block 是硬失败；warn 用于标注；info 用于报告。"
+    },
+    {
+      "stage": "check",
+      "question": "为何建议在编写时就标记严重等级？",
+      "options": [
+        "Linter 要求",
+        "团队早期容易高估严重等级，临近截止日期又削弱它；提前写下能强制校准",
+        "markdown 更好看",
+        "节省 token"
+      ],
+      "correct": 1,
+      "explanation": "严重等级校准必须是有意识的，而不是在压力下事后调整。"
+    },
+    {
+      "stage": "check",
+      "question": "markdown-as-source、JSON-as-cache 模式做什么？",
+      "options": [
+        "替换 markdown",
+        "加密规则",
+        "禁用评审",
+        "agent-rules.md 是编写的源文件；agent-rules.lock.json 是由 pre-commit hook 重新生成的热路径缓存（形状类似 package.json + lock）"
+      ],
+      "correct": 3,
+      "explanation": "Markdown 保持可评审；JSON 解析不进入热路径。"
+    },
+    {
+      "stage": "post",
+      "question": "规则过期作为强制机制是什么？",
+      "options": [
+        "超过 24 小时的规则会失败关闭",
+        "每条规则都有 expires_at（默认 90 天）；未触发的规则会触发季度评审，以论证、削弱或删除它们",
+        "规则自动过期，无需评审",
+        "规则在缓存满时过期"
+      ],
+      "correct": 1,
+      "explanation": "Cloudflare 的数据显示，带有过期时间的规则集保持在 30 条以下；不带的则增长到 80 多条未使用规则。"
+    },
+    {
+      "stage": "post",
+      "question": "规则与框架护栏有何关系？",
+      "options": [
+        "规则替代护栏",
+        "只需其一",
+        "护栏在运行时执行规则；规则集是护栏实现的人类可读契约",
+        "护栏是规则的替代方案"
+      ],
+      "correct": 2,
+      "explanation": "两者都需要：运行时捕获违规；规则集证明运行时做了正确的事。"
+    }
+  ]
+}

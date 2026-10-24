@@ -1,0 +1,78 @@
+{
+  "lesson": "kernel-fusion-and-profiling",
+  "title": "Kernel Fusion, Triton, and the Profiling Workflow",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "对于 z = ReLU(x + y)，单个融合 kernel 比独立的 add 和 ReLU kernel 更快的主要原因是什么？",
+      "options": [
+        "每个元素执行的浮点运算更少。",
+        "避免将中间张量写入 HBM 再读回。",
+        "自动提升 GPU 峰值内存带宽。",
+        "不需要在张量边界做逐元素掩码。"
+      ],
+      "correct": 1,
+      "explanation": "融合将中间结果保留在 SRAM/寄存器中；独立的 kernel 需要为临时张量额外付出一次 HBM 往返。"
+    },
+    {
+      "stage": "check",
+      "question": "在 Triton 以 tile 为中心的编程模型中，编译器替程序员承担了哪项职责？",
+      "options": [
+        "证明 kernel 数值正确。",
+        "选择线程到元素的映射、合并访问和共享内存布局。",
+        "编写 softmax 或矩阵乘法等高层算法。",
+        "保证所有张量形状在编译时静态已知。"
+      ],
+      "correct": 1,
+      "explanation": "Triton 程序描述一个 tile；编译器负责跨 SM 调度 tile 并处理底层内存布局。"
+    },
+    {
+      "stage": "check",
+      "question": "哪种情况最可能导致 torch.compile 回退到 eager 模式或反复重编译？",
+      "options": [
+        "所有输入张量在各训练步形状相同。",
+        "模型仅包含静态形状上的逐元素运算。",
+        "nonzero() 等数据相关形状每次调用都改变输出大小。",
+        "前向传播每层都使用单个连续 CUDA 张量。"
+      ],
+      "correct": 2,
+      "explanation": "动态或数据相关形状会强制图断裂或重编译；静态连续形状只编译一次。"
+    },
+    {
+      "stage": "check",
+      "question": "在 Nsight Systems 时间线上看到 GPU kernel 之间有很大空隙，首先应调查什么？",
+      "options": [
+        "Nsight Compute 中单个 kernel 的寄存器压力。",
+        "CPU 启动开销、Python GIL 或上游图断裂。",
+        "每个单独 kernel 的占用率。",
+        "HBM 内存吞吐量是否接近峰值。"
+      ],
+      "correct": 1,
+      "explanation": "时间线空隙是系统级症状；先排查 CPU 侧和启动路径，再深入单个 kernel。"
+    },
+    {
+      "stage": "post",
+      "question": "FlashAttention 的在线 softmax 将 attention 的 HBM 流量从什么渐近成本降到什么成本？",
+      "options": [
+        "O(N) 到 O(1)",
+        "O(N^2) 到 O(N)",
+        "O(N^3) 到 O(N^2)",
+        "O(N log N) 到 O(N)"
+      ],
+      "correct": 1,
+      "explanation": "通过分块并更新运行中的 softmax 统计量，FlashAttention 一次性流式读取 Q、K、V 并写出 O，而不是物化 N×N 的分数矩阵。"
+    },
+    {
+      "stage": "post",
+      "question": "一个 kernel 的内存吞吐量接近 GPU 峰值，但计算 SOL 远低于峰值，瓶颈是什么？",
+      "options": [
+        "kernel 是内存受限的，因为它已饱和带宽。",
+        "kernel 是计算受限的，因为它已饱和 FLOPs。",
+        "kernel 因低占用率停滞而为延迟受限。",
+        "kernel 因活跃线程过多而为寄存器受限。"
+      ],
+      "correct": 0,
+      "explanation": "高内存吞吐量伴随低计算利用率是内存受限 kernel 的典型特征；融合或分块可以改善。"
+    }
+  ]
+}

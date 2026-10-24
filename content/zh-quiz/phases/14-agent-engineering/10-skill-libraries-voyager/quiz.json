@@ -1,0 +1,90 @@
+{
+  "lesson": "10-skill-libraries-voyager",
+  "title": "技能库与终身学习（Voyager）",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Voyager 将什么视为动作空间？",
+      "options": [
+        "原始 Minecraft 命令",
+        "强化学习 Q 值",
+        "仅文本提示词",
+        "可存储、检索和组合的可执行代码（JavaScript 函数）"
+      ],
+      "correct": 3,
+      "explanation": "Voyager 的贡献在于将代码作为动作：技能是程序，而非原始命令。"
+    },
+    {
+      "stage": "pre",
+      "question": "Voyager 智能体的三个组成部分是什么？",
+      "options": [
+        "Retriever、generator、ranker",
+        "Encoder、decoder、value head",
+        "Automatic curriculum、skill library、iterative prompting",
+        "Planner、executor、judge"
+      ],
+      "correct": 2,
+      "explanation": "Voyager 围绕课程、技能库和迭代提示三个组件构建智能体。"
+    },
+    {
+      "stage": "check",
+      "question": "技能执行尝试可能返回哪三种信号？",
+      "options": [
+        "Success、error（带堆栈跟踪）、self-verification failure",
+        "Pass、fail、retry",
+        "Heartbeat、ack、nack",
+        "Green、yellow、red"
+      ],
+      "correct": 0,
+      "explanation": "Voyager 的迭代提示机制由这三种信号驱动，并反馈到下一个版本。"
+    },
+    {
+      "stage": "check",
+      "question": "自动课程如何选择下一个任务？",
+      "options": [
+        "在动作空间上均匀随机",
+        "略高于当前能力，基于环境状态和技能库存（探索甜点区）",
+        "总是最难的可用任务",
+        "仅用户提供的列表"
+      ],
+      "correct": 1,
+      "explanation": "任务提出者瞄准略高于当前能力的任务，以保持稳定进步。"
+    },
+    {
+      "stage": "check",
+      "question": "哪个 2026 年产品最匹配本课所说的 Voyager 技能？",
+      "options": [
+        "Claude Agent SDK 的 skills：具名、可检索、按需加载的代码加说明",
+        "AWS Lambda layers",
+        "Pinecone 索引",
+        "OpenAI 微调"
+      ],
+      "correct": 0,
+      "explanation": "Agent SDK 的 skills 匹配 Voyager 的具名—可检索—可组合代码模式。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么本课建议对技能库写入时去重？",
+      "options": [
+        "不去重，相同技能会以略有不同的描述被多次添加；检索应返回一个规范版本",
+        "提供方拒绝重复项",
+        "Git 阻止重复项",
+        "磁盘很贵"
+      ],
+      "correct": 0,
+      "explanation": "相近的重复描述会收敛为单一规范技能，使检索保持干净。"
+    },
+    {
+      "stage": "post",
+      "question": "composed-skill drift 描述的是什么问题？",
+      "options": [
+        "Python 升级后技能停止编译",
+        "父技能静默采用了从未经测试过的 refined 子版本；应通过固定技能版本来修复",
+        "技能在存储中被加密",
+        "检索无结果"
+      ],
+      "correct": 1,
+      "explanation": "没有版本固定，子技能的优化会静默改变父技能的行为。"
+    }
+  ]
+}

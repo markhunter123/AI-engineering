@@ -1,0 +1,90 @@
+{
+  "lesson": "40-linking-loading-and-stripped-binaries",
+  "title": "Linking, Loading, and Stripped Binaries: PLT, GOT, Imports, Fixups, and Function Identification",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "可重定位目标对每次调用都携带 R_X86_64_PLT32，包括调用同一链接中另一目标定义的函数。该记录对最终可执行文件说明了什么？",
+      "options": [
+        "每次调用都会经过 PLT 项",
+        "目标使用 -fno-plt 构建",
+        "函数在共享库中",
+        "仅说明字段是调用位移；链接编辑器在符号由输入定义时将 PLT32 缩减为直接距离，仅对未定义符号创建 PLT 项"
+      ],
+      "correct": 3,
+      "explanation": "自 binutils 2.31 和 LLVM 7 起，编译器对所有调用都发出 PLT32。决定权在链接编辑器，这也是本课计划在同一目标中找到四个直接调用和两个 PLT 符号的原因。"
+    },
+    {
+      "stage": "check",
+      "question": "在 tiny-dyn-x86_64 中，puts 的 .got.plt 槽在文件中保存 0x206，puts@plt 从 0x200 开始，含 jmpq *slot(%rip)。第一次调用会发生什么？",
+      "options": [
+        "程序跳到 0x206，即其自身 PLT 项内的 pushq $0，然后到 PLT0，通过 GOT+16 进入动态链接器；解析器处理 R_X86_64_JUMP_SLOT puts 并将真实地址写入槽",
+        "程序崩溃，因为 0x206 不在 libc 中",
+        "调用由链接编辑器解析，槽未被使用",
+        "槽已保存 puts 的地址，因为链接编辑器读取了 libc.so.6"
+      ],
+      "correct": 0,
+      "explanation": "psABI 5.2 规定槽最初保存后续 pushq 的地址。第一次调用走 PLT0 和解析器的长路径，之后每次调用只需一次间接跳转。"
+    },
+    {
+      "stage": "check",
+      "question": "ledger_main 中 0x100004038 处的字在文件中读取为 0x8010000000000007。它是什么？",
+      "options": [
+        "代码签名哈希",
+        "指向内核内存的指针",
+        "链式修复：第 63 位表示 bind，下一个字段为 2 个四字节单位，ordinal 7 命名第二个库的 _puts；dyld 在加载时用 _puts 的地址替换该字",
+        "_puts 的 stub 地址"
+      ],
+      "correct": 2,
+      "explanation": "dyld_chained_ptr_64_bind 将 ordinal:24、addend:8、next:12 和 bind:1 打包。导入表第 7 项是 _puts，库 ordinal 2，即 /usr/lib/libSystem.B.dylib。"
+    },
+    {
+      "stage": "check",
+      "question": "在 tiny-x86_64.exe 中，IAT 在 RVA 0x2040 处保存 0x2058 和 0x2060，这些是 .rdata 内部的 RVA。为什么它们不是 puts 和 exit 的地址？",
+      "options": [
+        "函数已导出，因此不需要导入",
+        "puts 和 exit 按 ordinal 调用",
+        "IAT 在镜像绑定前与导入查找表相同；这些值是 hint/name 项，Windows 加载器在加载时用 64 位地址覆盖 IAT",
+        "镜像已损坏"
+      ],
+      "correct": 2,
+      "explanation": "PE 格式说明 IAT 在绑定前与查找表匹配，并被覆写为 32 位或 64 位地址。每项的 bit 63 清零表示通过 hint/name 项按名称导入。"
+    },
+    {
+      "stage": "check",
+      "question": "strip 不带选项后，nm 对 libledger.stripped.dylib 不打印符号。新的 main.c 仍能链接并运行。为什么？",
+      "options": [
+        "dylib 已签名",
+        "strip 只向 nm 隐藏符号",
+        "函数被内联到 main 中",
+        "链接编辑器和 dyld 读取 LC_DYLD_EXPORTS_TRIE 中的导出 trie，strip 会保留它，而 LC_SYMTAB 不用于绑定"
+      ],
+      "correct": 3,
+      "explanation": "本课显示 LC_SYMTAB 为 0 条记录，而 dyld_info -exports 仍按偏移列出四个函数。只有全局符号服务动态链接，而 trie 承载它们。"
+    },
+    {
+      "stage": "post",
+      "question": "在 static-arm64-O2.stripped 上，扫描 stp x29, x30, [sp, #-0x10]! 找到 5 个函数中的 0 个，扫描 sub sp, sp, #imm 找到 1 个。LC_FUNCTION_STARTS 找到 5 个。差异如何解释？",
+      "options": [
+        "四个未找到的函数不是真实函数",
+        "LC_FUNCTION_STARTS 由 nm 重建",
+        "前奏扫描只报告编译器实际发出的内容：clang 写 sub sp 然后 stp 且偏移为正，四个叶函数根本没有帧，而链接编辑器为每个函数写了 starts 表，strip 保留了它",
+        "扫描在错误的节上运行"
+      ],
+      "correct": 2,
+      "explanation": "在 -O0 下 sub sp 扫描找到全部五个，因为每个函数都有帧。在 -O2 下 percent_change、grade、total 和 grade_label 是叶函数，因此只有 starts 表和 bl 目标能找到它们。"
+    },
+    {
+      "stage": "post",
+      "question": "-O2 的 grade 和 grade_label 的 FLIRT 形签名具有相同的 32 字节模式和相同的 4 字节 CRC16。匹配器如何正确命名两个函数？",
+      "options": [
+        "选择文件中第一个签名",
+        "无法做到，两者都保持未命名",
+        "比较两个函数不同的尾部字节：grade 的字节 44 是 0x20，grade_label 是 0x28，且长度分别为 60 和 72",
+        "使用剥离后二进制文件的符号表"
+      ],
+      "correct": 2,
+      "explanation": "Hex-Rays 文档顺序为：pattern、CRC16，然后是尾部字节和引用名。grade_label 内联了 grade，因此前 36 字节共享，只有尾部区分它们。"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "lesson": "02-bag-of-words-tfidf",
+  "title": "词袋模型、TF-IDF 与文本表示",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "词袋模型（Bag of Words）丢弃了什么信息？",
+      "options": [
+        "标点符号",
+        "token 顺序",
+        "词汇表大小",
+        "文档长度"
+      ],
+      "correct": 1,
+      "explanation": "BoW 统计每篇文档中的 token，但丢弃了它们的序列信息。"
+    },
+    {
+      "stage": "pre",
+      "question": "为什么要用 IDF 因子对 TF 进行缩放？",
+      "options": [
+        "为了归一化文档长度",
+        "出现在每篇文档中的词 discriminative 信号很弱，应当被降权",
+        "为了移除标点符号",
+        "为了加速训练"
+      ],
+      "correct": 1,
+      "explanation": "IDF 惩罚 ubiquitous 的词并提升罕见词的权重。"
+    },
+    {
+      "stage": "check",
+      "question": "在平滑 IDF 公式 log((N+1)/(df+1)) + 1 中，末尾的 +1 起什么作用？",
+      "options": [
+        "保证大 N 时的数值稳定性",
+        "与原始计数兼容",
+        "让每个文档都出现的词仍具有 IDF 1 而不是 0",
+        "加快计算"
+      ],
+      "correct": 2,
+      "explanation": "+1 使 ubiquitous 的词保持 IDF=1，从而不被归零，与 scikit-learn 的默认值一致。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么在计算余弦相似度前要对 TF-IDF 行进行 L2 归一化？",
+      "options": [
+        "将稀疏向量转为稠密向量",
+        "否则长文档会主导相似度分数；归一化后所有文档都位于单位超球面上",
+        "为了移除零项",
+        "为了压缩词汇表"
+      ],
+      "correct": 1,
+      "explanation": "L2 归一化消除文档长度偏差，使余弦相似度等价于点积。"
+    },
+    {
+      "stage": "check",
+      "question": "对于情感分析，启用哪个 TfidfVectorizer 设置比较危险？",
+      "options": [
+        "sublinear_tf=True",
+        "ngram_range=(1, 2)",
+        "min_df=2",
+        "stop_words='english'"
+      ],
+      "correct": 3,
+      "explanation": "英文停用词表会丢弃 'not' 等否定词，而这些词携带情感信号。"
+    },
+    {
+      "stage": "post",
+      "question": "在 2026 年，TF-IDF 仍在哪些任务中占优？",
+      "options": [
+        "机器翻译",
+        "开放式对话",
+        "图像描述",
+        "垃圾邮件检测、日志异常标记和低延迟的窄分类任务"
+      ],
+      "correct": 3,
+      "explanation": "当词的存在本身就是信号，并且可解释性或速度很重要时，TF-IDF 优于嵌入。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么 TF-IDF 无法区分 'The movie was not good' 与 'The movie was excellent'？",
+      "options": [
+        "TF-IDF 必须依赖 bigram 才能工作",
+        "两篇文档共享大部分 token；词袋模型没有否定或词序概念",
+        "TF-IDF 无法处理停用词",
+        "嵌入重叠度过高"
+      ],
+      "correct": 1,
+      "explanation": "没有词序或句法上下文，BoW 无法建模 'not' 翻转 'good' 情感的现象。"
+    },
+    {
+      "stage": "post",
+      "question": "什么是 TF-IDF 加权嵌入混合方法？",
+      "options": [
+        "拼接 BoW 与稠密嵌入",
+        "对 TF-IDF 做 PCA 后再嵌入",
+        "用 TF-IDF 权重作为每个 token 嵌入的池化权重，然后再平均",
+        "在 TF-IDF 特征上训练 BERT"
+      ],
+      "correct": 2,
+      "explanation": "该混合方法用 TF-IDF 分数加权每个 token 的嵌入后取平均，兼顾语义能力与罕见词强调。"
+    }
+  ]
+}

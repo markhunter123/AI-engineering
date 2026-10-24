@@ -1,0 +1,78 @@
+{
+  "lesson": "33-disassembly-and-control-flow",
+  "title": "Disassembly and Control Flow: From Bytes to a Graph You Can Check",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "llvm-objdump 的反汇编列表将函数的每个字节解码为真实助记符。这证明了什么？",
+      "options": [
+        "该函数没有间接跳转",
+        "列表中的每条指令都会执行",
+        "控制流图是完整的",
+        "仅说明线性扫描找到了每条指令的边界，但当代码内部存在数据时仍可能出错"
+      ],
+      "correct": 3,
+      "explanation": "线性扫描会把数据当作代码解码，并在几个字节后重新同步，因此看似合理的列表不能证明指令边界或可达性。"
+    },
+    {
+      "stage": "check",
+      "question": "字节 48 8d 0d 00 00 00 00 解码为 leaq (%rip), %rcx，且 .rela.text 在位移字段处保存 R_X86_64_PC32 .rodata-0x4。链接后操作数指向哪里？",
+      "options": [
+        ".rodata+0x0，因为处理器将字段加到下一指令地址，即字段后 4 字节",
+        ".rodata-0x4",
+        "lea 本身的地址",
+        ".rodata+0x4"
+      ],
+      "correct": 0,
+      "explanation": "R_X86_64_PC32 存储 S + A - P。字段是指令最后 4 字节，因此最终目标为 S + A + 4 = .rodata + 0。"
+    },
+    {
+      "stage": "check",
+      "question": "在 trap fixture 中，表字节为 31 c0 90 48，下一条真实指令是 83 c0 01（addl $1, %eax）。线性扫描在跳转目标 0x14 处打印什么？",
+      "options": [
+        "0x14 处的 nop",
+        "0x13 处的无效操作码错误",
+        "0x14 处的 addl $0x1, %eax",
+        "0x14 处没有任何指令开始。0x13 处的 48 成为 REX 前缀，扫描打印从 0x13 到 0x17 的 addq $0x1, %rax"
+      ],
+      "correct": 3,
+      "explanation": "REX 字节与真实 add 的三个字节合并，因此列表显示一条提前一字节的 64 位 add，且分支目标处没有指令。"
+    },
+    {
+      "stage": "check",
+      "question": "在 grade 的 -O0 递归下降中，在 jmpq *%rax 处停止并报告三个块。什么证据能让它继续到四个 case 块？",
+      "options": [
+        ".rodata 中的表字节，在目标文件中全为零",
+        "符号表中的函数大小",
+        "命名表的 lea 重定位、限定索引的 cmp 或 sub 加 ja，以及 .rela.rodata 中的五条 R_X86_64_PC32 项，给出 target = addend - 4k",
+        "列表中块的顺序"
+      ],
+      "correct": 2,
+      "explanation": "在可重定位目标文件中，表保存占位符。表项上的重定位是唯一的目标来源，而边界检查给出条目数。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么 Cooper、Harvey 和 Kennedy 的迭代支配点算法按逆后序处理块？",
+      "options": [
+        "因为入口块必须最后处理",
+        "这样大多数块的前驱在被访问时已有直接支配点，使不动点在几次遍历内收敛",
+        "因为它消除了 intersect 步骤的需要",
+        "因为逆后序就是内存地址顺序"
+      ],
+      "correct": 1,
+      "explanation": "逆后序在正向前驱之后访问块，因此每次遍历都沿正向边传播支配点，只有回边需要额外遍历。"
+    },
+    {
+      "stage": "post",
+      "question": "在 -O1 下 clang 将 grade 编译为 cmpl $4, %ecx; ja; leaq (%rip), %rcx 并带重定位到 .rodata; movl (%rcx,%rax,4), %eax; retq。分析应报告什么？",
+      "options": [
+        "通过表的调用",
+        ".rodata+0x14 处的值表保存 1、2、3、4、4，三个基本块，没有间接转移",
+        "未解析的间接跳转",
+        "具有五个代码目标的跳转表"
+      ],
+      "correct": 1,
+      "explanation": "该 load 是普通 movl，函数随后返回。优化器用返回值表替换了 case 块，改变的是 load 而不是控制流。"
+    }
+  ]
+}

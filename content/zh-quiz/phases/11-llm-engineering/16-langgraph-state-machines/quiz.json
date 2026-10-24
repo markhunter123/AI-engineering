@@ -1,0 +1,65 @@
+{
+  "lesson": "phase-11/16-langgraph-state-machines",
+  "questions": [
+    {
+      "stage": "post",
+      "question": "为什么 LangGraph State TypedDict 中的 `messages` 字段需要 `Annotated[list, add_messages]`？",
+      "options": [
+        "在检查点写入磁盘时压缩消息列表。",
+        "启用从模型流式传输 token delta。",
+        "在运行时将普通 dict 转换为 LangChain 消息对象。",
+        "如果没有 reducer，节点更新会覆盖列表而不是追加，导致每一轮都丢失之前的历史。"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "`interrupt_before=['tools']` 与 `interrupt_after=['tools']` 有什么区别？",
+      "options": [
+        "`interrupt_before` 在模型发出 tool_calls 之后、工具执行之前暂停；`interrupt_after` 在工具已经运行之后暂停。",
+        "`interrupt_before` 先在沙箱中运行工具；`interrupt_after` 在生产环境中运行。",
+        "没有区别；它们是别名。",
+        "`interrupt_before` 用于单元测试；`interrupt_after` 用于生产环境。"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "给定线程的检查点历史，如何时间旅行回到之前的状态并探索不同分支？",
+      "options": [
+        "设置 `graph.rewind = True` 并重新调用。",
+        "调用 `graph.reset(thread_id)`，然后 `graph.invoke(new_input, config)`。",
+        "删除检查点目录并使用相同的 thread_id 重新调用。",
+        "在 config 中传入目标 `checkpoint_id` 调用图；将输入设为 `None` 会从该检查点重放，传入新值则会在恢复前先追加到该检查点。"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "在四节点 ReAct 图（agent、tools、conditional edge、回到 agent 的静态边）中，conditional edge 位于哪里？",
+      "options": [
+        "从 `START` 出发，根据输入长度路由到 `agent` 或 `END`。",
+        "从 `tools` 回到 `agent`，根据工具输出是否为空进行路由。",
+        "没有 conditional edge；两条边都是静态的。",
+        "从 `agent` 出发，如果最后一条消息有 tool_calls 则路由到 `tools`，否则路由到 `END`。"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "什么时候应该使用 `Send(node_name, state)` 而不是普通边？",
+      "options": [
+        "为了在隔离的不同进程中调用节点。",
+        "为了将节点推迟到计时器到期。",
+        "为了在失败后重试节点。",
+        "为了分发目标节点的 N 个并行执行，其输出通过 state reducer 合并回来。"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

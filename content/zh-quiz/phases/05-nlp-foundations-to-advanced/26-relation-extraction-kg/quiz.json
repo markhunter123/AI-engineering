@@ -1,0 +1,102 @@
+{
+  "lesson": "26-relation-extraction-kg",
+  "title": "关系抽取与知识图谱构建",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "知识图谱的原子单位是什么？",
+      "options": [
+        "一个 token",
+        "一个 POS 标签",
+        "一个（subject, relation, object）三元组",
+        "一个句子"
+      ],
+      "correct": 2,
+      "explanation": "KG 以（s, r, o）三元组存储信息；聚合的三元组形成图。"
+    },
+    {
+      "stage": "pre",
+      "question": "2026 年关系抽取中的 AEVS 代表什么？",
+      "options": [
+        "Aggregated Entity-Value Schema",
+        "Async Entity Validation Service",
+        "Auto-Encoder Vector Search",
+        "Anchor-Extraction-Verification-Supplement：锚定跨度、抽取三元组、针对源验证、补充覆盖"
+      ],
+      "correct": 3,
+      "explanation": "AEVS 是 2026 年用于 grounded RE 的幻觉缓解框架。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么每个三元组必须携带源出处（doc id + span）？",
+      "options": [
+        "SPARQL 要求出处",
+        "它加速抽取",
+        "出处改变本体",
+        "出处让你可以审计三元组，并拒绝那些跨度与源文本不匹配的幻觉"
+      ],
+      "correct": 3,
+      "explanation": "出处支持审计，是 AEVS 风格幻觉检测的核心。"
+    },
+    {
+      "stage": "check",
+      "question": "关系的 canonicalization 做什么？",
+      "options": [
+        "添加嵌入",
+        "移除三元组",
+        "将表面动词短语（例如 'was born in'、'is a native of'）映射到固定属性 id，使图谱可查询",
+        "翻译文档"
+      ],
+      "correct": 2,
+      "explanation": "Canonicalization 将同义改写折叠为规范的 KG 属性 id。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么关系抽取通常需要先进行共指消解？",
+      "options": [
+        "像 'he founded Apple' 中的代词必须先解析为命名实体，然后才能抽取三元组",
+        "共指归一化大小写",
+        "共指提供位置",
+        "共指添加嵌入"
+      ],
+      "correct": 0,
+      "explanation": "没有共指，RE 会把关系附着到代词而不是底层命名实体。"
+    },
+    {
+      "stage": "post",
+      "question": "哪种选择以开放 IE 召回换取图谱可查询性？",
+      "options": [
+        "随机采样三元组",
+        "仅嵌入图谱",
+        "将开放 IE 关系映射到封闭本体（例如 Wikidata 属性）后再合并入 KG",
+        "跳过 NER"
+      ],
+      "correct": 2,
+      "explanation": "封闭本体的图谱可查询；canonicalization 步骤在下游获得回报。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么许多生产 KG 使用时间限定符（start/end time）？",
+      "options": [
+        "RDF 要求",
+        "移除 NIL 实体",
+        "加速 SPARQL",
+        "许多关系有时间边界（雇主、配偶、角色）；限定符可防止“永远为真”的声明过时"
+      ],
+      "correct": 3,
+      "explanation": "有时间边界的关系需要限定符（例如 Wikidata P580/P582），否则事实会悄悄过时。"
+    },
+    {
+      "stage": "post",
+      "question": "什么是 REBEL？",
+      "options": [
+        "一个分词器",
+        "一个共指模型",
+        "一个 seq2seq 关系抽取器，输出已是 Wikidata 属性 id 的三元组",
+        "一个向量数据库"
+      ],
+      "correct": 2,
+      "explanation": "REBEL（Babelscape）是一个在远程监督 Wikidata 三元组上训练的 seq2seq RE 模型。"
+    }
+  ]
+}

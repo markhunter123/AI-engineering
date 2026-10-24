@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "SAM 3 引入的 Promptable Concept Segmentation（PCS）是什么？",
+      "options": [
+        "检测器后接 SAM 的多步链",
+        "通过单次前向传播分割由短名词短语或图像示例描述的某个概念的所有实例，返回掩码和唯一实例 ID",
+        "像经典 SAM 那样的视觉提示（点/框）分割",
+        "仅跟踪模式"
+      ],
+      "correct": 1,
+      "explanation": "PCS 是 SAM 3 的标志性能力。你输入 'yellow school bus' 或一张公交车的图像示例；SAM 3 返回每个匹配实例及其掩码和唯一 ID，外加存在分数。经典 SAM 需要为每个实例单独提示；PCS 端到端产生所有匹配。"
+    },
+    {
+      "stage": "pre",
+      "question": "如果 SAM 3 已经能做文本提示分割，2026 年为什么还要保留解耦的检测器 + SAM 2 流水线（Grounded SAM 2）？",
+      "options": [
+        "SAM 3 只在云端可用",
+        "Grounded SAM 2 总是更准确",
+        "模块化——你可以为不同领域、许可约束或阈值行为更换不同的开放词汇检测器（DINO-X、Florence-2、Grounding DINO 1.5）；SAM 3 的架构是单体的",
+        "SAM 3 不支持视频"
+      ],
+      "correct": 2,
+      "explanation": "Grounded SAM 2 是检测器与 SAM 2 的组合，权重冻结。这种模块化有时正是你需要的——医学影像检测器、许可友好的检测器或严格的阈值控制。SAM 3 在常见用例中端到端更准确，但更难定制。两者在 2026 年都有生产角色。"
+    },
+    {
+      "stage": "post",
+      "question": "SAM 3 的 presence head 产生什么？",
+      "options": [
+        "被查询概念存在于图像中的标量概率，与定位解耦；让模型能干净地说“不存在”，并减少概念不存在时的误报",
+        "候选边界框列表",
+        "跟踪记忆库",
+        "最终掩码"
+      ],
+      "correct": 0,
+      "explanation": "presence head 把“这里有没有？”的决策与“在哪里？”的决策分开。一个被要求时必须产生框的模型容易对不存在的概念幻觉出匹配。有了 presence head，SAM 3 可以干净地返回零检测。这还能改善相近提示之间的区分（例如 'a player in white' 与 'a player in red'）。"
+    },
+    {
+      "stage": "post",
+      "question": "SAM 3.1 Object Multiplex（2026 年 3 月）为跟踪引入了共享内存机制。它取代了什么？",
+      "options": [
+        "每个实例独立的记忆库；Multiplex 把它们合并为一个共享内存，配合每个实例的查询，使跟踪 N 个对象显著更快，同时保持准确率",
+        "整个 presence head",
+        "完全取代 SAM 2",
+        "ViT 主干"
+      ],
+      "correct": 0,
+      "explanation": "之前的 SAM 2 / SAM 3 跟踪为每个被跟踪实例维护一个记忆库，因此成本随对象数量线性增长。Object Multiplex 引入单个共享内存和每个实例的查询 token，用于获取实例特定特征。多实例跟踪现在变得高效——对人群和密集多目标场景至关重要。"
+    },
+    {
+      "stage": "post",
+      "question": "你需要在边缘设备上做实时的开放词汇检测（只要框，不要掩码）。2026 年哪个模型家族是正确的选择？",
+      "options": [
+        "自定义 CLIP + 检测器链",
+        "SAM 3",
+        "Grounded SAM 2",
+        "YOLO-World（及相关实时开放词汇检测器）；SAM 3 生成掩码且更重，而 YOLO-World 专为边缘硬件上的高 fps 框检测设计"
+      ],
+      "correct": 3,
+      "explanation": "YOLO-World 及类似模型（OV-DINO、LLMDet）是实时开放词汇检测器。它们不生成掩码，但在普通 GPU 上 640×640 可达 30-60 fps。当需要掩码和跟踪时选 SAM 3。始终让工具重量与任务匹配：只做检测时无需掩码开销。"
+    }
+  ]
+}

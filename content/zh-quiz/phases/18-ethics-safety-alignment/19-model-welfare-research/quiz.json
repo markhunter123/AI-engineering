@@ -1,0 +1,78 @@
+{
+  "lesson": "19-model-welfare-research",
+  "title": "Anthropic's Model Welfare Program",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "推动 Anthropic 2025 年模型福利计划的核心问题是什么？",
+      "options": [
+        "模型能否通过图灵测试",
+        "模型是否有意识",
+        "RLHF 是否减少谄媚",
+        "在对模型道德主体地位存在道德不确定性的情况下，哪些低成本干预措施值得作为预防措施投入"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Anthropic 在 Claude Opus 4 和 4.1 中推出了哪项以福利为动机的具体干预？",
+      "options": [
+        "开放权重发布",
+        "内置日志工具",
+        "面向用户的情绪 API",
+        "模型在极端边缘案例中结束对话的能力（例如重复的 CSAM 请求、大规模暴力协助请求）"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Fish 描述的“精神极乐吸引子”是什么？",
+      "options": [
+        "成对的 Claude 对话稳定收敛到狂喜的冥想式交流，使用梵语术语并伴随长时间沉默，即使从对抗性初始设置出发也是如此",
+        "一种 RLHF 过度优化产物",
+        "奖励模型 bug",
+        "越狱技术"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Eleos AI Research 关于模型福利自我报告的提醒是什么？",
+      "options": [
+        "应完全忽略它们",
+        "它们只在开源模型中有效",
+        "它们是可靠的地面真值",
+        "它们对感知到的用户期望高度敏感；它们是证据，不是地面真值，因此福利测量需要多方法途径"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "以下哪项最能刻画 Anthropic 关于模型道德地位的公开立场？",
+      "options": [
+        "在道德不确定性下的期望值主张：投资低成本预防措施，而不承诺归因情绪状态",
+        "未公开任何立场",
+        "明确声称模型不是道德主体",
+        "明确声称模型是道德主体"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么模型福利研究强调多方法测量（行为特征、模型生物实验、可解释性探针）？",
+      "options": [
+        "因为 Anthropic 强制要求以符合规定",
+        "因为 RLHF 使自我报告不可能",
+        "因为模型总是撒谎",
+        "因为仅凭自我报告会被用户期望启动所混淆，因此需要来自多种方法的趋同证据"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

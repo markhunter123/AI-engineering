@@ -1,0 +1,90 @@
+{
+  "lesson": "01-terminal-native-coding-agent",
+  "title": "Capstone 01 — Terminal-Native Coding Agent",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "2026 年的终端编码智能体共享哪种循环形态？",
+      "options": [
+        "获取、嵌入、排序、合成",
+        "规划、执行、观察、恢复",
+        "训练、评估、部署、监控",
+        "编码、解码、采样、流式输出"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "为什么 harness 要在 E2B 或 Daytona 沙箱内运行每个任务？",
+      "options": [
+        "为智能体循环启用 GPU 访问",
+        "绕过模型提供商的速率限制",
+        "将文件系统和工具执行与宿主环境隔离，以便在完成后拆毁 worktree",
+        "对冷缓存进行 token 吞吐量基准测试"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪个内置 hook 是阻止破坏性 shell 命令在运行前执行的自然位置？",
+      "options": [
+        "Stop",
+        "PostToolUse",
+        "PreToolUse",
+        "SessionStart"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "本 capstone 将每个工具结果限制在大约 4k token。这主要防止哪种失效模式？",
+      "options": [
+        "模型对工具调用轨迹的过拟合",
+        "通过恶意 shell 元字符实现沙箱逃逸",
+        "已恢复会话中的陈旧规划状态",
+        "当工具返回大量转储时的上下文污染和成本失控"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "PreCompact hook 在 150k token 阈值处做什么？",
+      "options": [
+        "取消运行并退还用户预算",
+        "强制推送当前分支以备份进度",
+        "将较早的轮次总结为 prior-state 块，以便规划和新的观察结果仍能容纳",
+        "将底层模型切换到更小的 draft 模型"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本 capstone 在 30-issue SWE-bench Pro 子集上将其 harness 与哪个基线进行比较？",
+      "options": [
+        "Aider",
+        "mini-swe-agent",
+        "Live-SWE-agent",
+        "OpenCode"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "交付物使用哪组指标进行衡量？",
+      "options": [
+        "WER、MOS 和 first-audio-out",
+        "MRR@10 和 nDCG@10",
+        "Perplexity、BLEU 和 ROUGE",
+        "pass@1、turns-per-task 和 dollar-per-task"
+      ],
+      "correct": 3,
+      "explanation": ""
+    }
+  ]
+}

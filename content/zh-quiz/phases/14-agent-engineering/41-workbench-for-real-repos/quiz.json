@@ -1,0 +1,90 @@
+{
+  "lesson": "41-workbench-for-real-repos",
+  "title": "The Workbench on a Real Repo",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "在同一个任务上跑 prompt-only 和 workbench-guided 两条流水线的目标是什么？",
+      "options": [
+        "为 GPU 跑分",
+        "对比模型",
+        "产出一份 before/after 报告，交给持怀疑态度的人用数字而不是争论",
+        "挑选厂商"
+      ],
+      "correct": 2,
+      "explanation": "数字会自己说话；案例基于真实任务，而非玩具。"
+    },
+    {
+      "stage": "pre",
+      "question": "以下哪项不是五个被测量结果之一？",
+      "options": [
+        "files_outside_scope",
+        "model_perplexity",
+        "acceptance_met",
+        "tests_actually_run"
+      ],
+      "correct": 1,
+      "explanation": "五个结果是 tests_actually_run、acceptance_met、files_outside_scope、handoff_quality、reviewer_total。"
+    },
+    {
+      "stage": "check",
+      "question": "LangChain 的 Anatomy of an Agent Harness 在 Terminal Bench 2.0 上测到了什么？",
+      "options": [
+        "顶级模型掉了 25 名",
+        "所有模型都收敛到 top-3",
+        "harness 改动没有移动排名",
+        "同一模型仅通过更换 harness 就从 30 名外升到第 5 名"
+      ],
+      "correct": 3,
+      "explanation": "同一模型上 25 名的差距就是 harness 与模型对比的核心收据。"
+    },
+    {
+      "stage": "check",
+      "question": "preprints.org 论文引用企业智能体项目的失败率是多少？",
+      "options": [
+        "8%",
+        "约 88% 未能进入生产，失败集中在运行时而非推理",
+        "约 50%",
+        "没有失败"
+      ],
+      "correct": 1,
+      "explanation": "Harness Engineering for Language Agents 预印本将失败追溯到运行时问题（状态陈旧、脆弱重试、上下文膨胀）。"
+    },
+    {
+      "stage": "check",
+      "question": "WebAgent 基线准确率在长上下文条件下会怎样？",
+      "options": [
+        "保持平稳",
+        "从 40–50% 降到 10% 以下，主要因为无限循环和目标丢失",
+        "上升 30%",
+        "减半但仍高于 30%"
+      ],
+      "correct": 1,
+      "explanation": "长上下文崩溃正是 Ralph Loop 和交接包要吸收的问题。"
+    },
+    {
+      "stage": "post",
+      "question": "本课如何评价假阴性（prompt-only 更快的情况）？",
+      "options": [
+        "单步事实任务、单行 lint、格式化运行用 prompt-only 更快；诚实地列举它们，以免工作台被说成过度设计",
+        "它们证明工作台失败",
+        "它们不存在",
+        "它们否定 harness 命题"
+      ],
+      "correct": 0,
+      "explanation": "诚实列举 prompt-only 最快的场景，能让 harness 论点更可信。"
+    },
+    {
+      "stage": "post",
+      "question": "本课报告应在什么时候引用？",
+      "options": [
+        "内部 HR 评审",
+        "只在黑客松",
+        "当有人想“就这个 sprint”放弃验证门禁，或新产品发布需要可移植的省时基准时",
+        "只在营销 deck"
+      ],
+      "correct": 2,
+      "explanation": "数字比解释传播得更远；当压力试图绕过操作面时，引用这份报告。"
+    }
+  ]
+}

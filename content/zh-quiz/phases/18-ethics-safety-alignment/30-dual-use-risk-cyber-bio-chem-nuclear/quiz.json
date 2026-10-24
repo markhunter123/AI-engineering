@@ -1,0 +1,78 @@
+{
+  "lesson": "30-dual-use-risk-cyber-bio-chem-nuclear",
+  "title": "Dual-Use Risk - Cyber, Bio, Chem, Nuclear Uplift",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "2024–2025 年生物能力 uplift 叙事如何演变？",
+      "options": [
+        "2024–2025 年间没有变化",
+        "从“严重 uplift”到“无可测量的 uplift”",
+        "从 2024 年的“轻微 uplift”，到 2025 年 4 月“即将实质性地帮助新手制造已知生物威胁”，再到 Anthropic 2025 年“2.53 倍 uplift 不足以排除 ASL-3”",
+        "从“无 uplift”到“轻微 uplift”"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Anthropic 2025 年 11 月的网络威胁报告发现了什么？",
+      "options": [
+        "前沿模型拒绝所有网络任务",
+        "开源模型超越前沿模型能力",
+        "与中国关联的国家行为体使用 Claude 的代理式编码工具自动化了 80–90% 的网络攻击活动，仅在 4–6 个步骤中需要人工干预",
+        "网络攻击仍完全依赖手工"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "具备视觉能力的前沿模型如何缩小化学/生物的执行差距？",
+      "options": [
+        "仅通过增加上下文长度",
+        "通过用虚拟模拟器替代所有实验设备",
+        "通过观察湿实验视频并提供实时协议修正；OpenAI 2025 年 12 月的演示显示，GPT-5 通过 AI 驱动的协议优化在湿实验实验中实现了 79 倍效率提升",
+        "通过生成虚假协议"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "相对于生物/化学/网络领域，核领域的能力 uplift 为什么保持有限？",
+      "options": [
+        "前沿模型拒绝讨论物理",
+        "所有核信息已从训练数据中移除",
+        "核领域是 AI 攻击最容易的领域",
+        "该领域威胁模型由裂变材料获取（非信息性、采购与设备瓶颈）主导，因此信息层面的 AI uplift 在实践中为新手带来的 uplift 有限"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "新手相对 uplift 与专家绝对能力之间的不对称性对安全案例意味着什么？",
+      "options": [
+        "仅解决新手相对 uplift（输入过滤、拒绝、不确定性）不足以实现专家绝对控制；还需要采取诱导强化、能力遗忘、控制协议等额外措施",
+        "RLHF 可以同时完美解决二者",
+        "专家绝对能力自动为零",
+        "只有新手 uplift 重要"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "在网络双重用途背景下，OpenAI 的“可信访问”试点是什么？",
+      "options": [
+        "CVE-2025-32711 的补丁",
+        "向经过审查的安全组织（事件响应公司、政府）授予能力访问权限，用于防御性双重用途工作，从而在规模扩大时形成有利于防御者的不对称优势",
+        "开源发布 GPT-5",
+        "关闭所有 API 访问"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

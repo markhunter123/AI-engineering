@@ -1,0 +1,102 @@
+{
+  "lesson": "41-recovering-data-and-types",
+  "title": "Recovering Data and Types: Structs, Arrays, C++ Objects, and DWARF",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "列表显示 addl 0x4(%rax), %ecx，其中 %rax 保存第一个参数。这条指令对参数类型证明了什么？",
+      "options": [
+        "它指向的对象在偏移 4 处有一个 4 字节字段，没有名称、结构大小，也没有其他字节的信息",
+        "参数是 int",
+        "它指向一个结构，其偏移 4 处的字段是名为 balance 的 4 字节整数",
+        "对象长 8 字节"
+      ],
+      "correct": 0,
+      "explanation": "位移给出偏移，l 后缀给出宽度。名称、结构大小和其他成员不在这些字节中。"
+    },
+    {
+      "stage": "check",
+      "question": "将 System V 规则应用于 struct account { char kind; int balance; short code; double rate; const char *label; }。成员偏移和大小是多少？",
+      "options": [
+        "0、8、16、24、32，大小 40，因为每个成员对齐到 8",
+        "0、1、5、7、15，大小 23，因为成员紧凑",
+        "0、4、8、12、16，大小 24，因为每个成员对齐到 4",
+        "0、4、8、16、24，大小 32，因为每个成员放在其自身对齐倍数的最小偏移处，大小是最严格对齐 8 的倍数"
+      ],
+      "correct": 3,
+      "explanation": "int 需要 4，因此放在 4；double 需要 8，因此放在 16；指针在 24；32 已是 8 的倍数。共 9 字节填充。"
+    },
+    {
+      "stage": "check",
+      "question": "在 -O2 下，循环从指针读取偏移 4、36、68、100、132、164、196、228 处的 4 字节值，每次循环将指针前进 256。pass 应报告什么？",
+      "options": [
+        "八个 4 字节字段和至少 232 字节的结构",
+        "步幅 4，即偏移的最大公约数",
+        "偏移 4 处的一个 4 字节字段，元素步幅 32，因为 256 是 8 乘以 32 且恰好有 8 个偏移，所以循环被展开 8 次",
+        "步幅 256 和偏移 4 处的一个字段"
+      ],
+      "correct": 2,
+      "explanation": "相同宽度访问相隔 d 字节，循环步长为 k 倍 d 且有 k 个不同偏移，表示 k 次同一元素访问的副本。折叠后得到一个字段和步幅 32。"
+    },
+    {
+      "stage": "check",
+      "question": "在带 -g 的可重定位目标中，.debug_str_offsets 的每个条目在文件中都是零。读取器如何找到 DW_AT_name 形式为 DW_FORM_strx1 的字符串？",
+      "options": [
+        "从 .debug_line_str 读取字符串",
+        "应用 .rela.debug_str_offsets 的 R_X86_64_32 重定位，然后在 str_offsets_base 加 4 倍索引处读取 4 字节条目，即 .debug_str 中的偏移",
+        "将索引作为 .debug_str 的直接偏移",
+        "在 .debug_str 中搜索成员名"
+      ],
+      "correct": 1,
+      "explanation": "在可重定位目标中，字符串偏移表保存占位符。重定位加数携带真实偏移，str_offsets_base（为 8）跳过表头。"
+    },
+    {
+      "stage": "check",
+      "question": "describe 包含 movq (%rdi), %rax，后跟 callq *0x10(%rax)。在 Rect 上这个调用到达哪个虚函数？",
+      "options": [
+        "析构函数，因为槽 0 是第一项",
+        "不运行程序就无法知道",
+        "Rect::area()，因为 vptr 指向 address point，0x10 除以 8 是槽 2，vtable 重定位和 DW_AT_vtable_elem_location 都将其分配给 area",
+        "Rect::name()，因为 0x10 是 typeinfo 指针后的第二项"
+      ],
+      "correct": 2,
+      "explanation": "vptr 保存 address point，即符号后 16 字节，在 offset-to-top 和 typeinfo 指针之后。槽 0 和 1 是两个析构函数，槽 2 是 area，槽 3 是 name。"
+    },
+    {
+      "stage": "post",
+      "question": "Itanium 修饰名 _ZNK4Rect4areaEv 编码了什么？",
+      "options": [
+        "Rect::area() const：_Z 前缀，N 打开嵌套名，K 标记 const 成员函数，4Rect 和 4area 是带长度前缀的名字，E 关闭，v 是空参数列表",
+        "Rect 的虚表",
+        "Rect::area(void*)",
+        "area(Rect) 带一个参数"
+      ],
+      "correct": 0,
+      "explanation": "Itanium C++ ABI 5.1 节：特殊名 _ZTV、_ZTI、_ZTS 分别是 vtable、typeinfo 和 typeinfo 名；普通函数编码其嵌套名然后是其参数类型。"
+    },
+    {
+      "stage": "post",
+      "question": "没有 DWARF 的 Ghidra 为 bump 打印 *(int *)(param_1 + 4)。什么单一改变能让它打印 a->balance？",
+      "options": [
+        "重新运行自动分析",
+        "在数据类型管理器中创建一个结构类型，含偏移 4 处的 4 字节 int 成员，并将其应用于参数；反编译器随后传播它；DWARF 自动提供该结构，恢复的布局允许你手动键入",
+        "将反编译器切换到不同调用约定",
+        "将 param_1 重命名为 a"
+      ],
+      "correct": 1,
+      "explanation": "两个目标中的指令完全相同。当参数有数据类型可用时（无论是来自 DWARF 还是分析师），反编译器输出都会改变。"
+    },
+    {
+      "stage": "post",
+      "question": "pass 从三个构建中恢复了 struct account 的五个字段和大小 32。以下哪项仍无法从指令中恢复？",
+      "options": [
+        "每个字段的宽度",
+        "数组的元素步幅",
+        "成员名称、const 限定符和偏移 24 处指针的确切 pointee 类型",
+        "哪个字段保存浮点值"
+      ],
+      "correct": 2,
+      "explanation": "宽度来自助记符，步幅来自循环，浮点来自 SSE 标量指令。名称和限定符只存在于源码和 DWARF 中，而 pointee 只知道元素相隔 1 字节。"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "lesson": "31-mcp-conformance-versioning-and-operations",
+  "title": "MCP Conformance Engineering: Versioning, Evidence, and Operations",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么一次成功的 SDK tools/list 调用不足以作为一致性证据？",
+      "options": [
+        "规范化值可能隐藏线字段、版本行为、代理变更和无效响应",
+        "SDK 不能调用 MCP 工具",
+        "成功的调用总是选择旧时代",
+        "一致性仅适用于 Registry 发布者"
+      ],
+      "correct": 0,
+      "explanation": "一致性必须检查原始请求和响应、所选版本时代、中间件和 SDK 转换。"
+    },
+    {
+      "stage": "check",
+      "question": "现代探测返回 JSON-RPC 错误 -32021。具备回退能力的客户端应怎么做？",
+      "options": [
+        "立即为旧时代发送 initialize",
+        "将对等端视为离线",
+        "保持现代时代，并纠正或报告缺失的能力声明",
+        "忽略错误并在没有能力的情况下重试"
+      ],
+      "correct": 2,
+      "explanation": "识别的现代错误证明现代行为。这是纠正证据，不是降级的许可。"
+    },
+    {
+      "stage": "check",
+      "question": "现代客户端应如何处理 resultType 为 complete 且包含不熟悉附加字段的结果？",
+      "options": [
+        "将 resultType 改为 input_required",
+        "拒绝任何包含未知键的结果",
+        "接受已知结果类型，并根据其角色保留或故意忽略附加字段",
+        "将不熟悉的字段视为旧握手"
+      ],
+      "correct": 2,
+      "explanation": "附加字段支持前向兼容性。它们不同于未知的生命周期判别符。"
+    },
+    {
+      "stage": "check",
+      "question": "对没有 id 的通知，所需的 JSON-RPC 响应是什么？",
+      "options": [
+        "server/discover 结果",
+        "无 JSON-RPC 响应",
+        "content 为 null 的 complete 结果",
+        "id 为 null 的错误"
+      ],
+      "correct": 1,
+      "explanation": "通知是单向的。最终传输序列化器不得发出 JSON-RPC 成功或错误。"
+    },
+    {
+      "stage": "post",
+      "question": "哪种证据最能证明代理保留了源协议错误？",
+      "options": [
+        "入口、源和出口的状态与正文证据经过编辑但摘要稳定",
+        "网关仪表板截图",
+        "仅 SDK 异常类",
+        "代理进程正常运行时间"
+      ],
+      "correct": 0,
+      "explanation": "三边界证据揭示状态折叠、正文重写以及行为变化发生的精确跳点。"
+    },
+    {
+      "stage": "post",
+      "question": "候选版本未通过其负向转录，而先前版本没有准入或健康证据。发布门应做什么？",
+      "options": [
+        "选择最新的 Registry 版本",
+        "因为金色转录通过而提升",
+        "回滚到标记为 latest 的包",
+        "暂停发布，直到有符合条件的回滚目标或已证明的修正候选"
+      ],
+      "correct": 3,
+      "explanation": "没有精确准入和健康证据的回滚只是另一次未经验证的发布，因此安全的做法是暂停。"
+    }
+  ]
+}

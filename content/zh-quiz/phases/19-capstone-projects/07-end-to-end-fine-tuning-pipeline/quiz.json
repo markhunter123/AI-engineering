@@ -1,0 +1,90 @@
+{
+  "lesson": "07-end-to-end-fine-tuning-pipeline",
+  "title": "Capstone 07 — End-to-End Fine-Tuning Pipeline (Data to SFT to DPO to Serve)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "数据准备期间，contamination check 防范什么？",
+      "options": [
+        "SFT 和 DPO 阶段之间的 tokenizer 漂移",
+        "公开基准（如 MMLU-Pro 和 MT-Bench-v2）的测试集泄漏到训练数据中",
+        "训练与推理之间的 GPU 驱动不匹配",
+        "不同 llama.cpp 构建之间的 GGUF 版本偏差"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "为什么流水线要组合 SFT 再 DPO（或 GRPO），而不是只用 DPO？",
+      "options": [
+        "DPO 无法在量化权重上运行",
+        "Axolotl 没有实现 DPO",
+        "SFT 在标注完成上建立领域行为，而 DPO 或 GRPO 根据偏好对或可验证奖励对齐模型",
+        "DPO 需要单独的基模型架构"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "EAGLE-3 在 vLLM 推理阶段贡献了什么？",
+      "options": [
+        "用于工具调用的 OPA 策略",
+        "自动数据去重步骤",
+        "新的 prompt-caching 层",
+        "Draft head 预测后续 N 个 token；目标模型一次通过完成验证，吞吐提升 2-3 倍"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "哪个指标报告 speculative-decoding draft 与目标模型的对齐程度？",
+      "options": [
+        "Acceptance rate",
+        "Perplexity",
+        "PSI",
+        "Coverage delta"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "流水线为部署灵活性发布了哪三种量化？",
+      "options": [
+        "GPTQ-INT4-Marlin、AWQ-INT4 和 GGUF-Q4_K_M",
+        "FP32、FP16、BF16",
+        "仅 INT8，跨三个运行时",
+        "ONNX、CoreML、TFLite"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本 capstone 的 2026 model card 遵循哪种框架约定？",
+      "options": [
+        "仅 HuggingFace YAML front-matter",
+        "OpenAI 的 model card 格式",
+        "Datasheets for Datasets",
+        "Model Openness Framework (MOF) 2026 模板，涵盖数据、训练、评估、安全、许可和可复现性"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "哪个 HPA 指标用于自动扩展推理副本？",
+      "options": [
+        "GPU 温度",
+        "CPU 利用率",
+        "队列等待时间",
+        "网络出口字节"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

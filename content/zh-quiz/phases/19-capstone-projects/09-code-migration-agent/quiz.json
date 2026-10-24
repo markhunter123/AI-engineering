@@ -1,0 +1,90 @@
+{
+  "lesson": "09-code-migration-agent",
+  "title": "Capstone 09 — Code Migration Agent (Repo-Level Language / Runtime Upgrade)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么流水线要组合确定性底层和智能体层，而不是只用其中一个？",
+      "options": [
+        "仅智能体比配方更快",
+        "OpenRewrite 或 libcst 可安全且廉价地处理 70-80% 的机械重写，把模糊的长尾留给智能体",
+        "确定性只对构建系统有必要",
+        "确定性配方比 LLM 更慢"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "pre",
+      "question": "流水线用什么信号作为迁移成功的 ground truth？",
+      "options": [
+        "智能体在评分标准上的自评",
+        "PR 上的审查者批准",
+        "diff 大小低于硬限制",
+        "沙箱中的 CI 通过，且覆盖率回落不超过较小阈值"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "智能体循环对每个仓库强制执行哪些预算上限？",
+      "options": [
+        "30 分钟 wall-clock、8 美元成本和 20 次智能体轮次",
+        "1 小时 wall-clock 和 100 轮",
+        "时间和成本无限制；只在错误时中止",
+        "无轮次限制，100 美元上限"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "迁移后覆盖率下降超过约 2% 时会触发什么 gate？",
+      "options": [
+        "确定性底层重放其配方",
+        "该仓库被归类为 coverage_regression 失败类别，而不是打开干净 PR",
+        "智能体自动 force-push 修复",
+        "绕过审查者"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么失败分类法被视为交付物而不是副产品？",
+      "options": [
+        "它取代测试套件",
+        "GitHub 分支保护要求它",
+        "它满足合规检查清单",
+        "它按类别对失败仓库分组，方便未来配方作者针对最突出的失败模式"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "本 capstone 针对 Java 8 到 17 迁移使用哪个公开基准？",
+      "options": [
+        "MMLU-Pro",
+        "Amazon 的 MigrationBench",
+        "ViDoRe v3",
+        "SWE-bench Pro"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "智能体集成评分标准衡量修复分布的哪方面？",
+      "options": [
+        "被固定的依赖数量",
+        "每个仓库的 force-push 次数",
+        "OpenRewrite 处理的修复比例与智能体层编写的修复比例",
+        "源文件的 tokenization 速度"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

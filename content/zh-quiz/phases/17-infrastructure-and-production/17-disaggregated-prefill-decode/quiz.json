@@ -1,0 +1,78 @@
+{
+  "lesson": "17-disaggregated-prefill-decode",
+  "title": "Disaggregated Prefill/Decode — NVIDIA Dynamo and llm-d",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么 prefill 和 decode 需要不同的最佳 GPU 配置？",
+      "options": [
+        "Prefill 必须跑在 AMD，decode 必须跑在 NVIDIA",
+        "They use different model weights",
+        "Prefill 受 matmul 吞吐计算限制；decode 受 HBM 带宽内存限制，因此共置会浪费一种资源",
+        "Decode requires more network bandwidth"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "NVIDIA Dynamo 使用哪种传输方式在 prefill 池和 decode 池之间移动 KV cache？",
+      "options": [
+        "gRPC bidi only",
+        "NIXL（优先 RDMA/InfiniBand，TCP 回退）",
+        "Plain HTTP",
+        "Shared filesystem on NFS"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "根据课程，解耦在什么时候不划算？",
+      "options": [
+        "RAG with 8K+ prefixes",
+        "MoE workloads on Blackwell",
+        "Multi-tenant serving with shared system prompts",
+        "提示词 < 512 token 且输出 < 200 token，此时 KV 传输开销超过收益"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "Dynamo 与 llm-d 的核心架构差异是什么？",
+      "options": [
+        "Dynamo is open source; llm-d is closed",
+        "Dynamo runs on CPU; llm-d on GPU",
+        "Dynamo 是位于 vLLM/SGLang/TRT-LLM 之上的编排器；llm-d 原生面向 Kubernetes，prefill/decode/router 是独立的 Service",
+        "Dynamo requires AMD; llm-d requires NVIDIA"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "Dynamo 的哪些组件会自动为 SLO 调优 prefill:decode 比例？",
+      "options": [
+        "Marlin kernels",
+        "Planner Profiler and SLA Planner",
+        "Cluster Autoscaler",
+        "Sidecar proxy and Envoy filter"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "解耦如何与第 17 阶段 · 11 的缓存感知路由交互？",
+      "options": [
+        "解耦完全禁用 KV cache 复用",
+        "缓存感知路由器可以让请求落到已持有其前缀的 decode 池；未命中时走 prefill -> decode，两者相互放大",
+        "They are mutually exclusive",
+        "Cache-aware routing is only for colocated serving"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

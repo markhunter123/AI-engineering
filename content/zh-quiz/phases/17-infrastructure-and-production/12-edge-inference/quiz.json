@@ -1,0 +1,78 @@
+{
+  "lesson": "12-edge-inference",
+  "title": "Edge Inference — Apple Neural Engine, Qualcomm Hexagon, WebGPU/WebLLM, Jetson",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "课程认为移动设备 LLM 推理比数据中心慢的核心限制是什么？",
+      "options": [
+        "Storage capacity",
+        "Wi-Fi latency",
+        "Compute throughput",
+        "内存带宽（移动 DRAM 50-90 GB/s vs HBM3 2-3 TB/s）"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "为什么 Apple 神经网络引擎能避免 CPU 与 NPU 之间的拷贝开销？",
+      "options": [
+        "Apple Silicon 采用统一内存——CPU 与 ANE 共享同一片内存池",
+        "It uses PCIe 5.0",
+        "Core ML disables KV cache",
+        "It transcodes weights to FP4 before copy"
+      ],
+      "correct": 0,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "课程推荐在浏览器 WebGPU + WebLLM 中使用哪种量化格式？",
+      "options": [
+        "GGUF Q4_K_M",
+        "NVFP4",
+        "FP8",
+        "通过 mlc_llm convert_weight 编译的 Q4 MLC（q4f16_1）"
+      ],
+      "correct": 3,
+      "explanation": ""
+    },
+    {
+      "stage": "check",
+      "question": "课程报告的 2026 年 WebGPU 移动端覆盖率大约是多少？",
+      "options": [
+        "Under 10%",
+        "Only iOS Safari",
+        "约 70-75%，Firefox Android 仍在追赶",
+        "100% across all browsers"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么在典型手机上保持 128K 上下文不现实？",
+      "options": [
+        "Tokenizers fail above 8K",
+        "模型权重 + 32K token 的 KV cache + 系统开销很容易超过 8 GB 内存预算",
+        "WebGPU caps context at 4K",
+        "iOS forbids long context"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "stage": "post",
+      "question": "为什么语音被强调为边缘推理的杀手级应用？",
+      "options": [
+        "Voice models do not need KV cache",
+        "Voice models always fit in 50 MB",
+        "语音助手对延迟敏感（首个 token < 500 ms），本地推理可以完全消除网络延迟",
+        "Voice runs in WebAssembly only"
+      ],
+      "correct": 2,
+      "explanation": ""
+    }
+  ]
+}

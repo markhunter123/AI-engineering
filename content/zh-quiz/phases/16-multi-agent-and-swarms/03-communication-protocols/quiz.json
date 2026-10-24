@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "MCP（Model Context Protocol）解决了 AI 智能体的什么问题？",
+      "options": ["加密智能体之间的通信", "将大上下文窗口压缩以适配更小的模型", "让智能体能够以标准方式发现和使用外部服务器暴露的工具，而无需硬编码工具实现", "提供训练数据的标准格式"],
+      "correct": 2,
+      "explanation": "MCP 标准化了工具访问：服务器以 JSON schema 暴露工具，任何兼容 MCP 的智能体都能发现并调用它们。这将工具实现与智能体代码解耦。"
+    },
+    {
+      "stage": "pre",
+      "question": "MCP 与 A2A 的区别是什么？",
+      "options": ["MCP 用于 Python 智能体，A2A 用于 JavaScript 智能体", "MCP 开源，A2A 专有", "MCP 连接智能体与工具（agent-to-tool），A2A 连接智能体与其他智能体（agent-to-agent）以进行任务委派", "MCP 是同步的，A2A 是异步的"],
+      "correct": 2,
+      "explanation": "MCP 是工具访问协议（智能体调用工具）。A2A 是智能体协作协议（智能体将任务委派给另一个智能体）。它们解决的是通信问题的不同层级。"
+    },
+    {
+      "stage": "post",
+      "question": "在 A2A 中，什么是‘agent card’，为什么重要？",
+      "options": ["验证智能体身份的安全凭证", "设置智能体系统提示的配置文件", "展示智能体性能指标的可视化仪表盘", "一个位于众所周知 URL 的 JSON 文档，描述智能体的能力、技能和端点，使其他智能体能够发现并委派任务给它"],
+      "correct": 3,
+      "explanation": "agent card（托管在 /.well-known/agent-card.json）是智能体自我宣传的方式。它列出技能、支持的输入/输出格式和任务端点。其他智能体读取该卡片来决定是否以及如何委派工作。"
+    },
+    {
+      "stage": "post",
+      "question": "为什么多智能体系统需要结构化通信协议，而不仅仅是智能体之间传递字符串？",
+      "options": ["字符串解析对 LLM 来说计算开销大", "结构化协议提供类型安全、可发现性、错误处理，以及不同团队用不同框架构建的智能体之间的互操作性", "字符串太大，无法通过 HTTP 发送", "所有云厂商都要求使用结构化协议"],
+      "correct": 1,
+      "explanation": "没有结构化契约，不同团队的智能体会相互误解输出，错误处理变得临时且随意，也无法发现其他智能体能做什么。协议提供了让多智能体系统可靠的共享语言。"
+    },
+    {
+      "stage": "post",
+      "question": "ACP（Agent Communication Protocol）在设计目标上与 A2A 有什么不同？",
+      "options": ["ACP 使用 WebSockets，A2A 使用 HTTP", "ACP 比 A2A 更适合实时应用", "ACP 只在单一组织内工作，A2A 可跨组织", "ACP 关注企业可审计性，包括完整消息历史和合规追踪；A2A 关注轻量级任务委派"],
+      "correct": 3,
+      "explanation": "ACP 面向企业环境设计，其中每一次智能体交互都必须可审计、可追溯且合规。A2A 更简单，专注于完成任务。ACP 增加了受监管行业所需的治理层。"
+    }
+  ]
+}

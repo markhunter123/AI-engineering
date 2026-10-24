@@ -1,0 +1,78 @@
+{
+  "lesson": "72-code-exec-metric",
+  "title": "Code Exec Metric",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "为什么运行器为每个候选启动一个独立的 Python 子进程，而不是直接调用 exec？",
+      "options": [
+        "避免污染内置对象",
+        "exec 在现代 Python 中已弃用",
+        "比 exec 更快",
+        "将超时、输出溢出和危险导入与宿主评估进程隔离"
+      ],
+      "correct": 3,
+      "explanation": "候选代码中的无限循环或内存失控只会使子进程崩溃。宿主评估继续推进。"
+    },
+    {
+      "stage": "pre",
+      "question": "一个包含三个断言的任务中，两个通过、一个失败，分数是多少？",
+      "options": [
+        "0.667",
+        "1.0",
+        "0.0",
+        "0.5"
+      ],
+      "correct": 0,
+      "explanation": "分数为通过数除以总数。三个中通过两个是 0.667。退出码为 assertion_fail。"
+    },
+    {
+      "stage": "check",
+      "question": "当候选代码无法解析时，运行器返回哪个退出码？",
+      "options": [
+        "syntax_error",
+        "error",
+        "timeout",
+        "assertion_fail"
+      ],
+      "correct": 0,
+      "explanation": "compile() 在运行器内引发 SyntaxError，内部脚本捕获后写入 exit_code=syntax_error。"
+    },
+    {
+      "stage": "check",
+      "question": "为什么墙上时间超时是承重控制，而导入拒绝列表不是？",
+      "options": [
+        "在 Python 中无法拒绝导入",
+        "subprocess.run 不支持拒绝列表",
+        "大多数失败是无限循环，而坚定的攻击者可以绕过任何进程内拒绝列表",
+        "墙上时间在编译时检查"
+      ],
+      "correct": 2,
+      "explanation": "拒绝列表只能拦截粗心的代码，超时才能捕获无限循环。拒绝列表是后盾，超时是底线。"
+    },
+    {
+      "stage": "check",
+      "question": "当 n - c < k 时，pass_at_k(n, c, k) 返回什么？",
+      "options": [
+        "1，因为样本必然包含至少一个通过解",
+        "c / n，即经验通过率",
+        "0，因为样本未定义",
+        "抛出 ValueError"
+      ],
+      "correct": 0,
+      "explanation": "如果失败数少于样本大小，则任意大小为 k 的样本必然包含至少一个通过解，因此概率为 1。"
+    },
+    {
+      "stage": "post",
+      "question": "运行器如何报告输出溢出？上限为什么设为 256 KB？",
+      "options": [
+        "仅 stderr；大小与 OS 管道默认值匹配",
+        "分数值，以保留两位小数的百分比表示",
+        "子进程 stdout 被流式读取；一旦累计超过 256 KB 就终止子进程，并记录 exit_code=error，detail 为 \"output overflow\"",
+        "候选源代码大小，限制生成代码保持较小"
+      ],
+      "correct": 2,
+      "explanation": "上限保护宿主。冲刷 stdout 的候选代码会在中途被终止；运行器将结果归一化为 exit_code=error，detail 为 \"output overflow\"，而不是新增退出码。"
+    }
+  ]
+}
